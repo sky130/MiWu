@@ -1,7 +1,6 @@
 package io.github.sky130.miwu.ui.miot
 
 import android.app.Activity
-import io.github.sky130.miwu.logic.dao.database.InstanceDatabase
 import io.github.sky130.miwu.logic.model.mi.MiDevice
 import io.github.sky130.miwu.logic.network.MiotSpecService
 import io.github.sky130.miwu.startActivity

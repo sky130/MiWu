@@ -1,9 +1,10 @@
 package io.github.sky130.miwu.logic.model.mi
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(indices = [Index(value = ["homeId"])])
 data class MiDevice(
     val roomId: String, // 房间Id
     val roomName: String, // 房间名称

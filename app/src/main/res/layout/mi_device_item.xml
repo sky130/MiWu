@@ -16,7 +16,7 @@
         android:id="@+id/device_item_icon"
         android:layout_width="27dp"
         android:layout_height="27dp"
-        android:src="@drawable/mi_icon_bg" />
+        android:src="@drawable/mi_icon_small" />
 
     <RelativeLayout
         android:layout_width="0dp"

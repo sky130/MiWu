@@ -12,8 +12,7 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:singleLine="true"
-        style="@style/TextStyle"
-        android:textSize="24sp"/>
+        style="@style/TextStyle" />
 
     <android.view.View
         android:layout_width="12dp"

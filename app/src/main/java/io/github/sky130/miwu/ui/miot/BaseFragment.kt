@@ -32,5 +32,10 @@ open class BaseFragment(private var mTitle: String = "") : Fragment() {
         return (context as DeviceActivity).did
     }
 
+    fun getModel(): String {
+        return (context as DeviceActivitiy).model 
+    }
+
+
 
 }

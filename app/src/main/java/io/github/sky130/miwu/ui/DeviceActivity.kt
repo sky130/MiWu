@@ -20,6 +20,7 @@ class DeviceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         init()
         binding = ActivityDeviceBinding.inflate(layoutInflater)
+        binding.title.setBackListener(null,this)
         addFragment()
         setContentView(binding.root)
     }
@@ -32,11 +33,10 @@ class DeviceActivity : AppCompatActivity() {
     }
 
     private fun addFragment() {
-        binding.title.setTitle("加载中")
+        binding.title.setTitle(getString(R.string.loading))
         DeviceUtils.getDeviceFragment(model, specType) {
             runOnUiThread {
                 mFragment = it
-                binding.title.setActivity(this)
                 binding.title.setTitle(name)
                 this.supportFragmentManager.beginTransaction().apply {
                     add(R.id.fragment_container, mFragment)

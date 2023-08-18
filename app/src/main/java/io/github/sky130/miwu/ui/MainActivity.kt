@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.Scene
 import androidx.viewpager.widget.ViewPager
+import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityMainBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.adapter.AppFragmentPageAdapter
@@ -21,7 +22,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        binding.title.setBack(false)
         binding.viewPager.adapter = AppFragmentPageAdapter(supportFragmentManager, list)
         binding.viewPager.addOnPageChangeListener(this)
         setContentView(binding.root)
@@ -30,11 +30,11 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     override fun onPageSelected(position: Int) { // 页面滚动
         when (position) {
             0 -> {
-                setTitle("设备")
+                setTitle(getString(R.string.device))
             }
 
             1 -> {
-                setTitle("场景")
+                setTitle(getString(R.string.scene))
             }
         }
     }

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">米屋</string>
+    <string name="login_bar">登录</string>
     <string name="login_edit_user">账号/手机号/邮箱</string>
     <string name="login_edit_pwd">密码</string>
     <string name="user_btn_login">登录</string>
@@ -7,4 +8,9 @@
     <string name="toast_login_failure">登录失败,请检查账号密码是否正确</string>
     <string name="toast_login_success">登录成功</string>
     <string name="device_tv_empty">暂未适配该设备</string>
+    <string name="device_online">设备在线</string>
+    <string name="device_offline">设备不在线</string>
+    <string name="loading">加载中</string>
+    <string name="device">设备</string>
+    <string name="scene">场景</string>
 </resources>

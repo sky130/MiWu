@@ -17,25 +17,28 @@ class ItemAdapter(val list: List<MiDevice>) :
     private var blockLong: ((Int) -> Unit)? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.title)
-        val room: TextView = view.findViewById(R.id.room)
-        val desc: TextView = view.findViewById(R.id.desc)
-        val img: ImageView = view.findViewById(R.id.imageView)
+        val img: ImageView = view.findViewById(R.id.device_item_icon)
+        val title: TextView = view.findViewById(R.id.device_item_name)
+        val room: TextView = view.findViewById(R.id.device_item_room)
+        val desc: TextView = view.findViewById(R.id.device_item_info)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_mi_device, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.mi_device_item, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val context = holder.itemView.context
         val isOnline = list[position].isOnline
         holder.title.text = list[position].deviceName
-        holder.desc.text = if (isOnline) {
-            "可用"
+        if (isOnline) {
+            holder.desc.text = context.getString(R.string.device_online)
+            holder.itemView.isEnabled = true
         } else {
-            "设备不在线"
+            holder.desc.text = context.getString(R.string.device_offline)
+            holder.itemView.isEnabled = false
         }
         val url = list[position].iconUrl
         if (url.isNotEmpty())

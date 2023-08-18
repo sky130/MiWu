@@ -8,11 +8,11 @@ import io.github.sky130.miwu.R
 
 class MainTitleBar(context: Context, attributeSet: AttributeSet?) : LinearLayout(context, attributeSet) {
     var titleTextView: TextView
-    var title: String?
+    var titleText: String?
 
     init {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MiTitleBar, 0, 0)
-        title = typedArray.getString(R.styleable.MiTitleBar_title)
+        titleText = typedArray.getString(R.styleable.MiTitleBar_title)
         typedArray.recycle()
         this.gravity = 16
         inflate(context, R.layout.main_title_bar, this)
@@ -23,12 +23,12 @@ class MainTitleBar(context: Context, attributeSet: AttributeSet?) : LinearLayout
             0
         )
         titleTextView = findViewById(R.id.textView)
-        titleTextView.text = title
+        titleTextView.text = titleText
         titleTextView.isSelected = true
         titleTextView.marqueeRepeatLimit = -1
     }
 
-    fun setTitle(var1: String?) {
-        titleTextView.text = var1
+    fun setTitle(str: String?) {
+        titleTextView.text = str
     }
 }

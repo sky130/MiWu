@@ -20,12 +20,12 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
     var leftArea: LinearLayout? = null
     var textClock: TextClock? = null
     var titleTextView: TextView? = null
-    var title: String?
+    var titleText: String?
     var f = false
 
     init {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MiTitleBar, 0, 0)
-        title = typedArray.getString(R.styleable.MiTitleBar_title)
+        titleText = typedArray.getString(R.styleable.MiTitleBar_title)
         typedArray.recycle()
         this.init(context)
     }
@@ -43,7 +43,7 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
         backIcon = findViewById(R.id.left_icon)
         textClock = findViewById(R.id.clock_stub)
         titleTextView = findViewById(R.id.title_textview)
-        titleTextView?.text = title
+        titleTextView?.text = titleText
         titleTextView?.isSelected = true
         titleTextView?.marqueeRepeatLimit = -1
         this.pivotX = this.left.toFloat()
@@ -101,8 +101,8 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
         return super.onTouchEvent(var1)
     }
 
-    fun setTitle(var1: String?) {
-        titleTextView!!.text = var1
+    fun setTitle(str: String?) {
+        titleTextView!!.text = str
     }
 
     fun b() {

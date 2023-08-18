@@ -19,7 +19,7 @@ data class MiRoom(
     fun toEntity() = MiRoomEntity(roomId, roomName, homeId, homeName)
 }
 
-@Entity(indices = [Index(value = ["homeId"])])
+@Entity(tableName = "MiRoom",indices = [Index(value = ["homeId"])])
 data class MiRoomEntity(
     val roomId: String, // 房间Id
     val roomName: String, // 房间名称,在米家中可以修改

@@ -6,30 +6,30 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import io.github.sky130.miwu.logic.model.mi.MiDevice
+import io.github.sky130.miwu.logic.model.mi.MiScene
 
 @Dao
 interface SceneDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addDevice(device: MiDevice): Long
+    fun addScene(scene: MiScene): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addDevices(devices: List<MiDevice>): List<Long>
+    fun addScenes(scenes: List<MiScene>): List<Long>
 
     @Update
-    fun updateDevice(device: MiDevice)
+    fun updateScene(scene: MiScene)
 
-    @Query("select * from MiDevice")
-    fun getAllDevice(): List<MiDevice>
+    @Query("select * from MiScene")
+    fun getAllScene(): List<MiScene>
 
-    @Query("select * from MiDevice where homeId == :homeId")
-    fun getDevice(homeId: String): List<MiDevice>
+    @Query("select * from MiScene where homeId == :homeId")
+    fun getScene(homeId: String): List<MiScene>
 
     @Delete
-    fun delDevice(device: MiDevice)
+    fun delScene(scene: MiScene)
 
-    @Query("select count(id) from MiDevice")
+    @Query("select count(id) from MiScene")
     fun getCount(): Int
 
 }

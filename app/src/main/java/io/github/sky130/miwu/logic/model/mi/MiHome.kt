@@ -19,7 +19,7 @@ data class MiHome(
     fun toEntity() = MiHomeEntity(homeId, homeName, userId, isShareHome)
 }
 
-@Entity(indices = [Index(value = ["homeId"])])
+@Entity(tableName = "MiRoom", indices = [Index(value = ["homeId"])])
 data class MiHomeEntity(
     val homeId: String, // 家庭Id
     val homeName: String, // 家庭名称
@@ -30,14 +30,17 @@ data class MiHomeEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
-//    fun toMiHome(): MiHome {
-//        val database = AppDatabase.getDatabase()
-//        val deviceList = ArrayList(database.deviceDAO().getDeviceFromRoom(roomId))
-//        val deviceIdList = ArrayList<String>().apply {
-//            deviceList.forEach { add(it.did) }
-//        }
-//        return MiRoom(roomId, roomName, homeId, homeName, deviceIdList, deviceList)
-//    }
+    fun toMiHome(): MiHome {
+        val database = AppDatabase.getDatabase()
+        val deviceList = ArrayList(database.deviceDAO().getDeviceFromHome(homeId))
+        val roomList = ArrayList<MiRoom>().apply{
+            database.roomDAO().getRoom(homeId).forEach {
+                add(it.toMiRoom())
+            }
+        }
+        val sceneList = ArrayList(database.sceneDAO().getScene(homeId))
+        return MiHome(homeId, homeName, userId, isShareHome, sceneList, roomList, deviceList)
+    }
 
 }
 

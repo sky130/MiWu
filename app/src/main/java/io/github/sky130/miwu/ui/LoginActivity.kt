@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
             val pwd = binding.editPwd.text.toString()
             if (user.isEmpty() || pwd.isEmpty()) {
                 R.string.toast_user_pwd_not_null.toast()
-                it.isEnabled =true
+                it.isEnabled = true
                 return@setOnClickListener
             }
             thread {

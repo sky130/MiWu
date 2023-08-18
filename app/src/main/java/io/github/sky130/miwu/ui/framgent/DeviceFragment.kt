@@ -1,13 +1,16 @@
 package io.github.sky130.miwu.ui.framgent
 
 import android.annotation.SuppressLint
+import android.content.ClipData.Item
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.github.sky130.miwu.databinding.FragmentMainDeviceBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
+import io.github.sky130.miwu.logic.model.mi.MiDevice
 import io.github.sky130.miwu.ui.adapter.DeviceItemAdapter
+
 
 class DeviceFragment : BaseFragment() {
 
@@ -20,9 +23,9 @@ class DeviceFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentMainDeviceBinding.inflate(layoutInflater)
+        val list = HomeDAO.getHome()!!.deviceList
+        list.sortBy { !it.isOnline }
         if (HomeDAO.isInit()) {
-            val list = HomeDAO.getHome()!!.deviceList
-            list.sortBy { it.isOnline }
             binding.recycler.adapter = DeviceItemAdapter(list).apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])

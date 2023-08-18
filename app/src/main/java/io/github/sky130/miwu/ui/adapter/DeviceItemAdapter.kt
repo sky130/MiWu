@@ -11,8 +11,8 @@ import io.github.sky130.miwu.logic.model.mi.MiDevice
 import io.github.sky130.miwu.util.GlideUtils
 import io.github.sky130.miwu.util.ViewUtils.addTouchScale
 
-class ItemAdapter(val list: List<MiDevice>) :
-    RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+class DeviceItemAdapter(val list: List<MiDevice>) :
+    RecyclerView.Adapter<DeviceItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
 

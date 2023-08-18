@@ -1,6 +1,7 @@
 package io.github.sky130.miwu.logic.model.mi
 
 
+
 // 用于存储对应家庭的信息
 data class MiHome(
     val homeId: String, // 家庭Id

@@ -145,6 +145,9 @@ object MiotService {
 
         val result = Gson().fromJson(json, Result::class.java)
         if (result.code != 0) return ArrayList()
+        for (i in result.result.sceneList) {
+            i.homeId = homeId
+        }
         return result.result.sceneList
     }
 
@@ -157,9 +160,15 @@ object MiotService {
     }
 
     fun runScene(scene: MiScene) {
-        val data = " {\"scene_id\": ${scene.sceneId}, \"trigger_key\": \"user.click\"}"
-        val url = "/appgateway/miot/appsceneservice/AppSceneService/RunScene"
-        OkHttpUtils.postData(url, data, loginMsg)
+        if (scene.icon.isNotEmpty()) {
+            val data = " {\"scene_id\": ${scene.sceneId}, \"trigger_key\": \"user.click\"}"
+            val url = "/appgateway/miot/appsceneservice/AppSceneService/RunScene"
+            OkHttpUtils.postData(url, data, loginMsg)
+        } else {
+            val data = " {\"us_id\": ${scene.sceneId}, \"key\": \"\"}"
+            val url = "/scene/start"
+            OkHttpUtils.postData(url, data, loginMsg)
+        }
     }
 
     private fun getHomeDevice(userId: String, homeId: String): ArrayList<HomeDeviceInfo>? {

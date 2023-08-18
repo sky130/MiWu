@@ -1,6 +1,7 @@
 package io.github.sky130.miwu.logic.model.mi
 
 
+
 // 用于存储一个房间
 data class MiRoom(
     val roomId: String, // 房间Id

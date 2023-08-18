@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import io.github.sky130.miwu.databinding.FragmentMainDeviceBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
-import io.github.sky130.miwu.ui.adapter.ItemAdapter
-import kotlin.concurrent.thread
+import io.github.sky130.miwu.ui.adapter.DeviceItemAdapter
 
 class DeviceFragment : BaseFragment() {
 
@@ -23,7 +21,7 @@ class DeviceFragment : BaseFragment() {
     ): View {
         binding = FragmentMainDeviceBinding.inflate(layoutInflater)
         if (HomeDAO.isInit()) {
-            binding.recycler.adapter = ItemAdapter(HomeDAO.getHome()!!.deviceList).apply {
+            binding.recycler.adapter = DeviceItemAdapter(HomeDAO.getHome()!!.deviceList).apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])
                 }

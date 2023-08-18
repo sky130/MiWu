@@ -21,7 +21,9 @@ class DeviceFragment : BaseFragment() {
     ): View {
         binding = FragmentMainDeviceBinding.inflate(layoutInflater)
         if (HomeDAO.isInit()) {
-            binding.recycler.adapter = DeviceItemAdapter(HomeDAO.getHome()!!.deviceList).apply {
+            val list = HomeDAO.getHome()!!.deviceList
+            list.sortBy { it.isOnline }
+            binding.recycler.adapter = DeviceItemAdapter(list).apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])
                 }

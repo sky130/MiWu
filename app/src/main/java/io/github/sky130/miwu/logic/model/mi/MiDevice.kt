@@ -13,7 +13,7 @@ data class MiDevice(
     val deviceName: String, // 设备名称, 可在米家中修改
     val model: String, // 设备型号
     val did: String, // DeviceId, 设备Id, 用于操纵设备
-    val isOnline: Boolean, // 当前设备是否在线
+    var isOnline: Boolean, // 当前设备是否在线
     val specType:String, // 设备的控制类型, 需要依靠这个来判断类型
     val iconUrl: String, // 设备图标链接, 可能为空, 部分设备不存在图标(至少我遇到过
 ){

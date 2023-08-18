@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
                 UserDAO.saveUser(loginMsg)
                 runOnUiThread {
                     R.string.toast_login_success.toast()
-                    startActivity<MainActivity>()
+                    startActivity<SplashActivity>()
                     this.finish()
                 }
             }

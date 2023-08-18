@@ -1,4 +1,4 @@
-package io.github.sky130.miwu.logic.dao
+package io.github.sky130.miwu.logic.dao.database
 
 import androidx.room.Dao
 import androidx.room.Delete

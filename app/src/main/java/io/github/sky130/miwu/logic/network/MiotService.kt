@@ -171,7 +171,7 @@ object MiotService {
         }
     }
 
-    private fun getHomeDevice(userId: String, homeId: String): ArrayList<HomeDeviceInfo>? {
+    fun getHomeDevice(userId: String, homeId: String): ArrayList<HomeDeviceInfo>? {
         val deviceUrlPath = "/v2/home/home_device_list" // 获取全部家庭的接口
         val homeData = "{\"home_owner\":${userId},\"home_id\":${homeId},\"limit\":200}"
         val homeResultJson = OkHttpUtils.postData(deviceUrlPath, homeData, loginMsg) ?: return null

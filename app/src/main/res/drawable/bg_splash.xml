@@ -11,10 +11,11 @@
         tools:ignore="PrivateResource,UnusedAttribute" />
 
     <item
-        android:width="125dp"
-        android:height="125dp"
-        android:drawable="@drawable/ic_launcher_background"
+        android:width="500dp"
+        android:height="500dp"
+        android:drawable="@drawable/ic_mi_icon_round"
         android:gravity="center"
         tools:ignore="PrivateResource,UnusedAttribute" />
+
 
 </layer-list>

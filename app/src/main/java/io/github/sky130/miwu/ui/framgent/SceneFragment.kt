@@ -8,6 +8,7 @@ import io.github.sky130.miwu.databinding.FragmentMainSceneBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.network.MiotService
 import io.github.sky130.miwu.ui.adapter.SceneItemAdapter
+import io.github.sky130.miwu.util.TextUtils.toast
 import kotlin.concurrent.thread
 
 class SceneFragment : BaseFragment() {
@@ -20,14 +21,18 @@ class SceneFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentMainSceneBinding.inflate(layoutInflater)
-        binding.recycler.adapter = SceneItemAdapter(HomeDAO.getHome()!!.sceneList).apply {
-            setOnClickListener {
-                "「${list[it].sceneName}」已执行"
-                thread {
-                    MiotService.runScene(list[it])
+        if (HomeDAO.isInit()) {
+            val list = HomeDAO.getHome()!!.sceneList
+            binding.recycler.adapter = SceneItemAdapter(list).apply {
+                setOnClickListener {
+                    "「${list[it].sceneName}」已执行".toast()
+                    thread {
+                        MiotService.runScene(list[it])
+                    }
                 }
             }
         }
+
         return binding.root
     }
 

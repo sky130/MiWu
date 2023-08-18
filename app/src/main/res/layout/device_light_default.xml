@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <io.github.sky130.miwu.widget.MiSwitchCard
+        android:id="@+id/switch_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:piid="1"
+        app:siid="2" />
+
+    <io.github.sky130.miwu.widget.MiSeekBarCard
+        android:id="@+id/brightness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        app:maxProgress="100"
+        app:title="亮度"
+        app:unit="%" />
+
+    <io.github.sky130.miwu.widget.MiRoundSeekBarCard
+        android:id="@+id/color_temperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        app:maxProgress="6400"
+        app:minProgress="3000"
+        app:title="色温"
+        app:unit="K" />
+</LinearLayout>

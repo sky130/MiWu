@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <attr name="title" format="string" />
+    <attr name="maxProgress" format="integer" tools:ignore="PrivateResource" />
+    <attr name="minProgress" format="integer" tools:ignore="PrivateResource" />
+    <attr name="progressBarColor" format="color" tools:ignore="PrivateResource" />
+    <attr name="unit" format="string" />
+    <attr name="siid" format="integer"/>
+    <attr name="piid" format="integer"/>
+    <attr name="value" format="string"/>
+
+
+    <declare-styleable name="MiSeekBarCard">
+        <attr name="title" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
+        <attr name="progressBarColor" />
+        <attr name="unit" />
+        <attr name="piid"/>
+        <attr name="siid"/>
+    </declare-styleable>
+
+    <declare-styleable name="MiRoundSeekBarCard">
+        <attr name="title" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
+        <attr name="progressBarColorStart" format="color" />
+        <attr name="progressBarColorEnd" format="color" />
+        <attr name="unit" />
+        <attr name="piid"/>
+        <attr name="siid"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="MiTitleView">
+        <attr name="title" />
+    </declare-styleable>
+
+    <declare-styleable name="MiSwitchCard">
+        <attr name="piid"/>
+        <attr name="siid"/>
+    </declare-styleable>
+
+    <declare-styleable name="MiTextView">
+        <attr name="title" />
+        <attr name="unit" />
+        <attr name="piid"/>
+        <attr name="siid"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MiHome" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:selectableItemBackground">@null</item>
+        <item name="android:selectableItemBackgroundBorderless">@null</item>
+        <item name="android:windowSwipeToDismiss">true</item>
+        <item name="android:windowBackground" tools:ignore="PrivateResource">@color/black</item>
+    </style>
+
+    <style name="Theme.MiHome" parent="Base.Theme.MiHome" />
+
+    <style name="Theme.MiHome.Splash" parent="Theme.MiHome">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:statusBarColor" tools:ignore="PrivateResource">@color/black</item>
+    </style>
+</resources>

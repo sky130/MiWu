@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="content_horizontal_distance">10dp</dimen>
+    <dimen name="title_bar_right_hotspot">72dp</dimen>
+</resources>

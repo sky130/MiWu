@@ -34,7 +34,7 @@ object UserService {
             val loginMsg = LoginMsg(code != 0, code.toString(), message)
             if (loginMsg.isError) return loginMsg
             loginMsg.apply {
-                val response = OkHttpUtils.getRequestResponse(getStr("location"))
+                val response = OkHttpUtils.getRequestResponse(getStr("location")) ?: return null
                 val setCookieHeader = response.headers["Set-Cookie"] ?: return null
                 val cookies = setCookieHeader.split(", ")
                 for (item in cookies) {

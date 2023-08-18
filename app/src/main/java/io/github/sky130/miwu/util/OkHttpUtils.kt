@@ -3,12 +3,11 @@ package io.github.sky130.miwu.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import io.github.sky130.miwu.MainApplication.Companion.context
 import io.github.sky130.miwu.logic.network.miot.MiotData
 import io.github.sky130.miwu.logic.model.user.LoginMsg
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.util.concurrent.TimeUnit
 import okhttp3.FormBody
@@ -25,6 +24,7 @@ object OkHttpUtils {
 
 
     fun getRequest(url: String, body: RequestBody? = null): String? {
+        if (!isNetSystemUsable()) return null
         val requestBuilder = Request.Builder().url(url).addHeader(
             "User-Agent",
             MiotData.UserAgent
@@ -44,7 +44,8 @@ object OkHttpUtils {
         }
     }
 
-    fun getRequestResponse(url: String, body: RequestBody? = null): Response {
+    fun getRequestResponse(url: String, body: RequestBody? = null): Response? {
+        if (!isNetSystemUsable()) return null
         val requestBuilder = Request.Builder().url(url).addHeader(
             "User-Agent",
             MiotData.UserAgent
@@ -58,29 +59,8 @@ object OkHttpUtils {
         return client.newCall(request).execute()
     }
 
-
-    fun postRequest(
-        url: String,
-        requestBody: String,
-        mediaType: String = "application/json; charset=utf-8",
-    ): String {
-        val mediaType = mediaType.toMediaType()
-        val request =
-            Request.Builder().url(url).post(requestBody.toRequestBody(mediaType)).addHeader(
-                "User-Agent",
-                MiotData.UserAgent
-            ).build()
-        val response: Response = client.newCall(request).execute()
-        return if (response.isSuccessful) {
-            val responseBody = response.body?.string()
-            responseBody.toString()
-        } else {
-            "null"
-        }
-    }
-
     fun postData(uri: String, data:String, loginMsg: LoginMsg): String? {
-
+        if (!isNetSystemUsable()) return null
         val serviceToken = loginMsg.serviceToken
         val securityToken = loginMsg.securityToken
 
@@ -130,7 +110,7 @@ object OkHttpUtils {
         return Base64.getEncoder().encodeToString(digest)
     }
 
-    fun isNetSystemUsable(context: Context): Boolean {
+    fun isNetSystemUsable(): Boolean {
         var isNetUsable = false
         val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkCapabilities = manager.getNetworkCapabilities(manager.activeNetwork)

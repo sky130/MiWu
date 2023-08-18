@@ -14,36 +14,36 @@ import android.widget.TextView
 import io.github.sky130.miwu.R
 
 @SuppressLint("CustomViewStyleable")
-class BackTitleBar @JvmOverloads constructor(var1: Context, var2: AttributeSet?, var3: Int = 0) :
-    LinearLayout(var1, var2, var3) {
+class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int = 0) :
+    LinearLayout(context, attributeSet, defStyleAttr) {
     var backIcon: ImageView? = null
-    var b: LinearLayout? = null
+    var leftArea: LinearLayout? = null
     var textClock: TextClock? = null
     var titleTextView: TextView? = null
-    var e: String?
+    var title: String?
     var f = false
 
     init {
-        val var10002 = var1.obtainStyledAttributes(var2, R.styleable.MiTitleBar, 0, 0)
-        e = var10002.getString(R.styleable.MiTitleBar_title)
-        var10002.recycle()
-        this.a(var1)
+        val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MiTitleBar, 0, 0)
+        title = typedArray.getString(R.styleable.MiTitleBar_title)
+        typedArray.recycle()
+        this.init(context)
     }
 
-    fun a(var1: Context) {
-        inflate(var1, R.layout.back_title_bar, this)
+    fun init(context: Context) {
+        inflate(context, R.layout.back_title_bar, this)
         this.isClickable = true
         setPadding(
-            var1.resources.getDimensionPixelSize(R.dimen.content_horizontal_distance),
+            context.resources.getDimensionPixelSize(R.dimen.content_horizontal_distance),
             0,
             0,
             0
         )
-        b = findViewById(R.id.left_area)
+        leftArea = findViewById(R.id.left_area)
         backIcon = findViewById(R.id.left_icon)
         textClock = findViewById(R.id.clock_stub)
         titleTextView = findViewById(R.id.title_textview)
-        titleTextView?.text = e
+        titleTextView?.text = title
         titleTextView?.isSelected = true
         titleTextView?.marqueeRepeatLimit = -1
         this.pivotX = this.left.toFloat()
@@ -52,9 +52,9 @@ class BackTitleBar @JvmOverloads constructor(var1: Context, var2: AttributeSet?,
 
     fun setBackListener(var1: OnClickListener?, var2: Activity) {
         if (var1 == null) {
-            b!!.setOnClickListener { var2.finish() }
+            leftArea!!.setOnClickListener { var2.finish() }
         } else {
-            b!!.setOnClickListener(var1)
+            leftArea!!.setOnClickListener(var1)
         }
     }
 
@@ -94,7 +94,7 @@ class BackTitleBar @JvmOverloads constructor(var1: Context, var2: AttributeSet?,
         } else if (1 == var1.action || 3 == var1.action) {
             f = false
             if (this.a(var1)) {
-                b!!.callOnClick()
+                leftArea!!.callOnClick()
             }
             this.a()
         }
@@ -112,14 +112,14 @@ class BackTitleBar @JvmOverloads constructor(var1: Context, var2: AttributeSet?,
             val var1 = FloatArray(2)
             var1[0] = 1.0f
             var1[1] = 0.8f
-            val var10002 = ObjectAnimator.ofFloat(b, "scaleX", *var1)
+            val var10002 = ObjectAnimator.ofFloat(leftArea, "scaleX", *var1)
             val var6 = this
-            val var10004 = b
+            val var10004 = leftArea
             val var2 = FloatArray(2)
             var2[0] = 1.0f
             var2[1] = 0.8f
             val var3 = ObjectAnimator.ofFloat(var10004, "scaleY", *var2)
-            val var7 = var6.b
+            val var7 = var6.leftArea
             val var4 = IntArray(2)
             var4[0] = 50
             var4[1] = 250
@@ -137,14 +137,14 @@ class BackTitleBar @JvmOverloads constructor(var1: Context, var2: AttributeSet?,
             val var1 = FloatArray(2)
             var1[0] = 0.8f
             var1[1] = 1.0f
-            val var10002 = ObjectAnimator.ofFloat(b, "scaleX", *var1)
+            val var10002 = ObjectAnimator.ofFloat(leftArea, "scaleX", *var1)
             val var6 = this
-            val var10004 = b
+            val var10004 = leftArea
             val var2 = FloatArray(2)
             var2[0] = 0.8f
             var2[1] = 1.0f
             val var3 = ObjectAnimator.ofFloat(var10004, "scaleY", *var2)
-            val var7 = var6.b
+            val var7 = var6.leftArea
             val var4 = IntArray(2)
             var4[0] = 250
             var4[1] = 50

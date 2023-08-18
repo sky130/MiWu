@@ -6,24 +6,24 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import io.github.sky130.miwu.R
 
-class MainTitleBar(var1: Context, var2: AttributeSet?) : LinearLayout(var1, var2) {
+class MainTitleBar(context: Context, attributeSet: AttributeSet?) : LinearLayout(context, attributeSet) {
     var titleTextView: TextView
-    var b: String?
+    var title: String?
 
     init {
-        val var10009 = var1.obtainStyledAttributes(var2, R.styleable.MiTitleBar, 0, 0)
-        b = var10009.getString(R.styleable.MiTitleBar_title)
-        var10009.recycle()
+        val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MiTitleBar, 0, 0)
+        title = typedArray.getString(R.styleable.MiTitleBar_title)
+        typedArray.recycle()
         this.gravity = 16
-        inflate(var1, R.layout.main_title_bar, this)
+        inflate(context, R.layout.main_title_bar, this)
         setPadding(
-            var1.resources.getDimensionPixelSize(R.dimen.content_horizontal_distance),
+            context.resources.getDimensionPixelSize(R.dimen.content_horizontal_distance),
             0,
             0,
             0
         )
         titleTextView = findViewById(R.id.textView)
-        titleTextView.text = b
+        titleTextView.text = title
         titleTextView.isSelected = true
         titleTextView.marqueeRepeatLimit = -1
     }

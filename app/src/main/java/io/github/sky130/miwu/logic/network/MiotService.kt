@@ -156,11 +156,17 @@ object MiotService {
         return jsonObject.getJSONObject("data").getString("realIcon")
     }
 
+    fun runScene(scene: MiScene) {
+        val data = " {\"scene_id\": ${scene.sceneId}, \"trigger_key\": \"user.click\"}"
+        val url = "/appgateway/miot/appsceneservice/AppSceneService/RunScene"
+        OkHttpUtils.postData(url, data, loginMsg)
+    }
 
     private fun getHomeDevice(userId: String, homeId: String): ArrayList<HomeDeviceInfo>? {
         val deviceUrlPath = "/v2/home/home_device_list" // 获取全部家庭的接口
         val homeData = "{\"home_owner\":${userId},\"home_id\":${homeId},\"limit\":200}"
         val homeResultJson = OkHttpUtils.postData(deviceUrlPath, homeData, loginMsg) ?: return null
+
         data class Result(@SerializedName("device_info") val deviceList: ArrayList<HomeDeviceInfo>)
         data class HomeResult(val code: Int, val result: Result)
 

@@ -9,6 +9,7 @@ import io.github.sky130.miwu.logic.dao.UserDAO
 import io.github.sky130.miwu.logic.network.miot.UserService
 import io.github.sky130.miwu.startActivity
 import io.github.sky130.miwu.util.TextUtils.toast
+import io.github.sky130.miwu.util.ViewUtils.addTouchScale
 import kotlin.concurrent.thread
 
 class LoginActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding.btnLogin.addTouchScale()
         binding.btnLogin.setOnClickListener {
             it.isEnabled = false
             val user = binding.editUser.text.toString()

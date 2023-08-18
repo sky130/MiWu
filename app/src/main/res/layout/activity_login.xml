@@ -7,13 +7,15 @@
     android:orientation="vertical"
     tools:context=".ui.LoginActivity">
 
-    <io.github.sky130.miwu.widget.MiTitleView
+    <io.github.sky130.miwu.widget.MainTitleBar
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:title="@string/login_bar"/>
 
     <EditText
         android:id="@+id/edit_user"
+        style="@style/EditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -21,18 +23,25 @@
 
     <EditText
         android:id="@+id/edit_pwd"
+        style="@style/EditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:hint="@string/login_edit_pwd" />
+        android:hint="@string/login_edit_pwd"
+        android:inputType="textPassword"
+        android:ems="10"/>
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_login"
         android:gravity="center"
-        android:text="@string/user_btn_login" />
+        android:text="@string/user_btn_login"
+        android:textColor="#FFFFFFFF"
+        android:textSize="17sp" />
 
 
 </LinearLayout>

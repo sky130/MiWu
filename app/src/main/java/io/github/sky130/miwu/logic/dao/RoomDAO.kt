@@ -18,9 +18,6 @@ interface RoomDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addRooms(rooms: List<MiRoomEntity>): List<Long>
 
-    @Update
-    fun updateRoom(room: MiRoomEntity)
-
     @Query("select * from MiRoom")
     fun getAllRoom(): List<MiRoomEntity>
 

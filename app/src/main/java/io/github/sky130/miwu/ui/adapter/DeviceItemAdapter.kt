@@ -25,7 +25,7 @@ class DeviceItemAdapter(val list: List<MiDevice>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.mi_device_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_mi_device, parent, false)
         return ViewHolder(view)
     }
 

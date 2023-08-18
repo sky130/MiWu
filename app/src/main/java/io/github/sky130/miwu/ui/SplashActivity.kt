@@ -14,12 +14,7 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        thread {
-            val start = System.currentTimeMillis()
-            HomeDAO.init() // 加载米家信息
-            "加载完成 ${(System.currentTimeMillis() - start) / 1000}".log()
-            startActivity()
-        }
+        startActivity()
     }
 
     private fun startActivity() {
@@ -34,8 +29,13 @@ class SplashActivity : BaseActivity() {
 
     private fun startMainActivity() {
         try {
-            startActivity<MainActivity>()
-            finish() //关闭当前活动
+            thread {
+                val start = System.currentTimeMillis()
+                HomeDAO.init() // 加载米家信息
+                "加载完成 ${(System.currentTimeMillis() - start) / 1000}".log()
+                startActivity<MainActivity>()
+                finish() //关闭当前活动
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

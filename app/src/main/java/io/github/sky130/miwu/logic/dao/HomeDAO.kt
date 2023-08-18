@@ -7,6 +7,7 @@ import io.github.sky130.miwu.logic.model.mi.MiHomeEntity
 import io.github.sky130.miwu.logic.model.mi.MiInfo
 import io.github.sky130.miwu.logic.network.MiotService
 import io.github.sky130.miwu.util.SettingUtils
+import io.github.sky130.miwu.util.TextUtils.log
 
 // 用于管理当前的家庭
 object HomeDAO {
@@ -18,6 +19,7 @@ object HomeDAO {
     private val edit = SettingUtils(sharedPreferences)
 
     fun init() {
+        isDatabaseInit().toString().log()
         if (isDatabaseInit()) {
             miInfo = getMiInfo()
         } else {

@@ -11,6 +11,5 @@
     <string name="device_online">设备在线</string>
     <string name="device_offline">设备不在线</string>
     <string name="loading">加载中</string>
-    <string name="device">设备</string>
     <string name="scene">场景</string>
 </resources>

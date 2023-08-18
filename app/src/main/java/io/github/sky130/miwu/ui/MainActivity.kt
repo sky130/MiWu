@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     override fun onPageSelected(position: Int) { // 页面滚动
         when (position) {
             0 -> {
-                setTitle(getString(R.string.device))
+                setTitle(getString(R.string.app_name))
             }
 
             1 -> {

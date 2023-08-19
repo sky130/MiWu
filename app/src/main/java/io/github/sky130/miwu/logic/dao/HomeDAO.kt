@@ -38,7 +38,8 @@ object HomeDAO {
     fun resetDeviceOnline(block: (Boolean) -> Unit) {
         if (!isInit()) return block(false)
         miInfo!!.homeList.forEach { home ->
-            val list = MiotService.getHomeDevice(home.userId, home.homeId) ?: return@forEach
+            val list =
+                MiotService.getHomeDevice(home.userId, home.homeId) ?: return@forEach block(false)
             list.forEach { homeDevice ->
                 home.deviceList.forEach {
                     if (homeDevice.did == it.did)

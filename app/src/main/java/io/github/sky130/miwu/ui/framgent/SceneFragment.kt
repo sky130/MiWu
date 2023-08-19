@@ -1,14 +1,18 @@
 package io.github.sky130.miwu.ui.framgent
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.databinding.FragmentMainSceneBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.network.MiotService
 import io.github.sky130.miwu.ui.adapter.SceneItemAdapter
 import io.github.sky130.miwu.util.TextUtils.toast
+import io.github.sky130.miwu.widget.ViewExtra
 import kotlin.concurrent.thread
 
 class SceneFragment : BaseFragment() {
@@ -21,9 +25,19 @@ class SceneFragment : BaseFragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentMainSceneBinding.inflate(layoutInflater)
-        if (HomeDAO.isInit()) {
-            val list = HomeDAO.getHome()!!.sceneList
-            binding.recycler.adapter = SceneItemAdapter(list).apply {
+        binding.swipe.setOnRefreshListener { // 刷新方法
+            refreshData()
+        }
+
+        binding.recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() { // 判断冲突
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val topRowVerticalPosition = layoutManager.findFirstVisibleItemPosition()
+                binding.swipe.isEnabled = topRowVerticalPosition == 0
+            }
+        })
+        if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
+            binding.recycler.adapter = SceneItemAdapter(0).apply {
                 setOnClickListener {
                     "「${list[it].sceneName}」已执行".toast()
                     thread {
@@ -31,9 +45,33 @@ class SceneFragment : BaseFragment() {
                     }
                 }
             }
+            refreshData()
         }
 
         return binding.root
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshData() {
+        thread {
+            HomeDAO.resetScene {
+                runOnUiThread {
+                    if (it) {
+                        binding.recycler.adapter!!.notifyDataSetChanged()
+                        if (binding.swipe.isRefreshing) {
+                            binding.swipe.isRefreshing = false
+                            "刷新完成".toast()
+                        }
+                    } else {
+                        if (binding.swipe.isRefreshing) {
+                            binding.swipe.isRefreshing = false
+                            "刷新失败".toast()
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
 }

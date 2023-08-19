@@ -2,21 +2,18 @@ package io.github.sky130.miwu.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.Scene
 import androidx.viewpager.widget.ViewPager
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityMainBinding
-import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.adapter.AppFragmentPageAdapter
-import io.github.sky130.miwu.ui.framgent.BaseFragment
 import io.github.sky130.miwu.ui.framgent.DeviceFragment
 import io.github.sky130.miwu.ui.framgent.SceneFragment
-import kotlin.concurrent.thread
+import io.github.sky130.miwu.ui.framgent.SettingsFragment
 
 class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var binding: ActivityMainBinding
     private val list = arrayListOf(
-        DeviceFragment(), SceneFragment()
+        DeviceFragment(), SceneFragment(), SettingsFragment()
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +32,10 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
             1 -> {
                 setTitle(getString(R.string.scene))
+            }
+
+            2 -> {
+                setTitle(getString(R.string.settings_bar))
             }
         }
     }

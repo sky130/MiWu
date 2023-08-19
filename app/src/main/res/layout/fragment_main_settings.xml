@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.framgent.SettingsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginVertical="3dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:maxEms="7"
+                    android:singleLine="true"
+                    android:text="@string/avatar"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+
+                <io.github.sky130.miwu.widget.AntiAliasCircleImageView
+                    android:id="@+id/avatarImage"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    tools:src="@tools:sample/avatars" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginVertical="3dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:maxEms="7"
+                    android:singleLine="true"
+                    android:text="@string/uid"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/uidText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:maxEms="7"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    tools:text="00001" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginVertical="3dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:maxEms="7"
+                    android:singleLine="true"
+                    android:text="@string/nickname"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/nicknameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:maxEms="7"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    tools:text="null" />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/switchHome"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/bg_btn"
+                android:gravity="center"
+                android:text="@string/switch_home"
+                android:textColor="#FFFFFFFF"
+                android:textSize="17sp" />
+
+            <Button
+                android:id="@+id/exitAccount"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="8dp"
+                android:background="@drawable/bg_btn"
+                android:gravity="center"
+                android:text="@string/exit_account"
+                android:textColor="#FFFFFFFF"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

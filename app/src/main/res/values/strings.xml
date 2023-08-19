@@ -12,4 +12,10 @@
     <string name="device_offline">设备不在线</string>
     <string name="loading">加载中</string>
     <string name="scene">场景</string>
+    <string name="settings_bar">设置</string>
+    <string name="avatar">头像</string>
+    <string name="uid">账号</string>
+    <string name="nickname">姓名</string>switchHome
+    <string name="switch_home">切换家庭</string>
+    <string name="exit_account">退出账号</string>
 </resources>

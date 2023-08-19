@@ -7,6 +7,7 @@
     <string name="toast_user_pwd_not_null">账号密码不能为空</string>
     <string name="toast_login_failure">登录失败,请检查账号密码是否正确</string>
     <string name="toast_login_success">登录成功</string>
+    <string name="toast_logging_in">登录中</string>
     <string name="device_tv_empty">暂不支持完整功能\n请持续关注后续版本</string>
     <string name="device_online">设备在线</string>
     <string name="device_offline">设备不在线</string>

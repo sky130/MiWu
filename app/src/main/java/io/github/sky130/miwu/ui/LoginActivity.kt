@@ -1,7 +1,7 @@
 package io.github.sky130.miwu.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import io.github.sky130.miwu.MainApplication
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityLoginBinding
@@ -29,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
                 it.isEnabled = true
                 return@setOnClickListener
             }
+            R.string.toast_logging_in.toast()
             thread {
                 val loginMsg = UserService.login(user, pwd)
                 if (loginMsg == null) {

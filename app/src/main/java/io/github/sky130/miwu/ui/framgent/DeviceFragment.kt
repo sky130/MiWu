@@ -18,7 +18,7 @@ import io.github.sky130.miwu.widget.ViewExtra
 import kotlin.concurrent.thread
 
 
-class DeviceFragment : BaseFragment(), ViewExtra {
+class DeviceFragment : BaseFragment(){
 
     private lateinit var binding: FragmentMainDeviceBinding
 

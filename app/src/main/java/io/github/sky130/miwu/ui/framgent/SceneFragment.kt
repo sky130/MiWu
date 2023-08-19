@@ -15,7 +15,7 @@ import io.github.sky130.miwu.util.TextUtils.toast
 import io.github.sky130.miwu.widget.ViewExtra
 import kotlin.concurrent.thread
 
-class SceneFragment : BaseFragment(), ViewExtra {
+class SceneFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMainSceneBinding
 

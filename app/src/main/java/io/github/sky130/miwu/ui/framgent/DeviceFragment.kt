@@ -74,7 +74,6 @@ class DeviceFragment : BaseFragment() {
 
     fun updateLayoutVisibility(index: Int) {
         val home = HomeDAO.getHome(index)
-        val isEmpty = home?.sceneList?.isEmpty() ?: true
-        binding.empty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        binding.empty.visibility = if (home!!.deviceList.isEmpty()) View.VISIBLE else View.GONE
     }
 }

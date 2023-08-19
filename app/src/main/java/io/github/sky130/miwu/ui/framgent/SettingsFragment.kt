@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.FragmentMainSettingsBinding
+import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.dao.UserDAO
 import io.github.sky130.miwu.startActivity
+import io.github.sky130.miwu.ui.LoginActivity
 import io.github.sky130.miwu.ui.SwitchHomeActivity
 import io.github.sky130.miwu.util.GlideUtils
+import io.github.sky130.miwu.util.TextUtils.toast
 import java.util.concurrent.Executors
 
 class SettingsFragment : BaseFragment() {
@@ -40,6 +43,12 @@ class SettingsFragment : BaseFragment() {
         }
         binding.switchHome.setOnClickListener {
             requireActivity().startActivity<SwitchHomeActivity>()
+        }
+        binding.exitAccount.setOnClickListener {
+            UserDAO.logout()
+            "登出成功".toast()
+            requireActivity().startActivity<LoginActivity>()
+            requireActivity().finish()
         }
         return binding.root
     }

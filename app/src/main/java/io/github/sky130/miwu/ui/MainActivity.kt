@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityMainBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
+import io.github.sky130.miwu.logic.dao.UserDAO
 import io.github.sky130.miwu.ui.adapter.AppFragmentPageAdapter
 import io.github.sky130.miwu.ui.framgent.BaseFragment
 import io.github.sky130.miwu.ui.framgent.DeviceFragment
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onResume() {
         super.onResume()
+        if(UserDAO.getLocalUser().userId.isEmpty()) finish()
         refreshList()
     }
 

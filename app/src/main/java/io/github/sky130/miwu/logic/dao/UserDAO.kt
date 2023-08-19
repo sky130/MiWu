@@ -20,7 +20,6 @@ object UserDAO {
         saveUserInfo(UserInfo("", "", ""))
         saveUser(LoginMsg(true, "", "", "", "", "", "", ""))
         AppDatabase.getDatabase().clearAllTables()
-
     }
 
     fun getLocalUser(): LoginMsg {

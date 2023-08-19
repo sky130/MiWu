@@ -27,7 +27,7 @@ class SceneFragment : BaseFragment() {
     ): View {
         binding = FragmentMainSceneBinding.inflate(layoutInflater)
         binding.swipe.setOnRefreshListener { // 刷新方法
-            refreshData()
+            refreshList()
         }
 
         binding.recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() { // 判断冲突
@@ -38,7 +38,8 @@ class SceneFragment : BaseFragment() {
             }
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
-            if (HomeDAO.getHome(0)!!.sceneList.size > 0) binding.empty.visibility = GONE else binding.empty.visibility = VISIBLE
+            if (HomeDAO.getHome(0)!!.sceneList.size > 0) binding.empty.visibility =
+                GONE else binding.empty.visibility = VISIBLE
             binding.recycler.adapter = SceneItemAdapter(0).apply {
                 setOnClickListener {
                     "「${list[it].sceneName}」已执行".toast()
@@ -47,18 +48,19 @@ class SceneFragment : BaseFragment() {
                     }
                 }
             }
-            refreshData()
+            refreshList()
         }
         return binding.root
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refreshData() {
+    override fun refreshList() {
         thread {
             HomeDAO.resetScene {
                 runOnUiThread {
                     if (it) {
-                        if (HomeDAO.getHome(0)!!.sceneList.size > 0) binding.empty.visibility = GONE else binding.empty.visibility = VISIBLE
+                        if (HomeDAO.getHome(0)!!.sceneList.size > 0) binding.empty.visibility =
+                            GONE else binding.empty.visibility = VISIBLE
                         binding.recycler.adapter!!.notifyDataSetChanged()
                         if (binding.swipe.isRefreshing) {
                             binding.swipe.isRefreshing = false

@@ -7,7 +7,7 @@ import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.ui.miot.DeviceUtils.startDeviceActivity
 import io.github.sky130.miwu.widget.ViewExtra
 
-open class BaseFragment : Fragment() , ViewExtra {
+open class BaseFragment : Fragment(), ViewExtra, RefreshListExtra {
 
     private val mainActivity: MainActivity
         get() = context as MainActivity

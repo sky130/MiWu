@@ -64,6 +64,17 @@ object HomeDAO {
         block(true)
     }
 
+    fun resetAll(block: (Boolean) -> Unit) {
+        miInfo = MiotService.getMiInfo() ?: return
+        AppDatabase.getDatabase().apply {
+            clearAllTables() // 强制清空数据库,因为要重新加载
+            homeDAO().addHomes(miInfo!!.homeList.map { it.toEntity() })
+            miInfo!!.homeList.forEach { sceneDAO().addScenes(it.sceneList) }
+            miInfo!!.homeList.forEach { deviceDAO().addDevices(it.deviceList) }
+            miInfo!!.homeList.forEach { home -> roomDAO().addRooms(home.roomList.map { it.toEntity() }) }
+        }
+    }
+
     private fun getMiInfo() =
         MiInfo(ArrayList(AppDatabase.getDatabase().homeDAO().getAllHome().map { it.toMiHome() }))
 

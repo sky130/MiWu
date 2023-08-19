@@ -5,11 +5,13 @@ import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityMainBinding
+import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.adapter.AppFragmentPageAdapter
 import io.github.sky130.miwu.ui.framgent.BaseFragment
 import io.github.sky130.miwu.ui.framgent.DeviceFragment
 import io.github.sky130.miwu.ui.framgent.SceneFragment
 import io.github.sky130.miwu.ui.framgent.SettingsFragment
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var binding: ActivityMainBinding
@@ -30,6 +32,24 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onPageSelected(position: Int) { // 页面滚动
         setTitle(list[position].title)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshList()
+        thread {
+            HomeDAO.resetAll {
+                if (it) {
+                    refreshList()
+                }
+            }
+        }
+    }
+
+    private fun refreshList() {
+        list.forEach {
+            it.fragment.refreshList()
+        }
     }
 
     data class FragmentItem(val title: String, val fragment: BaseFragment)

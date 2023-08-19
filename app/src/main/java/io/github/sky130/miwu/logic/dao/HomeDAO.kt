@@ -80,7 +80,7 @@ object HomeDAO {
 
     fun isDatabaseInit() = AppDatabase.getDatabase().homeDAO().getCount() > 0
     fun isInit() = miInfo != null
-    fun homeSize() = miInfo?.homeList?.size
+    fun homeSize() = miInfo?.homeList?.size ?: 0
     fun getHomeIndex() = edit.get("home_index", 0)
     fun setHomeIndex(index: Int) = edit.get("home_index", index)
     fun getHome(index: Int = getHomeIndex()) = miInfo?.homeList?.get(index)

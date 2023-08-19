@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityMainBinding
 import io.github.sky130.miwu.ui.adapter.AppFragmentPageAdapter
+import io.github.sky130.miwu.ui.framgent.BaseFragment
 import io.github.sky130.miwu.ui.framgent.DeviceFragment
 import io.github.sky130.miwu.ui.framgent.SceneFragment
 import io.github.sky130.miwu.ui.framgent.SettingsFragment
@@ -13,7 +14,9 @@ import io.github.sky130.miwu.ui.framgent.SettingsFragment
 class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var binding: ActivityMainBinding
     private val list = arrayListOf(
-        DeviceFragment(), SceneFragment(), SettingsFragment()
+        FragmentItem(getString(R.string.app_name), DeviceFragment()),
+        FragmentItem(getString(R.string.scene), SceneFragment()),
+        FragmentItem(getString(R.string.settings_bar), SettingsFragment()),
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,20 +28,10 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     }
 
     override fun onPageSelected(position: Int) { // 页面滚动
-        when (position) {
-            0 -> {
-                setTitle(getString(R.string.app_name))
-            }
-
-            1 -> {
-                setTitle(getString(R.string.scene))
-            }
-
-            2 -> {
-                setTitle(getString(R.string.settings_bar))
-            }
-        }
+        setTitle(list[position].title)
     }
+
+    data class FragmentItem(val title: String, val fragment: BaseFragment)
 
     fun setTitle(str: String) {
         binding.title.setTitle(str)

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="62dp"
+    android:background="@drawable/bg_list_item"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_marginVertical="3dp"
+    android:layout_marginHorizontal="2dp"
+    android:paddingStart="9dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:duplicateParentState="true">
+
+        <TextView
+            android:id="@+id/device_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:duplicateParentState="true"
+            android:singleLine="true"
+            android:textColor="@drawable/list_title"
+            android:textSize="14sp"
+            tools:text="你的家" />
+
+        <TextView
+            android:id="@+id/device_item_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/device_item_name"
+            android:layout_alignStart="@id/device_item_name"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/bg_card_room"
+            android:duplicateParentState="true"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            tools:text="共享家庭" />
+
+        <TextView
+            android:id="@+id/device_item_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/device_item_name"
+            android:layout_marginStart="3dp"
+            android:layout_toEndOf="@id/device_item_room"
+            android:duplicateParentState="true"
+            android:singleLine="true"
+            android:textColor="@drawable/list_title"
+            android:textSize="12sp"
+            tools:text="当前选择" />
+    </RelativeLayout>
+</LinearLayout>

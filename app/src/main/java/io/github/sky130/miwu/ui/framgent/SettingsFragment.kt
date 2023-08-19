@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.github.sky130.miwu.MainApplication.Companion.loginMsg
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.FragmentMainSettingsBinding
 import io.github.sky130.miwu.logic.dao.UserDAO
-import io.github.sky130.miwu.logic.network.miot.UserService
+import io.github.sky130.miwu.startActivity
+import io.github.sky130.miwu.ui.SwitchHomeActivity
 import io.github.sky130.miwu.util.GlideUtils
 import java.util.concurrent.Executors
 
@@ -37,6 +37,9 @@ class SettingsFragment : BaseFragment() {
                 uid.text = userInfo.uid
                 name.text = userInfo.nickname
             }
+        }
+        binding.switchHome.setOnClickListener {
+            requireActivity().startActivity<SwitchHomeActivity>()
         }
         return binding.root
     }

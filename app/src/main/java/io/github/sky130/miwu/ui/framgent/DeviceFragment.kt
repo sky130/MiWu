@@ -39,7 +39,7 @@ class DeviceFragment : BaseFragment() {
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
             updateLayoutVisibility(0)
-            binding.recycler.adapter = DeviceItemAdapter(0).apply {
+            binding.recycler.adapter = DeviceItemAdapter().apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])
                 }

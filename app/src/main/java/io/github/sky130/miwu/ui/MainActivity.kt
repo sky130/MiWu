@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         setTitle(list[position].title)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         refreshList()
         thread {
             HomeDAO.resetAll {
@@ -44,6 +44,11 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshList()
     }
 
     private fun refreshList() {

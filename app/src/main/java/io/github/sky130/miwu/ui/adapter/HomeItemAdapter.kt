@@ -9,52 +9,48 @@ import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.model.mi.MiDevice
+import io.github.sky130.miwu.logic.model.mi.MiHome
 import io.github.sky130.miwu.util.GlideUtils
+import io.github.sky130.miwu.util.TextUtils.log
 import io.github.sky130.miwu.util.ViewUtils.addTouchScale
 
-class DeviceItemAdapter() :
-    RecyclerView.Adapter<DeviceItemAdapter.ViewHolder>() {
+class HomeItemAdapter() :
+    RecyclerView.Adapter<HomeItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
-    val list:ArrayList<MiDevice>
-        get() = HomeDAO.getHome(HomeDAO.getHomeIndex())!!.deviceList
+    val list: ArrayList<MiHome>
+        get() = HomeDAO.getHomeList()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val img: ImageView = view.findViewById(R.id.device_item_icon)
         val title: TextView = view.findViewById(R.id.device_item_name)
-        val room: TextView = view.findViewById(R.id.device_item_room)
+        val type: TextView = view.findViewById(R.id.device_item_room)
         val desc: TextView = view.findViewById(R.id.device_item_info)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_mi_device, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_mi_home, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val context = holder.itemView.context
-        val isOnline = list[position].isOnline
-        holder.title.text = list[position].deviceName
-        if (isOnline) {
-            holder.desc.text = context.getString(R.string.device_online)
-            holder.itemView.isEnabled = true
+        holder.title.text = list[position].homeName
+        if (position == HomeDAO.getHomeIndex()) {
+            holder.desc.text = "当前选中"
         } else {
-            holder.desc.text = context.getString(R.string.device_offline)
-            holder.itemView.isEnabled = false
+            holder.desc.text = ""
         }
-        val url = list[position].iconUrl
-        if (url.isNotEmpty())
-            GlideUtils.loadImg(url, holder.img)
-        holder.room.text = list[position].roomName
+        holder.type.text = if (list[position].isShareHome) {
+            "共享家庭"
+        } else {
+            "主家庭"
+        }
         holder.itemView.addTouchScale()
         holder.itemView.setOnClickListener {
-            if (isOnline)
-                block?.invoke(position)
+            block?.invoke(position)
         }
         holder.itemView.setOnLongClickListener {
-            if (isOnline)
-                blockLong?.invoke(position)
+            blockLong?.invoke(position)
             true
         }
     }

@@ -37,7 +37,7 @@ class SceneFragment : BaseFragment() {
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
             updateLayoutVisibility(0)
-            binding.recycler.adapter = SceneItemAdapter(0).apply {
+            binding.recycler.adapter = SceneItemAdapter().apply {
                 setOnClickListener {
                     "「${list[it].sceneName}」已执行".toast()
                     thread {

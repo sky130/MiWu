@@ -12,12 +12,12 @@ import io.github.sky130.miwu.logic.model.mi.MiScene
 import io.github.sky130.miwu.util.GlideUtils
 import io.github.sky130.miwu.util.ViewUtils.addTouchScale
 
-class SceneItemAdapter(private val index: Int) :
+class SceneItemAdapter() :
     RecyclerView.Adapter<SceneItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
     val list: List<MiScene>
-        get() = HomeDAO.getHome(index)!!.sceneList
+        get() = HomeDAO.getHome(HomeDAO.getHomeIndex())!!.sceneList
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.title)

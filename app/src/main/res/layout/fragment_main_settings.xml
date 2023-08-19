@@ -31,7 +31,7 @@
                     android:singleLine="true"
                     android:text="@string/avatar"
                     android:textColor="@color/white"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
 
                 <io.github.sky130.miwu.widget.AntiAliasCircleImageView
                     android:id="@+id/avatarImage"
@@ -59,7 +59,7 @@
                     android:singleLine="true"
                     android:text="@string/uid"
                     android:textColor="@color/white"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/uidText"
@@ -73,7 +73,7 @@
                     android:maxEms="7"
                     android:singleLine="true"
                     android:textColor="@color/white"
-                    android:textSize="17sp"
+                    android:textSize="14sp"
                     tools:text="00001" />
 
             </RelativeLayout>
@@ -94,7 +94,7 @@
                     android:singleLine="true"
                     android:text="@string/nickname"
                     android:textColor="@color/white"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/nicknameText"
@@ -108,7 +108,7 @@
                     android:maxEms="7"
                     android:singleLine="true"
                     android:textColor="@color/white"
-                    android:textSize="17sp"
+                    android:textSize="14sp"
                     tools:text="null" />
 
             </RelativeLayout>

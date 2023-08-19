@@ -38,7 +38,7 @@ class DeviceFragment : BaseFragment() {
             }
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
-            updateLayoutVisibility(0)
+            updateLayoutVisibility()
             binding.recycler.adapter = DeviceItemAdapter().apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])
@@ -55,7 +55,7 @@ class DeviceFragment : BaseFragment() {
             HomeDAO.resetDeviceOnline {
                 runOnUiThread {
                     if (it) {
-                        updateLayoutVisibility(0)
+                        updateLayoutVisibility()
                         if (binding.swipe.isRefreshing) {
                             binding.swipe.isRefreshing = false
                             "刷新完成".toast()
@@ -72,8 +72,8 @@ class DeviceFragment : BaseFragment() {
         }
     }
 
-    fun updateLayoutVisibility(index: Int) {
-        val home = HomeDAO.getHome(index)
+    fun updateLayoutVisibility() {
+        val home = HomeDAO.getHome(HomeDAO.getHomeIndex())
         binding.empty.visibility = if (home!!.deviceList.isEmpty()) View.VISIBLE else View.GONE
     }
 }

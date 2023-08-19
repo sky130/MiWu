@@ -36,7 +36,7 @@ class SceneFragment : BaseFragment() {
             }
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
-            updateLayoutVisibility(0)
+            updateLayoutVisibility()
             binding.recycler.adapter = SceneItemAdapter().apply {
                 setOnClickListener {
                     "「${list[it].sceneName}」已执行".toast()
@@ -56,7 +56,7 @@ class SceneFragment : BaseFragment() {
             HomeDAO.resetScene {
                 runOnUiThread {
                     if (it) {
-                        updateLayoutVisibility(0)
+                        updateLayoutVisibility()
                         binding.recycler.adapter!!.notifyDataSetChanged()
                         if (binding.swipe.isRefreshing) {
                             binding.swipe.isRefreshing = false
@@ -74,8 +74,8 @@ class SceneFragment : BaseFragment() {
         }
     }
 
-    fun updateLayoutVisibility(index: Int) {
-        val home = HomeDAO.getHome(index)
+    fun updateLayoutVisibility() {
+        val home = HomeDAO.getHome(HomeDAO.getHomeIndex())
         binding.empty.visibility = if (home!!.sceneList.isEmpty()) View.VISIBLE else View.GONE
     }
 }

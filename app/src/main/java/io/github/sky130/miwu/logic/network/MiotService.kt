@@ -52,7 +52,7 @@ object MiotService {
         for (i in result.result.homeList) { // 非共享家庭
             val miHome = MiHome(
                 i.homeId, i.homeName, i.uid.toString(), false,
-                getMiScenes(i.homeId, i.uid.toString()),// 场景列表
+                getMiScenes(i.homeId, i.uid.toString()) ?: ArrayList(),// 场景列表
                 ArrayList(),// 房间列表
                 ArrayList(),// 设备列表
             )
@@ -92,7 +92,7 @@ object MiotService {
             for (i in result.result.shareHomeList) { // 共享家庭
                 val miHome = MiHome(
                     i.homeId, i.homeName, i.uid.toString(), true,
-                    getMiScenes(i.homeId, i.uid.toString()),// 场景列表
+                    getMiScenes(i.homeId, i.uid.toString()) ?: ArrayList(),// 场景列表
                     ArrayList(),// 房间列表
                     ArrayList(),// 设备列表
                 )
@@ -131,20 +131,20 @@ object MiotService {
         return MiInfo(homeList)
     }
 
-    fun getMiScenes(homeId: String, userId: String): ArrayList<MiScene> {
+    fun getMiScenes(homeId: String, userId: String): ArrayList<MiScene>? {
         val data =
             "{\"home_id\": $homeId,\"home_owner\":$userId,\"need_recommended_template\":true}"
         val json = OkHttpUtils.postData(
             "/appgateway/miot/appsceneservice/AppSceneService/GetCommonUsedSceneList",
             data,
             loginMsg
-        ) ?: return ArrayList()
+        ) ?: return null
 
         data class SceneResult(@SerializedName("common_use_scene") val sceneList: ArrayList<MiScene>)
         data class Result(val code: Int, val result: SceneResult)
 
         val result = Gson().fromJson(json, Result::class.java)
-        if (result.code != 0) return ArrayList()
+        if (result.code != 0) return null
         for (i in result.result.sceneList) {
             i.homeId = homeId
         }

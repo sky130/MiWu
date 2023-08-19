@@ -55,7 +55,7 @@ object HomeDAO {
     fun resetScene(block: (Boolean) -> Unit) {
         if (!isInit()) return block(false)
         miInfo!!.homeList.forEach { home ->
-            val list = MiotService.getMiScenes(home.homeId, home.userId)
+            val list = MiotService.getMiScenes(home.homeId, home.userId) ?: return@forEach
             AppDatabase.getDatabase().sceneDAO().delScenes(home.sceneList) // 这里做成强制刷新是因为难以判断场景是否改名
             home.sceneList.clear()
             list.forEach { home.sceneList.add(it) }

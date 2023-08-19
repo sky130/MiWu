@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.logic.dao.HomeDAO
-import io.github.sky130.miwu.logic.model.mi.MiDevice
 import io.github.sky130.miwu.logic.model.mi.MiScene
 import io.github.sky130.miwu.util.GlideUtils
 import io.github.sky130.miwu.util.ViewUtils.addTouchScale

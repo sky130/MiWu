@@ -2,9 +2,11 @@ package io.github.sky130.miwu.ui.framgent
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.databinding.FragmentMainSceneBinding
@@ -47,7 +49,6 @@ class SceneFragment : BaseFragment() {
             }
             refreshData()
         }
-
         return binding.root
     }
 

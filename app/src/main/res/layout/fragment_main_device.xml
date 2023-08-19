@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:id="@+id/swipe"
         android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-</LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

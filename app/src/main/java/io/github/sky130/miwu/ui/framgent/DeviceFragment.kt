@@ -2,11 +2,9 @@ package io.github.sky130.miwu.ui.framgent
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.GONE
@@ -15,7 +13,6 @@ import io.github.sky130.miwu.databinding.FragmentMainDeviceBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.adapter.DeviceItemAdapter
 import io.github.sky130.miwu.util.TextUtils.toast
-import io.github.sky130.miwu.widget.ViewExtra
 import kotlin.concurrent.thread
 
 
@@ -43,16 +40,14 @@ class DeviceFragment : BaseFragment(){
             }
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
+            if (HomeDAO.getHome(0)!!.deviceList.size > 0) binding.empty.visibility =
+                GONE else binding.empty.visibility = VISIBLE
             binding.recycler.adapter = DeviceItemAdapter(0).apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])
                 }
             }
             refreshData()
-        } else {
-            // TODO 初始化失败
-            binding.recycler.visibility = GONE
-            binding.recycler.visibility = VISIBLE
         }
         return binding.root
     }

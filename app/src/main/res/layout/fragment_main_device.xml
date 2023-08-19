@@ -15,13 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/device_tip" />
+                android:text="@string/device_tip"
+                android:textSize="10sp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

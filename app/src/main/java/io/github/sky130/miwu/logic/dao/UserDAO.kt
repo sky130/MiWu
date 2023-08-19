@@ -20,6 +20,7 @@ object UserDAO {
         saveUserInfo(UserInfo("", "", ""))
         saveUser(LoginMsg(true, "", "", "", "", "", "", ""))
         AppDatabase.getDatabase().clearAllTables()
+
     }
 
     fun getLocalUser(): LoginMsg {
@@ -54,7 +55,7 @@ object UserDAO {
     fun getLocalUserInfo(): UserInfo {
         edit.apply {
             return UserInfo(
-                get("userId", ""),
+                get("uid", ""),
                 get("avatar", ""),
                 get("nickname", ""),
             )
@@ -63,6 +64,7 @@ object UserDAO {
 
     fun saveUserInfo(info: UserInfo): UserInfo {
         edit.apply {
+            put("uid",info.uid)
             put("avatar", info.avatar)
             put("nickname", info.nickname)
         }

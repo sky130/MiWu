@@ -18,6 +18,8 @@
     <string name="nickname">姓名</string>switchHome
     <string name="switch_home">切换家庭</string>
     <string name="exit_account">退出账号</string>
-    <string name="scene_tip">暂无米屋场景，请在手机端添加</string>
-    <string name="device_tip">当前的家庭中暂无设备</string>
+    <string name="scene_tip">当前家庭暂无场景</string>
+    <string name="scene_small_tip">您可以打开手机端应用添加场景</string>
+    <string name="device_tip">当前家庭暂无设备</string>
+    <string name="device_small_tip">您可以打开手机端应用添加设备</string>
 </resources>

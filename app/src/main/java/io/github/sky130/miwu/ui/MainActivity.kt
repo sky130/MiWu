@@ -13,15 +13,16 @@ import io.github.sky130.miwu.ui.framgent.SettingsFragment
 
 class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var binding: ActivityMainBinding
-    private val list = arrayListOf(
-        FragmentItem(getString(R.string.app_name), DeviceFragment()),
-        FragmentItem(getString(R.string.scene), SceneFragment()),
-        FragmentItem(getString(R.string.settings_bar), SettingsFragment()),
-    )
+    private lateinit var list: ArrayList<FragmentItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        list = arrayListOf(
+            FragmentItem(getString(R.string.app_name), DeviceFragment()),
+            FragmentItem(getString(R.string.scene), SceneFragment()),
+            FragmentItem(getString(R.string.settings_bar), SettingsFragment()),
+        )
         binding.viewPager.adapter = AppFragmentPageAdapter(supportFragmentManager, list)
         binding.viewPager.addOnPageChangeListener(this)
         setContentView(binding.root)

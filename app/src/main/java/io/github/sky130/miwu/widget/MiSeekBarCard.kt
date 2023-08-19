@@ -84,7 +84,9 @@ class MiSeekBarCard(context: Context, attr: AttributeSet) : ConstraintLayout(con
         if (siid == 0 || piid == 0) return
         thread {
             val progress =
-                DeviceService.getDeviceATT(did, siid, piid)?.getValue(0f)!!.toInt()
+                DeviceService.getDeviceATT(did, siid, piid)
+                    ?.getValue(0f)
+                    ?.toInt()
             runOnUiThread {
                 setCurrentProgress(progress)
             }

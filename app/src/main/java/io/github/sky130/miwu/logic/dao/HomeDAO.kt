@@ -35,8 +35,8 @@ object HomeDAO {
 
 
     // 刷新设备在线
-    fun resetDeviceOnline(block: () -> Unit) {
-        if (!isInit()) return block()
+    fun resetDeviceOnline(block: (Boolean) -> Unit) {
+        if (!isInit()) return block(false)
         miInfo!!.homeList.forEach { home ->
             val list = MiotService.getHomeDevice(home.userId, home.homeId) ?: return@forEach
             list.forEach { homeDevice ->
@@ -48,7 +48,20 @@ object HomeDAO {
             AppDatabase.getDatabase().deviceDAO().addDevices(home.deviceList)
         }
         init()
-        block()
+        block(true)
+    }
+
+    fun resetScene(block: (Boolean) -> Unit) {
+        if (!isInit()) return block(false)
+        miInfo!!.homeList.forEach { home ->
+            val list = MiotService.getMiScenes(home.homeId, home.userId)
+            AppDatabase.getDatabase().sceneDAO().delScenes(home.sceneList) // 这里做成强制刷新是因为难以判断场景是否改名
+            home.sceneList.clear()
+            list.forEach { home.sceneList.add(it) }
+            AppDatabase.getDatabase().sceneDAO().addScenes(home.sceneList)
+        }
+        init()
+        block(true)
     }
 
     private fun getMiInfo() =

@@ -29,6 +29,9 @@ interface SceneDAO {
     @Delete
     fun delScene(scene: MiScene)
 
+    @Delete
+    fun delScenes(scenes:List<MiScene>)
+
     @Query("select count(id) from MiScene")
     fun getCount(): Int
 

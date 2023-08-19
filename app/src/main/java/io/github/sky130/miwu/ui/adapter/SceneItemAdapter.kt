@@ -7,15 +7,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.R
+import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.model.mi.MiDevice
 import io.github.sky130.miwu.logic.model.mi.MiScene
 import io.github.sky130.miwu.util.GlideUtils
 import io.github.sky130.miwu.util.ViewUtils.addTouchScale
 
-class SceneItemAdapter(val list: List<MiScene>) :
+class SceneItemAdapter(private val index: Int) :
     RecyclerView.Adapter<SceneItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
+    val list: List<MiScene>
+        get() = HomeDAO.getHome(index)!!.sceneList
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.title)
@@ -37,10 +40,10 @@ class SceneItemAdapter(val list: List<MiScene>) :
             holder.img.setImageResource(R.drawable.ic_mi_scene)
         holder.itemView.addTouchScale()
         holder.itemView.setOnClickListener {
-                block?.invoke(position)
+            block?.invoke(position)
         }
         holder.itemView.setOnLongClickListener {
-                blockLong?.invoke(position)
+            blockLong?.invoke(position)
             true
         }
     }

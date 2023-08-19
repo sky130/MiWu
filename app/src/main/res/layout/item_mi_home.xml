@@ -12,6 +12,11 @@
     android:paddingTop="12dp"
     android:paddingBottom="12dp">
 
+    <ImageView
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/home_icon" />
+
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"

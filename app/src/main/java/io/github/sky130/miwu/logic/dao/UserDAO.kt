@@ -2,7 +2,10 @@ package io.github.sky130.miwu.logic.dao
 
 import android.content.Context
 import io.github.sky130.miwu.MainApplication.Companion.context
+import io.github.sky130.miwu.MainApplication.Companion.loginMsg
 import io.github.sky130.miwu.logic.model.user.LoginMsg
+import io.github.sky130.miwu.logic.model.user.UserInfo
+import io.github.sky130.miwu.logic.network.miot.UserService
 import io.github.sky130.miwu.util.SettingUtils
 
 
@@ -39,6 +42,30 @@ object UserDAO {
                 put("serviceToken", serviceToken)
             }
         }
+    }
+
+    fun getLocalUserInfo(): UserInfo {
+        edit.apply {
+            return UserInfo(
+                get("userId", ""),
+                get("avatar", ""),
+                get("nickname", ""),
+            )
+        }
+    }
+
+    fun saveUserInfo(info: UserInfo): UserInfo {
+        edit.apply {
+            put("avatar", info.avatar)
+            put("nickname", info.nickname)
+        }
+        return info
+    }
+
+
+    // 在加载新信息的同时也保存到了本地
+    fun getLatestUserInfo(): UserInfo {
+        return saveUserInfo(UserService.getUserInfo(loginMsg.userId) ?: getLocalUserInfo())
     }
 
 }

@@ -3,6 +3,7 @@ package io.github.sky130.miwu.logic.dao
 import android.content.Context
 import io.github.sky130.miwu.MainApplication.Companion.context
 import io.github.sky130.miwu.MainApplication.Companion.loginMsg
+import io.github.sky130.miwu.logic.dao.database.AppDatabase
 import io.github.sky130.miwu.logic.model.user.LoginMsg
 import io.github.sky130.miwu.logic.model.user.UserInfo
 import io.github.sky130.miwu.logic.network.miot.UserService
@@ -14,6 +15,12 @@ object UserDAO {
     private val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)!!
 
     private val edit = SettingUtils(sharedPreferences)
+
+    fun logout() {
+        saveUserInfo(UserInfo("", "", ""))
+        saveUser(LoginMsg(true, "", "", "", "", "", "", ""))
+        AppDatabase.getDatabase().clearAllTables()
+    }
 
     fun getLocalUser(): LoginMsg {
         edit.apply {

@@ -5,7 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(indices = [Index(value = ["homeId"])])
+@Entity(indices = [Index(value = ["sceneId"], unique = true)])
 data class MiScene(
     @SerializedName("scene_id") val sceneId: String,
     @SerializedName("scene_name") val sceneName: String,

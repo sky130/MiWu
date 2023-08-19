@@ -19,7 +19,7 @@ data class MiHome(
     fun toEntity() = MiHomeEntity(homeId, homeName, userId, isShareHome)
 }
 
-@Entity(tableName = "MiHome", indices = [Index(value = ["homeId"])])
+@Entity(tableName = "MiHome", indices = [Index(value = ["homeId"], unique = true)])
 data class MiHomeEntity(
     val homeId: String, // 家庭Id
     val homeName: String, // 家庭名称

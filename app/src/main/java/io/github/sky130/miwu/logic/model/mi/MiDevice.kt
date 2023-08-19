@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["homeId"])])
+@Entity(indices = [Index(value = ["did"], unique = true)])
 data class MiDevice(
     val roomId: String, // 房间Id
     val roomName: String, // 房间名称

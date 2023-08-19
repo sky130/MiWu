@@ -7,14 +7,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.R
+import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.model.mi.MiDevice
 import io.github.sky130.miwu.util.GlideUtils
 import io.github.sky130.miwu.util.ViewUtils.addTouchScale
 
-class DeviceItemAdapter(val list: List<MiDevice>) :
+class DeviceItemAdapter(val homeSize:Int) :
     RecyclerView.Adapter<DeviceItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
+    val list:ArrayList<MiDevice>
+        get() = HomeDAO.getHome(homeSize)!!.deviceList
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val img: ImageView = view.findViewById(R.id.device_item_icon)
@@ -55,7 +58,6 @@ class DeviceItemAdapter(val list: List<MiDevice>) :
             true
         }
     }
-
 
     fun setOnClickListener(block: ((Int) -> Unit)) {
         this.block = block

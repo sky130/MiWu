@@ -27,7 +27,7 @@ class DeviceFragment : BaseFragment() {
         binding = FragmentMainDeviceBinding.inflate(layoutInflater)
 
         binding.swipe.setOnRefreshListener { // 刷新方法
-            refreshData()
+            refreshList()
         }
 
         binding.recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() { // 判断冲突
@@ -44,13 +44,13 @@ class DeviceFragment : BaseFragment() {
                     startDeviceActivity(list[it])
                 }
             }
-            refreshData()
+            refreshList()
         }
         return binding.root
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refreshData() {
+     override fun refreshList() {
         thread {
             HomeDAO.resetDeviceOnline {
                 runOnUiThread {

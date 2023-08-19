@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.GONE
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.VISIBLE
 import io.github.sky130.miwu.databinding.FragmentMainDeviceBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO

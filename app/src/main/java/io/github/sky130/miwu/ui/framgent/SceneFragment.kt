@@ -2,19 +2,18 @@ package io.github.sky130.miwu.ui.framgent
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.GONE
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.VISIBLE
 import io.github.sky130.miwu.databinding.FragmentMainSceneBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.network.MiotService
 import io.github.sky130.miwu.ui.adapter.SceneItemAdapter
 import io.github.sky130.miwu.util.TextUtils.toast
-import io.github.sky130.miwu.widget.ViewExtra
 import kotlin.concurrent.thread
 
 class SceneFragment : BaseFragment() {
@@ -48,6 +47,9 @@ class SceneFragment : BaseFragment() {
                 }
             }
             refreshData()
+        } else {
+            binding.recycler.visibility = GONE
+            binding.recycler.visibility = VISIBLE
         }
         return binding.root
     }

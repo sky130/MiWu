@@ -10,7 +10,7 @@
     <string name="toast_logging_in">登录中</string>
     <string name="device_tv_empty">暂不支持完整功能\n请持续关注后续版本</string>
     <string name="device_online">设备在线</string>
-    <string name="device_offline">设备不在线</string>
+    <string name="device_offline">设备离线</string>
     <string name="loading">加载中</string>
     <string name="scene">场景</string>
     <string name="settings_bar">设置</string>

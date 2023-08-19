@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.GONE
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.VISIBLE
 import io.github.sky130.miwu.databinding.FragmentMainDeviceBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.adapter.DeviceItemAdapter
@@ -16,7 +14,7 @@ import io.github.sky130.miwu.util.TextUtils.toast
 import kotlin.concurrent.thread
 
 
-class DeviceFragment : BaseFragment(){
+class DeviceFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMainDeviceBinding
 
@@ -40,8 +38,7 @@ class DeviceFragment : BaseFragment(){
             }
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
-            if (HomeDAO.getHome(0)!!.deviceList.size > 0) binding.empty.visibility =
-                GONE else binding.empty.visibility = VISIBLE
+            updateLayoutVisibility(0)
             binding.recycler.adapter = DeviceItemAdapter(0).apply {
                 setOnClickListener {
                     startDeviceActivity(list[it])
@@ -58,12 +55,12 @@ class DeviceFragment : BaseFragment(){
             HomeDAO.resetDeviceOnline {
                 runOnUiThread {
                     if (it) {
-                        binding.recycler.adapter!!.notifyDataSetChanged()
+                        updateLayoutVisibility(0)
                         if (binding.swipe.isRefreshing) {
                             binding.swipe.isRefreshing = false
                             "刷新完成".toast()
                         }
-                    }else{
+                    } else {
                         if (binding.swipe.isRefreshing) {
                             binding.swipe.isRefreshing = false
                             "刷新失败".toast()
@@ -75,4 +72,9 @@ class DeviceFragment : BaseFragment(){
         }
     }
 
+    fun updateLayoutVisibility(index: Int) {
+        val home = HomeDAO.getHome(index)
+        val isEmpty = home?.sceneList?.isEmpty() ?: true
+        binding.empty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+    }
 }

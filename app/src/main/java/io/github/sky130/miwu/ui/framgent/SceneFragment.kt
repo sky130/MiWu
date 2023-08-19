@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.GONE
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.VISIBLE
 import io.github.sky130.miwu.databinding.FragmentMainSceneBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.network.MiotService
@@ -38,8 +36,7 @@ class SceneFragment : BaseFragment() {
             }
         })
         if (HomeDAO.isInit() && HomeDAO.homeSize() > 0) {
-            if (HomeDAO.getHome(0)!!.sceneList.size > 0) binding.empty.visibility =
-                GONE else binding.empty.visibility = VISIBLE
+            updateLayoutVisibility(0)
             binding.recycler.adapter = SceneItemAdapter(0).apply {
                 setOnClickListener {
                     "「${list[it].sceneName}」已执行".toast()
@@ -59,8 +56,7 @@ class SceneFragment : BaseFragment() {
             HomeDAO.resetScene {
                 runOnUiThread {
                     if (it) {
-                        if (HomeDAO.getHome(0)!!.sceneList.size > 0) binding.empty.visibility =
-                            GONE else binding.empty.visibility = VISIBLE
+                        updateLayoutVisibility(0)
                         binding.recycler.adapter!!.notifyDataSetChanged()
                         if (binding.swipe.isRefreshing) {
                             binding.swipe.isRefreshing = false
@@ -78,4 +74,8 @@ class SceneFragment : BaseFragment() {
         }
     }
 
+    fun updateLayoutVisibility(index: Int) {
+        val home = HomeDAO.getHome(index)
+        binding.empty.visibility = if (home!!.sceneList.isEmpty()) View.VISIBLE else View.GONE
+    }
 }

@@ -24,6 +24,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         savedInstanceState: Bundle?,
     ): View {
         binding = DeviceOutletDefaultBinding.inflate(inflater)
+        manager.setDid(getDid())
         executor.execute {
             var url = ""
             HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
@@ -51,6 +52,9 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     piid,
                                     false
                                 )
+                                binding.switchOutlet.setOnStatusChangedListener {
+                                    // TODO 操作
+                                }
                             }
                         }
                     }

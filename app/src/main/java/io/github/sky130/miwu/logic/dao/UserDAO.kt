@@ -8,6 +8,8 @@ import io.github.sky130.miwu.logic.model.user.LoginMsg
 import io.github.sky130.miwu.logic.model.user.UserInfo
 import io.github.sky130.miwu.logic.network.miot.UserService
 import io.github.sky130.miwu.util.SettingUtils
+import java.io.File
+import kotlin.concurrent.thread
 
 
 object UserDAO {
@@ -20,6 +22,9 @@ object UserDAO {
         saveUserInfo(UserInfo("", "", ""))
         saveUser(LoginMsg(true, "", "", "", "", "", "", ""))
         AppDatabase.getDatabase().clearAllTables()
+        thread {
+            HomeDAO.init()
+        }
     }
 
     fun getLocalUser(): LoginMsg {

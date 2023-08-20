@@ -78,10 +78,10 @@ class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(cont
         block?.invoke(boolean)
         if (boolean) {
             binding.miSwitchButton.setBackgroundResource(R.drawable.bg_swicth_button_on)
-            binding.title.text = "开启"
+            binding.title.text = "点击开启"
         } else {
             binding.miSwitchButton.setBackgroundResource(R.drawable.bg_swicth_button_off)
-            binding.title.text = "关闭"
+            binding.title.text = "点击关闭"
         }
     }
 

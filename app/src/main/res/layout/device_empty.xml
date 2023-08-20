@@ -15,20 +15,19 @@
         android:src="@drawable/mi_icon_small" />
 
     <TextView
-        android:id="@+id/deviceOnline"
+        android:id="@+id/deviceStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/deviceImage"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginVertical="12dp"
         tools:text="@string/device_online" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/deviceOnline"
+        android:layout_below="@id/deviceStatus"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
         android:textSize="10sp"
         android:gravity="center"
         android:text="@string/device_tv_empty" />

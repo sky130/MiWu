@@ -13,10 +13,10 @@
         android:id="@+id/miSwitchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_power"
         android:adjustViewBounds="true"
         android:maxWidth="35dp"
         android:padding="5dp"
+        android:src="@drawable/ic_power"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,14 +25,13 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="关闭"
         android:layout_marginStart="5dp"
-        android:textColor="@color/white"
         android:includeFontPadding="false"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/miSwitchButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="点击关闭" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

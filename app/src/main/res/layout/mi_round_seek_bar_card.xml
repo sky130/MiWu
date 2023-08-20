@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:text="亮度"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
         android:layout_marginStart="3dp"
         android:includeFontPadding="false"
         android:text="|"
-        android:textSize="19sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintStart_toEndOf="@+id/title"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
         android:text="100%"
-        android:textSize="19sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/stub"
         app:layout_constraintStart_toEndOf="@+id/stub"
         app:layout_constraintTop_toTopOf="@+id/stub" />

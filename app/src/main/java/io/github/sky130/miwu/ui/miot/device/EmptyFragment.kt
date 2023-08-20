@@ -32,8 +32,8 @@ class EmptyFragment : BaseFragment() {
             // 更新UI需要切换到主线程
             runOnUiThread {
                 if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
-                if (isOnline) binding.deviceOnline.text =
-                    getString(R.string.device_online) else binding.deviceOnline.text =
+                if (isOnline) binding.deviceStatus.text =
+                    getString(R.string.device_online) else binding.deviceStatus.text =
                     getString(R.string.device_offline)
             }
         }

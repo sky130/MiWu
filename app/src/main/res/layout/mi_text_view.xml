@@ -18,7 +18,7 @@
         android:singleLine="true"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="19sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <View
@@ -36,5 +36,5 @@
         android:includeFontPadding="false"
         android:singleLine="true"
         android:text="100%"
-        android:textSize="19sp" />
+        android:textSize="14sp" />
 </LinearLayout>

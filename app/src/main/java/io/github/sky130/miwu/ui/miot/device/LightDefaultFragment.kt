@@ -26,9 +26,8 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
         binding = DeviceLightDefaultBinding.inflate(inflater)
         manager.setDid(getDid())
         executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""
-            home?.deviceList?.forEach { device ->
+            HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
                 if (device.model == getModel()) {
                     url = device.iconUrl
                 }

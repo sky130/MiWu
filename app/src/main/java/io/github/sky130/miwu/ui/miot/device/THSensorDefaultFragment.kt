@@ -27,10 +27,9 @@ class THSensorDefaultFragment(private val miotServices: ArrayList<MiotService>) 
         binding = DeviceThSensorDefaultBinding.inflate(inflater)
         manager.setDid(getDid())
         executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""
             var isOnline = false
-            home?.deviceList?.forEach { device ->
+            HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
                 if (device.model == getModel()) {
                     url = device.iconUrl
                     isOnline = device.isOnline

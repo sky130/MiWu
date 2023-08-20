@@ -22,7 +22,7 @@
             android:id="@+id/deviceStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="12dp"
+            android:layout_marginBottom="12dp"
             tools:text="已关闭" />
 
         <io.github.sky130.miwu.widget.MiSwitchCard

@@ -9,34 +9,27 @@ import io.github.sky130.miwu.databinding.DeviceEmptyBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.util.GlideUtils
-import java.util.concurrent.Executors
 
 class EmptyFragment : BaseFragment() {
     private lateinit var binding: DeviceEmptyBinding
-    private val executor = Executors.newSingleThreadExecutor()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?,
     ): View {
         binding = DeviceEmptyBinding.inflate(inflater)
-        executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
-            var url = ""
-            var isOnline = false
-            home?.deviceList?.forEach { device ->
-                if (device.model == getModel()) {
-                    url = device.iconUrl
-                    isOnline = device.isOnline
-                }
-            }
-            // 更新UI需要切换到主线程
-            runOnUiThread {
-                if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
-                if (isOnline) binding.deviceStatus.text =
-                    getString(R.string.device_online) else binding.deviceStatus.text =
-                    getString(R.string.device_offline)
+        var url = ""
+        var isOnline = false
+        HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
+            if (device.model == getModel()) {
+                url = device.iconUrl
+                isOnline = device.isOnline
             }
         }
+        if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+        if (isOnline) binding.deviceStatus.text =
+            getString(R.string.device_online) else binding.deviceStatus.text =
+            getString(R.string.device_offline)
+
         return binding.root
     }
 }

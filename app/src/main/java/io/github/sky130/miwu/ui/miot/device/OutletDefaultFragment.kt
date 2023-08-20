@@ -12,12 +12,10 @@ import io.github.sky130.miwu.logic.network.MiotSpecService
 import io.github.sky130.miwu.ui.manager.MiWidgetManager
 import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.util.GlideUtils
-import java.util.concurrent.Executors
 
 class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : BaseFragment() {
 
     private lateinit var binding: DeviceOutletDefaultBinding
-    private val executor = Executors.newSingleThreadExecutor()
     private val manager = MiWidgetManager()
 
     override fun onCreateView(
@@ -26,19 +24,13 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
     ): View {
         binding = DeviceOutletDefaultBinding.inflate(inflater)
         manager.setDid(getDid())
-        executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
-            var url = ""
-            home?.deviceList?.forEach { device ->
-                if (device.model == getModel()) {
-                    url = device.iconUrl
-                }
-            }
-            // 更新UI需要切换到主线程
-            runOnUiThread {
-                if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+        var url = ""
+        HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
+            if (device.model == getModel()) {
+                url = device.iconUrl
             }
         }
+        if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
         for (service in miotServices) { // 遍历服务
             val siid = service.iid // 获取当前服务的iid
             val serviceType = MiotSpecService.parseUrn(service.type)?.value ?: continue // 获取当前服务类型
@@ -58,9 +50,12 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     false
                                 )
                                 binding.switchOutlet.setOnStatusChangedListener {
-                                    if (binding.switchOutlet.getChecked()) binding.deviceStatus.text = getString(
-                                        R.string.device_opened) else binding.deviceStatus.text = getString(
-                                        R.string.device_closed)
+                                    if (binding.switchOutlet.getChecked()) binding.deviceStatus.text =
+                                        getString(
+                                            R.string.device_opened
+                                        ) else binding.deviceStatus.text = getString(
+                                        R.string.device_closed
+                                    )
                                 }
                             }
                         }

@@ -20,9 +20,10 @@ class EmptyFragment : BaseFragment() {
     ): View {
         binding = DeviceEmptyBinding.inflate(inflater)
         executor.execute {
+            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""
             var isOnline = false
-            HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
+            home?.deviceList?.forEach { device ->
                 if (device.model == getModel()) {
                     url = device.iconUrl
                     isOnline = device.isOnline

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.DeviceOutletDefaultBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.model.miot.MiotService
@@ -24,15 +25,18 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         savedInstanceState: Bundle?,
     ): View {
         binding = DeviceOutletDefaultBinding.inflate(inflater)
-        manager.setDid(getDid())
         executor.execute {
+            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""
-            HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
+            home?.deviceList?.forEach { device ->
                 if (device.model == getModel()) {
                     url = device.iconUrl
                 }
             }
-            if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+            // 更新UI需要切换到主线程
+            runOnUiThread {
+                if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+            }
         }
         for (service in miotServices) { // 遍历服务
             val siid = service.iid // 获取当前服务的iid
@@ -53,7 +57,9 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     false
                                 )
                                 binding.switchOutlet.setOnStatusChangedListener {
-                                    // TODO 操作
+                                    if (binding.switchOutlet.getChecked()) binding.deviceStatus.text = getString(
+                                        R.string.device_opened) else binding.deviceStatus.text = getString(
+                                        R.string.device_closed)
                                 }
                             }
                         }

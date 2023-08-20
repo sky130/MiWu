@@ -20,7 +20,6 @@ object MiotService {
         val homeData = // 发送的数据
             " {\"fg\": false, \"fetch_share\": true, \"fetch_share_dev\": true, \"limit\": 300, \"app_ver\": 7}"
         val homeResultJson = OkHttpUtils.postData(homeUrlPath, homeData, loginMsg) ?: return null
-        homeResultJson.log()
 
         data class Room(
             @SerializedName("id")
@@ -180,12 +179,12 @@ object MiotService {
         val homeData = "{\"home_owner\":${userId},\"home_id\":${homeId},\"limit\":200}"
         val homeResultJson = OkHttpUtils.postData(deviceUrlPath, homeData, loginMsg) ?: return null
 
-        data class Result(@SerializedName("device_info") val deviceList: ArrayList<HomeDeviceInfo>)
+        data class Result(@SerializedName("device_info") val deviceList: ArrayList<HomeDeviceInfo>?)
         data class HomeResult(val code: Int, val result: Result)
 
         val deviceResult = Gson().fromJson(homeResultJson, HomeResult::class.java) // 全部设备的信息
         if (deviceResult.code != 0) return null
-        return deviceResult.result.deviceList
+        return deviceResult.result.deviceList ?: ArrayList()
     }
 
     data class HomeDeviceInfo(

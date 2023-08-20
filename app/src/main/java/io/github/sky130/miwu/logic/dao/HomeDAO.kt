@@ -19,7 +19,6 @@ object HomeDAO {
     private val edit = SettingUtils(sharedPreferences)
 
     fun init() {
-        isDatabaseInit().toString().log()
         if (isDatabaseInit()) {
             miInfo = getMiInfo()
         } else {
@@ -39,7 +38,7 @@ object HomeDAO {
         if (!isInit()) return block(false)
         miInfo!!.homeList.forEach { home ->
             val list =
-                MiotService.getHomeDevice(home.userId, home.homeId) ?: return@forEach block(false)
+                MiotService.getHomeDevice(home.userId, home.homeId) ?: return@forEach
             list.forEach { homeDevice ->
                 home.deviceList.forEach {
                     if (homeDevice.did == it.did)

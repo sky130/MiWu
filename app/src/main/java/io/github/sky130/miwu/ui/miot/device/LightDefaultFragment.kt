@@ -43,6 +43,14 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                     when (urn2.value) {
                         "on" -> {
                             manager.addView(binding.switchLight, urn2.value, siid, piid, false)
+                            binding.switchLight.setOnStatusChangedListener {
+                                if (it) binding.deviceStatus.text =
+                                    getString(
+                                        R.string.device_opened
+                                    ) else binding.deviceStatus.text = getString(
+                                    R.string.device_closed
+                                )
+                            }
                         }
 
                         "brightness" -> {

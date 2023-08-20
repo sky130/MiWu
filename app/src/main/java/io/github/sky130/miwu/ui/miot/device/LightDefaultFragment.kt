@@ -9,6 +9,7 @@ import io.github.sky130.miwu.databinding.DeviceLightDefaultBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.model.miot.MiotService
 import io.github.sky130.miwu.logic.network.MiotSpecService
+import io.github.sky130.miwu.ui.manager.MiWidgetManager
 import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.util.GlideUtils
 import java.util.concurrent.Executors
@@ -17,11 +18,13 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
 
     private lateinit var binding: DeviceLightDefaultBinding
     private val executor = Executors.newSingleThreadExecutor()
+    private val manager = MiWidgetManager()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?,
     ): View {
         binding = DeviceLightDefaultBinding.inflate(inflater)
+        manager.setDid(getDid())
         executor.execute {
             val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""
@@ -47,39 +50,41 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                     val urn2 = MiotSpecService.parseUrn(x.type) ?: continue
                     when (urn2.value) {
                         "on" -> {
-                            binding.switchLight.apply {
-                                setSiid(siid)
-                                setPiid(piid)
-                                visibility = View.VISIBLE
-                            }
+                            manager.addView(binding.switchLight, urn2.value, siid, piid, false)
                         }
 
                         "brightness" -> {
-                            binding.brightness.apply {
-                                setSiid(siid)
-                                setPiid(piid)
-                                visibility = View.VISIBLE
-                                x.valueRange ?: return@apply
-                                getSeekBar().setMinProgress(x.valueRange[0].toInt())
-                                getSeekBar().setMaxProgress(x.valueRange[1].toInt())
-                            }
+                            x.valueRange ?: continue
+                            manager.addView(
+                                binding.brightness,
+                                urn2.value,
+                                siid,
+                                piid,
+                                0f,
+                                x.valueRange[1].toInt(),
+                                x.valueRange[0].toInt(),
+                            )
                         }
 
-                        "color-temperature"->{
-                            binding.colorTemperature.apply {
-                                setSiid(siid)
-                                setPiid(piid)
-                                visibility = View.VISIBLE
-                                x.valueRange ?: return@apply
-                                getSeekBar().setMinProgress(x.valueRange[0].toInt())
-                                getSeekBar().setMaxProgress(x.valueRange[1].toInt())
-                            }
+                        "color-temperature" -> {
+                            x.valueRange ?: continue
+                            manager.addView(
+                                binding.colorTemperature,
+                                urn2.value,
+                                siid,
+                                piid,
+                                0f,
+                                x.valueRange[1].toInt(),
+                                x.valueRange[0].toInt(),
+                            )
                         }
                     }
                     x.type
                 }
             }
         }
+        manager.init()
+        manager.update()
         return binding.root
     }
 

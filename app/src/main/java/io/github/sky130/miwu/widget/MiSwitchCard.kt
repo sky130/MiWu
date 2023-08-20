@@ -16,66 +16,27 @@ import kotlin.concurrent.thread
 class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(context, attr),
     ViewExtra {
     private var binding: MiSwitchCardBinding
-    private var block: ((Boolean) -> Unit)? = null
-    private lateinit var mActivity: DeviceActivity
-    private lateinit var did: String
-    private var siid: Int
-    private var piid: Int
     private var isChecked = false
+    private val listener = ArrayList<(Boolean) -> Unit>()
 
-
-    fun setOnProgressChangedListener(block: (Boolean) -> Unit) {
-        this.block = block
-    }
 
     init {
         binding = MiSwitchCardBinding.inflate(LayoutInflater.from(context), this, true)
         context.obtainStyledAttributes(attr, R.styleable.MiSwitchCard).apply {
-            siid = getInt(R.styleable.MiSwitchCard_siid, 0)
-            piid = getInt(R.styleable.MiSwitchCard_piid, 0)
             recycle()
         }
-        if (!isInEditMode) {
-            mActivity = context as DeviceActivity
-            did = mActivity.did
-            setOnProgressChangedListener {
-                thread {
-                    DeviceService.setDeviceATT(did, siid, piid, it)
-                }
-            }
-            setOnClickListener {
-                setChecked(!isChecked)
-            }
-            reset()
+        setOnClickListener {
+            setChecked(!isChecked)
         }
     }
 
-    fun setSiid(siid: Int) {
-        this.siid = siid
-        if (siid == 0 || piid == 0) return
-        reset()
-    }
-
-    fun setPiid(piid: Int) {
-        this.piid = piid
-        if (siid == 0 || piid == 0) return
-        reset()
-    }
-
-    private fun reset() {
-        if (siid == 0 || piid == 0) return
-        thread {
-            val boolean =
-                DeviceService.getDeviceATT(did, siid, piid)?.getValue(false)!!
-            runOnUiThread {
-                setChecked(boolean)
-            }
-        }
+    fun setOnStatusChangedListener(block: (Boolean) -> Unit) {
+        listener.add(block)
     }
 
     fun setChecked(boolean: Boolean) {
+        listener.forEach { it(boolean) }
         this.isChecked = boolean
-        block?.invoke(boolean)
         if (boolean) {
             binding.miSwitchButton.setBackgroundResource(R.drawable.bg_swicth_button_on)
             binding.title.text = "点击开启"

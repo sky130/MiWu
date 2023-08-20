@@ -16,52 +16,17 @@ class MiTextView(context: Context, attr: AttributeSet) : LinearLayout(context, a
     private var binding: MiTextViewBinding
     private val unit: String
     private var block: ((Int) -> Unit)? = null
-    private lateinit var mActivity: DeviceActivity
-    private lateinit var did: String
-    private var siid: Int
-    private var piid: Int
 
     init {
         binding = MiTextViewBinding.inflate(LayoutInflater.from(context), this, true)
         context.obtainStyledAttributes(attr, R.styleable.MiTextView).apply {
             binding.title.text = getString(R.styleable.MiTextView_title).toString()
             unit = getString(R.styleable.MiTextView_unit).toString()
-            siid = getInt(R.styleable.MiTextView_siid, 0)
-            piid = getInt(R.styleable.MiTextView_piid, 0)
             setText("0")
             recycle()
-            if (!isInEditMode) {
-                mActivity = context as DeviceActivity
-                did = mActivity.did
-                reset()
-            }
-            reset()
         }
     }
 
-    fun setSiid(siid: Int) {
-        this.siid = siid
-        if (siid == 0 || piid == 0) return
-        reset()
-    }
-
-    fun setPiid(piid: Int) {
-        this.piid = piid
-        if (siid == 0 || piid == 0) return
-        reset()
-    }
-
-    private fun reset() {
-        if (siid == 0 || piid == 0) return
-        thread {
-            val text =
-                DeviceService.getDeviceATT(did, siid, piid)?.value.toString()
-            runOnUiThread {
-                setText(text)
-            }
-        }
-        setText(binding.value.text)
-    }
 
     @SuppressLint("SetTextI18n")
     fun setText(text: CharSequence) {

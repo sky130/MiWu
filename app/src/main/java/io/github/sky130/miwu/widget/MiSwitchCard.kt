@@ -34,7 +34,7 @@ class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(cont
     fun setChecked(boolean: Boolean) {
         listener.forEach { it(boolean) }
         this.isChecked = boolean
-        if (boolean) {
+        if (!boolean) {
             binding.miSwitchButton.setBackgroundResource(R.drawable.bg_swicth_button_on)
             binding.title.text = "点击开启"
         } else {
@@ -42,9 +42,4 @@ class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(cont
             binding.title.text = "点击关闭"
         }
     }
-
-    fun getChecked(): Boolean {
-        return isChecked
-    }
-
 }

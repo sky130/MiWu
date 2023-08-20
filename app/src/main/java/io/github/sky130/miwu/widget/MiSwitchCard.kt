@@ -44,9 +44,4 @@ class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(cont
             binding.title.text = "点击关闭"
         }
     }
-
-    fun getChecked(): Boolean {
-        return isChecked
-    }
-
 }

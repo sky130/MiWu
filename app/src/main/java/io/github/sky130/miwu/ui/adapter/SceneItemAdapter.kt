@@ -1,9 +1,11 @@
 package io.github.sky130.miwu.ui.adapter
 
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.github.sky130.miwu.R
@@ -16,12 +18,14 @@ class SceneItemAdapter() :
     RecyclerView.Adapter<SceneItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
+    val handler = Handler()
     val list: List<MiScene>
         get() = HomeDAO.getHome(HomeDAO.getHomeIndex())!!.sceneList
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.title)
-        val img: ImageView = view.findViewById(R.id.imageView)
+        val title: TextView = view.findViewById(R.id.scene_item_name)
+        val img: ImageView = view.findViewById(R.id.scene_item_icon)
+        val sceneLayout:LinearLayout = view.findViewById(R.id.scene_layout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +44,12 @@ class SceneItemAdapter() :
         holder.itemView.addTouchScale()
         holder.itemView.setOnClickListener {
             block?.invoke(position)
+            holder.sceneLayout.isEnabled = false
+            // 延迟2秒后执行解禁操作
+            handler.postDelayed({
+                // 解禁按钮
+                holder.sceneLayout.isEnabled = true
+            }, 1000) // 延迟时间，单位为毫秒
         }
         holder.itemView.setOnLongClickListener {
             blockLong?.invoke(position)

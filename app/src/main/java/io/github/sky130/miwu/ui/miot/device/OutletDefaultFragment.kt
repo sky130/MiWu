@@ -62,6 +62,45 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                     }
                 }
             }
+            for (x in service.properties) {
+                val type2 = MiotSpecService.parseUrn(x.type)?.value ?: continue
+                val piid = x.iid
+                when (type2) {
+                    "temperature" -> {
+                        manager.addView(binding.temperature, type2, siid, piid, 0)
+                    }
+
+                    "working-time" -> {
+                        manager.addView(binding.workingTime, type2, siid, piid, 0)
+                    }
+                }
+            }
+        }
+        for (i in miotServices) {
+            val type = MiotSpecService.parseUrn(i.type)?.value ?: continue
+            if (type != "power-consumption") continue
+            val siid = i.iid
+            for (x in i.properties) {
+                val type2 = MiotSpecService.parseUrn(x.type)?.value ?: continue
+                val piid = x.iid
+                when (type2) {
+                    "power-consumption" -> {
+                        manager.addView(binding.powerConsumption, type2, siid, piid, 0)
+                    }
+
+                    "electric-current" -> {
+                        manager.addView(binding.electricCurrent, type2, siid, piid, 0)
+                    }
+
+                    "voltage" -> {
+                        manager.addView(binding.voltage, type2, siid, piid, 0)
+                    }
+
+                    "electric-power" -> {
+                        manager.addView(binding.electricPower, type2, siid, piid, 0)
+                    }
+                }
+            }
         }
         manager.init()
         manager.update()

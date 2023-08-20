@@ -32,6 +32,57 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp" />
 
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/working_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:title="工作时间"
+            app:unit=" min" />
+
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:title="温度"
+            app:unit=" ℃" />
+
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/power_consumption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:title="功耗"
+            app:unit=" W" />
+
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/electric_current"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:title="电流"
+            app:unit=" A" />
+
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/voltage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:title="电压"
+            app:unit=" V" />
+
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/electric_power"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            app:title="功率"
+            app:unit=" W" >
+
+        </io.github.sky130.miwu.widget.MiTextView>
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

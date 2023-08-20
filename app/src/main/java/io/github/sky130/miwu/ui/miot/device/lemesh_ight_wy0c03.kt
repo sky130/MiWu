@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.github.sky130.miwu.R
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.util.GlideUtils
@@ -32,6 +33,9 @@ class lemesh_ight_wy0c03() : BaseFragment() {
             // 更新UI需要切换到主线程
             runOnUiThread {
                 if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+                if (binding.switch.getChecked()) binding.deviceStatus.text =
+                    getString(R.string.device_opened) else binding.deviceStatus.text =
+                    getString(R.string.device_closed)
             }
         }
         return binding.root

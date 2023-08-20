@@ -7,9 +7,6 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.MiSwitchCardBinding
-import io.github.sky130.miwu.logic.network.DeviceService
-import io.github.sky130.miwu.ui.DeviceActivity
-import kotlin.concurrent.thread
 
 
 @SuppressLint("ClickableViewAccessibility")
@@ -47,7 +44,7 @@ class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(cont
     }
 
     fun getChecked(): Boolean {
-        return isChecked
+        return !isChecked
     }
 
 }

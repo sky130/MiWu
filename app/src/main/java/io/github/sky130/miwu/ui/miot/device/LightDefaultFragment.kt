@@ -50,7 +50,6 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                             binding.switchLight.apply {
                                 setSiid(siid)
                                 setPiid(piid)
-                                visibility = View.VISIBLE
                             }
                         }
 
@@ -58,7 +57,6 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                             binding.brightness.apply {
                                 setSiid(siid)
                                 setPiid(piid)
-                                visibility = View.VISIBLE
                                 x.valueRange ?: return@apply
                                 getSeekBar().setMinProgress(x.valueRange[0].toInt())
                                 getSeekBar().setMaxProgress(x.valueRange[1].toInt())
@@ -69,7 +67,6 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                             binding.colorTemperature.apply {
                                 setSiid(siid)
                                 setPiid(piid)
-                                visibility = View.VISIBLE
                                 x.valueRange ?: return@apply
                                 getSeekBar().setMinProgress(x.valueRange[0].toInt())
                                 getSeekBar().setMaxProgress(x.valueRange[1].toInt())

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
@@ -23,7 +24,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.DeviceActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false" />

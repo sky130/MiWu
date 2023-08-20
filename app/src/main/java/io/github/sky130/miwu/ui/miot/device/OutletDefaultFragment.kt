@@ -25,6 +25,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         savedInstanceState: Bundle?,
     ): View {
         binding = DeviceOutletDefaultBinding.inflate(inflater)
+        manager.setDid(getDid())
         executor.execute {
             val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="5dp"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginVertical="3dp"
     android:background="@drawable/bg_item"
     android:padding="12dp"
     tools:ignore="UseCompoundDrawables">
@@ -13,8 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:singleLine="true"
         android:includeFontPadding="false"
+        android:singleLine="true"
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="19sp"
@@ -22,18 +23,18 @@
 
     <View
         android:layout_width="2dp"
-        android:background="@color/lrc_bg"
+        android:layout_height="match_parent"
         android:layout_marginHorizontal="6dp"
         android:layout_marginVertical="2dp"
-        android:layout_height="match_parent" />
+        android:background="@color/lrc_bg" />
 
     <TextView
         android:id="@+id/value"
-        android:singleLine="true"
-        android:includeFontPadding="false"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:includeFontPadding="false"
+        android:singleLine="true"
         android:text="100%"
         android:textSize="19sp" />
 </LinearLayout>

@@ -8,17 +8,16 @@
     <io.github.sky130.miwu.widget.MiTextView
         android:id="@+id/temperature"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:title="温度"
         app:unit=" ℃" />
 
     <io.github.sky130.miwu.widget.MiTextView
         android:id="@+id/relative_humidity"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:visibility="gone"
         app:title="湿度"
         app:unit=" %" />
 

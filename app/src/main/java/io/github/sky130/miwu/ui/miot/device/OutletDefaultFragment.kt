@@ -58,20 +58,14 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     )
                                 }
                             }
-                        }
-                    }
-                }
-            }
-            for (x in service.properties) {
-                val type2 = MiotSpecService.parseUrn(x.type)?.value ?: continue
-                val piid = x.iid
-                when (type2) {
-                    "temperature" -> {
-                        manager.addView(binding.temperature, type2, siid, piid, 0)
-                    }
+                            "temperature" -> {
+                                manager.addView(binding.temperature, propertyType, siid, piid, 0)
+                            }
 
-                    "working-time" -> {
-                        manager.addView(binding.workingTime, type2, siid, piid, 0)
+                            "working-time" -> {
+                                manager.addView(binding.workingTime, propertyType, siid, piid, 0)
+                            }
+                        }
                     }
                 }
             }

@@ -25,9 +25,8 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
     ): View {
         binding = DeviceOutletDefaultBinding.inflate(inflater)
         executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
             var url = ""
-            home?.deviceList?.forEach { device ->
+            HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
                 if (device.model == getModel()) {
                     url = device.iconUrl
                 }

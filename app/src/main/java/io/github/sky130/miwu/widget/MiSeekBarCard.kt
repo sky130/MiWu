@@ -53,7 +53,7 @@ class MiSeekBarCard(context: Context, attr: AttributeSet) : ConstraintLayout(con
 
     @SuppressLint("SetTextI18n")
     fun setCurrentProgress(progress: Number) {
-        if (isInTouchMode) return
+        if (isFocusableInTouchMode) return
         binding.seekbar.progress = progress.toInt()
         binding.value.text = "${progress.toInt()}$unit"
     }

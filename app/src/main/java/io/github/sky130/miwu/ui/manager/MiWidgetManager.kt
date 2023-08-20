@@ -107,7 +107,8 @@ class MiWidgetManager {
     }
 
     fun notify(time: Long) {
-        if (time <= 500) return
+        if (time <= 1000) return
+        cancelNotify()
         this.time = time
         handler.postDelayed(runnable, time)
     }
@@ -115,6 +116,7 @@ class MiWidgetManager {
     fun cancelNotify(){
         handler.removeCallbacks(runnable)
     }
+
 
     @Synchronized
     fun update() {
@@ -148,11 +150,13 @@ class MiWidgetManager {
     }
 
     private fun launch(block: () -> Unit) { // 用于网络请求
+        cancelNotify()
         scope.launch {
             withContext(Dispatchers.IO) {
                 block()
             }
         }
+        notify(time)
     }
 
     private fun runOnUiThread(block: () -> Unit) {

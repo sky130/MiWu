@@ -89,9 +89,12 @@ object OkHttpUtils {
                 "PassportDeviceId=${loginMsg.deviceId};userId=${loginMsg.userId};serviceToken=$serviceToken;"
             )
             .build()
-
-        val response = client.newCall(request).execute()
-        return response.body?.string()
+        return try {
+            val response = client.newCall(request).execute()
+            response.body?.string()
+        }catch (e:Exception){
+            null
+        }
     }
 
 

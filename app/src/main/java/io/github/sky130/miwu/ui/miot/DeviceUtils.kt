@@ -6,6 +6,7 @@ import io.github.sky130.miwu.startActivity
 import io.github.sky130.miwu.ui.DeviceActivity
 import io.github.sky130.miwu.ui.miot.device.EmptyFragment
 import io.github.sky130.miwu.ui.miot.device.LightDefaultFragment
+import io.github.sky130.miwu.ui.miot.device.OutletDefaultFragment
 import io.github.sky130.miwu.ui.miot.device.THSensorDefaultFragment
 import kotlin.concurrent.thread
 
@@ -41,6 +42,10 @@ object DeviceUtils {
 
                             "temperature-humidity-sensor" -> {
                                 THSensorDefaultFragment(miotDevice.services)
+                            }
+
+                            "outlet" -> {
+                                OutletDefaultFragment(miotDevice.services)
                             }
 
                             else -> {

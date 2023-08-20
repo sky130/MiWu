@@ -54,6 +54,20 @@ class THSensorDefaultFragment(private val miotServices: ArrayList<MiotService>) 
                 }
             }
         }
+        for (i in miotServices) {
+            val type = MiotSpecService.parseUrn(i.type)?.value ?: continue
+            if (type != "battery") continue
+            val siid = i.iid
+            for (x in i.properties) {
+                val type2 = MiotSpecService.parseUrn(x.type)?.value ?: continue
+                val piid = x.iid
+                when (type2) {
+                    "battery-level" -> {
+                        manager.addView(binding.battery, type2, siid, piid, 0)
+                    }
+                }
+            }
+        }
         manager.init()
         manager.update()
         return binding.root

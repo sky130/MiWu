@@ -42,6 +42,15 @@
             app:title="湿度"
             app:unit=" %" />
 
+        <io.github.sky130.miwu.widget.MiTextView
+            android:id="@+id/battery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:visibility="gone"
+            app:title="电量"
+            app:unit=" %" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

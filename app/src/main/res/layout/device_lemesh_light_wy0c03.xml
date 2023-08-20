@@ -26,7 +26,7 @@
             tools:text="@string/device_opened" />
 
         <io.github.sky130.miwu.widget.MiSwitchCard
-            android:id="@+id/switch"
+            android:id="@+id/switch_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:piid="1"

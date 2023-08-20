@@ -33,7 +33,7 @@ class lemesh_ight_wy0c03() : BaseFragment() {
             // 更新UI需要切换到主线程
             runOnUiThread {
                 if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
-                if (binding.switch.getChecked()) binding.deviceStatus.text =
+                if (binding.switchLight.getChecked()) binding.deviceStatus.text =
                     getString(R.string.device_opened) else binding.deviceStatus.text =
                     getString(R.string.device_closed)
             }

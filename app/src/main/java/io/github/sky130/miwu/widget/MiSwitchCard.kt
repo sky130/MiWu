@@ -86,7 +86,7 @@ class MiSwitchCard(context: Context, attr: AttributeSet) : ConstraintLayout(cont
     }
 
     fun getChecked(): Boolean {
-        return isChecked
+        return !isChecked
     }
 
 }

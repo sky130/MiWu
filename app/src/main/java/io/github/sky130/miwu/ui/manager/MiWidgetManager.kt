@@ -1,5 +1,7 @@
 package io.github.sky130.miwu.ui.manager
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -22,6 +24,14 @@ class MiWidgetManager {
     private val job = Job()
     private val scope = CoroutineScope(job)
     private lateinit var did: String
+    private val handler = Handler(Looper.getMainLooper())
+    private var time = 0L
+    private val runnable = object : Runnable {
+        override fun run() {
+            update()
+            handler.postDelayed(this, time)
+        }
+    }
 
     private data class ViewItem(
         val view: View,
@@ -59,9 +69,9 @@ class MiWidgetManager {
                     view.getSeekBar().apply {
                         setMaxProgress(i.max)
                         setMinProgress(i.min)
-                        setOnProgressChanged(true){
+                        setOnProgressChanged(true) {
                             launch {
-                                DeviceService.setDeviceATT(did,i.siid,i.piid,it)
+                                DeviceService.setDeviceATT(did, i.siid, i.piid, it)
                             }
                         }
                     }
@@ -72,9 +82,9 @@ class MiWidgetManager {
                     view.getSeekBar().apply {
                         setMaxProgress(i.max)
                         setMinProgress(i.min)
-                        setOnProgressChanged(true){
+                        setOnProgressChanged(true) {
                             launch {
-                                DeviceService.setDeviceATT(did,i.siid,i.piid,it)
+                                DeviceService.setDeviceATT(did, i.siid, i.piid, it)
                             }
                         }
                     }
@@ -84,7 +94,7 @@ class MiWidgetManager {
                 is MiSwitchCard -> {
                     view.setOnStatusChangedListener {
                         launch {
-                            DeviceService.setDeviceATT(did,i.siid,i.piid,it)
+                            DeviceService.setDeviceATT(did, i.siid, i.piid, it)
                         }
                     }
                 }
@@ -96,6 +106,17 @@ class MiWidgetManager {
         }
     }
 
+    fun notify(time: Long) {
+        if (time <= 500) return
+        this.time = time
+        handler.postDelayed(runnable, time)
+    }
+
+    fun cancelNotify(){
+        handler.removeCallbacks(runnable)
+    }
+
+    @Synchronized
     fun update() {
         for (i in viewMap.values) {
             launch {

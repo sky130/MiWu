@@ -103,25 +103,27 @@ object MiotService {
                     miHome.roomList.add(miRoom)
                 }
 
-                val deviceInfo = getHomeDevice(miHome.userId, miHome.homeId) ?: continue
-                for (x in deviceInfo) { // 嵌套循环
-                    for (y in miHome.roomList) {
-                        if (x.did in y.deviceIdList) { // 判断是否在房间中
-                            y.apply {
-                                val miDevice = MiDevice(
-                                    roomId,
-                                    roomName,
-                                    homeId,
-                                    homeName,
-                                    x.name,
-                                    x.model,
-                                    x.did,
-                                    x.isOnline,
-                                    x.specType,
-                                    getModelIconUrl(x.model) ?: ""
-                                )
-                                y.deviceList.add(miDevice)
-                                miHome.deviceList.add(miDevice)
+                val deviceInfo = getHomeDevice(miHome.userId, miHome.homeId)
+                if (deviceInfo != null){
+                    for (x in deviceInfo) { // 嵌套循环
+                        for (y in miHome.roomList) {
+                            if (x.did in y.deviceIdList) { // 判断是否在房间中
+                                y.apply {
+                                    val miDevice = MiDevice(
+                                        roomId,
+                                        roomName,
+                                        homeId,
+                                        homeName,
+                                        x.name,
+                                        x.model,
+                                        x.did,
+                                        x.isOnline,
+                                        x.specType,
+                                        getModelIconUrl(x.model) ?: ""
+                                    )
+                                    y.deviceList.add(miDevice)
+                                    miHome.deviceList.add(miDevice)
+                                }
                             }
                         }
                     }

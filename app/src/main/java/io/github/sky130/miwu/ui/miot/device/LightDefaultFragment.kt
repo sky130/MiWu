@@ -87,6 +87,10 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        manager.cancelNotify()
+    }
 
 
 }

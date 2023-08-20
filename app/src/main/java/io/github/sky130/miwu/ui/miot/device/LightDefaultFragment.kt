@@ -12,12 +12,10 @@ import io.github.sky130.miwu.logic.network.MiotSpecService
 import io.github.sky130.miwu.ui.manager.MiWidgetManager
 import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.util.GlideUtils
-import java.util.concurrent.Executors
 
 class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : BaseFragment() {
 
     private lateinit var binding: DeviceLightDefaultBinding
-    private val executor = Executors.newSingleThreadExecutor()
     private val manager = MiWidgetManager()
 
     override fun onCreateView(
@@ -25,22 +23,16 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
     ): View {
         binding = DeviceLightDefaultBinding.inflate(inflater)
         manager.setDid(getDid())
-        executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
-            var url = ""
-            home?.deviceList?.forEach { device ->
-                if (device.model == getModel()) {
-                    url = device.iconUrl
-                }
-            }
-            // 更新UI需要切换到主线程
-            runOnUiThread {
-                if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
-                if (binding.switchLight.getChecked()) binding.deviceStatus.text =
-                    getString(R.string.device_opened) else binding.deviceStatus.text =
-                    getString(R.string.device_closed)
+        var url = ""
+        HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
+            if (device.model == getModel()) {
+                url = device.iconUrl
             }
         }
+        if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+        if (binding.switchLight.getChecked()) binding.deviceStatus.text =
+            getString(R.string.device_opened) else binding.deviceStatus.text =
+            getString(R.string.device_closed)
         for (i in miotServices) {
             val urn = MiotSpecService.parseUrn(i.type) ?: continue
             val siid = i.iid

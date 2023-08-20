@@ -12,13 +12,11 @@ import io.github.sky130.miwu.logic.network.MiotSpecService
 import io.github.sky130.miwu.ui.manager.MiWidgetManager
 import io.github.sky130.miwu.ui.miot.BaseFragment
 import io.github.sky130.miwu.util.GlideUtils
-import java.util.concurrent.Executors
 
 // 全程Temperature Humidity Sensor
 class THSensorDefaultFragment(private val miotServices: ArrayList<MiotService>) : BaseFragment() {
 
     private lateinit var binding: DeviceThSensorDefaultBinding
-    private val executor = Executors.newSingleThreadExecutor()
     private val manager = MiWidgetManager()
 
     override fun onCreateView(
@@ -26,24 +24,18 @@ class THSensorDefaultFragment(private val miotServices: ArrayList<MiotService>) 
     ): View {
         binding = DeviceThSensorDefaultBinding.inflate(inflater)
         manager.setDid(getDid())
-        executor.execute {
-            val home = HomeDAO.getHome(HomeDAO.getHomeIndex()) // 获取家庭对象
-            var url = ""
-            var isOnline = false
-            home?.deviceList?.forEach { device ->
-                if (device.model == getModel()) {
-                    url = device.iconUrl
-                    isOnline = device.isOnline
-                }
-            }
-            // 更新UI需要切换到主线程
-            runOnUiThread {
-                if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
-                if (isOnline) binding.deviceStatus.text =
-                    getString(R.string.device_online) else binding.deviceStatus.text =
-                    getString(R.string.device_offline)
+        var url = ""
+        var isOnline = false
+        HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
+            if (device.model == getModel()) {
+                url = device.iconUrl
+                isOnline = device.isOnline
             }
         }
+        if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+        if (isOnline) binding.deviceStatus.text =
+            getString(R.string.device_online) else binding.deviceStatus.text =
+            getString(R.string.device_offline)
         for (i in miotServices) {
             val type = MiotSpecService.parseUrn(i.type)?.value ?: continue
             if (type != "temperature-humidity-sensor") continue

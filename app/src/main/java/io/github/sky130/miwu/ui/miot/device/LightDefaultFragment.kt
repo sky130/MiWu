@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.DeviceLightDefaultBinding
 import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.model.miot.MiotService
@@ -39,6 +40,14 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                     when (urn2.value) {
                         "on" -> {
                             manager.addView(binding.switchLight, urn2.value, siid, piid, false)
+                            binding.switchLight.setOnStatusChangedListener {
+                                if (it) binding.deviceStatus.text =
+                                    getString(
+                                        R.string.device_opened
+                                    ) else binding.deviceStatus.text = getString(
+                                    R.string.device_closed
+                                )
+                            }
                         }
 
                         "brightness" -> {

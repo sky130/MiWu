@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.miwu.R
 import com.github.miwu.databinding.DeviceOutletDefaultBinding
 import com.github.miwu.logic.dao.HomeDAO
 import com.github.miwu.logic.model.miot.MiotService
@@ -11,7 +12,6 @@ import com.github.miwu.logic.network.MiotSpecService
 import com.github.miwu.ui.manager.MiWidgetManager
 import com.github.miwu.ui.miot.BaseFragment
 import com.github.miwu.util.GlideUtils
-import com.github.miwu.R
 
 class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : BaseFragment() {
 
@@ -50,7 +50,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     false
                                 )
                                 binding.switchOutlet.setOnStatusChangedListener(true) {
-                                    if (isAdded) if (it) binding.deviceStatus.text =
+                                    if (it) binding.deviceStatus.text =
                                         getString(
                                             R.string.device_opened
                                         ) else binding.deviceStatus.text = getString(

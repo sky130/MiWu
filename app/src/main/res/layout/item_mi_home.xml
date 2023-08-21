@@ -15,6 +15,7 @@
     <ImageView
         android:layout_width="27dp"
         android:layout_height="27dp"
+        android:padding="4dp"
         android:src="@drawable/home_icon" />
 
     <RelativeLayout

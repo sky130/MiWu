@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(0, 0)
         binding = ActivityMainBinding.inflate(layoutInflater)
         list = arrayListOf(
             FragmentItem(getString(R.string.app_name), DeviceFragment()),

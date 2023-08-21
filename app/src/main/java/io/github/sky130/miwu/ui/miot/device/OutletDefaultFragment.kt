@@ -23,11 +23,6 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         savedInstanceState: Bundle?,
     ): View {
         binding = DeviceOutletDefaultBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         manager.setDid(getDid())
         var url = ""
         HomeDAO.getHome(HomeDAO.getHomeIndex())?.deviceList?.forEach { device ->
@@ -55,7 +50,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     false
                                 )
                                 binding.switchOutlet.setOnStatusChangedListener(true) {
-                                    if (it) binding.deviceStatus.text =
+                                    if (isAdded) if (it) binding.deviceStatus.text =
                                         getString(
                                             R.string.device_opened
                                         ) else binding.deviceStatus.text = getString(
@@ -104,6 +99,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         manager.init()
         manager.update()
         manager.notify(1000) // 1.5秒更新一次数据
+        return binding.root
     }
 
     override fun onDestroy() {

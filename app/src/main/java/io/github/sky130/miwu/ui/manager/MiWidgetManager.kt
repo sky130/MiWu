@@ -20,7 +20,9 @@ import kotlinx.coroutines.withContext
 
 class MiWidgetManager {
 
-    private val viewMap = HashMap<String, ViewItem>()
+    private val piidViewMap = HashMap<String, PiidViewItem>()
+    private val aiidViewMap = HashMap<String, AiidViewItem>()
+    private val notifyBlockMap = HashMap<String, MiWidgetManager.() -> Unit>()
     private val job = Job()
     private val scope = CoroutineScope(job)
     private lateinit var did: String
@@ -28,7 +30,7 @@ class MiWidgetManager {
     private var time = 0L
     private val runnable = Runnable { update() }
 
-    private data class ViewItem(
+    private data class PiidViewItem(
         val view: View,
         val siid: Int,
         val piid: Int,
@@ -36,6 +38,12 @@ class MiWidgetManager {
         val max: Int = 0,
         val min: Int = 0,
         val step: Int = 0,
+    )
+
+    private data class AiidViewItem(
+        val view: View,
+        val siid: Int,
+        val aiid: Int,
     )
 
     fun addView(
@@ -48,7 +56,16 @@ class MiWidgetManager {
         min: Int = 0,
         step: Int = 0,
     ) { // 添加一个View实例来进行管理
-        viewMap[tag] = ViewItem(view, siid, piid, defaultValue, max, min, step)
+        piidViewMap[tag] = PiidViewItem(view, siid, piid, defaultValue, max, min, step)
+    }
+
+    fun addView(view: View, tag: String, siid: Int, aiid: Int) {
+        aiidViewMap[tag] = AiidViewItem(view, siid, aiid)
+    }
+
+    // 默认异步操作
+    fun addNotifyBlock(tag: String, block: MiWidgetManager.() -> Unit) {
+        notifyBlockMap[tag] = block
     }
 
     fun setDid(str: String) {
@@ -56,7 +73,7 @@ class MiWidgetManager {
     }
 
     fun init() {
-        for (i in viewMap.values) {
+        for (i in piidViewMap.values) {
             val view = i.view
             view.visibility = VISIBLE
             when (view) {
@@ -99,6 +116,15 @@ class MiWidgetManager {
                 }
             }
         }
+        for (i in aiidViewMap.values) {
+            val view = i.view
+            view.visibility = VISIBLE
+            view.setOnClickListener {
+                launch {
+                    DeviceService.doAction(did, i.siid, i.aiid)
+                }
+            }
+        }
     }
 
     fun notify(time: Long) {
@@ -117,7 +143,7 @@ class MiWidgetManager {
     @Synchronized
     fun update() {
         val jobs = mutableListOf<Deferred<Unit>>()
-        for (i in viewMap.values) {
+        for (i in piidViewMap.values) {
             jobs.add(async {
                 val att = DeviceService.getDeviceATT(did, i.siid, i.piid) ?: return@async
                 val view = i.view
@@ -133,7 +159,7 @@ class MiWidgetManager {
                         }
 
                         is MiSwitchCard -> {
-                            view.setChecked(value as Boolean,false)
+                            view.setChecked(value as Boolean, false)
                         }
 
                         is MiTextView -> {
@@ -143,14 +169,18 @@ class MiWidgetManager {
                 }
             })
         }
-
+        for (i in notifyBlockMap.values) {
+            jobs.add(async {
+                i()
+            })
+        }
         scope.launch {
             jobs.awaitAll()
             notify(time)
         }
     }
 
-    private fun async(block: () -> Unit): Deferred<Unit> { // 用于网络请求
+    fun async(block: () -> Unit): Deferred<Unit> { // 用于网络请求
         return scope.async {
             withContext(Dispatchers.IO) {
                 block()
@@ -158,7 +188,7 @@ class MiWidgetManager {
         }
     }
 
-    private fun launch(block: () -> Unit) { // 用于网络请求
+    fun launch(block: () -> Unit) { // 用于网络请求
         scope.launch {
             handler.removeCallbacks(runnable)
             withContext(Dispatchers.IO) {
@@ -177,7 +207,12 @@ class MiWidgetManager {
     }
 
     fun removeView(tag: String) {
-        viewMap.remove(tag)
+        piidViewMap.remove(tag)
+        aiidViewMap.remove(tag)
+    }
+
+    fun removeNotify(tag: String) {
+        notifyBlockMap.remove(tag)
     }
 
 }

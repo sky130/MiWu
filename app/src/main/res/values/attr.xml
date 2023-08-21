@@ -8,6 +8,7 @@
     <attr name="siid" format="integer"/>
     <attr name="piid" format="integer"/>
     <attr name="value" format="string"/>
+    <attr name="dotSize" format="integer"/>
 
 
     <declare-styleable name="MiSeekBarCard">
@@ -49,6 +50,11 @@
     </declare-styleable>
 
     <declare-styleable name="MiIndicators">
-        <attr name="dotSize" format="integer"/>
+        <attr name="dotSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="MiLineIndicators">
+        <attr name="dotSize"/>
+<!--        <attr name="dotWidth"/>-->
     </declare-styleable>
 </resources>

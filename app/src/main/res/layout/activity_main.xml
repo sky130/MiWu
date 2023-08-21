@@ -23,6 +23,12 @@
 
         </androidx.viewpager.widget.ViewPager>
 
+        <com.github.miwu.widget.MiLineIndicators
+            android:layout_width="100dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            app:dotSize="3" />
+
         <com.github.miwu.widget.MiIndicators
             android:id="@+id/indicator"
             android:layout_width="match_parent"

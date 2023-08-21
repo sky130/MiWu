@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "io.github.sky130.miwu"
+    namespace = "con.github.miwu"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "io.github.sky130.miwu"
+        applicationId = "con.github.miwu"
         minSdk = 26 // 来个人把Base64换掉就能改成21了
         targetSdk = 33
         versionCode = 1

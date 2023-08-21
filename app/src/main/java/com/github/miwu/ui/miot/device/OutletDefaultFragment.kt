@@ -62,10 +62,6 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                             "temperature" -> {
                                 manager.addView(binding.temperature, propertyType, siid, piid, 0)
                             }
-
-                            "working-time" -> {
-                                manager.addView(binding.workingTime, propertyType, siid, piid, 0)
-                            }
                         }
                     }
                 }

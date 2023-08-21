@@ -33,14 +33,6 @@
             android:layout_marginBottom="5dp" />
 
         <com.github.miwu.widget.MiTextView
-            android:id="@+id/working_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            app:title="工作时间"
-            app:unit=" min" />
-
-        <com.github.miwu.widget.MiTextView
             android:id="@+id/temperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.miwu.MainApplication
 import com.github.miwu.R
 import com.github.miwu.databinding.DeviceOutletDefaultBinding
 import com.github.miwu.logic.dao.HomeDAO
@@ -51,9 +52,9 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                 )
                                 binding.switchOutlet.setOnStatusChangedListener(true) {
                                     if (it) binding.deviceStatus.text =
-                                        getString(
+                                        MainApplication.context.getString(
                                             R.string.device_opened
-                                        ) else binding.deviceStatus.text = getString(
+                                        ) else binding.deviceStatus.text = MainApplication.context.getString(
                                         R.string.device_closed
                                     )
                                 }

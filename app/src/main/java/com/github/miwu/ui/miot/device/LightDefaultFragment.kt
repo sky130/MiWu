@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.github.miwu.MainApplication
 import com.github.miwu.R
 import com.github.miwu.databinding.DeviceLightDefaultBinding
 import com.github.miwu.logic.dao.HomeDAO
@@ -42,9 +43,9 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                             manager.addView(binding.switchLight, urn2.value, siid, piid, false)
                             binding.switchLight.setOnStatusChangedListener(true) {
                                 if (it) binding.deviceStatus.text =
-                                    getString(
+                                    MainApplication.context.getString(
                                         R.string.device_opened
-                                    ) else binding.deviceStatus.text = getString(
+                                    ) else binding.deviceStatus.text = MainApplication.context.getString(
                                     R.string.device_closed
                                 )
                             }

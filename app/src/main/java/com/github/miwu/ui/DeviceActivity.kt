@@ -1,11 +1,11 @@
 package com.github.miwu.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.github.miwu.ui.miot.BaseFragment
-import com.github.miwu.ui.miot.DeviceUtils
+import androidx.appcompat.app.AppCompatActivity
 import com.github.miwu.R
 import com.github.miwu.databinding.ActivityDeviceBinding
+import com.github.miwu.ui.miot.BaseFragment
+import com.github.miwu.ui.miot.DeviceUtils
 
 class DeviceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDeviceBinding
@@ -34,16 +34,22 @@ class DeviceActivity : AppCompatActivity() {
 
     private fun addFragment() {
         binding.title.setTitle(getString(R.string.loading))
-        DeviceUtils.getDeviceFragment(model, specType) {
+        DeviceUtils.getDeviceFragment(model, specType) { fragment ->
             runOnUiThread {
-                mFragment = it
-                binding.title.setTitle(name)
-                this.supportFragmentManager.beginTransaction().apply {
-                    add(R.id.fragment_container, mFragment)
-                    attach(mFragment)
-                    commit()
+                fragment.let { deviceFragment ->
+                    mFragment = deviceFragment
+                    binding.title.setTitle(name)
+                    supportFragmentManager.apply {
+                        if (!isDestroyed) {
+                            beginTransaction().apply {
+                                add(R.id.fragment_container, mFragment)
+                                attach(mFragment)
+                                commitAllowingStateLoss()
+                                executePendingTransactions()
+                            }
+                        }
+                    }
                 }
-                this.supportFragmentManager.executePendingTransactions()
             }
         }
     }

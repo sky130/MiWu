@@ -11,9 +11,17 @@
         android:layout_height="wrap_content"
         app:title="@string/app_name"/>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </androidx.viewpager.widget.ViewPager>
+    </FrameLayout>
 
 </LinearLayout>

@@ -5,14 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import io.github.sky130.miwu.R
 import io.github.sky130.miwu.databinding.ActivityMainBinding
-import io.github.sky130.miwu.logic.dao.HomeDAO
 import io.github.sky130.miwu.logic.dao.UserDAO
 import io.github.sky130.miwu.ui.adapter.AppFragmentPageAdapter
 import io.github.sky130.miwu.ui.framgent.BaseFragment
 import io.github.sky130.miwu.ui.framgent.DeviceFragment
 import io.github.sky130.miwu.ui.framgent.SceneFragment
 import io.github.sky130.miwu.ui.framgent.SettingsFragment
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private lateinit var binding: ActivityMainBinding

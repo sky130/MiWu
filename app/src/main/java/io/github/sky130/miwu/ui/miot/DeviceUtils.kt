@@ -7,7 +7,6 @@ import io.github.sky130.miwu.ui.DeviceActivity
 import io.github.sky130.miwu.ui.miot.device.EmptyFragment
 import io.github.sky130.miwu.ui.miot.device.LightDefaultFragment
 import io.github.sky130.miwu.ui.miot.device.OutletDefaultFragment
-import io.github.sky130.miwu.ui.miot.device.RouterDefaultFragment
 import io.github.sky130.miwu.ui.miot.device.THSensorDefaultFragment
 import kotlin.concurrent.thread
 
@@ -47,10 +46,6 @@ object DeviceUtils {
 
                             "outlet" -> {
                                 OutletDefaultFragment(miotDevice.services)
-                            }
-
-                            "router" -> {
-                                RouterDefaultFragment(miotDevice.services)
                             }
 
                             else -> {

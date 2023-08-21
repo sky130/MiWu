@@ -82,7 +82,7 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
         }
         manager.init()
         manager.update()
-        manager.notify(1000) // 1.5秒更新一次数据
+        manager.notify(1000) // 1秒更新一次数据
         return binding.root
     }
 

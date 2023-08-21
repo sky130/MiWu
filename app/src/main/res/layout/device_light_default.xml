@@ -25,13 +25,13 @@
             android:layout_marginBottom="12dp"
             tools:text="@string/device_opened" />
 
-        <io.github.sky130.miwu.widget.MiSwitchCard
+        <com.github.miwu.widget.MiSwitchCard
             android:id="@+id/switch_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <io.github.sky130.miwu.widget.MiSeekBarCard
+        <com.github.miwu.widget.MiSeekBarCard
             android:id="@+id/brightness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             app:title="亮度"
             app:unit="%" />
 
-        <io.github.sky130.miwu.widget.MiRoundSeekBarCard
+        <com.github.miwu.widget.MiRoundSeekBarCard
             android:id="@+id/color_temperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -33,7 +33,7 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
-                <io.github.sky130.miwu.widget.AntiAliasCircleImageView
+                <com.github.miwu.widget.AntiAliasCircleImageView
                     android:id="@+id/avatarImage"
                     android:layout_width="42dp"
                     android:layout_height="42dp"

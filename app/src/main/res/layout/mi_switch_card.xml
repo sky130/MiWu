@@ -9,7 +9,7 @@
     android:background="@drawable/bg_item"
     android:padding="12dp">
 
-    <io.github.sky130.miwu.widget.MiSwitchButton
+    <com.github.miwu.widget.MiSwitchButton
         android:id="@+id/miSwitchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

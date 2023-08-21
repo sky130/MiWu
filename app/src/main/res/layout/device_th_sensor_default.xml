@@ -25,7 +25,7 @@
             android:layout_marginBottom="12dp"
             tools:text="@string/device_online" />
 
-        <io.github.sky130.miwu.widget.MiTextView
+        <com.github.miwu.widget.MiTextView
             android:id="@+id/temperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             app:title="温度"
             app:unit=" ℃" />
 
-        <io.github.sky130.miwu.widget.MiTextView
+        <com.github.miwu.widget.MiTextView
             android:id="@+id/relative_humidity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             app:title="湿度"
             app:unit=" %" />
 
-        <io.github.sky130.miwu.widget.MiTextView
+        <com.github.miwu.widget.MiTextView
             android:id="@+id/battery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

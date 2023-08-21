@@ -43,7 +43,7 @@
         app:layout_constraintStart_toEndOf="@+id/stub"
         app:layout_constraintTop_toTopOf="@+id/stub" />
 
-    <io.github.sky130.miwu.widget.MiSeekBar
+    <com.github.miwu.widget.MiSeekBar
         android:id="@+id/seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onPageSelected(position: Int) { // 页面滚动
         setTitle(list[position].title)
+        binding.indicator.setIndex(position)
     }
 
     override fun onResume() {

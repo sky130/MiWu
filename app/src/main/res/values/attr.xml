@@ -47,4 +47,8 @@
         <attr name="piid"/>
         <attr name="siid"/>
     </declare-styleable>
+
+    <declare-styleable name="MiIndicators">
+        <attr name="dotSize" format="integer"/>
+    </declare-styleable>
 </resources>

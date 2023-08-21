@@ -3,18 +3,18 @@ package io.github.sky130.miwu.ui.manager
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.View.GONE
 import android.view.View.VISIBLE
 import io.github.sky130.miwu.logic.network.DeviceService
 import io.github.sky130.miwu.widget.MiRoundSeekBarCard
 import io.github.sky130.miwu.widget.MiSeekBarCard
-import io.github.sky130.miwu.widget.MiSwitchButton
 import io.github.sky130.miwu.widget.MiSwitchCard
 import io.github.sky130.miwu.widget.MiTextView
-import io.github.sky130.miwu.widget.ViewExtra
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -26,12 +26,7 @@ class MiWidgetManager {
     private lateinit var did: String
     private val handler = Handler(Looper.getMainLooper())
     private var time = 0L
-    private val runnable = object : Runnable {
-        override fun run() {
-            update()
-            handler.postDelayed(this, time)
-        }
-    }
+    private val runnable = Runnable { update() }
 
     private data class ViewItem(
         val view: View,
@@ -107,23 +102,24 @@ class MiWidgetManager {
     }
 
     fun notify(time: Long) {
-        if (time <= 1000) return
+        if (time < 1000) return
         cancelNotify()
         this.time = time
         handler.postDelayed(runnable, time)
     }
 
-    fun cancelNotify(){
+    fun cancelNotify() {
+        time = 0
         handler.removeCallbacks(runnable)
     }
 
 
     @Synchronized
     fun update() {
+        val jobs = mutableListOf<Deferred<Unit>>()
         for (i in viewMap.values) {
-            launch {
-                val att =
-                    DeviceService.getDeviceATT(did, i.siid, i.piid) ?: return@launch
+            jobs.add(async {
+                val att = DeviceService.getDeviceATT(did, i.siid, i.piid) ?: return@async
                 val view = i.view
                 val value = att.value
                 runOnUiThread {
@@ -137,7 +133,7 @@ class MiWidgetManager {
                         }
 
                         is MiSwitchCard -> {
-                            view.setChecked(value as Boolean)
+                            view.setChecked(value as Boolean,false)
                         }
 
                         is MiTextView -> {
@@ -145,18 +141,31 @@ class MiWidgetManager {
                         }
                     }
                 }
+            })
+        }
+
+        scope.launch {
+            jobs.awaitAll()
+            notify(time)
+        }
+    }
+
+    private fun async(block: () -> Unit): Deferred<Unit> { // 用于网络请求
+        return scope.async {
+            withContext(Dispatchers.IO) {
+                block()
             }
         }
     }
 
     private fun launch(block: () -> Unit) { // 用于网络请求
-        cancelNotify()
         scope.launch {
+            handler.removeCallbacks(runnable)
             withContext(Dispatchers.IO) {
                 block()
             }
+            notify(time)
         }
-        notify(time)
     }
 
     private fun runOnUiThread(block: () -> Unit) {

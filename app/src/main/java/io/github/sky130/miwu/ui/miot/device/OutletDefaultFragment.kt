@@ -49,7 +49,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                     piid,
                                     false
                                 )
-                                binding.switchOutlet.setOnStatusChangedListener {
+                                binding.switchOutlet.setOnStatusChangedListener(true) {
                                     if (it) binding.deviceStatus.text =
                                         getString(
                                             R.string.device_opened

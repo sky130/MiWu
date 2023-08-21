@@ -40,7 +40,7 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                     when (urn2.value) {
                         "on" -> {
                             manager.addView(binding.switchLight, urn2.value, siid, piid, false)
-                            binding.switchLight.setOnStatusChangedListener {
+                            binding.switchLight.setOnStatusChangedListener(true) {
                                 if (it) binding.deviceStatus.text =
                                     getString(
                                         R.string.device_opened
@@ -82,7 +82,7 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
         }
         manager.init()
         manager.update()
-        manager.notify(1500) // 1.5秒更新一次数据
+        manager.notify(1000) // 1.5秒更新一次数据
         return binding.root
     }
 

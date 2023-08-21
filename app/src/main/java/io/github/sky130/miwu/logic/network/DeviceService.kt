@@ -45,6 +45,11 @@ object DeviceService {
         }
     }
 
+    fun doAction(did: String, siid: Int, aiid: Int) {
+        val data = "{\"params\":{\"did\":\"$did\",\"siid\":$siid,\"aiid\":$aiid,\"in\":[]}}"
+        OkHttpUtils.postData("/miotspec/prop/action", data, loginMsg)
+    }
+
     // 用于解析Json
     private data class GetDeviceAtt(val did: String, val siid: Int, val piid: Int)
     private data class SetDeviceAtt(val did: String, val siid: Int, val piid: Int, val value: Any)

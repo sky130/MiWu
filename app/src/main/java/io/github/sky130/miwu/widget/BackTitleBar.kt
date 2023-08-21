@@ -69,7 +69,7 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
         if (event.action == MotionEvent.ACTION_DOWN && isTouchWithinHotspot(event)) {
             isAnimating = true
         }
-        var shouldDispatch = isAnimating
+        val shouldDispatch = isAnimating
         return if (!shouldDispatch) {
             true
         } else {
@@ -105,6 +105,7 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
         titleTextView!!.text = title
     }
 
+    @SuppressLint("ObjectAnimatorBinding")
     private fun animateDown() {
         if (this.isClickable) {
             val animatorSet = AnimatorSet()
@@ -117,6 +118,7 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
         }
     }
 
+    @SuppressLint("ObjectAnimatorBinding")
     private fun animateUp() {
         if (this.isClickable) {
             val animatorSet = AnimatorSet()

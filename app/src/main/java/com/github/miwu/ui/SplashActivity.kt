@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.github.miwu.MainApplication.Companion.loginMsg
 import com.github.miwu.base.BaseActivity
 import com.github.miwu.logic.dao.HomeDAO
-import com.github.miwu.logic.network.miot.UserService
 import com.github.miwu.startActivity
 import com.github.miwu.util.TextUtils.log
 import kotlin.concurrent.thread
@@ -15,6 +14,7 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(0, 0)
         startActivity()
     }
 

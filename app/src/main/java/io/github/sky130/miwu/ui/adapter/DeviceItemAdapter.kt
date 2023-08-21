@@ -16,7 +16,7 @@ class DeviceItemAdapter() :
     RecyclerView.Adapter<DeviceItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
-    val list:ArrayList<MiDevice>
+    val list: ArrayList<MiDevice>
         get() = HomeDAO.getHome(HomeDAO.getHomeIndex())!!.deviceList
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,6 +29,7 @@ class DeviceItemAdapter() :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_mi_device, parent, false)
+        list.sortBy { !it.isOnline }
         return ViewHolder(view)
     }
 

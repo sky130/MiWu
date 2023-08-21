@@ -21,16 +21,16 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
     var textClock: TextClock? = null
     var titleTextView: TextView? = null
     var titleText: String?
-    var f = false
+    var isAnimating = false
 
     init {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MiTitleBar, 0, 0)
         titleText = typedArray.getString(R.styleable.MiTitleBar_title)
         typedArray.recycle()
-        this.init(context)
+        this.initializeViews(context)
     }
 
-    fun init(context: Context) {
+    private fun initializeViews(context: Context) {
         inflate(context, R.layout.back_title_bar, this)
         this.isClickable = true
         setPadding(
@@ -50,113 +50,87 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
         this.pivotY = (this.height / 2).toFloat()
     }
 
-    fun setBackListener(var1: OnClickListener?, var2: Activity) {
-        if (var1 == null) {
-            leftArea!!.setOnClickListener { var2.finish() }
+    fun setBackListener(listener: OnClickListener?, activity: Activity) {
+        if (listener == null) {
+            leftArea!!.setOnClickListener { activity.finish() }
         } else {
-            leftArea!!.setOnClickListener(var1)
+            leftArea!!.setOnClickListener(listener)
         }
     }
 
-    override fun onInterceptTouchEvent(var1: MotionEvent): Boolean {
-        if (var1.action == 0 && this.a(var1)) {
-            f = true
+    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN && isTouchWithinHotspot(event)) {
+            isAnimating = true
         }
-        return if (this.a(var1) && f) true else super.onInterceptTouchEvent(var1)
+        return if (isTouchWithinHotspot(event) && isAnimating) true else super.onInterceptTouchEvent(event)
     }
 
-    override fun dispatchTouchEvent(var1: MotionEvent): Boolean {
-        if (var1.action == 0 && this.a(var1)) {
-            f = true
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN && isTouchWithinHotspot(event)) {
+            isAnimating = true
         }
-        var var2: Boolean
-        return if (!f.also { var2 = it }) {
+        var shouldDispatch = isAnimating
+        return if (!shouldDispatch) {
             true
         } else {
-            if (var2 && this.a(var1)) super.dispatchTouchEvent(var1) else super.dispatchTouchEvent(
-                var1
+            if (shouldDispatch && isTouchWithinHotspot(event)) super.dispatchTouchEvent(event) else super.dispatchTouchEvent(
+                event
             )
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(var1: MotionEvent): Boolean {
-        if (var1.action == 0) {
-            if (f) {
-                b()
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (isAnimating) {
+                animateDown()
             }
-        } else if (2 == var1.action) {
-            if (!this.a(var1)) {
-                f = false
-                this.a()
+        } else if (event.action == MotionEvent.ACTION_MOVE) {
+            if (!isTouchWithinHotspot(event)) {
+                isAnimating = false
+                animateUp()
                 return true
             }
-        } else if (1 == var1.action || 3 == var1.action) {
-            f = false
-            if (this.a(var1)) {
+        } else if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+            isAnimating = false
+            if (isTouchWithinHotspot(event)) {
                 leftArea!!.callOnClick()
             }
-            this.a()
+            animateUp()
         }
-        return super.onTouchEvent(var1)
+        return super.onTouchEvent(event)
     }
 
-    fun setTitle(str: String?) {
-        titleTextView!!.text = str
+    fun setTitle(title: String?) {
+        titleTextView!!.text = title
     }
 
-    fun b() {
+    private fun animateDown() {
         if (this.isClickable) {
-            val var10000 = AnimatorSet()
-            var10000.duration = 66L
-            val var1 = FloatArray(2)
-            var1[0] = 1.0f
-            var1[1] = 0.8f
-            val var10002 = ObjectAnimator.ofFloat(leftArea, "scaleX", *var1)
-            val var6 = this
-            val var10004 = leftArea
-            val var2 = FloatArray(2)
-            var2[0] = 1.0f
-            var2[1] = 0.8f
-            val var3 = ObjectAnimator.ofFloat(var10004, "scaleY", *var2)
-            val var7 = var6.leftArea
-            val var4 = IntArray(2)
-            var4[0] = 50
-            var4[1] = 250
-            @SuppressLint("ObjectAnimatorBinding") val var5 =
-                ObjectAnimator.ofInt(var7, "Alpha", *var4)
-            var10000.play(var10002).with(var3).with(var5)
-            var10000.start()
+            val animatorSet = AnimatorSet()
+            animatorSet.duration = 66L
+            val scaleXAnimator = ObjectAnimator.ofFloat(leftArea, "scaleX", 1.0f, 0.8f)
+            val scaleYAnimator = ObjectAnimator.ofFloat(leftArea, "scaleY", 1.0f, 0.8f)
+            val alphaAnimator = ObjectAnimator.ofInt(leftArea, "Alpha", 50, 250)
+            animatorSet.play(scaleXAnimator).with(scaleYAnimator).with(alphaAnimator)
+            animatorSet.start()
         }
     }
 
-    fun a() {
+    private fun animateUp() {
         if (this.isClickable) {
-            val var10000 = AnimatorSet()
-            var10000.duration = 333L
-            val var1 = FloatArray(2)
-            var1[0] = 0.8f
-            var1[1] = 1.0f
-            val var10002 = ObjectAnimator.ofFloat(leftArea, "scaleX", *var1)
-            val var6 = this
-            val var10004 = leftArea
-            val var2 = FloatArray(2)
-            var2[0] = 0.8f
-            var2[1] = 1.0f
-            val var3 = ObjectAnimator.ofFloat(var10004, "scaleY", *var2)
-            val var7 = var6.leftArea
-            val var4 = IntArray(2)
-            var4[0] = 250
-            var4[1] = 50
-            @SuppressLint("ObjectAnimatorBinding") val var5 =
-                ObjectAnimator.ofInt(var7, "Alpha", *var4)
-            var10000.play(var10002).with(var3).with(var5)
-            var10000.start()
+            val animatorSet = AnimatorSet()
+            animatorSet.duration = 333L
+            val scaleXAnimator = ObjectAnimator.ofFloat(leftArea, "scaleX", 0.8f, 1.0f)
+            val scaleYAnimator = ObjectAnimator.ofFloat(leftArea, "scaleY", 0.8f, 1.0f)
+            val alphaAnimator = ObjectAnimator.ofInt(leftArea, "Alpha", 250, 50)
+            animatorSet.play(scaleXAnimator).with(scaleYAnimator).with(alphaAnimator)
+            animatorSet.start()
         }
     }
 
-    fun a(var1: MotionEvent): Boolean {
-        return var1.rawX <= this.context.resources.getDimensionPixelSize(R.dimen.title_bar_right_hotspot)
+    private fun isTouchWithinHotspot(event: MotionEvent): Boolean {
+        return event.rawX <= this.context.resources.getDimensionPixelSize(R.dimen.title_bar_right_hotspot)
             .toFloat()
     }
 }

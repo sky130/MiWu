@@ -34,9 +34,9 @@ class DeviceActivity : AppCompatActivity() {
 
     private fun addFragment() {
         binding.title.setTitle(getString(R.string.loading))
-        DeviceUtils.getDeviceFragment(model, specType) { fragment ->
+        DeviceUtils.getDeviceFragment(model, specType) {
             runOnUiThread {
-                fragment.let { deviceFragment ->
+                it.let { deviceFragment ->
                     mFragment = deviceFragment
                     binding.title.setTitle(name)
                     supportFragmentManager.apply {

@@ -64,6 +64,11 @@ object HomeDAO {
         block(true)
     }
 
+    fun clear() {
+        miInfo!!.homeList.clear()
+        miInfo = null
+    }
+
     fun resetAll(block: (Boolean) -> Unit) {
         miInfo = MiotService.getMiInfo() ?: return
         AppDatabase.getDatabase().apply {
@@ -86,6 +91,7 @@ object HomeDAO {
     } else {
         edit.get("home_index", 0)
     }
+
     fun getHomeList() = miInfo!!.homeList
     fun setHomeIndex(index: Int) = edit.put("home_index", index)
     fun getHome(index: Int = getHomeIndex()) = miInfo?.homeList?.get(index)

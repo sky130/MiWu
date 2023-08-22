@@ -5,6 +5,7 @@ import android.os.Looper
 import android.view.View
 import android.view.View.VISIBLE
 import com.github.miwu.logic.network.DeviceService
+import com.github.miwu.widget.MiIndicatorsCard
 import com.github.miwu.widget.MiRoundSeekBarCard
 import com.github.miwu.widget.MiSeekBarCard
 import com.github.miwu.widget.MiSwitchCard
@@ -114,6 +115,14 @@ class MiWidgetManager {
                 is MiTextView -> {
 
                 }
+
+                is MiIndicatorsCard -> {
+                    view.setOnProgressChangerListener {
+                        launch {
+                            DeviceService.setDeviceATT(did, i.siid, i.piid, it)
+                        }
+                    }
+                }
             }
         }
         for (i in aiidViewMap.values) {
@@ -164,6 +173,17 @@ class MiWidgetManager {
 
                         is MiTextView -> {
                             view.setText(value.toString())
+                        }
+
+                        is MiIndicatorsCard -> {
+                            val on = DeviceService.getDeviceATT(did, i.siid, i.piid)
+                                ?: return@runOnUiThread
+                            val boolean = on.value as Boolean
+                            if (boolean) {
+                                view.setProgress(0, false)
+                            } else {
+                                view.setProgress((value as Number).toInt(), false)
+                            }
                         }
                     }
                 }

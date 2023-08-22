@@ -50,12 +50,20 @@
             app:title="色温"
             app:unit="K" />
 
+        <com.github.miwu.widget.MiIndicatorsCard
+            android:id="@+id/fan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            app:unit=" 档"
+            app:title="风扇"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:gravity="center"
             android:layout_marginBottom="5dp"
-            android:text="@string/device_tv_empty" />
+            android:gravity="center"
+            android:text="@string/device_tv_empty"
+            android:textSize="10sp" />
     </LinearLayout>
 </ScrollView>

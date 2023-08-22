@@ -57,4 +57,9 @@
         <attr name="dotSize"/>
 <!--        <attr name="dotWidth"/>-->
     </declare-styleable>
+
+    <declare-styleable name="MiIndicatorsCard">
+        <attr name="title"/>
+        <attr name="unit"/>
+    </declare-styleable>
 </resources>

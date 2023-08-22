@@ -9,6 +9,7 @@ import com.github.miwu.R
 import com.github.miwu.databinding.DeviceLightDefaultBinding
 import com.github.miwu.logic.dao.HomeDAO
 import com.github.miwu.logic.model.miot.MiotService
+import com.github.miwu.logic.network.DeviceService
 import com.github.miwu.logic.network.MiotSpecService
 import com.github.miwu.ui.manager.MiWidgetManager
 import com.github.miwu.ui.miot.BaseFragment
@@ -34,50 +35,87 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
         for (i in miotServices) {
             val urn = MiotSpecService.parseUrn(i.type) ?: continue
             val siid = i.iid
-            if (urn.value == "light") {
-                for (x in i.properties) {
-                    val piid = x.iid
-                    val urn2 = MiotSpecService.parseUrn(x.type) ?: continue
-                    when (urn2.value) {
-                        "on" -> {
-                            manager.addView(binding.switchLight, urn2.value, siid, piid, false)
-                            binding.switchLight.setOnStatusChangedListener(true) {
-                                if (it) binding.deviceStatus.text =
-                                    MainApplication.context.getString(
-                                        R.string.device_opened
-                                    ) else binding.deviceStatus.text = MainApplication.context.getString(
-                                    R.string.device_closed
+            when (urn.value) {
+                "light" -> {
+                    for (x in i.properties) {
+                        val piid = x.iid
+                        val urn2 = MiotSpecService.parseUrn(x.type) ?: continue
+                        when (urn2.value) {
+                            "on" -> {
+                                manager.addView(binding.switchLight, urn2.value, siid, piid, false)
+                                binding.switchLight.setOnStatusChangedListener(true) {
+                                    if (it) binding.deviceStatus.text =
+                                        MainApplication.context.getString(
+                                            R.string.device_opened
+                                        ) else binding.deviceStatus.text =
+                                        MainApplication.context.getString(
+                                            R.string.device_closed
+                                        )
+                                }
+                            }
+
+                            "brightness" -> {
+                                x.valueRange ?: continue
+                                manager.addView(
+                                    binding.brightness,
+                                    urn2.value,
+                                    siid,
+                                    piid,
+                                    0f,
+                                    x.valueRange[1].toInt(),
+                                    x.valueRange[0].toInt(),
+                                )
+                            }
+
+                            "color-temperature" -> {
+                                x.valueRange ?: continue
+                                manager.addView(
+                                    binding.colorTemperature,
+                                    urn2.value,
+                                    siid,
+                                    piid,
+                                    0f,
+                                    x.valueRange[1].toInt(),
+                                    x.valueRange[0].toInt(),
                                 )
                             }
                         }
-
-                        "brightness" -> {
-                            x.valueRange ?: continue
-                            manager.addView(
-                                binding.brightness,
-                                urn2.value,
-                                siid,
-                                piid,
-                                0f,
-                                x.valueRange[1].toInt(),
-                                x.valueRange[0].toInt(),
-                            )
-                        }
-
-                        "color-temperature" -> {
-                            x.valueRange ?: continue
-                            manager.addView(
-                                binding.colorTemperature,
-                                urn2.value,
-                                siid,
-                                piid,
-                                0f,
-                                x.valueRange[1].toInt(),
-                                x.valueRange[0].toInt(),
-                            )
-                        }
+                        x.type
                     }
-                    x.type
+                }
+
+                "fan" -> {
+                    var onPiid = 0
+                    for (x in i.properties) {
+                        val piid = x.iid
+                        val urn2 = MiotSpecService.parseUrn(x.type) ?: continue
+                        when (urn2.value) {
+                            "on" -> {
+                                onPiid = piid
+                            }
+
+                            "fan-level" -> {
+                                x.valueRange ?: continue
+                                binding.fan.setOnProgressChangerListener {
+                                    if (it == 0) {
+                                        manager.launch {
+                                            DeviceService.setDeviceATT(
+                                                getDid(),
+                                                siid,
+                                                onPiid,
+                                                false
+                                            )
+                                        }
+                                    }
+                                }
+                                manager.addView(
+                                    binding.fan, "fan", siid, piid, 0, x.valueRange[1].toInt(),
+                                    x.valueRange[0].toInt(),
+                                )
+                            }
+                        }
+                        x.type
+                    }
                 }
             }
         }

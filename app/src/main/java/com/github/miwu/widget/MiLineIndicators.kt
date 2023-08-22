@@ -28,8 +28,14 @@ class MiLineIndicators(
         paint.strokeCap = Paint.Cap.ROUND
     }
 
-    private val dotSize: Int // 点数量
-    private var dotIndex = 0 // 点索引
+    private var dotSize: Int // 点数量
+    private var dotIndex = 3 // 点索引
+
+    fun setDotSize(size: Int) {
+        dotSize = size
+        requestLayout()
+        invalidate()
+    }
 
     init {
         context.obtainStyledAttributes(attr, R.styleable.MiLineIndicators).apply {
@@ -39,10 +45,13 @@ class MiLineIndicators(
     }
 
     fun setIndex(index: Int) {
+        if (index >= dotSize || index < 0) return
         dotIndex = index
         requestLayout()
         invalidate()
     }
+
+    fun getIndex() = dotIndex
 
 //    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 //        super.onMeasure(widthMeasureSpec, heightMeasureSpec) // 设置为屏幕宽度
@@ -52,13 +61,13 @@ class MiLineIndicators(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // 先计算屏幕正中心位置
-        val centerHeight = height / 2f
+        val centerHeight = height.toFloat() / 2f
         paint.strokeWidth = dotWidth.toFloat()
         val startX = dotMargin / 2f
         val lineSize = (((width).toFloat() - dotMargin * (dotSize)) / dotSize)
         var drawX = startX
-        for (i in 0 until dotSize) {
-            if (i == dotIndex) {
+        for (i in 1 until dotSize + 1) {
+            if (i <= dotIndex) {
                 paint.color = ContextCompat.getColor(context, R.color.white)
             } else {
                 paint.color = ContextCompat.getColor(context, R.color.lrc_disable)

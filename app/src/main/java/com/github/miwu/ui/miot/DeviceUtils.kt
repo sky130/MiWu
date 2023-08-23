@@ -4,6 +4,7 @@ import android.app.Activity
 import com.github.miwu.logic.network.MiotSpecService
 import com.github.miwu.startActivity
 import com.github.miwu.ui.DeviceActivity
+import com.github.miwu.ui.miot.device.AirConditionerDefaultFragment
 import com.github.miwu.ui.miot.device.AirerDefaultFragment
 import com.github.miwu.ui.miot.device.EmptyFragment
 import com.github.miwu.ui.miot.device.LightDefaultFragment
@@ -56,6 +57,10 @@ object DeviceUtils {
 
                             "vacuum" ->{
                                 VacuumDefaultFragment(miotDevice.services)
+                            }
+
+                            "air-conditioner" ->{
+                                AirConditionerDefaultFragment(miotDevice.services)
                             }
 
                             else -> {

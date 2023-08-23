@@ -34,6 +34,7 @@ class MiLineIndicators(
     private var dotIndex = 2 // 点索引
 
     fun setDotSize(size: Int) {
+        if (size > 7) setDotMode(1)
         dotSize = size
         requestLayout()
         invalidate()

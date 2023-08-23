@@ -51,24 +51,8 @@ class VacuumDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                         siid,
                                         piid
                                     )?.value as Number).toInt()
-
-                                    when (value) {
-                                        5 -> {
-                                            setDeviceTitle("正在扫地")
-                                        }
-
-                                        3 -> {
-                                            setDeviceTitle("正在充电")
-                                        }
-
-                                        2 -> {
-                                            setDeviceTitle("停止扫地")
-                                        }
-
-                                        else -> {
-                                            setDeviceTitle("设备在线")
-                                        }
-                                    }
+                                    x.valueList ?: return@addNotifyBlock
+                                    setDeviceTitle(x.valueList[value].description)
                                 }
                             }
                         }

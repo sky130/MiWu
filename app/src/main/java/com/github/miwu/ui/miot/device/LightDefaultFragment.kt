@@ -115,6 +115,15 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                                         }
                                     }
                                 }
+                                manager.addNotifyBlock("fan-on") {
+                                    val att = DeviceService.getDeviceATT(getDid(), siid, onPiid)
+                                        ?: return@addNotifyBlock
+                                    runOnUiThread {
+                                        if (!(att.value as Boolean)) {
+                                            binding.fan.setProgress(0,false)
+                                        }
+                                    }
+                                }
                                 manager.addView(
                                     binding.fan,
                                     "fan",

@@ -65,7 +65,7 @@ class VacuumDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                                             setDeviceTitle("停止扫地")
                                         }
 
-                                        else->{
+                                        else -> {
                                             setDeviceTitle("设备在线")
                                         }
                                     }
@@ -99,8 +99,6 @@ class VacuumDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
                     }
                 }
             }
-
-
         }
         manager.init()
         manager.update()

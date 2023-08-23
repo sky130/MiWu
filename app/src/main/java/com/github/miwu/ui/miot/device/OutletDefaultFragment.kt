@@ -103,6 +103,4 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         super.onDestroy()
         manager.cancelNotify()
     }
-
-
 }

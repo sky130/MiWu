@@ -6,13 +6,14 @@ import androidx.room.RoomDatabase
 import com.github.miwu.MainApplication.Companion.context
 import com.github.miwu.logic.model.mi.MiDevice
 import com.github.miwu.logic.model.mi.MiHomeEntity
+import com.github.miwu.logic.model.mi.MiLanguage
 import com.github.miwu.logic.model.mi.MiRoomEntity
 import com.github.miwu.logic.model.mi.MiScene
 import com.github.miwu.logic.model.mi.MiSpecType
 
 @Database(
-    version = 2,
-    entities = [MiDevice::class, MiScene::class, MiRoomEntity::class, MiHomeEntity::class, MiSpecType::class]
+    version = 3,
+    entities = [MiDevice::class, MiScene::class, MiRoomEntity::class, MiHomeEntity::class, MiSpecType::class,MiLanguage::class]
 )
 abstract class AppDatabase : RoomDatabase() {
 

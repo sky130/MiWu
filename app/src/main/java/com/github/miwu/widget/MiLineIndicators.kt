@@ -21,7 +21,9 @@ class MiLineIndicators(
         get() = height
     private val dotMargin: Int
         get() = 8f.toPx() + dotWidth
+    private var dotMode = 1
 
+    // 0 为点 ,1 为线
     init {
         paint.isAntiAlias = true
         paint.isDither = true
@@ -29,7 +31,7 @@ class MiLineIndicators(
     }
 
     private var dotSize: Int // 点数量
-    private var dotIndex = 3 // 点索引
+    private var dotIndex = 2 // 点索引
 
     fun setDotSize(size: Int) {
         dotSize = size
@@ -44,6 +46,12 @@ class MiLineIndicators(
         }
     }
 
+    fun setDotMode(mode: Int) {
+        dotMode = mode
+        requestLayout()
+        invalidate()
+    }
+
     fun setIndex(index: Int) {
         if (index > dotSize || index < 0) return
         dotIndex = index
@@ -55,11 +63,6 @@ class MiLineIndicators(
 
     fun getSize() = dotSize
 
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec) // 设置为屏幕宽度
-//        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
-//    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // 先计算屏幕正中心位置
@@ -68,14 +71,27 @@ class MiLineIndicators(
         val startX = dotMargin / 2f
         val lineSize = (((width).toFloat() - dotMargin * (dotSize)) / dotSize)
         var drawX = startX
-        for (i in 1 until dotSize + 1) {
-            if (i <= dotIndex) {
-                paint.color = ContextCompat.getColor(context, R.color.white)
-            } else {
-                paint.color = ContextCompat.getColor(context, R.color.lrc_disable)
+        when (dotMode) {
+            0 -> {
+                for (i in 1 until dotSize + 1) {
+                    if (i <= dotIndex) {
+                        paint.color = ContextCompat.getColor(context, R.color.white)
+                    } else {
+                        paint.color = ContextCompat.getColor(context, R.color.lrc_disable)
+                    }
+                    canvas.drawLine(drawX, centerHeight, drawX + lineSize, centerHeight, paint)
+                    drawX += lineSize + dotMargin
+                }
             }
-            canvas.drawLine(drawX, centerHeight, drawX + lineSize, centerHeight, paint)
-            drawX += lineSize + dotMargin
+
+            1 -> {
+                paint.color = ContextCompat.getColor(context, R.color.lrc_disable)
+                canvas.drawLine(drawX, centerHeight, width.toFloat() - startX, centerHeight, paint)
+                if (dotIndex <= 0) return
+                paint.color = ContextCompat.getColor(context, R.color.white)
+                drawX = dotIndex * (lineSize + dotMargin) - dotMargin
+                canvas.drawLine(startX, centerHeight, drawX, centerHeight, paint)
+            }
         }
     }
 

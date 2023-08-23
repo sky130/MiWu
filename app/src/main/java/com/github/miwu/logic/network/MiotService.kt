@@ -136,7 +136,7 @@ object MiotService {
 
     fun getMiScenes(homeId: String, userId: String): ArrayList<MiScene>? {
         val data =
-            "{\"home_id\": $homeId,\"home_owner\":$userId,\"need_recommended_template\":true}"
+            "{\"home_id\": $homeId,\"home_owner\":$userId,\"need_recommended_template\":false}"
         val json = OkHttpUtils.postData(
             "/appgateway/miot/appsceneservice/AppSceneService/GetCommonUsedSceneList",
             data,

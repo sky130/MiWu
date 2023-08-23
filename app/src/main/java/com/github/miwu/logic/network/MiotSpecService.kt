@@ -37,33 +37,37 @@ object MiotSpecService {
             val urn = "https://miot-spec.org/instance/v2/multiLanguage?urn=$type"
             OkHttpUtils.getRequest(urn) ?: return null
         }
-        urnJson.log()
         spec.addSpecLanguage(MiLanguage(type, urnJson))
         val jsonObj = JSONObject(urnJson).getJSONObject("data")
-        val enLanguage = ArrayList<String>()
-        val cnLanguage = ArrayList<String>()
-        val enObj = jsonObj.getJSONObject("en")
-        val cnObj = jsonObj.getJSONObject("zh_cn")
-        for (key in enObj.keys()) {
-            try {
-                val cn = cnObj.getString(key)
-                val en = enObj.getString(key)
-                cnLanguage.add(cn)
-                enLanguage.add(en)
-            } catch (_: JSONException) {
+        try {
+            val enLanguage = ArrayList<String>()
+            val cnLanguage = ArrayList<String>()
+            val enObj = jsonObj.getJSONObject("en")
+            val cnObj = jsonObj.getJSONObject("zh_cn")
+            for (key in enObj.keys()) {
+                try {
+                    val cn = cnObj.getString(key)
+                    val en = enObj.getString(key)
+                    cnLanguage.add(cn)
+                    enLanguage.add(en)
+                } catch (_: JSONException) {
+                }
             }
-        }
-        val regexPattern = enLanguage.joinToString("|").toRegex()
-        val str = json.replace(regexPattern) { matchResult ->
-            val matchedText = matchResult.value
-            val index = enLanguage.indexOf(matchedText)
-            if (index != -1) {
-                cnLanguage[index]
-            } else {
-                matchedText
+            val regexPattern = enLanguage.joinToString("|").toRegex()
+            val str = json.replace(regexPattern) { matchResult ->
+                val matchedText = matchResult.value
+                val index = enLanguage.indexOf(matchedText)
+                if (index != -1) {
+                    cnLanguage[index]
+                } else {
+                    matchedText
+                }
             }
+            return Gson().fromJson(str, MiotDevice::class.java)
+        } catch (_: Exception) {
         }
-        return Gson().fromJson(str, MiotDevice::class.java)
+
+        return Gson().fromJson(json, MiotDevice::class.java)
     }
 
 

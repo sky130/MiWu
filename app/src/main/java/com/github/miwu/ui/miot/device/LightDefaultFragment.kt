@@ -66,8 +66,8 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                                     siid,
                                     piid,
                                     0f,
-                                    x.valueRange[1],
-                                    x.valueRange[0],
+                                    x.valueRange[1].toInt(),
+                                    x.valueRange[0].toInt(),
                                 )
                             }
 
@@ -79,8 +79,8 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                                     siid,
                                     piid,
                                     0f,
-                                    x.valueRange[1],
-                                    x.valueRange[0],
+                                    x.valueRange[1].toInt(),
+                                    x.valueRange[0].toInt(),
                                 )
                             }
                         }

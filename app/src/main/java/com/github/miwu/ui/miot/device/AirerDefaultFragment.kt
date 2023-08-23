@@ -62,15 +62,16 @@ class AirerDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                 }
 
                 "airer" -> {
-                    for (x in i.properties) {
-                        val piid = x.iid
+                    i.actions ?: continue
+                    for (x in i.actions) {
+                        val aiid = x.iid
                         val urn2 = MiotSpecService.parseUrn(x.type) ?: continue
                         when (urn2.value) {
                             "motor-control" -> {
                                 binding.apply {
-                                    manager.addView(pause, "pause", siid, piid, 0)
-                                    manager.addView(up, "up", siid, piid, 1)
-                                    manager.addView(down, "down", siid, piid, 2)
+                                    manager.addView(pause, "pause", siid, aiid, 0)
+                                    manager.addView(up, "up", siid, aiid, 1)
+                                    manager.addView(down, "down", siid, aiid, 2)
                                 }
                             }
                         }

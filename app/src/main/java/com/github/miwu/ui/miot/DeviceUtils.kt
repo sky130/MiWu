@@ -9,6 +9,7 @@ import com.github.miwu.ui.miot.device.EmptyFragment
 import com.github.miwu.ui.miot.device.LightDefaultFragment
 import com.github.miwu.ui.miot.device.OutletDefaultFragment
 import com.github.miwu.ui.miot.device.THSensorDefaultFragment
+import com.github.miwu.ui.miot.device.VacuumDefaultFragment
 import kotlin.concurrent.thread
 
 object DeviceUtils {
@@ -51,6 +52,10 @@ object DeviceUtils {
 
                             "airer" -> {
                                 AirerDefaultFragment(miotDevice.services)
+                            }
+
+                            "vacuum" ->{
+                                VacuumDefaultFragment(miotDevice.services)
                             }
 
                             else -> {

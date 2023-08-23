@@ -48,6 +48,7 @@ object DeviceService {
 
     fun doAction(did: String, siid: Int, aiid: Int) {
         val data = "{\"params\":{\"did\":\"$did\",\"siid\":$siid,\"aiid\":$aiid,\"in\":[]}}"
+        val result = OkHttpUtils.postData("/miotspec/action", data, loginMsg)
     }
 
     // 用于解析Json

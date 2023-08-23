@@ -12,7 +12,7 @@ data class MiotProperties(
     val access: ArrayList<String>,
     val unit: String?,
     @SerializedName("value-range")
-    val valueRange: ArrayList<Int>?,
+    val valueRange: ArrayList<Number>?,
     @SerializedName("value-list")
     val valueList: ArrayList<PropertiesValue>?,
 )

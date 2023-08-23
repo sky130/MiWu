@@ -47,13 +47,13 @@ class MiIndicatorsCard(
         binding.seekbar.setDotSize(size)
     }
 
-    @SuppressLint("SetTextI18n")
     fun setProgress(progress: Int) {
+        if (progress > binding.seekbar.getSize() || progress < 0) return
+        setProgress(progress,true)
         listeners.forEach { it(progress) }
-        binding.seekbar.setIndex(progress)
-        binding.value.text = "$progress$unit"
     }
 
+    @SuppressLint("SetTextI18n")
     fun setProgress(progress: Int,boolean: Boolean){
         binding.seekbar.setIndex(progress)
         binding.value.text = "$progress$unit"

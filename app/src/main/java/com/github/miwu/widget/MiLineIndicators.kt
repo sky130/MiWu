@@ -45,13 +45,15 @@ class MiLineIndicators(
     }
 
     fun setIndex(index: Int) {
-        if (index >= dotSize || index < 0) return
+        if (index > dotSize || index < 0) return
         dotIndex = index
         requestLayout()
         invalidate()
     }
 
     fun getIndex() = dotIndex
+
+    fun getSize() = dotSize
 
 //    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 //        super.onMeasure(widthMeasureSpec, heightMeasureSpec) // 设置为屏幕宽度

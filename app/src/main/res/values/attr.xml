@@ -62,4 +62,9 @@
         <attr name="title"/>
         <attr name="unit"/>
     </declare-styleable>
+
+    <declare-styleable name="MiButtonCard">
+        <attr name="title"/>
+        <attr name="srcIcon" format="reference"/>
+    </declare-styleable>
 </resources>

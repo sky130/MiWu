@@ -34,7 +34,6 @@ object DeviceService {
         val gson = Gson()
         val data = gson.toJson(GetParams(listOf(GetDeviceAtt(did, siid, piid)))) ?: return null
         val result = OkHttpUtils.postData("/miotspec/prop/get", data, loginMsg) ?: return null
-        result.log()
         try {
             val deviceAtt = gson.fromJson(result, GetResult::class.java)
             deviceAtt.result[0].apply {
@@ -49,7 +48,7 @@ object DeviceService {
 
     fun doAction(did: String, siid: Int, aiid: Int) {
         val data = "{\"params\":{\"did\":\"$did\",\"siid\":$siid,\"aiid\":$aiid,\"in\":[]}}"
-        OkHttpUtils.postData("/miotspec/action", data, loginMsg)?.log()
+        val result = OkHttpUtils.postData("/miotspec/action", data, loginMsg)
     }
 
     // 用于解析Json

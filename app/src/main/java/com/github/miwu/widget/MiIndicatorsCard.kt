@@ -23,7 +23,10 @@ class MiIndicatorsCard(
 
     private var binding: MiIndicatorsCardBinding
     private val listeners = ArrayList<(Int) -> Unit>()
-//    private var block: (Int) -> Unit = {}
+    private var min = 0
+    private var max = 10
+
+    //    private var block: (Int) -> Unit = {}
     private val unit: String
 
     init {
@@ -32,6 +35,10 @@ class MiIndicatorsCard(
             unit = getString(R.styleable.MiIndicatorsCard_unit).toString()
             setProgress(0)
             setTitle(getString(R.styleable.MiIndicatorsCard_title).toString())
+            binding.seekbar.setDotMode(getInt(R.styleable.MiIndicatorsCard_dotMode, 0))
+            min = getInt(R.styleable.MiIndicatorsCard_minProgress, 0)
+            max = getInt(R.styleable.MiIndicatorsCard_maxProgress, 10)
+            setProgressMax(max - min)
             recycle()
         }
         binding.add.setOnClickListener {
@@ -47,19 +54,25 @@ class MiIndicatorsCard(
         binding.seekbar.setDotSize(size)
     }
 
-    @SuppressLint("SetTextI18n")
     fun setProgress(progress: Int) {
+        if (progress > max || progress < min) return
+        setProgress(progress, true)
         listeners.forEach { it(progress) }
-        binding.seekbar.setIndex(progress)
+    }
+
+    fun setProgress(max: Int, min: Int) {
+        this.max = max
+        this.min = min
+        setProgressMax(max - min)
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun setProgress(progress: Int, boolean: Boolean) {
+        binding.seekbar.setIndex(progress - min)
         binding.value.text = "$progress$unit"
     }
 
-    fun setProgress(progress: Int,boolean: Boolean){
-        binding.seekbar.setIndex(progress)
-        binding.value.text = "$progress$unit"
-    }
-
-    fun getProgress() = binding.seekbar.getIndex()
+    fun getProgress() = binding.seekbar.getIndex() + min
 
 
     fun setTitle(title: String) {

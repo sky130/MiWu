@@ -5,6 +5,7 @@ import android.os.Looper
 import android.view.View
 import android.view.View.VISIBLE
 import com.github.miwu.logic.network.DeviceService
+import com.github.miwu.widget.MiButtonCard
 import com.github.miwu.widget.MiIndicatorsCard
 import com.github.miwu.widget.MiRoundSeekBarCard
 import com.github.miwu.widget.MiSeekBarCard
@@ -117,9 +118,18 @@ class MiWidgetManager {
                 }
 
                 is MiIndicatorsCard -> {
+                    view.setProgress(i.max, i.min)
                     view.setOnProgressChangerListener {
                         launch {
                             DeviceService.setDeviceATT(did, i.siid, i.piid, it)
+                        }
+                    }
+                }
+
+                is MiButtonCard -> {
+                    view.setOnClickListener {
+                        launch {
+                            DeviceService.setDeviceATT(did, i.siid, i.piid, i.defaultValue)
                         }
                     }
                 }
@@ -176,14 +186,7 @@ class MiWidgetManager {
                         }
 
                         is MiIndicatorsCard -> {
-                            val on = DeviceService.getDeviceATT(did, i.siid, i.piid)
-                                ?: return@runOnUiThread
-                            val boolean = on.value as Boolean
-                            if (boolean) {
-                                view.setProgress(0, false)
-                            } else {
-                                view.setProgress((value as Number).toInt(), false)
-                            }
+                            view.setProgress((value as Number).toInt(), false)
                         }
                     }
                 }

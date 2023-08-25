@@ -23,46 +23,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            tools:text="@string/device_opened" />
+            tools:text="@string/device_online" />
 
-        <com.github.miwu.widget.MiSwitchCard
-            android:id="@+id/switch_light"
+        <com.github.miwu.widget.MiButtonCard
+            android:id="@+id/sweep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:srcIcon="@drawable/ic_clean"
+            app:title="开始扫地" />
 
-        <com.github.miwu.widget.MiSeekBarCard
-            android:id="@+id/brightness"
+        <com.github.miwu.widget.MiButtonCard
+            android:id="@+id/charge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:visibility="gone"
-            app:maxProgress="100"
-            app:title="亮度"
-            app:unit="%" />
-
-        <com.github.miwu.widget.MiRoundSeekBarCard
-            android:id="@+id/color_temperature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:visibility="gone"
-            app:title="色温"
-            app:unit="K" />
-
-        <com.github.miwu.widget.MiIndicatorsCard
-            android:id="@+id/fan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:visibility="gone"
-            app:dotMode="0"
-            app:title="风扇"
-            app:unit=" 档" />
+            app:srcIcon="@drawable/ic_charge"
+            app:title="开始回充" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="@string/device_tv_empty"

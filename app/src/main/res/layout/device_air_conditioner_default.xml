@@ -23,46 +23,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            tools:text="@string/device_opened" />
-
-        <com.github.miwu.widget.MiSwitchCard
-            android:id="@+id/switch_light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <com.github.miwu.widget.MiSeekBarCard
-            android:id="@+id/brightness"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:visibility="gone"
-            app:maxProgress="100"
-            app:title="亮度"
-            app:unit="%" />
-
-        <com.github.miwu.widget.MiRoundSeekBarCard
-            android:id="@+id/color_temperature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:visibility="gone"
-            app:title="色温"
-            app:unit="K" />
+            tools:text="@string/device_online" />
 
         <com.github.miwu.widget.MiIndicatorsCard
-            android:id="@+id/fan"
+            android:id="@+id/temperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:visibility="gone"
             app:dotMode="0"
-            app:title="风扇"
-            app:unit=" 档" />
+            app:maxProgress="3"
+            android:visibility="gone"
+            app:title="温度"
+            app:unit=" ℃" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="@string/device_tv_empty"

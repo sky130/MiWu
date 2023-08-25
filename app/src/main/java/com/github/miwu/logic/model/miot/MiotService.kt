@@ -5,4 +5,5 @@ data class MiotService(
     val type: String,
     val description: String,
     val properties: ArrayList<MiotProperties>,
+    val actions: ArrayList<MiotAction>?,
 )

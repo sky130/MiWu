@@ -14,6 +14,9 @@ import com.github.miwu.logic.network.MiotSpecService
 import com.github.miwu.ui.manager.MiWidgetManager
 import com.github.miwu.ui.miot.BaseFragment
 import com.github.miwu.util.GlideUtils
+import com.github.miwu.util.TextUtils.log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : BaseFragment() {
 
@@ -32,6 +35,7 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
             }
         }
         if (url.isNotEmpty()) GlideUtils.loadImg(url, binding.deviceImage)
+        miotServices.toString().log()
         for (i in miotServices) {
             val urn = MiotSpecService.parseUrn(i.type) ?: continue
             val siid = i.iid
@@ -89,13 +93,16 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                     for (x in i.properties) {
                         val piid = x.iid
                         val urn2 = MiotSpecService.parseUrn(x.type) ?: continue
+                        "${x.valueRange},text".log()
                         when (urn2.value) {
                             "on" -> {
                                 onPiid = piid
+                                onPiid.toString().log()
                             }
 
                             "fan-level" -> {
-                                x.valueRange ?: continue
+                                val list = x.valueList ?: continue
+                                onPiid.toString().log()
                                 binding.fan.setOnProgressChangerListener {
                                     if (it == 0) {
                                         manager.launch {
@@ -108,9 +115,22 @@ class LightDefaultFragment(private val miotServices: ArrayList<MiotService>) : B
                                         }
                                     }
                                 }
+                                manager.addNotifyBlock("fan-on") {
+                                    val att = DeviceService.getDeviceATT(getDid(), siid, onPiid)
+                                        ?: return@addNotifyBlock
+                                    runOnUiThread {
+                                        if (!(att.value as Boolean)) {
+                                            binding.fan.setProgress(0,false)
+                                        }
+                                    }
+                                }
                                 manager.addView(
-                                    binding.fan, "fan", siid, piid, 0, x.valueRange[1].toInt(),
-                                    x.valueRange[0].toInt(),
+                                    binding.fan,
+                                    "fan",
+                                    siid,
+                                    piid,
+                                    0,
+                                    list[list.lastIndex].value
                                 )
                             }
                         }

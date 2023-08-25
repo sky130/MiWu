@@ -29,7 +29,6 @@ class LoginActivity : AppCompatActivity() {
                 it.isEnabled = true
                 return@setOnClickListener
             }
-            R.string.toast_logging_in.toast()
             thread {
                 val loginMsg = UserService.login(user, pwd)
                 if (loginMsg == null) {
@@ -40,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
                     loginFailure()
                     return@thread
                 }
+                R.string.toast_logging_in.toast()
                 MainApplication.loginMsg = loginMsg
                 UserDAO.saveUser(loginMsg)
                 runOnUiThread {

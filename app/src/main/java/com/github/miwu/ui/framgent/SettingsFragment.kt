@@ -47,10 +47,10 @@ class SettingsFragment : BaseFragment() {
         }
         binding.exitAccount.addTouchScale()
         binding.exitAccount.setOnClickListener {
-            UserDAO.logout()
-            "登出成功".toast()
             requireActivity().startActivity<LoginActivity>()
             requireActivity().finish()
+            UserDAO.logout()
+            "登出成功".toast()
         }
         return binding.root
     }

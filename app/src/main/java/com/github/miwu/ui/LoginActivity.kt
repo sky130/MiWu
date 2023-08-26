@@ -39,7 +39,9 @@ class LoginActivity : AppCompatActivity() {
                     loginFailure()
                     return@thread
                 }
-                R.string.toast_logging_in.toast()
+                runOnUiThread {
+                    R.string.toast_logging_in.toast()
+                }
                 MainApplication.loginMsg = loginMsg
                 UserDAO.saveUser(loginMsg)
                 runOnUiThread {

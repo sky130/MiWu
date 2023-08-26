@@ -66,8 +66,8 @@ class DeviceFragment : BaseFragment() {
                             "刷新失败".toast()
                         }
                     }
+                    binding.recycler.adapter?.notifyDataSetChanged()
                 }
-
             }
         }
     }

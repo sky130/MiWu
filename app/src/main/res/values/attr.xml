@@ -33,7 +33,7 @@
 
     </declare-styleable>
 
-    <declare-styleable name="MiTitleBar">
+    <declare-styleable name="MainTitleBar">
         <attr name="title" />
     </declare-styleable>
 

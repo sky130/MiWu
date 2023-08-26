@@ -39,7 +39,7 @@ class SceneFragment : BaseFragment() {
             updateLayoutVisibility()
             binding.recycler.adapter = SceneItemAdapter().apply {
                 setOnClickListener {
-//                    "「${list[it].sceneName}」已执行".toast()
+                    "「${list[it].sceneName}」已执行".toast()
                     thread {
                         MiotService.runScene(list[it])
                     }
@@ -68,8 +68,8 @@ class SceneFragment : BaseFragment() {
                             "刷新失败".toast()
                         }
                     }
+                    binding.recycler.adapter?.notifyDataSetChanged()
                 }
-
             }
         }
     }

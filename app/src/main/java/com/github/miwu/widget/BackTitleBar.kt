@@ -33,12 +33,6 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
     private fun initializeViews(context: Context) {
         inflate(context, R.layout.back_title_bar, this)
         this.isClickable = true
-//        setPadding(
-//            context.resources.getDimensionPixelSize(R.dimen.content_horizontal_distance),
-//            0,
-//            0,
-//            0
-//        )
         leftArea = findViewById(R.id.left_area)
         backIcon = findViewById(R.id.left_icon)
         textClock = findViewById(R.id.clock_stub)

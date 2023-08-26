@@ -7,8 +7,8 @@ import android.widget.TextView
 import com.github.miwu.R
 
 class MainTitleBar(context: Context, attributeSet: AttributeSet?) : LinearLayout(context, attributeSet) {
-    private var titleTextView: TextView
-    private var titleText: String?
+    var titleTextView: TextView
+    var titleText: String?
 
     init {
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MainTitleBar, 0, 0)
@@ -16,12 +16,6 @@ class MainTitleBar(context: Context, attributeSet: AttributeSet?) : LinearLayout
         typedArray.recycle()
         this.gravity = 16
         inflate(context, R.layout.main_title_bar, this)
-        setPadding(
-            0,
-            0,
-            0,
-            0
-        )
         titleTextView = findViewById(R.id.textView)
         titleTextView.text = titleText
         titleTextView.isSelected = true

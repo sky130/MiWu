@@ -35,7 +35,7 @@
     </style>
 
     <style name="ClockStyle">
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#CCFFFFFF</item>
         <item name="android:layout_gravity">center_vertical</item>

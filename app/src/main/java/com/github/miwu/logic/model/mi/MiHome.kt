@@ -32,7 +32,9 @@ data class MiHomeEntity(
 
     fun toMiHome(): MiHome {
         val database = AppDatabase.getDatabase()
-        val deviceList = ArrayList(database.deviceDAO().getDeviceFromHome(homeId))
+        val deviceList = ArrayList(database.deviceDAO().getDeviceFromHome(homeId)).apply {
+            sortBy { !it.isOnline }
+        }
         val roomList = ArrayList<MiRoom>().apply {
             database.roomDAO().getRoom(homeId).forEach {
                 add(it.toMiRoom())

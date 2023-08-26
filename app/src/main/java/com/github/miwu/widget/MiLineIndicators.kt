@@ -21,7 +21,7 @@ class MiLineIndicators(
         get() = height
     private val dotMargin: Int
         get() = 8f.toPx() + dotWidth
-    private var dotMode = 1
+    private var dotMode = 0
 
     // 0 为点 ,1 为线
     init {

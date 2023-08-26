@@ -29,7 +29,7 @@ class DeviceItemAdapter() :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_mi_device, parent, false)
-        list.sortBy { !it.isOnline }
+        //list.sortBy { !it.isOnline } 不能在这里调用
         return ViewHolder(view)
     }
 

@@ -7,6 +7,7 @@ import com.github.miwu.ui.DeviceActivity
 import com.github.miwu.ui.miot.device.AirConditionerDefaultFragment
 import com.github.miwu.ui.miot.device.AirerDefaultFragment
 import com.github.miwu.ui.miot.device.EmptyFragment
+import com.github.miwu.ui.miot.device.FanDefaultFragment
 import com.github.miwu.ui.miot.device.LightDefaultFragment
 import com.github.miwu.ui.miot.device.OutletDefaultFragment
 import com.github.miwu.ui.miot.device.THSensorDefaultFragment
@@ -55,12 +56,16 @@ object DeviceUtils {
                                 AirerDefaultFragment(miotDevice.services)
                             }
 
-                            "vacuum" ->{
+                            "vacuum" -> {
                                 VacuumDefaultFragment(miotDevice.services)
                             }
 
-                            "air-conditioner" ->{
+                            "air-conditioner" -> {
                                 AirConditionerDefaultFragment(miotDevice.services)
+                            }
+
+                            "fan" -> {
+                                FanDefaultFragment(miotDevice.services)
                             }
 
                             else -> {

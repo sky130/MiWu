@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        app:title="@string/login_bar"/>
+        app:title="@string/login_bar" />
 
     <EditText
         android:id="@+id/edit_user"
@@ -22,15 +22,24 @@
         android:layout_marginHorizontal="10dp"
         android:hint="@string/login_edit_user" />
 
-    <EditText
-        android:id="@+id/edit_pwd"
-        style="@style/EditTextStyle"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:ems="10"
-        android:hint="@string/login_edit_pwd"
-        android:inputType="textPassword" />
+        android:maxEms="10"
+        app:endIconMode="password_toggle"
+        app:hintEnabled="false"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_pwd"
+            style="@style/EditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/login_edit_pwd"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_login"

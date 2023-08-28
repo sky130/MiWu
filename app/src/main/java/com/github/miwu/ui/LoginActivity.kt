@@ -12,6 +12,7 @@ import com.github.miwu.util.TextUtils.toast
 import com.github.miwu.util.ViewUtils.addTouchScale
 import kotlin.concurrent.thread
 
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 

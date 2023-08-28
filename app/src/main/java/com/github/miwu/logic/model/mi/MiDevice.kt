@@ -14,7 +14,7 @@ data class MiDevice(
     val model: String, // 设备型号
     val did: String, // DeviceId, 设备Id, 用于操纵设备
     var isOnline: Boolean, // 当前设备是否在线
-    val specType:String, // 设备的控制类型, 需要依靠这个来判断类型
+    val specType:String, // 设备的控制类型, 需要依靠这个来判断类型, 可能为空
     val iconUrl: String, // 设备图标链接, 可能为空, 部分设备不存在图标(至少我遇到过
 ){
     @PrimaryKey(autoGenerate = true)

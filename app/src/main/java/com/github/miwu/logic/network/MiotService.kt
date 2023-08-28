@@ -1,7 +1,5 @@
 package com.github.miwu.logic.network
 
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import com.github.miwu.MainApplication.Companion.loginMsg
 import com.github.miwu.logic.model.mi.MiDevice
 import com.github.miwu.logic.model.mi.MiHome
@@ -9,7 +7,8 @@ import com.github.miwu.logic.model.mi.MiInfo
 import com.github.miwu.logic.model.mi.MiRoom
 import com.github.miwu.logic.model.mi.MiScene
 import com.github.miwu.util.OkHttpUtils
-import com.github.miwu.util.TextUtils.log
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import org.json.JSONObject
 
 object MiotService {
@@ -77,7 +76,7 @@ object MiotService {
                                     x.model,
                                     x.did,
                                     x.isOnline,
-                                    x.specType,
+                                    x.specType ?: "",
                                     getModelIconUrl(x.model) ?: ""
                                 )
                                 y.deviceList.add(miDevice)
@@ -119,7 +118,7 @@ object MiotService {
                                         x.model,
                                         x.did,
                                         x.isOnline,
-                                        x.specType,
+                                        x.specType ?: "",
                                         getModelIconUrl(x.model) ?: ""
                                     )
                                     y.deviceList.add(miDevice)
@@ -192,7 +191,7 @@ object MiotService {
         val name: String,
         val model: String,
         val isOnline: Boolean,
-        @SerializedName("spec_type") val specType: String,
+        @SerializedName("spec_type") val specType: String?,
     )
 
 }

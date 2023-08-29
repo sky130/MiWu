@@ -25,6 +25,14 @@
     <string name="device_small_tip">您可以打开手机端应用添加设备</string>
     <string name="device_opened">已开启</string>
     <string name="device_closed">已关闭</string>
+    <string name="Straight">直吹风</string>
+    <string name="Natural">自然风</string>
+    <string name="Smart">智能风</string>
+    <string name="Sleep">睡眠风</string>
+    <string name="Level1">1 档</string>
+    <string name="Level2">2 档</string>
+    <string name="Level3">3 档</string>
+    <string name="Level4">4 档</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

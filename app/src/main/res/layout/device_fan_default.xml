@@ -31,15 +31,31 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <com.github.miwu.widget.MiIndicatorsCard
+        <com.github.miwu.widget.MiButtonIndicatorsCard
+            android:id="@+id/mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:visibility="gone"
+            app:title="模式" />
+
+        <com.github.miwu.widget.MiButtonIndicatorsCard
             android:id="@+id/fan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
             android:visibility="gone"
-            app:dotMode="0"
-            app:title="风扇"
-            app:unit=" 档" />
+            app:title="风机档位" />
+
+        <!--        <com.github.miwu.widget.MiIndicatorsCard-->
+        <!--            android:id="@+id/fan"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginVertical="5dp"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:dotMode="0"-->
+        <!--            app:title="风扇"-->
+        <!--            app:unit=" 档" />-->
 
         <com.github.miwu.widget.MiTextView
             android:id="@+id/temperature"

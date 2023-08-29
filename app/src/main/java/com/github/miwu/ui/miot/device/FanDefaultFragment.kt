@@ -9,7 +9,6 @@ import com.github.miwu.R
 import com.github.miwu.databinding.DeviceFanDefaultBinding
 import com.github.miwu.logic.dao.HomeDAO
 import com.github.miwu.logic.model.miot.MiotService
-import com.github.miwu.logic.network.DeviceService
 import com.github.miwu.logic.network.MiotSpecService
 import com.github.miwu.ui.manager.MiWidgetManager
 import com.github.miwu.ui.miot.BaseFragment
@@ -71,37 +70,27 @@ class FanDefaultFragment(private val miotServices: ArrayList<MiotService>) : Bas
                             "fan-level" -> {
                                 val list = it.valueList ?: return@forEach
                                 onPiid.toString().log()
-                                // 不需要 0 档关闭, 有独立关闭按钮
-//                                binding.fan.setOnProgressChangerListener { level ->
-//                                    if (level == 0) {
-//                                        manager.launch {
-//                                            DeviceService.setDeviceATT(
-//                                                getDid(),
-//                                                siid,
-//                                                onPiid,
-//                                                false
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                                manager.addNotifyBlock("fan-on") {
-//                                    val att = DeviceService.getDeviceATT(getDid(), siid, onPiid)
-//                                        ?: return@addNotifyBlock
-//                                    runOnUiThread {
-//                                        if (!(att.value as Boolean)) {
-//                                            binding.fan.setProgress(0, false)
-//                                        }
-//                                    }
-//                                }
                                 manager.addView(
                                     binding.fan,
                                     urn2.value,
                                     siid,
                                     piid,
-                                    1,
-                                    list.size,
                                     1
                                 )
+                                binding.fan.setDatas(list, urn2.value)
+                            }
+
+                            "mode" -> {
+                                val list = it.valueList ?: return@forEach
+                                onPiid.toString().log()
+                                manager.addView(
+                                    binding.mode,
+                                    urn2.value,
+                                    siid,
+                                    piid,
+                                    1
+                                )
+                                binding.mode.setDatas(list, urn2.value)
                             }
                         }
                     }

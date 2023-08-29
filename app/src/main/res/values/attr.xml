@@ -66,8 +66,19 @@
         <attr name="minProgress" />
     </declare-styleable>
 
+    <declare-styleable name="MiButtonIndicatorsCard">
+        <attr name="title" />
+    </declare-styleable>
+
     <declare-styleable name="MiButtonCard">
         <attr name="title" />
         <attr name="srcIcon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MiButtonIndicators">
+        <attr name="title" />
+        <attr name="unit" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
     </declare-styleable>
 </resources>

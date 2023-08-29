@@ -6,6 +6,7 @@ import android.view.View
 import android.view.View.VISIBLE
 import com.github.miwu.logic.network.DeviceService
 import com.github.miwu.widget.MiButtonCard
+import com.github.miwu.widget.MiButtonIndicatorsCard
 import com.github.miwu.widget.MiIndicatorsCard
 import com.github.miwu.widget.MiRoundSeekBarCard
 import com.github.miwu.widget.MiSeekBarCard
@@ -45,7 +46,7 @@ class MiWidgetManager {
     private data class AiidViewItem(
         val view: View,
         val siid: Int,
-        val aiid: Int,
+        val aiid: Int
     )
 
     fun addView(
@@ -115,6 +116,14 @@ class MiWidgetManager {
 
                 is MiTextView -> {
 
+                }
+
+                is MiButtonIndicatorsCard -> {
+                    view.setButtonOnClickListener {
+                        launch {
+                            DeviceService.setDeviceATT(did, i.siid, i.piid, it)
+                        }
+                    }
                 }
 
                 is MiIndicatorsCard -> {
@@ -187,6 +196,10 @@ class MiWidgetManager {
 
                         is MiIndicatorsCard -> {
                             view.setProgress((value as Number).toInt(), false)
+                        }
+
+                        is MiButtonIndicatorsCard -> {
+                            view.setIndex((value as Number).toInt())
                         }
                     }
                 }

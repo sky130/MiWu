@@ -52,6 +52,10 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+        binding.gotoLicense.addTouchScale()
+        binding.gotoLicense.setOnClickListener {
+            startActivity<LicenseActivity>()
+        }
         setContentView(binding.root)
     }
 

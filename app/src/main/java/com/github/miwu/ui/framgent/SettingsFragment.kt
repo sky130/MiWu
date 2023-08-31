@@ -8,6 +8,7 @@ import com.github.miwu.R
 import com.github.miwu.databinding.FragmentMainSettingsBinding
 import com.github.miwu.logic.dao.UserDAO
 import com.github.miwu.startActivity
+import com.github.miwu.ui.LicenseActivity
 import com.github.miwu.ui.LoginActivity
 import com.github.miwu.ui.SwitchHomeActivity
 import com.github.miwu.util.GlideUtils
@@ -52,7 +53,10 @@ class SettingsFragment : BaseFragment() {
             UserDAO.logout()
             "登出成功".toast()
         }
+        binding.gotoLicense.addTouchScale()
+        binding.gotoLicense.setOnClickListener {
+            requireActivity().startActivity<LicenseActivity>()
+        }
         return binding.root
     }
-
 }

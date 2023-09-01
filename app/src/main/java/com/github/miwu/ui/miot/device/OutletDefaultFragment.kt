@@ -96,6 +96,7 @@ class OutletDefaultFragment(private val miotServices: ArrayList<MiotService>) : 
         manager.init()
         manager.update()
         manager.notify(1000) // 1.5秒更新一次数据
+        binding.root.requestFocus()
         return binding.root
     }
 

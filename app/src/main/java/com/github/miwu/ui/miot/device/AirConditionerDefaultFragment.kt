@@ -70,6 +70,7 @@ class AirConditionerDefaultFragment(private val miotServices: ArrayList<MiotServ
         manager.init()
         manager.update()
         manager.notify(1000) // 1秒更新一次数据
+        binding.root.requestFocus()
         return binding.root
     }
 

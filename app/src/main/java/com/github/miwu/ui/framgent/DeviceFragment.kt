@@ -46,6 +46,7 @@ class DeviceFragment : BaseFragment() {
             }
             refreshList()
         }
+        binding.recycler.requestFocus()
         return binding.root
     }
 

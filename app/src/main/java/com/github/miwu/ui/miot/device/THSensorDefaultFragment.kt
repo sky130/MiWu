@@ -70,6 +70,7 @@ class THSensorDefaultFragment(private val miotServices: ArrayList<MiotService>) 
         }
         manager.init()
         manager.update()
+        binding.root.requestFocus()
         return binding.root
     }
 

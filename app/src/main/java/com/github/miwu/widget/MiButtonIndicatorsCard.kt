@@ -12,6 +12,7 @@ import com.github.miwu.databinding.MiButtonIndicatorsCardBinding
 import com.github.miwu.logic.model.miot.PropertiesValue
 import com.github.miwu.ui.adapter.ButtonAirConditionerItemAdapter
 import com.github.miwu.ui.adapter.ButtonFanItemAdapter
+import com.github.miwu.util.TextUtils.log
 
 /**
  * @author ch.hu
@@ -56,7 +57,11 @@ class MiButtonIndicatorsCard(
                     }
                 }
 
-                "air-conditioner" -> ButtonAirConditionerItemAdapter(datas, type, context).apply {
+                "air-conditioner", "fan-control" -> ButtonAirConditionerItemAdapter(
+                    datas,
+                    type,
+                    context
+                ).apply {
                     setButtonOnClickListener { level ->
                         listeners.forEach { it(level) }
                     }
@@ -86,7 +91,7 @@ class MiButtonIndicatorsCard(
                     }
                 }
 
-                "air-conditioner" -> {
+                "air-conditioner", "fan-control" -> {
                     (modeItemAdapter as ButtonAirConditionerItemAdapter).setIndex(index) {
                         binding.value.text = it
                     }

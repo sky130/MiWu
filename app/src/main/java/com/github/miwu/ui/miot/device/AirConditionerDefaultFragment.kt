@@ -86,6 +86,29 @@ class AirConditionerDefaultFragment(private val miotServices: ArrayList<MiotServ
                     }
                 }
 
+                "fan-control" -> {
+                    i.properties.forEach { it ->
+                        var onPiid = 0
+                        val piid = it.iid
+                        val urn2 = MiotSpecService.parseUrn(it.type) ?: return@forEach
+                        "${it.valueRange},text".log()
+                        when (urn2.value) {
+                            "fan-level" -> {
+                                val list = it.valueList ?: return@forEach
+                                onPiid.toString().log()
+                                manager.addView(
+                                    binding.fanLevel,
+                                    urn2.value,
+                                    siid,
+                                    piid,
+                                    1
+                                )
+                                binding.fanLevel.setDatas(list, urn2.value, urn.value)
+                            }
+                        }
+                    }
+                }
+
                 "ir-aircondition-control" -> {
                     for (x in i.properties) {
                         val piid = x.iid

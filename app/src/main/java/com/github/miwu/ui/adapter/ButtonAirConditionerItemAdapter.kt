@@ -87,6 +87,19 @@ class ButtonAirConditionerItemAdapter(
                 }
             }
 
+            ContentTypeAirConditioner.AirConditionerFanLevel.value -> {
+                try {
+                    context.getString(
+                        context.resources.getIdentifier(
+                            ContentAirConditionerFanLevel.fromValue(list[position].description)
+                                .toString(), "string", context.packageName
+                        )
+                    )
+                } catch (e: Exception) {
+                    list[position].description
+                }
+            }
+
             else -> {
                 ""
             }
@@ -95,7 +108,19 @@ class ButtonAirConditionerItemAdapter(
 }
 
 enum class ContentTypeAirConditioner(val value: String) {
-    MODE("mode");
+    MODE("mode"),
+    AirConditionerFanLevel("fan-level");
+}
+
+enum class ContentAirConditionerFanLevel(val value: String) {
+    Auto("Auto"), Low("Low"), Medium("Medium"), High("High");
+
+    companion object {
+        private val map =
+            ContentAirConditionerFanLevel.values().associateBy(ContentAirConditionerFanLevel::value)
+
+        fun fromValue(value: String): ContentAirConditionerFanLevel? = map[value]
+    }
 }
 
 enum class ContentAirConditionerMode(val value: String) {

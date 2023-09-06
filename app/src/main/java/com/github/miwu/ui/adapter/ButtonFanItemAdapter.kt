@@ -17,8 +17,12 @@ import com.github.miwu.logic.model.miot.PropertiesValue
  * @date 2023/08/28 18:22
  * Description:
  */
-class ModeItemAdapter(val list: List<PropertiesValue>, val type: String, val context: Context) :
-    RecyclerView.Adapter<ModeItemAdapter.ViewHolder>() {
+class ButtonFanItemAdapter(
+    val list: List<PropertiesValue>,
+    val type: String,
+    val context: Context
+) :
+    RecyclerView.Adapter<ButtonFanItemAdapter.ViewHolder>() {
     private var block: ((Int) -> Unit)? = null
     private var blockLong: ((Int) -> Unit)? = null
     private var index: Int? = null
@@ -41,24 +45,24 @@ class ModeItemAdapter(val list: List<PropertiesValue>, val type: String, val con
 
         holder.img.background = ContextCompat.getDrawable(
             context,
-            if (position == if (ContentType.FAN_LEVEL.value == type) (index
+            if (position == if (ContentTypeFan.FAN_LEVEL.value == type) (index
                     ?: 0) - 1 else index
             ) R.drawable.bg_swicth_button_on else R.drawable.bg_switch_button_gray
         )
         holder.title.text = title
 //        holder.itemView.addTouchScale()
         holder.itemView.setOnClickListener {
-            block?.invoke(if (ContentType.FAN_LEVEL.value == type) position + 1 else position)
+            block?.invoke(if (ContentTypeFan.FAN_LEVEL.value == type) position + 1 else position)
         }
         holder.itemView.setOnLongClickListener {
-            blockLong?.invoke(if (ContentType.FAN_LEVEL.value == type) position + 1 else position)
+            blockLong?.invoke(if (ContentTypeFan.FAN_LEVEL.value == type) position + 1 else position)
             true
         }
     }
 
     fun setIndex(index: Int, result: (title: String) -> Unit) {
         this.index = index
-        var title = getTypeTitle(if (ContentType.FAN_LEVEL.value == type) index - 1 else index)
+        var title = getTypeTitle(if (ContentTypeFan.FAN_LEVEL.value == type) index - 1 else index)
         result(title)
         notifyDataSetChanged()
     }
@@ -77,25 +81,33 @@ class ModeItemAdapter(val list: List<PropertiesValue>, val type: String, val con
 
     fun getTypeTitle(position: Int): String {
         return when (type) {
-            ContentType.MODE.value -> {
-                context.getString(
-                    context.resources.getIdentifier(
-                        ContentFanMode.fromValue(list[position].description).toString(),
-                        "string",
-                        context.packageName
+            ContentTypeFan.MODE.value -> {
+                try {
+                    context.getString(
+                        context.resources.getIdentifier(
+                            ContentFanMode.fromValue(list[position].description).toString(),
+                            "string",
+                            context.packageName
+                        )
                     )
-                )
+                } catch (e: Exception) {
+                    list[position].description
+                }
             }
 
-            ContentType.FAN_LEVEL.value -> {
-                context.getString(
-                    context.resources.getIdentifier(
-                        ContentFanLevel.fromValue(list[position].description)
-                            .toString(),
-                        "string",
-                        context.packageName
+            ContentTypeFan.FAN_LEVEL.value -> {
+                try {
+                    context.getString(
+                        context.resources.getIdentifier(
+                            ContentFanLevel.fromValue(list[position].description)
+                                .toString(),
+                            "string",
+                            context.packageName
+                        )
                     )
-                )
+                } catch (e: Exception) {
+                    list[position].description
+                }
             }
 
             else -> {
@@ -105,7 +117,7 @@ class ModeItemAdapter(val list: List<PropertiesValue>, val type: String, val con
     }
 }
 
-enum class ContentType(val value: String) {
+enum class ContentTypeFan(val value: String) {
     MODE("mode"),
     FAN_LEVEL("fan-level");
 }

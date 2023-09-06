@@ -77,7 +77,7 @@ class FanDefaultFragment(private val miotServices: ArrayList<MiotService>) : Bas
                                     piid,
                                     1
                                 )
-                                binding.fan.setDatas(list, urn2.value)
+                                binding.fan.setDatas(list, urn2.value, urn.value)
                             }
 
                             "mode" -> {
@@ -90,7 +90,7 @@ class FanDefaultFragment(private val miotServices: ArrayList<MiotService>) : Bas
                                     piid,
                                     1
                                 )
-                                binding.mode.setDatas(list, urn2.value)
+                                binding.mode.setDatas(list, urn2.value, urn.value)
                             }
                         }
                     }

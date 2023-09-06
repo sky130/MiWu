@@ -25,6 +25,20 @@
             android:layout_marginBottom="12dp"
             tools:text="@string/device_online" />
 
+        <com.github.miwu.widget.MiSwitchCard
+            android:id="@+id/switch_air_conditioner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <com.github.miwu.widget.MiButtonIndicatorsCard
+            android:id="@+id/mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:visibility="gone"
+            app:title="模式" />
+
         <com.github.miwu.widget.MiIndicatorsCard
             android:id="@+id/temperature"
             android:layout_width="match_parent"

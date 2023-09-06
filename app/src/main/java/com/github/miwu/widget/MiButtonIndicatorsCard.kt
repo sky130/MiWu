@@ -6,10 +6,12 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.github.miwu.R
 import com.github.miwu.databinding.MiButtonIndicatorsCardBinding
 import com.github.miwu.logic.model.miot.PropertiesValue
-import com.github.miwu.ui.adapter.ModeItemAdapter
+import com.github.miwu.ui.adapter.ButtonAirConditionerItemAdapter
+import com.github.miwu.ui.adapter.ButtonFanItemAdapter
 
 /**
  * @author ch.hu
@@ -25,7 +27,8 @@ class MiButtonIndicatorsCard(
     private val listeners = ArrayList<(Int) -> Unit>()
     private lateinit var datas: List<PropertiesValue>
     private lateinit var type: String
-    private lateinit var modeItemAdapter: ModeItemAdapter
+    private lateinit var modeItemAdapter: Adapter<*>
+    private lateinit var service: String
 
     init {
         binding = MiButtonIndicatorsCardBinding.inflate(LayoutInflater.from(context), this, true)
@@ -39,15 +42,30 @@ class MiButtonIndicatorsCard(
         binding.title.text = title
     }
 
-    fun setDatas(datas: List<PropertiesValue>, type: String) {
+    fun setDatas(datas: List<PropertiesValue>, type: String, service: String) {
+        this.service = service
         this.type = type
         this.datas = datas
         val gridLayoutManager = GridLayoutManager(context, datas.size)
         binding.recycler.layoutManager = gridLayoutManager
         if (!::modeItemAdapter.isInitialized) {
-            modeItemAdapter = ModeItemAdapter(datas, type, context).apply {
-                setButtonOnClickListener { level ->
-                    listeners.forEach { it(level) }
+            modeItemAdapter = when (service) {
+                "fan" -> ButtonFanItemAdapter(datas, type, context).apply {
+                    setButtonOnClickListener { level ->
+                        listeners.forEach { it(level) }
+                    }
+                }
+
+                "air-conditioner" -> ButtonAirConditionerItemAdapter(datas, type, context).apply {
+                    setButtonOnClickListener { level ->
+                        listeners.forEach { it(level) }
+                    }
+                }
+
+                else -> ButtonFanItemAdapter(datas, type, context).apply {
+                    setButtonOnClickListener { level ->
+                        listeners.forEach { it(level) }
+                    }
                 }
             }
         }
@@ -61,8 +79,18 @@ class MiButtonIndicatorsCard(
     @SuppressLint("SetTextI18n")
     fun setIndex(index: Int) {
         if (::modeItemAdapter.isInitialized) {
-            modeItemAdapter.setIndex(index) {
-                binding.value.text = it
+            when (service) {
+                "fan" -> {
+                    (modeItemAdapter as ButtonFanItemAdapter).setIndex(index) {
+                        binding.value.text = it
+                    }
+                }
+
+                "air-conditioner" -> {
+                    (modeItemAdapter as ButtonAirConditionerItemAdapter).setIndex(index) {
+                        binding.value.text = it
+                    }
+                }
             }
         }
     }

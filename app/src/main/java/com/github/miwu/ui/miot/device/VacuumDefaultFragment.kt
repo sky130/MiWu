@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.miwu.R
-import com.github.miwu.databinding.DeviceThSensorDefaultBinding
 import com.github.miwu.databinding.DeviceVacuumDefaultBinding
 import com.github.miwu.logic.dao.HomeDAO
 import com.github.miwu.logic.model.miot.MiotService

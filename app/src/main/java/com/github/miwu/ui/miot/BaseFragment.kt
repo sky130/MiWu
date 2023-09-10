@@ -15,6 +15,7 @@ open class BaseFragment(private var mTitle: String = "") : Fragment() {
             (msg.obj as () -> Unit)()
         }
     }
+
     fun runOnUiThread(block: () -> Unit) {
         handler.sendMessage(Message().apply {
             this.obj = block

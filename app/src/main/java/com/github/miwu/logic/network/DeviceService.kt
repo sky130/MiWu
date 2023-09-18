@@ -46,6 +46,26 @@ object DeviceService {
         }
     }
 
+    fun getDeviceATT(atts:ArrayList<GetDeviceAtt>) : ArrayList<GetDeviceAtt>? {
+        val gson = Gson()
+        val data = gson.toJson(GetParams(atts)) ?: return null
+        val result = OkHttpUtils.postData("/miotspec/prop/get", data, loginMsg) ?: return null
+        try {
+            val deviceAtt = gson.fromJson(result, GetResult::class.java)
+            return ArrayList<GetDeviceATT>().apply{
+                for(i in deviceAtt.result){
+                    add(
+                        GetDeviceATT(
+                            code.toString(), iid, siid, piid, value, updateTime, exe_time
+                        )
+                    )
+                }
+            }
+        } catch (_: Exception) {
+            return null
+        }
+    }
+
     fun doAction(did: String, siid: Int, aiid: Int) {
         val data = "{\"params\":{\"did\":\"$did\",\"siid\":$siid,\"aiid\":$aiid,\"in\":[]}}"
         val result = OkHttpUtils.postData("/miotspec/action", data, loginMsg)

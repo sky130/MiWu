@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,52 +10,78 @@ android {
     namespace = "com.github.miwu"
     compileSdk = 33
 
+    val javaVersion = 11
+    compileOptions {
+//        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility(javaVersion)
+        targetCompatibility(javaVersion)
+    }
+    kotlinOptions.jvmTarget = javaVersion.toString()
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.jvmTarget = javaVersion.toString()
+    }
     defaultConfig {
         applicationId = "com.github.miwu"
         minSdk = 26 // 来个人把Base64换掉就能改成21了
         targetSdk = 33
         versionCode = 1
-        versionName = "1.0"
-
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildFeatures {
+        buildConfig = true
+        dataBinding = true
+        viewBinding = true
+    }
+//    signingConfigs {
+//        create("release") {
+//            storeFile = file("")
+//            storePassword = ""
+//            keyAlias = ""
+//            keyPassword = ""
+//        }
+//    }
 
     buildTypes {
-        release {
+        getByName("release") {
+//            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            applicationVariants.all {
+                outputs.all {
+                    if (name.contains("release"))
+                        (this as BaseVariantOutputImpl).outputFileName =
+                            "$name-$versionName-$versionCode.apk"
+                }
+            }
+        }
+        getByName("debug") {
+//            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-DEV"
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        viewBinding = true
-    }
-}
-
-
-/*
-不加会报错
-    Execution failed for task ':app:kspDebugKotlin'.
-> 'compileDebugJavaWithJavac' task (current target is 1.8) and 'kspDebugKotlin' task (current target is 17) jvm target compatibility should be set to the same Java version.
-  Consider using JVM toolchain: https://kotl.in/gradle/jvm/toolchain
-*/
-
-kotlin {
-    jvmToolchain(8)
+    packagingOptions.resources.excludes.addAll(
+        listOf(
+            "**/*.kotlin_*",
+            "META-INF/versions/**",
+        )
+    )
+    lint.warning += "UnsafeOptInUsageError"
+    flavorDimensions.add("miwu")
 }
 
 dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    ksp("com.github.bumptech.glide:compiler:4.11.0")
+    ksp("com.github.bumptech.glide:compiler:4.15.1")
     ksp("androidx.room:room-compiler:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

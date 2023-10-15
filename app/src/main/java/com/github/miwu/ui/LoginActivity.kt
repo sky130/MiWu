@@ -12,6 +12,7 @@ import com.github.miwu.util.TextUtils.toast
 import com.github.miwu.util.ViewUtils.addTouchScale
 import kotlin.concurrent.thread
 
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
@@ -50,6 +51,10 @@ class LoginActivity : AppCompatActivity() {
                     this.finish()
                 }
             }
+        }
+        binding.gotoLicense.addTouchScale()
+        binding.gotoLicense.setOnClickListener {
+            startActivity<LicenseActivity>()
         }
         setContentView(binding.root)
     }

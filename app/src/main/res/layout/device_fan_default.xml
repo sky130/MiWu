@@ -23,10 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            tools:text="@string/device_online" />
+            tools:text="@string/device_opened" />
 
         <com.github.miwu.widget.MiSwitchCard
-            android:id="@+id/switch_air_conditioner"
+            android:id="@+id/switch_fan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
@@ -40,27 +40,43 @@
             app:title="模式" />
 
         <com.github.miwu.widget.MiButtonIndicatorsCard
-            android:id="@+id/fan_level"
+            android:id="@+id/fan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="5dp"
             android:visibility="gone"
             app:title="风机档位" />
 
-        <com.github.miwu.widget.MiIndicatorsCard
+        <!--        <com.github.miwu.widget.MiIndicatorsCard-->
+        <!--            android:id="@+id/fan"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginVertical="5dp"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:dotMode="0"-->
+        <!--            app:title="风扇"-->
+        <!--            app:unit=" 档" />-->
+
+        <com.github.miwu.widget.MiTextView
             android:id="@+id/temperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:dotMode="0"
-            app:maxProgress="3"
             android:visibility="gone"
             app:title="温度"
             app:unit=" ℃" />
 
+        <com.github.miwu.widget.MiTextView
+            android:id="@+id/relative_humidity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:visibility="gone"
+            app:title="湿度"
+            app:unit=" %" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:text="@string/device_tv_empty"

@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     override fun onResume() {
         super.onResume()
-        if(UserDAO.getLocalUser().userId.isEmpty()) finish()
+        if (UserDAO.getLocalUser().userId.isEmpty()) finish()
         refreshList()
     }
 

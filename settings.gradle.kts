@@ -17,3 +17,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "MiWu"
 include(":app")
+
+include(":MiotSDK")

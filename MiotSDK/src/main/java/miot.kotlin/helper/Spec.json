@@ -1,0 +1,596 @@
+{
+    "type": "urn:miot-spec-v2:device:light:0000A001:xhuan-wyrz05:1:0000C802",
+    "description": "xhuan light wyrz05",
+    "services": [
+        {
+            "iid": 1,
+            "type": "urn:miot-spec-v2:service:device-information:00007801:xhuan-wyrz05:1:0000C802",
+            "description": "Device Information",
+            "properties": [
+                {
+                    "iid": 1,
+                    "type": "urn:miot-spec-v2:property:manufacturer:00000001:xhuan-wyrz05:1:0000C802",
+                    "description": "Device Manufacturer",
+                    "format": "string",
+                    "access": [
+                        "read"
+                    ],
+                    "gatt-access": []
+                },
+                {
+                    "iid": 2,
+                    "type": "urn:miot-spec-v2:property:model:00000002:xhuan-wyrz05:1:0000C802",
+                    "description": "Device Model",
+                    "format": "string",
+                    "access": [
+                        "read"
+                    ],
+                    "gatt-access": []
+                },
+                {
+                    "iid": 3,
+                    "type": "urn:miot-spec-v2:property:serial-number:00000003:xhuan-wyrz05:1:0000C802",
+                    "description": "Device Serial Number",
+                    "format": "string",
+                    "access": [
+                        "read"
+                    ],
+                    "gatt-access": []
+                },
+                {
+                    "iid": 4,
+                    "type": "urn:miot-spec-v2:property:firmware-revision:00000005:xhuan-wyrz05:1:0000C802",
+                    "description": "Current Firmware Version",
+                    "format": "string",
+                    "access": [
+                        "read"
+                    ],
+                    "gatt-access": []
+                }
+            ]
+        },
+        {
+            "iid": 2,
+            "type": "urn:miot-spec-v2:service:light:00007802:xhuan-wyrz05:1:0000C802",
+            "description": "Light",
+            "properties": [
+                {
+                    "iid": 1,
+                    "type": "urn:miot-spec-v2:property:on:00000006:xhuan-wyrz05:1:0000C802",
+                    "description": "Switch Status",
+                    "format": "bool",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "gatt-access": []
+                },
+                {
+                    "iid": 2,
+                    "type": "urn:miot-spec-v2:property:brightness:0000000D:xhuan-wyrz05:1:0000C802",
+                    "description": "Brightness",
+                    "format": "uint8",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "percentage",
+                    "value-range": [
+                        1,
+                        100,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 3,
+                    "type": "urn:miot-spec-v2:property:color-temperature:0000000F:xhuan-wyrz05:1:0000C802",
+                    "description": "Color Temperature",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "kelvin",
+                    "value-range": [
+                        2700,
+                        6500,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 7,
+                    "type": "urn:miot-spec-v2:property:mode:00000008:xhuan-wyrz05:1:0000C802",
+                    "description": "Mode",
+                    "format": "uint8",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-list": [
+                        {
+                            "value": 0,
+                            "description": "Sun"
+                        },
+                        {
+                            "value": 1,
+                            "description": "Moon"
+                        },
+                        {
+                            "value": 2,
+                            "description": "Wake"
+                        },
+                        {
+                            "value": 3,
+                            "description": "Sleep"
+                        },
+                        {
+                            "value": 4,
+                            "description": "MyMode1"
+                        },
+                        {
+                            "value": 5,
+                            "description": "MyMode2"
+                        },
+                        {
+                            "value": 6,
+                            "description": "MyMode3"
+                        },
+                        {
+                            "value": 7,
+                            "description": "MyMode4"
+                        },
+                        {
+                            "value": 8,
+                            "description": "MyMode5"
+                        },
+                        {
+                            "value": 9,
+                            "description": "MyMode6"
+                        },
+                        {
+                            "value": 10,
+                            "description": "MyMode7"
+                        },
+                        {
+                            "value": 11,
+                            "description": "MyMode8"
+                        },
+                        {
+                            "value": 12,
+                            "description": "MyMode9"
+                        },
+                        {
+                            "value": 13,
+                            "description": "MyMode10"
+                        },
+                        {
+                            "value": 14,
+                            "description": "MyMode11"
+                        },
+                        {
+                            "value": 15,
+                            "description": "MyMode12"
+                        },
+                        {
+                            "value": 255,
+                            "description": "Invalid"
+                        }
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 9,
+                    "type": "urn:miot-spec-v2:property:default-power-on-state:00000105:xhuan-wyrz05:1:0000C802",
+                    "description": "Default Power On State",
+                    "format": "uint8",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-list": [
+                        {
+                            "value": 0,
+                            "description": "Default"
+                        },
+                        {
+                            "value": 1,
+                            "description": "Off"
+                        },
+                        {
+                            "value": 2,
+                            "description": "On"
+                        }
+                    ],
+                    "gatt-access": []
+                },
+                {
+                    "iid": 12,
+                    "type": "urn:miot-spec-v2:property:flex-switch:000000EC:xhuan-wyrz05:1",
+                    "description": "Flex Switch",
+                    "format": "bool",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "source": 1
+                }
+            ],
+            "actions": [
+                {
+                    "iid": 1,
+                    "type": "urn:miot-spec-v2:action:toggle:00002811:xhuan-wyrz05:1:0000C802",
+                    "description": "Toggle",
+                    "in": [],
+                    "out": []
+                },
+                {
+                    "iid": 2,
+                    "type": "urn:miot-spec-v2:action:brightness-up:00002828:xhuan-wyrz05:1",
+                    "description": "Brightness Up",
+                    "in": [],
+                    "out": []
+                },
+                {
+                    "iid": 3,
+                    "type": "urn:miot-spec-v2:action:brightness-down:00002829:xhuan-wyrz05:1",
+                    "description": "Brightness Down",
+                    "in": [],
+                    "out": []
+                }
+            ]
+        },
+        {
+            "iid": 4,
+            "type": "urn:xhuan-spec:service:ctrl-panel:00007801:xhuan-wyrz05:1",
+            "description": "ctrl-panel",
+            "properties": [
+                {
+                    "iid": 1,
+                    "type": "urn:xhuan-spec:property:panel-one:00000001:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 2,
+                    "type": "urn:xhuan-spec:property:panel-two:00000002:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 3,
+                    "type": "urn:xhuan-spec:property:panel-three:00000003:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 4,
+                    "type": "urn:xhuan-spec:property:panel-four:00000004:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 5,
+                    "type": "urn:xhuan-spec:property:panel-five:00000005:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 6,
+                    "type": "urn:xhuan-spec:property:panel-six:00000006:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 7,
+                    "type": "urn:xhuan-spec:property:panel-bind-enable:00000007:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "bool",
+                    "access": [
+                        "write"
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 8,
+                    "type": "urn:xhuan-spec:property:panel-pos:00000008:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "read",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                }
+            ]
+        },
+        {
+            "iid": 5,
+            "type": "urn:xhuan-spec:service:custom-service:00007802:xhuan-wyrz05:1",
+            "description": "custom-service",
+            "properties": [
+                {
+                    "iid": 1,
+                    "type": "urn:xhuan-spec:property:color-swap:00000001:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "bool",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 2,
+                    "type": "urn:xhuan-spec:property:dimm-gradient-time:00000002:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "ms",
+                    "value-range": [
+                        0,
+                        10000,
+                        100
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 3,
+                    "type": "urn:xhuan-spec:property:reset-lock:00000003:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "bool",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 4,
+                    "type": "urn:xhuan-spec:property:sleep-ligtness-start:00000004:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "percentage",
+                    "value-range": [
+                        0,
+                        100,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 5,
+                    "type": "urn:xhuan-spec:property:sleep-duration:00000005:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "minutes",
+                    "value-range": [
+                        0,
+                        600,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 6,
+                    "type": "urn:xhuan-spec:property:wake-lightness-start:00000006:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "percentage",
+                    "value-range": [
+                        0,
+                        100,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 7,
+                    "type": "urn:xhuan-spec:property:wake-duration:00000007:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "minutes",
+                    "value-range": [
+                        0,
+                        600,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 8,
+                    "type": "urn:xhuan-spec:property:light-on-gradient:00000008:xhuan-wyrz05:1",
+                    "description": "light-on-gradient",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "ms",
+                    "value-range": [
+                        0,
+                        10000,
+                        100
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 9,
+                    "type": "urn:xhuan-spec:property:light-off-gradient:00000009:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint16",
+                    "access": [
+                        "read",
+                        "write",
+                        "notify"
+                    ],
+                    "unit": "ms",
+                    "value-range": [
+                        0,
+                        10000,
+                        100
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                },
+                {
+                    "iid": 10,
+                    "type": "urn:xhuan-spec:property:online-counter:0000000a:xhuan-wyrz05:1",
+                    "description": "",
+                    "format": "uint32",
+                    "access": [
+                        "write",
+                        "notify"
+                    ],
+                    "value-range": [
+                        0,
+                        4294967295,
+                        1
+                    ],
+                    "source": 1,
+                    "gatt-access": []
+                }
+            ],
+            "actions": [
+                {
+                    "iid": 1,
+                    "type": "urn:xhuan-spec:action:colortemp-up:00002801:xhuan-wyrz05:1",
+                    "description": "colortemp-up",
+                    "in": [],
+                    "out": []
+                },
+                {
+                    "iid": 2,
+                    "type": "urn:xhuan-spec:action:colortemp-down:00002802:xhuan-wyrz05:1",
+                    "description": "colortemp-down",
+                    "in": [],
+                    "out": []
+                }
+            ]
+        }
+    ]
+}

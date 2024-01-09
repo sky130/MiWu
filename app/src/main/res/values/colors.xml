@@ -9,11 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lrc">#FFFFFFFF</color>
     <color name="gray">#353638</color>
+    <color name="transparent">#00000000</color>
+    <color name="blue">#6186FC</color>
     <color name="dialog_black">#E6000000</color>
     <color name="lrc_disable">#80FFFFFF</color>
     <color name="lrc_bg">#33FFFFFF</color>
-    <color name="transparent">#00000000</color>
-    <color name="blue">#6186FC</color>
     <color name="gray_light">#FFE0E0E0</color>
     <color name="mi_green">#57D1B8</color>
     <color name="red" tools:ignore="MissingDefaultResource">#FC4850</color>

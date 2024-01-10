@@ -31,13 +31,15 @@ object AppRepository {
                         "加载家庭失败".toast()
                     } else {
                         homeList.clear()
-                        homeList.addAll(it.result.homes)
+                        it.result.homes?.let { it1 -> homeList.addAll(it1) }
+                        it.result.shareHomes?.let { it1 -> homeList.addAll(it1) }
                         homes.value = it
                     }
                 }
             }?.let {
+                it.log.d()
                 if (AppPreferences.homeId == 0L) {
-                    it.result.homes.firstNotNullOf { home ->
+                    it.result.homes?.firstNotNullOf { home ->
                         AppPreferences.homeId = home.id.toLong()
                         AppPreferences.homeUid = home.uid
                     }
@@ -58,7 +60,7 @@ object AppRepository {
                         "加载设备失败".toast()
                     } else {
                         deviceList.clear()
-                        deviceList.addAll(it.result.deviceInfo)
+                        it.result.deviceInfo?.let { it1 -> deviceList.addAll(it1) }
                         devices.value = it
                     }
                 }

@@ -9,8 +9,8 @@ data class MiotDevices(
     @SerializedName("result") val result: Result
 ) {
     data class Result(
-        @SerializedName("home_info") val homeInfo: HomeInfo,
-        @SerializedName("device_info") val deviceInfo: List<Device>,
+        @SerializedName("home_info") val homeInfo: HomeInfo?,
+        @SerializedName("device_info") val deviceInfo: List<Device>?,
         @SerializedName("has_more") val hasMore: Boolean,
         @SerializedName("max_did") val maxDid: String
     ) {

@@ -89,7 +89,7 @@ class Miot(private val user: MiotUser) {
     )
 
     suspend fun getHomes(
-        appVer: Int = 0, fetchShare: Boolean = false, fetchShareDev: Boolean = false, limit: Int = 25
+        appVer: Int = 7, fetchShare: Boolean = true, fetchShareDev: Boolean = true, limit: Int = 300
     ) = withContext(Dispatchers.IO) {
         return@withContext miotService.getHomes(
             GetHome(

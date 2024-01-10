@@ -11,7 +11,8 @@ data class MiotHomes(
     data class Result(
         @SerializedName("has_more") val hasMore: Boolean,
         @SerializedName("homelist") val homes: List<Home>,
-        @SerializedName("max_id") val maxId: String
+        @SerializedName("max_id") val maxId: String,
+        @SerializedName("share_home_list")  val shareHomes: List<Home>?,
     ) {
         data class Home(
             @SerializedName("address") val address: String,

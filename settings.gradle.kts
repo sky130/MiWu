@@ -1,9 +1,14 @@
+
+
 pluginManagement {
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven("https://jitpack.io/")
+        maven {
+            setUrl("https://jitpack.io/")
+            isAllowInsecureProtocol = true
+        }
     }
 }
 dependencyResolutionManagement {
@@ -11,7 +16,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io/")
+        maven {
+            setUrl("https://jitpack.io/")
+            isAllowInsecureProtocol = true
+        }
+//        maven("https://jitpack.io/")
     }
 }
 

@@ -37,6 +37,11 @@
         <attr name="title" />
     </declare-styleable>
 
+    <declare-styleable name="BackTitleBar">
+        <attr name="title" />
+    </declare-styleable>
+
+
     <declare-styleable name="MiSwitchCard">
         <attr name="piid" />
         <attr name="siid" />

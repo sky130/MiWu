@@ -1,46 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:paddingBottom="10dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_title_round"
+    tools:parentTag="android.widget.LinearLayout">
 
-    <LinearLayout
-        android:id="@+id/left_area"
+    <TextView
+
+        android:id="@+id/title_textview"
+        style="@style/TextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="6dp"
+        android:ellipsize="end"
         android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/left_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0.5dp"
-            android:layout_marginEnd="4dp"
-            android:gravity="center"
-            android:src="@drawable/back_icon" />
-
-        <TextView
-            android:id="@+id/title_textview"
-            style="@style/TextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="6dp"
-            android:ellipsize="end"
-            android:maxEms="3"
-            android:singleLine="true" />
-    </LinearLayout>
-
-    <android.view.View
-        android:layout_width="12dp"
-        android:layout_height="1dp"
-        android:visibility="gone" />
-
-    <TextClock
-        android:id="@+id/clock_stub"
-        style="@style/ClockStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-</merge>
+        android:maxEms="5"
+        android:singleLine="true" />
+</LinearLayout>

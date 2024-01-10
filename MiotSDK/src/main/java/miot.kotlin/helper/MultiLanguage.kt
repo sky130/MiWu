@@ -2,12 +2,19 @@
 
 package miot.kotlin.helper
 
+import android.util.ArrayMap
+import miot.kotlin.MiotManager.gson
 import miot.kotlin.model.att.SpecAtt
 import org.json.JSONObject
 
 fun getLanguageMap(language: String, languageCode: String): Map<String, String>? {
     return try {
-        JSONObject(language).getJSONObject("data").getJSONObject(languageCode).toMap() as Map<String, String>
+        gson.fromJson(
+            JSONObject(language)
+                .getJSONObject("data")
+                .getJSONObject(languageCode).toString(),
+            ArrayMap::class.java
+        ) as Map<String, String>
     } catch (_: Exception) {
         null
     }

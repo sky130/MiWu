@@ -21,6 +21,7 @@
             <ImageView
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:id="@+id/deviceImage"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/empty_list_icon" />

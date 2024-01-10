@@ -80,7 +80,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
 
 
-    implementation("com.github.kndroidx:KndroidX:v0.1.1-alpha-1")
+    implementation("com.github.KndroidX:KndroidX:de68f7d259")
 
 
     //noinspection GradleDependency
@@ -114,6 +114,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.android.material:material:1.11.0")
 
+    implementation(project(":MiotSDK"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:background="@drawable/bg_title_round"
+    tools:parentTag="android.widget.LinearLayout">
 
     <TextView
         android:id="@+id/textView"
@@ -14,16 +18,4 @@
         android:gravity="center"
         android:maxEms="3"
         android:singleLine="true" />
-
-    <android.view.View
-        android:layout_width="12dp"
-        android:layout_height="1dp"
-        android:visibility="gone" />
-
-    <TextClock
-        android:id="@+id/clock_stub"
-        style="@style/ClockStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-</merge>
+</LinearLayout>

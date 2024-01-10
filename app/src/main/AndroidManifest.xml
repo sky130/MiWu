@@ -20,25 +20,39 @@
         android:theme="@style/Theme.MiHome"
         tools:targetApi="31">
         <activity
-            android:name=".ui.SwitchHomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.DeviceActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="false"
-            android:launchMode="singleTask" />
+            android:taskAffinity="" />
+        <!--        <activity-->
+        <!--            android:name=".ui.SwitchHomeActivity"-->
+        <!--            android:exported="false" />-->
+        <!--        <activity-->
+        <!--            android:name=".ui.DeviceActivity"-->
+        <!--            android:exported="false"-->
+        <!--            android:launchMode="singleTask" />-->
+        <!--        <activity-->
+        <!--            android:name=".ui.LoginActivity"-->
+        <!--            android:exported="false" />-->
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
         <activity
-            android:name=".ui.LoginActivity"
-            android:exported="false" />
+            android:name=".ui.main.MainActivity"
+            android:exported="false"
+            android:taskAffinity="" />
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="false" />
+            android:name=".ui.home.HomeActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <!--        <activity-->
+        <!--            android:name=".ui.LicenseActivity"-->
+        <!--            android:exported="false" />-->
         <activity
-            android:name=".ui.LicenseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.MiHome.Splash">
+            android:taskAffinity=""
+            android:theme="@style/Theme.MiHome.Splash"
+            tools:ignore="WearSplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

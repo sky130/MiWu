@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.framgent.SettingsFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="fragment"
+            type="com.github.miwu.ui.main.fragment.UserFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.viewmodel.MainViewModel" />
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,14 +41,13 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
-                <com.github.miwu.widget.AntiAliasCircleImageView
+                <ImageView
                     android:id="@+id/avatarImage"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    tools:src="@tools:sample/avatars" />
+                    android:layout_marginRight="10dp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -121,6 +128,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="3dp"
                 android:background="@drawable/bg_btn"
+                android:onClick="@{()->fragment.startHomeActivity()}"
                 android:text="@string/switch_home"
                 android:textColor="#FFFFFFFF"
                 android:textSize="17sp" />
@@ -150,4 +158,4 @@
                 android:textSize="17sp" />
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</layout>

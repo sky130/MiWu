@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.viewmodel.LoginViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.login.LoginActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="30dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:background="@drawable/bg_item"
+                    android:hint="@string/login_edit_user"
+                    android:padding="15dp"
+                    android:singleLine="true"
+                    android:text="@={viewModel.user}" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/bg_item"
+                    android:hint="@string/login_edit_pwd"
+                    android:padding="15dp"
+                    android:singleLine="true"
+                    android:text="@={viewModel.password}" />
+
+                <com.github.miwu.widget.app.AppButton
+                    style="@style/ButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="7dp"
+                    android:onClick="@{()->activity.login()}"
+                    android:text="@string/user_btn_login" />
+            </LinearLayout>
+        </ScrollView>
+
+        <com.github.miwu.widget.app.BackTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/login_bar" />
+    </FrameLayout>
+</layout>

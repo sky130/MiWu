@@ -1,10 +1,13 @@
 package com.github.miwu.miot
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.AttributeSet
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.github.miwu.MainApplication.Companion.miot
-import com.github.miwu.widget.miot.MiotBaseWidget
+import com.github.miwu.miot.widget.MiotBaseWidget
 import kndroidx.extension.RunnableX
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,10 +15,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.helper.GetAtt
+import miot.kotlin.helper.SetAtt
 import miot.kotlin.model.att.DeviceAtt
 import miot.kotlin.model.miot.MiotDevices
 
-class MiotManager(
+class MiotDeviceManager(
     private val device: MiotDevices.Result.Device,
     private val miotLayout: ViewGroup,
 ) {
@@ -33,8 +37,18 @@ class MiotManager(
     private val viewList = arrayListOf<MiotBaseWidget<*>>()
 
     fun addView(view: MiotBaseWidget<*>) {
+        view.setManager(this)
         viewList.add(view)
     }
+
+    inline fun <reified V : MiotBaseWidget<*>> createView(context: Context) =
+        context.let {
+            V::class.java.getDeclaredConstructor(
+                Context::class.java,
+                AttributeSet::class.java,
+                Int::class.java
+            ).newInstance(it, null, 0)
+        }
 
     fun post(delayMillis: Long) {
         if (delayMillis < 350) return
@@ -42,9 +56,16 @@ class MiotManager(
         handler.postDelayed(runnable, delayMillis)
     }
 
-    fun cancel() {
+    fun destroy() {
         delayMillis = 0
         handler.removeCallbacks(runnable)
+        job.cancel()
+    }
+
+    fun putValue(value: Any, siid: Int, piid: Int) {
+        scope.launch(Dispatchers.IO) {
+            miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value)))
+        }
     }
 
     fun refresh() {
@@ -72,3 +93,4 @@ class MiotManager(
         }
     }
 }
+

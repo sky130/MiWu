@@ -41,6 +41,10 @@
             android:exported="false"
             android:taskAffinity="" />
         <activity
+            android:name=".ui.device.DeviceActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false"
             android:taskAffinity="" />

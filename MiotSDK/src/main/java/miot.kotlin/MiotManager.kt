@@ -114,7 +114,7 @@ object MiotManager {
         specService.getSpecMultiLanguage(urn).execute().body()?.string()
     }
 
-    suspend fun getSpecAttWithLanguage(urn: String, languageCode: String): SpecAtt? {
+    suspend fun getSpecAttWithLanguage(urn: String, languageCode: String="zh_cn"): SpecAtt? {
         val att = getSpecAtt(urn) ?: return null
         val language = getSpecMultiLanguage(urn) ?: return att
         val map = getLanguageMap(language, languageCode) ?: return att

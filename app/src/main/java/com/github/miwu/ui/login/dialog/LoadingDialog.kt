@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.miwu.MainApplication
 import com.github.miwu.R
 import com.github.miwu.databinding.DialogLoadingBinding
-import com.github.miwu.dialog.AppDialog
+import com.github.miwu.basic.AppDialog
 import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.ui.main.MainActivity
 import com.github.miwu.viewmodel.LoginViewModel

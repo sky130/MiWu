@@ -1,4 +1,4 @@
-package com.github.miwu.dialog
+package com.github.miwu.basic
 
 import android.app.Dialog
 import android.graphics.Color
@@ -12,11 +12,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import androidx.annotation.StyleRes
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -13,6 +13,9 @@
             android:id="@+id/miot_widget_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="60dp"
+            android:paddingHorizontal="10dp"
             android:layout_height="wrap_content">
 
         </LinearLayout>

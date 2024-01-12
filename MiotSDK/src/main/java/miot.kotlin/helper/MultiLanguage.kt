@@ -44,7 +44,7 @@ fun SpecAtt.convertLanguage(language: Map<String, String>): SpecAtt {
                     if (it.iid == siid) {
                         when (type) {
                             "property" -> {
-                                it.properties.forEach { property ->
+                                it.properties?.forEach { property ->
                                     if (property.iid == piid) {
                                         property.description = desc
                                         return@serviceForEach
@@ -53,7 +53,7 @@ fun SpecAtt.convertLanguage(language: Map<String, String>): SpecAtt {
                             }
 
                             "action" -> {
-                                it.actions.forEach { action ->
+                                it.actions?.forEach { action ->
                                     if (action.iid == piid) {
                                         action.description = desc
                                         return@serviceForEach
@@ -72,7 +72,7 @@ fun SpecAtt.convertLanguage(language: Map<String, String>): SpecAtt {
                 val index = splitId[5].toInt()
                 this.services.forEach serviceForEach@{
                     if (it.iid == siid) {
-                        it.properties.forEach { property ->
+                        it.properties?.forEach { property ->
                             if (property.iid == piid) {
                                 property.valueList?.let { list ->
                                     list[index].description = desc

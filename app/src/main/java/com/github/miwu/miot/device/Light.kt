@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import com.github.miwu.miot.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.widget.Switch
+import kndroidx.extension.log
 import miot.kotlin.model.att.SpecAtt
-import miot.kotlin.utils.Urn
 
 class Light(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, manager),
     SpecAttHelper {
@@ -25,7 +25,10 @@ class Light(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, 
     ) {
         when (service to property) {
             "light" to "on" -> {
-
+                "$service $property".log.d()
+                manager.addView(
+                    manager.createView<Switch>(layout, siid, piid)
+                )
             }
         }
     }

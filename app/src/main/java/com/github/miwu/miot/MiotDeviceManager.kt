@@ -5,13 +5,13 @@ import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.github.miwu.MainApplication.Companion.miot
 import com.github.miwu.miot.widget.MiotBaseWidget
 import kndroidx.extension.RunnableX
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.helper.GetAtt
@@ -39,15 +39,34 @@ class MiotDeviceManager(
     fun addView(view: MiotBaseWidget<*>) {
         view.setManager(this)
         viewList.add(view)
+        miotLayout.apply {
+            addView(
+                view,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, // 宽度为 MATCH_PARENT（填满父容器）
+                    ViewGroup.LayoutParams.WRAP_CONTENT // 高度为 WRAP_CONTENT（根据内容自适应）
+                )
+            )
+            requestLayout()
+            invalidate()
+        }
     }
 
-    inline fun <reified V : MiotBaseWidget<*>> createView(context: Context) =
+    inline fun <reified V : MiotBaseWidget<*>> createView(
+        viewGroup: ViewGroup,
+        siid: Int,
+        piid: Int,
+    ) = createView<V>(viewGroup.context, siid, piid)
+
+    inline fun <reified V : MiotBaseWidget<*>> createView(context: Context, siid: Int, piid: Int) =
         context.let {
             V::class.java.getDeclaredConstructor(
-                Context::class.java,
-                AttributeSet::class.java,
-                Int::class.java
-            ).newInstance(it, null, 0)
+                Context::class.java
+            ).newInstance(it).apply {
+                this.siid = siid
+                this.piid = piid
+                this.setManager(this@MiotDeviceManager)
+            }
         }
 
     fun post(delayMillis: Long) {
@@ -63,8 +82,11 @@ class MiotDeviceManager(
     }
 
     fun putValue(value: Any, siid: Int, piid: Int) {
+        handler.removeCallbacks(runnable)
+        job.cancelChildren()
         scope.launch(Dispatchers.IO) {
             miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value)))
+            post(delayMillis)
         }
     }
 
@@ -75,14 +97,15 @@ class MiotDeviceManager(
                 attList.add(GetAtt(siid, piid))
             }
         }
+        if (attList.isEmpty()) return
         scope.launch(Dispatchers.IO) {
             miot.getDeviceAtt(device, attList.toTypedArray())?.let {
-                refreshValue(it.result)
+                refreshValue(it.result ?: return@let)
             }
         }
     }
 
-    private suspend fun refreshValue(list: List<DeviceAtt.Att>) = withContext(Dispatchers.IO) {
+    private suspend fun refreshValue(list: List<DeviceAtt.Att>) = withContext(Dispatchers.Main) {
         for (att in list) {
             viewLoop@ for (view in viewList) {
                 if (att.siid == view.siid && att.piid == view.piid) {

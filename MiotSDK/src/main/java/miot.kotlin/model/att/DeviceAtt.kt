@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class DeviceAtt(
     @SerializedName("code") val code: Int,
     @SerializedName("message") val message: String,
-    @SerializedName("result") val result: List<Att>,
+    @SerializedName("result") val result: ArrayList<Att>?,
 ){
     data class Att(
         @SerializedName("did") val did: String,

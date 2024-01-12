@@ -9,10 +9,10 @@ data class SpecAtt(
     @SerializedName("type") val type: String
 ) {
     data class Service(
-        @SerializedName("actions") val actions: List<Action>,
+        @SerializedName("actions") val actions: List<Action>?,
         @SerializedName("description") var description: String,
         @SerializedName("iid") val iid: Int,
-        @SerializedName("properties") val properties: List<Property>,
+        @SerializedName("properties") val properties: List<Property>?,
         @SerializedName("type") val type: String
     ) {
         data class Action(

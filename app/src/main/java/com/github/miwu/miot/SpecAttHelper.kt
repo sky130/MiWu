@@ -1,25 +1,30 @@
 package com.github.miwu.miot
 
+import kndroidx.extension.log
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.utils.parseUrn
 
 interface SpecAttHelper {
 
-    fun initAtt(att: SpecAtt) {
+   fun initAtt(att: SpecAtt) {
         for (service in att.services) {
             val serviceUrn = service.type.parseUrn()
-            val value = serviceUrn.value
+            val name = serviceUrn.name
             val siid = service.iid
-            for (property in service.properties) {
-                val propertyUrn = property.type.parseUrn()
-                property.apply {
-                    onPropertyFound(siid, value, iid, propertyUrn.value, this)
+            service.properties?.let {
+                for (property in it) {
+                    val propertyUrn = property.type.parseUrn()
+                    property.apply {
+                        onPropertyFound(siid, name, iid, propertyUrn.name, this)
+                    }
                 }
             }
-            for (action in service.actions) {
-                val actionUrn = action.type.parseUrn()
-                action.apply {
-                    onActionFound(siid, value, iid, actionUrn.value, this)
+            service.actions?.let {
+                for (action in it) {
+                    val actionUrn = action.type.parseUrn()
+                    action.apply {
+                        onActionFound(siid, name, iid, actionUrn.name, this)
+                    }
                 }
             }
         }

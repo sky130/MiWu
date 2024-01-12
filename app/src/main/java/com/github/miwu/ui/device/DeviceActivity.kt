@@ -8,6 +8,7 @@ import com.github.miwu.miot.MiotDeviceManager
 import com.github.miwu.miot.device.Light
 import com.github.miwu.viewmodel.DeviceViewModel
 import kndroidx.activity.ViewActivityX
+import kndroidx.extension.log
 import kndroidx.extension.start
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     private val layout by lazy { binding.miotWidgetLayout }
     private val manager by lazy { MiotDeviceManager(device, layout) }
     private val urn by lazy { device.specType?.parseUrn() }
-    private val mode by lazy { urn?.type }
+    private val mode by lazy { urn?.name }
 
     override fun beforeSetContent() {
         device = gson.fromJson(
@@ -35,7 +36,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             device.specType?.also {
                 val att = MiotManager.getSpecAttWithLanguage(it)
-                withContext(Dispatchers.IO) {
+                withContext(Dispatchers.Main) {
                     att?.let { att ->
                         initSpecAtt(att)
                     }
@@ -48,11 +49,15 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
 
     private fun initSpecAtt(att: SpecAtt) {
         // 未来考虑换成注解
+        mode!!.log.d()
         when (mode) {
             "light" -> {
-                Light(layout, manager).onLayout(att)
+                Light(layout, manager).apply {
+                    onLayout(att)
+                }
             }
         }
+        att.log.d()
         manager.post(1000L)
     }
 

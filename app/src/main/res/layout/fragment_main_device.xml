@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="fragment"
+            type="com.github.miwu.ui.main.fragment.MainFragment" />
         <variable
             name="viewModel"
             type="com.github.miwu.viewmodel.MainViewModel" />
@@ -63,6 +65,7 @@
                 android:paddingTop="50dp"
                 android:paddingBottom="50dp"
                 android:scrollbars="vertical"
+                app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
                 app:data="@{viewModel.deviceList}"
                 app:itemLayout="@{@layout/item_mi_device}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">

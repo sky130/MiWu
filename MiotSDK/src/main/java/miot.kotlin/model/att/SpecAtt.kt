@@ -33,7 +33,7 @@ data class SpecAtt(
             @SerializedName("type") val type: String,
             @SerializedName("unit") val unit: String,
             @SerializedName("value-list") val valueList: List<Value>?,
-            @SerializedName("value-range") val valueRange: List<Long>?
+            @SerializedName("value-range") val valueRange: List<Number>?
         ) {
             data class Value(
                 @SerializedName("description") var description: String, @SerializedName("value") val value: Int

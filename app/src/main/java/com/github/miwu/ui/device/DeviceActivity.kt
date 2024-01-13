@@ -6,17 +6,20 @@ import com.github.miwu.MainApplication.Companion.gson
 import com.github.miwu.databinding.ActivityDeviceBinding
 import com.github.miwu.miot.MiotDeviceManager
 import com.github.miwu.miot.device.Light
+import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.viewmodel.DeviceViewModel
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.log
 import kndroidx.extension.start
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.MiotManager
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.utils.parseUrn
+import java.io.File
 
 class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     private lateinit var device: MiotDevices.Result.Device
@@ -35,12 +38,23 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     override fun init() {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             device.specType?.also {
-                val att = MiotManager.getSpecAttWithLanguage(it)
-                withContext(Dispatchers.Main) {
-                    att?.let { att ->
-                        initSpecAtt(att)
+                File(this@DeviceActivity.cacheDir.absolutePath + "/" + it.hashCode()).let { file ->
+                    if (file.isFile) {
+                        val att = gson.fromJson(file.readText(), SpecAtt::class.java)
+                        withContext(Dispatchers.Main) {
+                            initSpecAtt(att)
+                        }
+                    } else {
+                        val att = MiotManager.getSpecAttWithLanguage(it)
+                        att?.let { at ->
+                            file.writeText(gson.toJson(at))
+                            withContext(Dispatchers.Main) {
+                                initSpecAtt(at)
+                            }
+                        }
                     }
                 }
+
             }.let {
 
             }
@@ -48,16 +62,8 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     }
 
     private fun initSpecAtt(att: SpecAtt) {
-        // 未来考虑换成注解
-        mode!!.log.d()
-        when (mode) {
-            "light" -> {
-                Light(layout, manager).apply {
-                    onLayout(att)
-                }
-            }
-        }
-        att.log.d()
+        mode ?: return // TODO
+        initSpecAttFun(mode!!, att, layout, manager)
         manager.post(1000L)
     }
 

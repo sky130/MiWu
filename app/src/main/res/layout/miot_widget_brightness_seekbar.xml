@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.github.miwu.widget.app.AppSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/miot_widget_card_height"
+        android:minHeight="@dimen/miot_widget_card_height"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
+        android:progressDrawable="@drawable/seek_brightness"
+        tools:progress="50" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="15dp"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:src="@drawable/ic_brightness"
+        android:importantForAccessibility="no" />
+</FrameLayout>

@@ -8,14 +8,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <requestFocus/>
         <LinearLayout
             android:id="@+id/miot_widget_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:clipToPadding="false"
             android:paddingVertical="60dp"
-            android:paddingHorizontal="10dp"
+            android:paddingHorizontal="@dimen/device_activity_padding"
             android:layout_height="wrap_content">
 
         </LinearLayout>

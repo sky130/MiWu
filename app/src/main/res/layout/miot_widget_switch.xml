@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/miot_widget_card_height"
     android:background="@drawable/bg_item"
     android:padding="10dp">
 
     <ImageView
         android:id="@+id/img"
+        android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:background="@drawable/bg_switch_button_off"
-        android:maxHeight="40dp"
+        android:maxHeight="45dp"
         android:padding="10dp"
         android:src="@drawable/ic_power" />
 

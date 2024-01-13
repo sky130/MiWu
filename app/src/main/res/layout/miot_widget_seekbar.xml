@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_item"
+    android:padding="10dp">
+
+    <com.github.miwu.widget.app.AppSeekBar
+        android:progressDrawable="@drawable/seek_brightness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="60dp"
+        android:minHeight="60dp"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp" />
+
+</LinearLayout>

@@ -3,6 +3,8 @@ package com.github.miwu.miot.device
 import android.view.ViewGroup
 import com.github.miwu.miot.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
+import com.github.miwu.miot.widget.BrightnessSeekBar
+import com.github.miwu.miot.widget.ColorTemperatureSeekbar
 import com.github.miwu.miot.widget.Switch
 import kndroidx.extension.log
 import miot.kotlin.model.att.SpecAtt
@@ -14,7 +16,7 @@ class Light(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, 
 
     override suspend fun onQuickAction() = TODO("Not yet implemented")
 
-    override fun onLayout(att: SpecAtt) = initAtt(att)
+    override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
     override fun onPropertyFound(
         siid: Int,
@@ -25,10 +27,15 @@ class Light(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, 
     ) {
         when (service to property) {
             "light" to "on" -> {
-                "$service $property".log.d()
-                manager.addView(
-                    manager.createView<Switch>(layout, siid, piid)
-                )
+                createAddView<Switch>(siid, piid, obj)
+            }
+
+            "light" to "brightness" -> {
+                createAddView<BrightnessSeekBar>(siid, piid, obj)
+            }
+
+            "light" to "color-temperature" -> {
+                createAddView<ColorTemperatureSeekbar>(siid, piid, obj)
             }
         }
     }

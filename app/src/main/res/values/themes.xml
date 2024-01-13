@@ -8,6 +8,7 @@
         <item name="android:selectableItemBackground">@null</item>
         <item name="android:selectableItemBackgroundBorderless">@null</item>
         <item name="android:windowSwipeToDismiss">true</item>
+        <item name="android:scrollbars">vertical</item>
     </style>
 
     <style name="Theme.MiHome" parent="Base.Theme.MiHome" />

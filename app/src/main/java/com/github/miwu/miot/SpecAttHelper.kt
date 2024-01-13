@@ -1,12 +1,11 @@
 package com.github.miwu.miot
 
-import kndroidx.extension.log
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.utils.parseUrn
 
 interface SpecAttHelper {
 
-   fun initAtt(att: SpecAtt) {
+   fun forEachAtt(att: SpecAtt) {
         for (service in att.services) {
             val serviceUrn = service.type.parseUrn()
             val name = serviceUrn.name

@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="fragment"
             type="com.github.miwu.ui.main.fragment.MainFragment" />
+
         <variable
             name="viewModel"
             type="com.github.miwu.viewmodel.MainViewModel" />
@@ -14,8 +16,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        android:layout_height="match_parent">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -56,21 +57,27 @@
                     android:textSize="10sp" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <androidx.wear.widget.WearableRecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
+                android:background="@color/transparent"
                 android:overScrollMode="never"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:paddingHorizontal="@dimen/device_activity_padding"
                 android:paddingTop="50dp"
                 android:paddingBottom="50dp"
                 android:scrollbars="vertical"
-                app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
                 app:data="@{viewModel.deviceList}"
+                app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
+                app:itemEventHandler="@{fragment}"
                 app:itemLayout="@{@layout/item_mi_device}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-                <requestFocus/>
-            </androidx.recyclerview.widget.RecyclerView>
+
+                <requestFocus />
+            </androidx.wear.widget.WearableRecyclerView>
 
         </FrameLayout>
 

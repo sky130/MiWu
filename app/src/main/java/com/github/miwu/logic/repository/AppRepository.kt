@@ -1,5 +1,6 @@
 package com.github.miwu.logic.repository
 
+import android.util.ArrayMap
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,21 @@ object AppRepository {
     val homeList = ObservableArrayList<MiotHomes.Result.Home>()
     val homes = MutableLiveData<MiotHomes>()
     val devices = MutableLiveData<MiotDevices>()
+    private val deviceRoomName = ArrayMap<String, String>()
+
+    fun getRoomName(device: MiotDevices.Result.Device): String {
+        val name = deviceRoomName[device.did]
+        if (name != null) return name
+        for (home in homeList) {
+            for (room in home.rooms) {
+                if (device.did in room.dids) {
+                    deviceRoomName[device.did] = room.name
+                    return room.name
+                }
+            }
+        }
+        return "未知位置"
+    }
 
     fun loadHomes() {
         scope.launch(Dispatchers.IO) {

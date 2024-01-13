@@ -18,7 +18,7 @@
     <color name="mi_green">#57D1B8</color>
     <color name="red" tools:ignore="MissingDefaultResource">#FC4850</color>
     <color name="orange">#FE733A</color>
-    <color name="color_temperature_start">#DC7202</color>
-    <color name="color_temperature_end">#C4D0E6</color>
+    <color name="color_temperature_start">#FEBF23</color>
+    <color name="color_temperature_end">#FFFFFF</color>
 
 </resources>

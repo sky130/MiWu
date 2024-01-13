@@ -2,4 +2,6 @@
 <resources>
     <dimen name="content_horizontal_distance">10dp</dimen>
     <dimen name="title_bar_right_hotspot">72dp</dimen>
+    <dimen name="miot_widget_card_height">65dp</dimen>
+    <dimen name="device_activity_padding">10dp</dimen>
 </resources>

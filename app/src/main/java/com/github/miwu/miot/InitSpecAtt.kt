@@ -3,6 +3,7 @@ package com.github.miwu.miot
 import android.view.ViewGroup
 import com.github.miwu.miot.device.Airer
 import com.github.miwu.miot.device.Light
+import com.github.miwu.miot.device.Vacuum
 import miot.kotlin.model.att.SpecAtt
 
 // 未来考虑换成注解
@@ -14,6 +15,10 @@ fun initSpecAttFun(mode: String, att: SpecAtt, layout: ViewGroup, manager: MiotD
 
         "airer" -> {
             Airer(layout, manager).onLayout(att)
+        }
+
+        "vacuum" -> {
+            Vacuum(layout, manager).onLayout(att)
         }
     }
 }

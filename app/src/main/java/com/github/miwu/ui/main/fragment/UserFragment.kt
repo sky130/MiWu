@@ -1,5 +1,6 @@
 package com.github.miwu.ui.main.fragment
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.github.miwu.databinding.FragmentMainDeviceBinding
 import com.github.miwu.databinding.FragmentMainSettingsBinding
@@ -10,6 +11,10 @@ import kndroidx.extension.start
 import kndroidx.fragment.ViewFragmentX
 
 class UserFragment : ViewFragmentX<FragmentMainSettingsBinding, MainViewModel>() {
+    override fun init() {
+        viewModel.loadInfo()
+    }
+
     override fun onResume() {
         super.onResume()
         binding.root.requestFocus()

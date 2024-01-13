@@ -15,14 +15,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotHomes
+import miot.kotlin.model.miot.MiotScenes
 
 object AppRepository {
     private val job = Job()
     private val scope = CoroutineScope(job)
     val deviceList = ObservableArrayList<MiotDevices.Result.Device>()
     val homeList = ObservableArrayList<MiotHomes.Result.Home>()
+    val sceneList = ObservableArrayList<MiotScenes.Result.Scene>()
     val homes = MutableLiveData<MiotHomes>()
     val devices = MutableLiveData<MiotDevices>()
+    val scenes = MutableLiveData<MiotScenes>()
+
     private val deviceRoomName = ArrayMap<String, String>()
 
     fun getRoomName(device: MiotDevices.Result.Device): String {
@@ -79,6 +83,22 @@ object AppRepository {
                         it.result.deviceInfo?.let { it1 -> deviceList.addAll(it1) }
                         devices.value = it
                     }
+                }
+            }
+        }
+    }
+
+    suspend fun loadDevices() {
+        miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId)?.also {
+            it.log.d()
+        }.let {
+            withContext(Dispatchers.Main) {
+                if (it == null) {
+                    "加载设备失败".toast()
+                } else {
+                    deviceList.clear()
+                    it.result.deviceInfo?.let { it1 -> deviceList.addAll(it1) }
+                    devices.value = it
                 }
             }
         }

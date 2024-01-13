@@ -1,8 +1,10 @@
 package miot.kotlin
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miot.kotlin.exception.MiotUnauthorizedException
+import miot.kotlin.helper.Action
 import miot.kotlin.helper.GetAtt
 import miot.kotlin.helper.SetAtt
 import miot.kotlin.model.miot.MiotDevices
@@ -32,18 +34,26 @@ class Miot(private val user: MiotUser) {
                     throw MiotUnauthorizedException("serviceToken or securityToken not found.")
                 }
                 request = chain.request().newBuilder().apply {
-                    val data = getBodyStr(chain.request().body ?: throw RuntimeException("body is empty"))
+                    val data =
+                        getBodyStr(chain.request().body ?: throw RuntimeException("body is empty"))
                     val nonce = getNonce()
                     val signedNonce = generateSignedNonce(securityToken, nonce)
                     val signature = generateSignature(
-                        chain.request().url.toString().replace(MIOT_SERVER_URL, "/"), signedNonce, nonce, data
+                        chain.request().url.toString().replace(MIOT_SERVER_URL, "/"),
+                        signedNonce,
+                        nonce,
+                        data
                     )
                     removeHeader("User-Agent")
                     addHeader("User-Agent", USER_AGENT)
                     addHeader("x-xiaomi-protocal-flag-cli", "PROTOCAL-HTTP2")
-                    addHeader("Cookie", "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken;")
+                    addHeader(
+                        "Cookie",
+                        "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken;"
+                    )
                     post(
-                        FormBody.Builder().add("_nonce", nonce).add("data", data).add("signature", signature).build()
+                        FormBody.Builder().add("_nonce", nonce).add("data", data)
+                            .add("signature", signature).build()
                     )
                 }.build()
             }
@@ -55,7 +65,9 @@ class Miot(private val user: MiotUser) {
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
-    private val tempChars = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+    private val tempChars =
+        "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+
     private fun getNonce() = (1..16).map { _ -> tempChars.random() }.joinToString("")
     private fun getBodyStr(body: RequestBody): String {
         Buffer().apply {
@@ -83,13 +95,12 @@ class Miot(private val user: MiotUser) {
         val deviceId: String = MiotManager.getRandomDeviceId(),
     )
 
-    data class UserInfo(
-        val avatar: String,
-        val nickname: String,
-    )
 
     suspend fun getHomes(
-        appVer: Int = 7, fetchShare: Boolean = true, fetchShareDev: Boolean = true, limit: Int = 300
+        appVer: Int = 7,
+        fetchShare: Boolean = true,
+        fetchShareDev: Boolean = true,
+        limit: Int = 300,
     ) = withContext(Dispatchers.IO) {
         return@withContext miotService.getHomes(
             GetHome(
@@ -99,7 +110,7 @@ class Miot(private val user: MiotUser) {
     }
 
     suspend fun getDevices(
-        homeOwnerId: Long, homeId: Long, limit: Int = 200
+        homeOwnerId: Long, homeId: Long, limit: Int = 200,
     ) = withContext(Dispatchers.IO) {
         return@withContext miotService.getDevices(
             GetDevices(homeOwnerId, homeId, limit)
@@ -123,22 +134,38 @@ class Miot(private val user: MiotUser) {
         }.execute().body()
     }
 
-    suspend fun getDeviceAtt(device: MiotDevices.Result.Device, att: Array<out GetAtt>) = withContext(Dispatchers.IO) {
-        val list = Array(att.size) {
-            att[it].run {
-                GetParams.Att(device.did, siid, piid)
+    suspend fun getDeviceAtt(device: MiotDevices.Result.Device, att: Array<out GetAtt>) =
+        withContext(Dispatchers.IO) {
+            val list = Array(att.size) {
+                att[it].run {
+                    GetParams.Att(device.did, siid, piid)
+                }
             }
+            return@withContext miotService.getDeviceAtt(GetParams(list)).execute().body()
         }
-        return@withContext miotService.getDeviceAtt(GetParams(list)).execute().body()
-    }
 
-    suspend fun setDeviceAtt(device: MiotDevices.Result.Device, att: Array<out SetAtt>) = withContext(Dispatchers.IO) {
-        val list = Array(att.size) {
-            att[it].run {
-                SetParams.Att(device.did, siid, piid, value)
+    suspend fun setDeviceAtt(device: MiotDevices.Result.Device, att: Array<out SetAtt>) =
+        withContext(Dispatchers.IO) {
+            val list = Array(att.size) {
+                att[it].run {
+                    SetParams.Att(device.did, siid, piid, value)
+                }
             }
+            return@withContext miotService.setDeviceAtt(SetParams(list)).execute().body()
         }
-        return@withContext miotService.setDeviceAtt(SetParams(list)).execute().body()
-    }
 
+    suspend fun doAction(device: MiotDevices.Result.Device, siid: Int, aiid: Int) =
+        withContext(Dispatchers.IO) {
+            return@withContext miotService.doAction(
+                ActionBody(
+                    ActionBody.Action(
+                        device.did, siid, aiid
+                    )
+                )
+            ).execute().body()
+        }
+
+    suspend fun getUserInfo() = withContext(Dispatchers.IO) {
+        return@withContext miotService.getUserInfo(GetUserInfo(user.userId)).execute().body()
+    }
 }

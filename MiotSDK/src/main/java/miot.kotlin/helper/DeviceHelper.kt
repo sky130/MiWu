@@ -9,6 +9,7 @@ import org.json.JSONObject
 
 data class GetAtt(val siid: Int, val piid: Int)
 data class SetAtt(val siid: Int, val piid: Int, val value: Any)
+data class Action(val siid: Int, val aiid: Int)
 
 
 suspend fun MiotDevices.Result.Device.getAtt(miot: Miot, vararg att: GetAtt) = miot.getDeviceAtt(this, att)

@@ -40,6 +40,12 @@ fun miotIcon(imageView: ImageView, device: MiotDevices.Result.Device, fragment: 
     }
 }
 
+@BindingAdapter(value = ["url"])
+fun loadImg(imageView: ImageView, url: String?) {
+    if (url != null)
+        loadImageUrl(imageView, url)
+}
+
 fun loadImageUrl(imageView: ImageView, url: String) {
     Glide.with(imageView.context)
         .load(url)

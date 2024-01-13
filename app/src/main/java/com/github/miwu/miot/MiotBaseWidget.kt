@@ -18,19 +18,23 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     var siid: Int = -1
     val binding: VB
     var property: SpecAtt.Service.Property? = null
-    var action: SpecAtt.Service.Action? = null
+    var actions = arrayListOf<Pair<Int,SpecAtt.Service.Action>>()
     private lateinit var miotManager: MiotDeviceManager
 
     init {
         binding = createViewBinding()
     }
 
-    open fun init(){}
+    open fun init() {}
 
     abstract fun onValueChange(value: Any) // 需要自己转换类型
 
     fun putValue(value: Any) {
         miotManager.putValue(value, siid, piid)
+    }
+
+    fun doAction(siid: Int, aiid: Int) {
+        miotManager.doAction(siid, aiid)
     }
 
     fun stopRefresh() = miotManager.stopRefresh()

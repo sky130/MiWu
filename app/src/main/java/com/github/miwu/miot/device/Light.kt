@@ -6,7 +6,6 @@ import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.widget.BrightnessSeekBar
 import com.github.miwu.miot.widget.ColorTemperatureSeekbar
 import com.github.miwu.miot.widget.Switch
-import kndroidx.extension.log
 import miot.kotlin.model.att.SpecAtt
 
 class Light(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, manager),
@@ -43,7 +42,7 @@ class Light(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, 
     override fun onActionFound(
         siid: Int,
         service: String,
-        piid: Int,
+        aiid: Int,
         action: String,
         obj: SpecAtt.Service.Action,
     ) {

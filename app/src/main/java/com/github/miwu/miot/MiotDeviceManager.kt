@@ -11,12 +11,14 @@ import com.github.miwu.MainApplication.Companion.miot
 import com.github.miwu.miot.widget.MiotBaseWidget
 import kndroidx.extension.RunnableX
 import kndroidx.extension.dp
+import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import miot.kotlin.helper.Action
 import miot.kotlin.helper.GetAtt
 import miot.kotlin.helper.SetAtt
 import miot.kotlin.model.att.DeviceAtt
@@ -61,42 +63,39 @@ class MiotDeviceManager(
 
     inline fun <reified V : MiotBaseWidget<*>> createAddView(
         context: Context,
-        siid: Int,
-        piid: Int,
-        obj: Any? = null,
-    ) = createView<V>(context, siid, piid, obj).also { addView(it) }
+        siid: Int = -1,
+        piid: Int = -1,
+        property: SpecAtt.Service.Property? = null,
+    ) = createView<V>(context, siid, piid, property).also { addView(it) }
 
     inline fun <reified V : MiotBaseWidget<*>> createAddView(
         viewGroup: ViewGroup,
-        siid: Int,
-        piid: Int,
-        obj: Any? = null,
-    ) = createView<V>(viewGroup.context, siid, piid, obj).also { addView(it) }
+        siid: Int = -1,
+        piid: Int = -1,
+        property: SpecAtt.Service.Property? = null,
+    ) = createView<V>(viewGroup.context, siid, piid, property).also { addView(it) }
 
     inline fun <reified V : MiotBaseWidget<*>> createView(
         viewGroup: ViewGroup,
-        siid: Int,
-        piid: Int,
-        obj: Any? = null,
-    ) = createView<V>(viewGroup.context, siid, piid, obj)
+        siid: Int = -1,
+        piid: Int = -1,
+        property: SpecAtt.Service.Property? = null,
+    ) = createView<V>(viewGroup.context, siid, piid, property)
 
     inline fun <reified V : MiotBaseWidget<*>> createView(
         context: Context,
-        siid: Int,
-        piid: Int,
-        obj: Any? = null,
+        siid: Int = -1,
+        piid: Int = -1,
+        property: SpecAtt.Service.Property? = null,
     ) =
-        context.let {
+        context.let { c ->
             V::class.java.getDeclaredConstructor(
                 Context::class.java
-            ).newInstance(it).apply {
+            ).newInstance(c).apply {
                 this.siid = siid
                 this.piid = piid
-                if (obj is SpecAtt.Service.Property) {
-                    this.property = obj
-                }
-                if (obj is SpecAtt.Service.Action) {
-                    this.action = obj
+                property?.let {
+                    this.property = it
                 }
                 this.setManager(this@MiotDeviceManager)
             }
@@ -132,13 +131,20 @@ class MiotDeviceManager(
         }
     }
 
+    fun doAction(siid: Int, aiid: Int) {
+        scope.launch(Dispatchers.IO) {
+            miot.doAction(device, siid, aiid)!!.log.d()
+        }
+    }
+
     fun refresh() {
         scope.launch(Dispatchers.IO) {
             val attList = arrayListOf<GetAtt>()
             for (i in viewList) {
-                i.apply {
-                    attList.add(GetAtt(siid, piid))
-                }
+                if (i.piid != -1)
+                    i.apply {
+                        attList.add(GetAtt(siid, piid))
+                    }
             }
             if (attList.isEmpty()) return@launch
             miot.getDeviceAtt(device, attList.toTypedArray())?.let {
@@ -149,10 +155,9 @@ class MiotDeviceManager(
 
     private suspend fun refreshValue(list: List<DeviceAtt.Att>) = withContext(Dispatchers.Main) {
         for (att in list) {
-            viewLoop@ for (view in viewList) {
+            for (view in viewList) {
                 if (att.siid == view.siid && att.piid == view.piid) {
                     view.onValueChange(att.value)
-                    break@viewLoop
                 }
             }
         }

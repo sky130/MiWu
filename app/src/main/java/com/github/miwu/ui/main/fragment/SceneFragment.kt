@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.wear.widget.WearableLinearLayoutManager
 import com.github.miwu.databinding.FragmentMainDeviceBinding
+import com.github.miwu.databinding.FragmentMainSceneBinding
 import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.ui.device.DeviceActivity.Companion.startDeviceActivity
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.model.miot.MiotDevices
 
-class MainFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),SwipeRefreshLayout.OnRefreshListener {
+class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),SwipeRefreshLayout.OnRefreshListener {
 
     override fun init() {
         binding.recycler.apply {

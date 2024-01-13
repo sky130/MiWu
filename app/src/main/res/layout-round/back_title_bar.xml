@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="10dp"
-    android:gravity="center_vertical"
     android:background="@drawable/bg_title_round"
-    tools:parentTag="android.widget.LinearLayout">
+    android:clickable="false"
+    android:gravity="center_vertical">
 
     <TextView
-
         android:id="@+id/title_textview"
         style="@style/TextStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginVertical="6dp"
-        android:ellipsize="end"
+        android:clickable="false"
+        android:ellipsize="marquee"
         android:gravity="center"
+        android:includeFontPadding="false"
+        android:marqueeRepeatLimit="marquee_forever"
         android:maxEms="5"
+        android:paddingBottom="25dp"
         android:singleLine="true" />
 </LinearLayout>

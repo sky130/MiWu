@@ -14,6 +14,7 @@ class MainTitleBar(context: Context, attributeSet: AttributeSet?) : LinearLayout
         val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.MainTitleBar, 0, 0)
         titleText = typedArray.getString(R.styleable.MainTitleBar_title)
         typedArray.recycle()
+        isClickable = false
         this.gravity = 16
         inflate(context, R.layout.main_title_bar, this)
         titleTextView = findViewById(R.id.textView)

@@ -44,7 +44,7 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.wear.widget.WearableRecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

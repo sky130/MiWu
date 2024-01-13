@@ -4,6 +4,7 @@ import miot.kotlin.model.att.DeviceAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotHomes
 import miot.kotlin.model.miot.MiotScenes
+import miot.kotlin.model.miot.MiotUserInfo
 import miot.kotlin.service.body.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -38,4 +39,10 @@ interface MiotService {
 
     @POST("miotspec/prop/get")
     fun getDeviceAtt(@Body body: GetParams): Call<DeviceAtt>
+
+    @POST("miotspec/action")
+    fun doAction(@Body body: ActionBody): Call<ResponseBody>
+
+    @POST("home/profile")
+    fun getUserInfo(@Body body: GetUserInfo): Call<MiotUserInfo>
 }

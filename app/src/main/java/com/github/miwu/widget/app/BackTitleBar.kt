@@ -6,15 +6,21 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextClock
 import android.widget.TextView
 import com.github.miwu.R
+import com.github.miwu.databinding.BackTitleBarBinding
 
 @SuppressLint("CustomViewStyleable")
-class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int = 0) :
+class BackTitleBar @JvmOverloads constructor(
+    context: Context,
+    attributeSet: AttributeSet?,
+    defStyleAttr: Int = 0,
+) :
     LinearLayout(context, attributeSet, defStyleAttr) {
     private var backIcon: ImageView? = null
     private var leftArea: LinearLayout? = null
@@ -24,15 +30,17 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
     private var isAnimating = false
 
     init {
-        val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.BackTitleBar, 0, 0)
+        val typedArray =
+            context.obtainStyledAttributes(attributeSet, R.styleable.BackTitleBar, 0, 0)
         titleText = typedArray.getString(R.styleable.BackTitleBar_title)
         typedArray.recycle()
         this.initializeViews(context)
     }
 
     private fun initializeViews(context: Context) {
-        inflate(context, R.layout.back_title_bar, this)
-        this.isClickable = true
+        BackTitleBarBinding.inflate(LayoutInflater.from(context), this, true)
+        isClickable = false
+//        inflate(context, R.layout.back_title_bar, this)
         leftArea = findViewById(R.id.left_area)
         backIcon = findViewById(R.id.left_icon)
         textClock = findViewById(R.id.clock_stub)
@@ -53,10 +61,13 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        if (!isClickable) return super.onInterceptTouchEvent(event)
         if (event.action == MotionEvent.ACTION_DOWN && isTouchWithinHotspot(event)) {
             isAnimating = true
         }
-        return if (isTouchWithinHotspot(event) && isAnimating) true else super.onInterceptTouchEvent(event)
+        return if (isTouchWithinHotspot(event) && isAnimating) true else super.onInterceptTouchEvent(
+            event
+        )
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -75,6 +86,7 @@ class BackTitleBar @JvmOverloads constructor(context: Context, attributeSet: Att
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isClickable) return super.onTouchEvent(event)
         if (event.action == MotionEvent.ACTION_DOWN) {
             if (isAnimating) {
                 animateDown()

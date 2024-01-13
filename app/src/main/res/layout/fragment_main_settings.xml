@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -21,112 +22,48 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/activity_padding_top">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginVertical="3dp">
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.github.miwu.widget.app.AntiAliasCircleImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    app:url="@{viewModel.avatar}" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:ellipsize="end"
-                    android:maxEms="7"
-                    android:singleLine="true"
-                    android:text="@string/avatar"
+                    android:layout_marginTop="5dp"
+                    android:text="@{viewModel.nickname}"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="18sp"
 
-                <ImageView
-                    android:id="@+id/avatarImage"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginVertical="3dp">
+                    tools:text="Sky233" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:ellipsize="end"
-                    android:maxEms="7"
-                    android:singleLine="true"
-                    android:text="@string/uid"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/uidText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:ellipsize="end"
-                    android:gravity="right"
-                    android:maxEms="7"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    tools:text="00001" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginVertical="3dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:ellipsize="end"
-                    android:maxEms="7"
-                    android:singleLine="true"
-                    android:text="@string/nickname"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/nicknameText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:ellipsize="end"
-                    android:gravity="right"
-                    android:maxEms="7"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    tools:text="null" />
-
-            </RelativeLayout>
+                    android:layout_marginTop="0dp"
+                    android:text="@{viewModel.uid}"
+                    android:textSize="15sp"
+                    tools:text="114514" />
+            </LinearLayout>
 
             <Button
+
                 android:id="@+id/switchHome"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/bg_btn"
                 android:onClick="@{()->fragment.startHomeActivity()}"
                 android:text="@string/switch_home"

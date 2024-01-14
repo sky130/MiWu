@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.github.miwu.MainApplication.Companion.gson
 import com.github.miwu.databinding.ActivityDeviceBinding
 import com.github.miwu.miot.MiotDeviceManager
+import com.github.miwu.miot.MiotQuickManager
+import com.github.miwu.miot.device.DeviceType
 import com.github.miwu.miot.device.Light
 import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.viewmodel.DeviceViewModel
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.log
 import kndroidx.extension.start
+import kndroidx.extension.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -27,12 +30,24 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     private val manager by lazy { MiotDeviceManager(device, layout) }
     private val urn by lazy { device.specType?.parseUrn() }
     private val mode by lazy { urn?.name }
+    private var deviceType: DeviceType? = null
 
     override fun beforeSetContent() {
         device = gson.fromJson(
             intent.getStringExtra("device"),
             MiotDevices.Result.Device::class.java
         )
+    }
+
+    fun onAddButtonClick() {
+        if (deviceType == null) {
+            "设备暂不支持".toast()
+        } else if (deviceType!!.isQuickActionable) {
+            MiotQuickManager.addQuick(deviceType!!.getQuick()!!)
+            "添加成功".toast()
+        } else {
+            "设备没有快捷操作".toast()
+        }
     }
 
     override fun init() {
@@ -63,7 +78,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
 
     private fun initSpecAtt(att: SpecAtt) {
         mode ?: return // TODO
-        initSpecAttFun(mode!!, att, layout, manager)
+        deviceType = initSpecAttFun(device, mode!!, att, layout, manager)
         manager.post(1000L)
     }
 

@@ -1,11 +1,13 @@
 package com.github.miwu.miot
 
+import com.github.miwu.miot.device.DeviceType
+import com.github.miwu.miot.widget.MiotBaseWidget
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.utils.parseUrn
 
 interface SpecAttHelper {
 
-   fun forEachAtt(att: SpecAtt) {
+   fun DeviceType.forEachAtt(att: SpecAtt):DeviceType {
         for (service in att.services) {
             val serviceUrn = service.type.parseUrn()
             val name = serviceUrn.name
@@ -27,6 +29,7 @@ interface SpecAttHelper {
                 }
             }
         }
+       return this
     }
 
     fun onPropertyFound(

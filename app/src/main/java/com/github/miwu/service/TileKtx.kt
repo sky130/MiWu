@@ -106,6 +106,7 @@ fun Grid(
     padding: PaddingValue? = null,
     spanCount: Int = 1,
     rowPadding: PaddingValue? = null,
+
     modifiers: Modifiers.Builder.() -> Unit = {},
     block: Grid.() -> Unit = {},
 ) = Column(width, height, padding, modifiers) {
@@ -137,7 +138,9 @@ class Grid(
     }
 
     private fun getRowBuilder() = Row.Builder().setHeight(wrap()).setWidth(expand()).apply {
-        setModifiers(Modifiers.Builder().setPadding(Padding.Builder().apply {
+        setModifiers(Modifiers.Builder().apply {
+            setVerticalAlignment(Vertical(VERTICAL_ALIGN_CENTER))
+        }.setPadding(Padding.Builder().apply {
             rowPadding?.let {
                 setEnd(it.end)
                 setTop(it.top)
@@ -178,7 +181,7 @@ fun TileService.Text(
     padding: PaddingValue? = null,
     modifiers: Modifiers.Builder.() -> Unit = {},
     block: Text.Builder.() -> Unit = {},
-) = Text.Builder(this, text).apply{
+) = Text.Builder(this, text).apply {
     setModifiers(
         Modifiers.Builder().apply {
             if (padding != null) setPadding(
@@ -329,7 +332,8 @@ fun Vertical(value: Int) = VerticalAlignmentProp.Builder().setValue(
 ).build()
 
 fun PaddingValue(dp: DpProp) = PaddingValue(dp, dp, dp, dp)
-fun PaddingValue(vertical: DpProp = 0.dp,horizontal: DpProp = 0.dp) = PaddingValue(vertical, vertical, horizontal, horizontal)
+fun PaddingValue(vertical: DpProp = 0.dp, horizontal: DpProp = 0.dp) =
+    PaddingValue(vertical, vertical, horizontal, horizontal)
 
 
 data class PaddingValue(val top: DpProp, val bottom: DpProp, val start: DpProp, val end: DpProp)

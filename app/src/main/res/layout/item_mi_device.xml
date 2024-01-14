@@ -18,6 +18,7 @@
         android:foreground="?attr/selectableItemBackground"
         android:background="@drawable/bg_list_item"
         android:gravity="center_vertical"
+        android:onLongClick="@{()->handler.onItemLongClick(item)}"
         android:orientation="vertical"
         android:layout_marginVertical="3dp"
         android:layout_marginHorizontal="2dp"

@@ -6,11 +6,13 @@ import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.widget.StatusText
 import com.github.miwu.miot.widget.VacuumButtonBar
 import miot.kotlin.model.att.SpecAtt
+import miot.kotlin.model.miot.MiotDevices
 
-class Vacuum(layout: ViewGroup, manager: MiotDeviceManager) : DeviceType(layout, manager),
+class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
+    DeviceType(device, layout, manager),
     SpecAttHelper {
     override val isQuickActionable = false
-    override suspend fun onQuickAction() {}
+    override fun getQuick() = null
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
     private val buttonBar by lazy { createAddView<VacuumButtonBar>() }

@@ -40,9 +40,10 @@ class MainFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),
         requireContext().startDeviceActivity(item)
     }
 
-    fun onItemLongClick(item: Any?) :Boolean{
+    fun onItemLongClick(item: Any?): Boolean {
         item as MiotDevices.Result.Device
-        MiotQuickManager.addQuick(LightQuick(item, 2, 1))
+
+//        MiotQuickManager.addQuick(LightQuick(item, 2, 1))
         return true
     }
 

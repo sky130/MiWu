@@ -2,22 +2,42 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.device.DeviceActivity" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <requestFocus/>
-        <LinearLayout
-            android:id="@+id/miot_widget_layout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:clipToPadding="false"
-            android:paddingVertical="60dp"
-            android:paddingHorizontal="@dimen/device_activity_padding"
-            android:layout_height="wrap_content">
 
+        <requestFocus />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/device_activity_padding"
+            android:paddingVertical="60dp">
+
+            <LinearLayout
+                android:id="@+id/miot_widget_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <com.github.miwu.widget.app.AppButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:onClick="@{()->activity.onAddButtonClick()}"
+                android:background="@drawable/bg_button"
+                android:paddingHorizontal="20dp"
+                android:text="添加到卡片" />
         </LinearLayout>
     </ScrollView>
 </layout>

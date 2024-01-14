@@ -112,11 +112,21 @@ dependencies {
 
 
     implementation("androidx.wear:wear:1.4.0-alpha01")
-
+    implementation("androidx.wear.tiles:tiles:1.3.0-beta01")
+    implementation("androidx.wear.protolayout:protolayout:1.1.0-beta01")
+    implementation("androidx.wear.protolayout:protolayout-material:1.1.0-beta01")
+    implementation("androidx.wear.protolayout:protolayout-expression:1.1.0-beta01")
 
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.android.material:material:1.11.0")
+
+
+    implementation("com.google.guava:guava:31.0.1-android")
+    implementation("androidx.concurrent:concurrent-futures:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0")
+    implementation("com.google.android.horologist:horologist-compose-tools:0.1.8")
+    implementation("com.google.android.horologist:horologist-tiles:0.1.8")
 
     implementation(project(":MiotSDK"))
 

@@ -157,7 +157,7 @@ class MiotDeviceManager(
         for (att in list) {
             for (view in viewList) {
                 if (att.siid == view.siid && att.piid == view.piid) {
-                    view.onValueChange(att.value)
+                    view.onValueChange(att.value ?: continue)
                 }
             }
         }

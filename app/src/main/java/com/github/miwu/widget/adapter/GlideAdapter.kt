@@ -2,6 +2,7 @@ package com.github.miwu.widget.adapter
 
 import android.util.ArrayMap
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
@@ -12,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.helper.getIconUrl
 import miot.kotlin.model.miot.MiotDevices
+import miot.kotlin.model.miot.MiotScenes
 
 val map = ArrayMap<String, String>()
 
@@ -46,9 +48,26 @@ fun loadImg(imageView: ImageView, url: String?) {
         loadImageUrl(imageView, url)
 }
 
+@BindingAdapter(value = ["scene"])
+fun loadImg(imageView: ImageView, scene: MiotScenes.Result.Scene) {
+    if (scene.icon.isNotEmpty())
+        loadImageUrl(imageView, scene.icon)
+    else{
+        loadImageRes(imageView,R.drawable.ic_mi_scene)
+    }
+}
+
 fun loadImageUrl(imageView: ImageView, url: String) {
     Glide.with(imageView.context)
         .load(url)
+        .placeholder(R.drawable.mi_icon_small)
+        .error(R.drawable.mi_icon_small)
+        .into(imageView)
+}
+
+fun loadImageRes(imageView: ImageView, @DrawableRes res: Int) {
+    Glide.with(imageView.context)
+        .load(res)
         .placeholder(R.drawable.mi_icon_small)
         .error(R.drawable.mi_icon_small)
         .into(imageView)

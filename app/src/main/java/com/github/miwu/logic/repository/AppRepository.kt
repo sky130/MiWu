@@ -88,6 +88,44 @@ object AppRepository {
         }
     }
 
+
+    fun loadScene() {
+        if (AppPreferences.homeId == 0L) return
+        scope.launch(Dispatchers.IO) {
+            miot.getScenes(AppPreferences.homeId)?.also {
+                it.log.d()
+            }.let {
+                withContext(Dispatchers.Main) {
+                    if (it == null) {
+                        "加载设备失败".toast()
+                    } else {
+                        sceneList.clear()
+                        it.result.scenes?.let { it1 -> sceneList.addAll(it1) }
+                        scenes.value = it
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun loadScenes() {
+        if (AppPreferences.homeId == 0L) return
+        miot.getScenes(AppPreferences.homeId)?.also {
+            it.log.d()
+        }.let {
+            withContext(Dispatchers.Main) {
+                if (it == null) {
+                    "加载设备失败".toast()
+                } else {
+                    sceneList.clear()
+                    it.result.scenes?.let { it1 -> sceneList.addAll(it1) }
+                    scenes.value = it
+                }
+            }
+        }
+    }
+
+
     suspend fun loadDevices() {
         miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId)?.also {
             it.log.d()

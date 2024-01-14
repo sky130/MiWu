@@ -4,6 +4,7 @@
     <string name="login_edit_user">账号/手机号/邮箱</string>
     <string name="login_edit_pwd">密码</string>
     <string name="user_btn_login">登录</string>
+    <string name="tile_description">快捷卡片</string>
     <string name="toast_user_pwd_not_null">账号密码不能为空</string>
     <string name="toast_login_failure">登录失败,请检查账号密码是否正确</string>
     <string name="toast_login_success">登录成功</string>

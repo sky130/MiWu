@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.miwu.R
 import com.github.miwu.ui.main.fragment.MainFragment
+import com.github.miwu.ui.main.fragment.SceneFragment
 import com.github.miwu.ui.main.fragment.UserFragment
 import kndroidx.extension.string
 
@@ -16,6 +17,7 @@ class MainViewPagerAdapter(activity: AppCompatActivity) :
 
     private val list = listOf(
         R.string.app_name.string to MainFragment(),
+        R.string.app_name.string to SceneFragment(),
         R.string.app_name.string to UserFragment(),
     )
 

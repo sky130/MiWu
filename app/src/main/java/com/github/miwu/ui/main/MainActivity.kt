@@ -12,6 +12,7 @@ class MainActivity : ViewActivityX<ActivityMainBinding, MainViewModel>() {
         binding.viewPager.adapter = MainViewPagerAdapter(this)
         AppRepository.loadHomes()
         AppRepository.loadDevice()
+        AppRepository.loadScene()
     }
 
 }

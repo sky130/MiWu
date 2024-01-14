@@ -23,12 +23,15 @@ class MainViewModel : ViewModel() {
     val devices get() = AppRepository.devices
     val deviceList get() = AppRepository.deviceList
     val homeList get() = AppRepository.homeList
+    val sceneList get() = AppRepository.sceneList
+    val scenes get() = AppRepository.scenes
+
     val avatar = MutableLiveData<String>()
     val nickname = MutableLiveData<String>()
     val uid = MutableLiveData<String>()
 
-    fun loadInfo(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun loadInfo() {
+        viewModelScope.launch(Dispatchers.IO) {
             miot.getUserInfo()?.let {
                 avatar.postValue(it.info.avatar)
                 nickname.postValue(it.info.nickname)

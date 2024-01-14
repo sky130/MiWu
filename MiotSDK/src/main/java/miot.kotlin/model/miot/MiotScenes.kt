@@ -13,7 +13,7 @@ data class MiotScenes(
 ) {
     data class Result(
         @SerializedName("common_use_scene")
-        val scenes: List<Scene>,
+        val scenes: List<Scene>?,
         @SerializedName("has_recommended_template")
         val hasRecommendedTemplate: Boolean
     ) {

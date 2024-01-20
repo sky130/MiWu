@@ -6,13 +6,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.databinding.adapters.SeekBarBindingAdapter.OnProgressChanged
 import com.github.miwu.databinding.MiotWidgetColorTemperatureSeekbarBinding as Binding
 
-class ColorTemperatureSeekbar(context: Context) : MiotBaseWidget<Binding>(context),OnSeekBarChangeListener {
-
+class ColorTemperatureSeekbar(context: Context) : MiotBaseWidget<Binding>(context),
+    OnSeekBarChangeListener {
 
 
     override fun init() {
         binding.seekbar.setOnSeekBarChangeListener(this)
-        property?.let {
+        properties[0].second.let {
             binding.seekbar.setMinProgress(it.valueRange!![0].toInt())
             binding.seekbar.setMaxProgress(it.valueRange!![1].toInt())
         }
@@ -28,7 +28,7 @@ class ColorTemperatureSeekbar(context: Context) : MiotBaseWidget<Binding>(contex
     }
 
     override fun onStartTrackingTouch(p0: SeekBar) {
-       stopRefresh()
+        stopRefresh()
     }
 
     override fun onStopTrackingTouch(p0: SeekBar) {

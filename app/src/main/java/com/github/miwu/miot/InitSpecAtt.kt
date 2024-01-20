@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import com.github.miwu.miot.device.Airer
 import com.github.miwu.miot.device.Light
 import com.github.miwu.miot.device.Vacuum
+import com.github.miwu.miot.manager.MiotDeviceManager
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 

@@ -1,12 +1,10 @@
-package com.github.miwu.miot
+package com.github.miwu.miot.manager
 
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.core.view.marginBottom
 import com.github.miwu.MainApplication.Companion.miot
 import com.github.miwu.miot.widget.MiotBaseWidget
 import kndroidx.extension.RunnableX
@@ -18,11 +16,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import miot.kotlin.helper.Action
 import miot.kotlin.helper.GetAtt
 import miot.kotlin.helper.SetAtt
 import miot.kotlin.model.att.DeviceAtt
-import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
 class MiotDeviceManager(
@@ -61,45 +57,20 @@ class MiotDeviceManager(
         }
     }
 
-    inline fun <reified V : MiotBaseWidget<*>> createAddView(
-        context: Context,
-        siid: Int = -1,
-        piid: Int = -1,
-        property: SpecAtt.Service.Property? = null,
-    ) = createView<V>(context, siid, piid, property).also { addView(it) }
-
-    inline fun <reified V : MiotBaseWidget<*>> createAddView(
-        viewGroup: ViewGroup,
-        siid: Int = -1,
-        piid: Int = -1,
-        property: SpecAtt.Service.Property? = null,
-    ) = createView<V>(viewGroup.context, siid, piid, property).also { addView(it) }
 
     inline fun <reified V : MiotBaseWidget<*>> createView(
-        viewGroup: ViewGroup,
+        layout: ViewGroup,
         siid: Int = -1,
         piid: Int = -1,
-        property: SpecAtt.Service.Property? = null,
-    ) = createView<V>(viewGroup.context, siid, piid, property)
-
-    inline fun <reified V : MiotBaseWidget<*>> createView(
-        context: Context,
-        siid: Int = -1,
-        piid: Int = -1,
-        property: SpecAtt.Service.Property? = null,
-    ) =
-        context.let { c ->
-            V::class.java.getDeclaredConstructor(
-                Context::class.java
-            ).newInstance(c).apply {
-                this.siid = siid
-                this.piid = piid
-                property?.let {
-                    this.property = it
-                }
-                this.setManager(this@MiotDeviceManager)
-            }
+    ) = layout.context.let { context ->
+        V::class.java.getDeclaredConstructor(
+            Context::class.java
+        ).newInstance(context).apply {
+            this.siid = siid
+            this.piid = piid
+            this.setManager(this@MiotDeviceManager)
         }
+    }
 
     fun post(delayMillis: Long) {
         if (delayMillis < 350) return

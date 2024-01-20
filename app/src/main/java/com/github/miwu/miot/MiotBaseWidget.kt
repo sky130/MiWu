@@ -3,13 +3,12 @@
 package com.github.miwu.miot.widget
 
 import android.content.Context
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.viewbinding.ViewBinding
-import com.github.miwu.miot.MiotDeviceManager
+import com.github.miwu.miot.manager.MiotDeviceManager
 import miot.kotlin.model.att.SpecAtt
 import java.lang.reflect.ParameterizedType
 
@@ -17,8 +16,8 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     var piid: Int = -1
     var siid: Int = -1
     val binding: VB
-    var property: SpecAtt.Service.Property? = null
-    var actions = arrayListOf<Pair<Int,SpecAtt.Service.Action>>()
+    var properties = arrayListOf<Pair<Int, SpecAtt.Service.Property>>()
+    var actions = arrayListOf<Pair<Int, SpecAtt.Service.Action>>()
     private lateinit var miotManager: MiotDeviceManager
 
     init {

@@ -1,17 +1,11 @@
 package com.github.miwu.ui.main.fragment
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.wear.widget.WearableLinearLayoutManager
 import com.github.miwu.databinding.FragmentMainDeviceBinding
-import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.logic.repository.AppRepository
-import com.github.miwu.miot.MiotQuickManager
-import com.github.miwu.miot.quick.LightQuick
 import com.github.miwu.ui.device.DeviceActivity.Companion.startDeviceActivity
 import com.github.miwu.viewmodel.MainViewModel
-import kndroidx.activity.ViewActivityX
 import kndroidx.extension.toast
 import kndroidx.fragment.ViewFragmentX
 import kotlinx.coroutines.Dispatchers

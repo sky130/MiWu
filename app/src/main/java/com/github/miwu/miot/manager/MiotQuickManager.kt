@@ -1,4 +1,4 @@
-package com.github.miwu.miot
+package com.github.miwu.miot.manager
 
 import android.os.Handler
 import android.os.Looper

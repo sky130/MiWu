@@ -3,14 +3,17 @@
 package com.github.miwu.miot.device
 
 import android.view.ViewGroup
-import com.github.miwu.miot.MiotDeviceManager
+import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.MiotBaseWidget
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
-import miot.kotlin.utils.Urn
 
-sealed class DeviceType(val device:   MiotDevices.Result.Device, val layout: ViewGroup, val manager: MiotDeviceManager) {
+sealed class DeviceType(
+    val device: MiotDevices.Result.Device,
+    val layout: ViewGroup,
+    val manager: MiotDeviceManager,
+) {
 
     open val type = this::class.java.name.lowercase()// 设备类型
 
@@ -20,11 +23,12 @@ sealed class DeviceType(val device:   MiotDevices.Result.Device, val layout: Vie
 
     abstract fun onLayout(att: SpecAtt): DeviceType
 
-    inline fun <reified V : MiotBaseWidget<*>> createAddView(
+    inline fun <reified V : MiotBaseWidget<*>> createView(
         siid: Int = -1,
         piid: Int = -1,
-        property: SpecAtt.Service.Property? = null,
-    ) = manager.createAddView<V>(layout, siid, piid, property)
+    ) = manager.createView<V>(layout, siid, piid).apply {
+        manager.addView(this)
+    }
 
 
 }

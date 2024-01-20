@@ -3,6 +3,7 @@ package com.github.miwu.service
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.wear.protolayout.ActionBuilders
+import androidx.wear.protolayout.ColorBuilders.ColorProp
 import androidx.wear.protolayout.DeviceParametersBuilders
 import androidx.wear.protolayout.DeviceParametersBuilders.*
 import androidx.wear.protolayout.DimensionBuilders
@@ -19,6 +20,7 @@ import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.ChipColors
 import androidx.wear.protolayout.material.Colors
 import androidx.wear.protolayout.material.CompactChip
+import androidx.wear.protolayout.material.Typography
 import androidx.wear.tiles.TileService
 import kndroidx.extension.log
 
@@ -100,41 +102,58 @@ fun Box(
 }.build()
 
 @Suppress("FunctionName")
-fun Grid(
+fun TileService.Grid(
     width: ContainerDimension,
     height: ContainerDimension,
     padding: PaddingValue? = null,
     spanCount: Int = 1,
     rowPadding: PaddingValue? = null,
-
     modifiers: Modifiers.Builder.() -> Unit = {},
     block: Grid.() -> Unit = {},
 ) = Column(width, height, padding, modifiers) {
     if (spanCount < 1) throw Exception("SpanCount cannot be $spanCount.")
-    Grid(this, spanCount, rowPadding).apply(block).build()
+    Grid(this, spanCount, rowPadding, this@Grid).apply(block).build()
 }
 
 class Grid(
     private val column: Column.Builder,
     private val spanCount: Int,
     private val rowPadding: PaddingValue?,
+    private val tileService: TileService
 ) {
     private val list = arrayListOf<LayoutElement>()
 
     fun build() {
-        var x = 0
         var row = getRowBuilder()
-        for (i in list) {
-            if (x == spanCount) {
+        for ((index, view) in list.withIndex()) {
+            if (index % spanCount == 0) {
                 column.contents(row.build())
                 row = getRowBuilder()
-                x = 0
             }
-            i.log.d()
-            row.contents(i)
-            x++
+            row.contents(view)
         }
-        column.contents(row.build())
+        column.contents(row.apply {
+            var x = spanCount - row.build().contents.size
+            while (x != 0) {
+                row.contents(
+                    Box(width = weight(1f), height = 0.dp)
+                )
+                x--
+            }
+        }.build())
+//        var x = 0
+//        var row = getRowBuilder()
+//        for (i in list) {
+//            if (x == spanCount) {
+//                column.contents(row.build())
+//                row = getRowBuilder()
+//                x = 0
+//            }
+//            i.log.d()
+//            row.contents(i)
+//            x++
+//        }
+//        column.contents(row.build())
     }
 
     private fun getRowBuilder() = Row.Builder().setHeight(wrap()).setWidth(expand()).apply {
@@ -179,9 +198,13 @@ fun Box.Builder.contents(vararg elements: LayoutElement) {
 fun TileService.Text(
     text: String,
     padding: PaddingValue? = null,
+    textColors: ColorProp? = null,
+    typography: Int? = null,
     modifiers: Modifiers.Builder.() -> Unit = {},
     block: Text.Builder.() -> Unit = {},
 ) = Text.Builder(this, text).apply {
+    textColors?.let { setColor(it) }
+    typography?.let { setTypography(it) }
     setModifiers(
         Modifiers.Builder().apply {
             if (padding != null) setPadding(
@@ -339,3 +362,12 @@ fun PaddingValue(vertical: DpProp = 0.dp, horizontal: DpProp = 0.dp) =
 data class PaddingValue(val top: DpProp, val bottom: DpProp, val start: DpProp, val end: DpProp)
 
 val Number.dp get() = dp(this.toFloat())
+
+fun TileService.Modifiers(block: Modifiers.Builder.() -> Unit) =
+    Modifiers.Builder().apply(block).build()
+
+fun TileService.Background(color: ColorProp, radius: DpProp) =
+    ModifiersBuilders.Background.Builder().apply {
+        setColor(color)
+        setCorner(Corner.Builder().setRadius(radius).build())
+    }.build()

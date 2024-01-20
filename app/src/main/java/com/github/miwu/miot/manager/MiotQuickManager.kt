@@ -20,8 +20,7 @@ object MiotQuickManager {
     private val handler = Handler(Looper.getMainLooper())
     private const val delayMillis = 1000L
     private val runnable = RunnableX {
-        if (quickList.isNotEmpty())
-            refresh()
+        if (quickList.isNotEmpty()) refresh()
         delay()
     }
     val quickList = arrayListOf<MiotBaseQuick>()
@@ -50,6 +49,7 @@ object MiotQuickManager {
     }
 
     fun refresh() {
+        var isValueChanged = false
         scope.launch(Dispatchers.IO) {
             for (i in quickList) {
                 when (i) {
@@ -57,7 +57,10 @@ object MiotQuickManager {
                         launch {
                             miot.getDeviceAtt(i.device, arrayOf(GetAtt(i.siid, i.piid)))?.let {
                                 it.result?.let { att ->
-                                    att[0].value?.let { it1 -> i.putValue(it1) }
+                                    att[0].value?.let { it1 ->
+                                        isValueChanged = i.value != it1
+                                        i.putValue(it1)
+                                    }
                                 }
                             }
                         }
@@ -68,7 +71,7 @@ object MiotQuickManager {
                     }
                 }
             }
-            withContext(Dispatchers.Main) {
+            if (isValueChanged) withContext(Dispatchers.Main) {
                 QuickActionTileService.update()
             }
         }

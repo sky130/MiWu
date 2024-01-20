@@ -41,7 +41,6 @@ class MiotDeviceManager(
     fun addView(view: MiotBaseWidget<*>) {
         view.setManager(this)
         viewList.add(view)
-        view.init()
         miotLayout.apply {
             addView(
                 view,
@@ -76,6 +75,9 @@ class MiotDeviceManager(
         if (delayMillis < 350) return
         this.delayMillis = delayMillis
         runnable.run()
+        for (i in viewList) {
+            i.init()
+        }
     }
 
     fun stopRefresh() {

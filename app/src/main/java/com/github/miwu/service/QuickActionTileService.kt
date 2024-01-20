@@ -1,8 +1,13 @@
 package com.github.miwu.service
 
+import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders.expand
+import androidx.wear.protolayout.DimensionBuilders.weight
 import androidx.wear.protolayout.DimensionBuilders.wrap
 import androidx.wear.protolayout.LayoutElementBuilders.*
+import androidx.wear.protolayout.ModifiersBuilders
+import androidx.wear.protolayout.ModifiersBuilders.Clickable
+import androidx.wear.protolayout.material.Typography
 import com.github.miwu.R
 import com.github.miwu.miot.manager.MiotQuickManager
 import kndroidx.KndroidX
@@ -20,34 +25,52 @@ class QuickActionTileService : KtxTileService() {
 
     val list get() = MiotQuickManager.quickList
 
-    override val resMap = super.resMap.apply {
-        put("test_res", R.drawable.mi_icon_small)
+    init {
+        imageMap.apply {
+            set("test_res", R.drawable.mi_icon_small.toImage())
+        }
     }
 
-    override fun onLayout() = Box(width = expand(), height = expand()) {
-        setVerticalAlignment(Vertical(VERTICAL_ALIGN_CENTER))
-        setHorizontalAlignment(Horizontal(HORIZONTAL_ALIGN_CENTER))
-        contents(
-            Grid(expand(), wrap(), spanCount = 2, rowPadding = PaddingValue(5.dp)) {
-                setVerticalAlignment(Vertical(VERTICAL_ALIGN_CENTER))
-                setHorizontalAlignment(Horizontal(HORIZONTAL_ALIGN_CENTER))
+    override fun onLayout() =
+        Box(width = expand(), height = expand(), padding = PaddingValue(horizontal = 25.dp)) {
+            setVerticalAlignment(Vertical(VERTICAL_ALIGN_CENTER))
+            setHorizontalAlignment(Horizontal(HORIZONTAL_ALIGN_CENTER))
+            contents(Grid(
+                expand(), wrap(), spanCount = 2, rowPadding = PaddingValue(vertical = 3.dp)
+            ) {
                 for ((i, quick) in list.withIndex()) {
                     contents(
-                        Box(wrap(), wrap(), padding = PaddingValue(horizontal = 2.dp)) {
-                            contents(
-                                Chip(
-                                    width = wrap(),
-                                    clickable = Clickable(i.toString()),
-                                    title = quick.name,
-                                    icon = "test_res",
-                                )
-                            )
-                        }
+                        QuickCard(
+                            title = quick.name, iconId = "test_res", Clickable(i.toString())
+                        )
                     )
                 }
-            }
-        )
-    }
+            })
+        }
+
+    @Suppress("FunctionName")
+    private fun QuickCard(title: String, iconId: String, clickable: Clickable? = null) =
+        Box(weight(1f), wrap(), padding = PaddingValue(horizontal = 3.dp)) {
+            contents(Box(expand(), wrap()) {
+                setModifiers(Modifiers {
+                    setBackground(Background(argb(0xFF202020.toInt()), 15.dp))
+                    clickable?.let { setClickable(it) }
+                })
+                contents(Column(
+                    width = weight(1f), height = wrap(), padding = PaddingValue(10.dp)
+                ) {
+                    contents(
+                        Image(width = 25.dp, height = 25.dp, resId = iconId),
+                        Spacer(width = 0.dp, height = 5.dp),
+                        Text(
+                            text = title,
+                            textColors = argb(0xFFFFFFFF.toInt()),
+                            typography = Typography.TYPOGRAPHY_BUTTON
+                        )
+                    )
+                })
+            })
+        }
 
 
     override fun onClick(id: String) {

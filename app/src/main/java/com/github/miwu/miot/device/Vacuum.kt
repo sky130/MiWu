@@ -15,7 +15,7 @@ class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
     override fun getQuick() = null
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
-    private val buttonBar by lazy { createAddView<VacuumButtonBar>() }
+    private val buttonBar by lazy { createView<VacuumButtonBar>() }
 
     override fun onPropertyFound(
         siid: Int,
@@ -26,10 +26,14 @@ class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
     ) {
         when (service to property) {
             "vacuum" to "status" -> {
-                createAddView<StatusText>(siid, piid, obj)
+                createView<StatusText>(siid, piid).apply {
+                    properties.add(siid to obj)
+                }
                 buttonBar.siid = siid
                 buttonBar.piid = piid
-                buttonBar.property = obj
+                buttonBar.apply {
+                    properties.add(siid to obj)
+                }
             }
         }
     }

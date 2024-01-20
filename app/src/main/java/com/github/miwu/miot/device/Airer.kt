@@ -24,7 +24,7 @@ class Airer(device: MiotDevices.Result.Device,layout: ViewGroup, manager: MiotDe
     ) {
         when (service to property) {
             "airer" to "fault" -> {
-                createAddView<StatusText>(siid, piid, obj)
+                createView<StatusText>(siid, piid)
             }
         }
     }

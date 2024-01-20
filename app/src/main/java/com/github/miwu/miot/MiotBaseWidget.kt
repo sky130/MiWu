@@ -16,8 +16,8 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     var piid: Int = -1
     var siid: Int = -1
     val binding: VB
-    var properties = arrayListOf<Pair<Int, SpecAtt.Service.Property>>()
-    var actions = arrayListOf<Pair<Int, SpecAtt.Service.Action>>()
+    val properties = arrayListOf<Pair<Int, SpecAtt.Service.Property>>()
+    val actions = arrayListOf<Pair<Int, SpecAtt.Service.Action>>()
     private lateinit var miotManager: MiotDeviceManager
 
     init {

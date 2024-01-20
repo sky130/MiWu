@@ -33,15 +33,19 @@ class Light(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
         when (service to property) {
             "light" to "on" -> {
                 quickLight = siid to piid
-                createAddView<Switch>(siid, piid, obj)
+                createView<Switch>(siid, piid)
             }
 
             "light" to "brightness" -> {
-                createAddView<BrightnessSeekBar>(siid, piid, obj)
+                createView<BrightnessSeekBar>(siid, piid).apply {
+                    properties.add(siid to obj)
+                }
             }
 
             "light" to "color-temperature" -> {
-                createAddView<ColorTemperatureSeekbar>(siid, piid, obj)
+                createView<ColorTemperatureSeekbar>(siid, piid).apply {
+                    properties.add(siid to obj)
+                }
             }
         }
     }

@@ -62,9 +62,10 @@
             </LinearLayout>
         </ScrollView>
 
-        <com.github.miwu.widget.app.BackTitleBar
+        <com.github.miwu.widget.app.AppTitleBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:back="false"
             app:title="@string/login_bar" />
     </FrameLayout>
 </layout>

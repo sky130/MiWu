@@ -13,8 +13,8 @@ import miot.kotlin.MiotManager
 class MainApplication : Application() {
 
     companion object {
-        lateinit var miotUser: Miot.MiotUser
         val gson = Gson()
+        lateinit var miotUser: Miot.MiotUser
         val Any.miot by lazy { MiotManager.from(miotUser) }
     }
 

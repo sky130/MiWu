@@ -18,9 +18,6 @@ class SplashActivity : AppCompatActivity() {
         if (AppPreferences.userId.isEmpty()){
             start<LoginActivity>()
         }else{
-            AppPreferences.apply {
-                MainApplication.miotUser = Miot.MiotUser(userId, securityToken, serviceToken)
-            }
             start<MainActivity>()
         }
         finish()

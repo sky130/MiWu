@@ -40,16 +40,15 @@ class BackTitleBar @JvmOverloads constructor(
     private fun initializeViews(context: Context) {
         BackTitleBarBinding.inflate(LayoutInflater.from(context), this, true)
         isClickable = false
-//        inflate(context, R.layout.back_title_bar, this)
         leftArea = findViewById(R.id.left_area)
         backIcon = findViewById(R.id.left_icon)
         textClock = findViewById(R.id.clock_stub)
         titleTextView = findViewById(R.id.title_textview)
         titleTextView?.text = titleText
-        titleTextView?.isSelected = true
+//        titleTextView?.isSelected = true
         titleTextView?.marqueeRepeatLimit = -1
-        this.pivotX = this.left.toFloat()
-        this.pivotY = (this.height / 2).toFloat()
+//        this.pivotX = this.left.toFloat()
+//        this.pivotY = (this.height / 2).toFloat()
     }
 
     fun setBackListener(listener: OnClickListener?, activity: Activity) {

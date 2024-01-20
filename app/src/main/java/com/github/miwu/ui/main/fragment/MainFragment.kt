@@ -36,8 +36,6 @@ class MainFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),
 
     fun onItemLongClick(item: Any?): Boolean {
         item as MiotDevices.Result.Device
-
-//        MiotQuickManager.addQuick(LightQuick(item, 2, 1))
         return true
     }
 

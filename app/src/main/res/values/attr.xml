@@ -41,6 +41,10 @@
         <attr name="title" />
     </declare-styleable>
 
+    <declare-styleable name="AppTitleBar">
+        <attr name="title" />
+        <attr name="back" format="boolean" />
+    </declare-styleable>
 
     <declare-styleable name="MiSwitchCard">
         <attr name="piid" />

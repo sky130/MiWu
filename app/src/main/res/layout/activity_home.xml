@@ -36,9 +36,10 @@
             <requestFocus />
         </androidx.recyclerview.widget.RecyclerView>
 
-        <com.github.miwu.widget.app.BackTitleBar
+        <com.github.miwu.widget.app.AppTitleBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:back="true"
             app:title="@string/switch_home" />
     </FrameLayout>
 </layout>

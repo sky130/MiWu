@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.github.miwu.viewmodel.LoginViewModel" />
+            type="com.github.miwu.viewmodel.AboutViewModel" />
 
         <variable
             name="activity"
-            type="com.github.miwu.ui.login.LoginActivity" />
+            type="com.github.miwu.ui.about.AboutActivity" />
     </data>
 
     <FrameLayout
@@ -22,43 +23,89 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false">
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <requestFocus />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="@dimen/activity_padding_top"
+                android:clipToPadding="false"
                 android:orientation="vertical"
-                android:layout_marginBottom="50dp"
-                android:paddingHorizontal="@dimen/device_activity_padding">
+                android:paddingHorizontal="@dimen/device_activity_padding"
+                android:paddingTop="@dimen/activity_padding_top"
+                android:paddingBottom="50dp">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/bg_miwu_card">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginVertical="15dp"
-                        android:adjustViewBounds="true"
-                        android:maxHeight="35dp"
-                        android:src="@drawable/ic_miwu" />
-                </FrameLayout>
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:maxHeight="62dp"
+                    android:src="@drawable/ic_miwu_round" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="5dp"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/miwu"/>
+                    android:layout_marginTop="5dp"
+                    android:text="@string/miwu"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/unofficial_mihome_app"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{viewModel.versionName}"
+                    android:textSize="13sp"
+                    tools:text="2.0.0" />
+
+                <Button
+                    android:id="@+id/gotoLicense"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="3dp"
+                    android:background="@drawable/bg_list_item"
+                    android:gravity="center"
+                    android:onClick="@{()->activity.startLicenseActivity()}"
+                    android:text="@string/license_for_use"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="仓库项目地址"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal"
+                    android:layout_marginHorizontal="15dp"
+                    android:text="@string/github_url"
+                    android:textSize="12sp" />
             </LinearLayout>
+
+
         </ScrollView>
 
         <com.github.miwu.widget.app.AppTitleBar

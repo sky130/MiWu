@@ -53,9 +53,10 @@
             android:name=".ui.home.HomeActivity"
             android:exported="false"
             android:taskAffinity="" />
-        <!--        <activity-->
-        <!--            android:name=".ui.LicenseActivity"-->
-        <!--            android:exported="false" />-->
+        <activity
+            android:name=".ui.license.LicenseActivity"
+            android:exported="false"
+            android:taskAffinity="" />
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"

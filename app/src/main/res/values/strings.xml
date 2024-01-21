@@ -43,6 +43,9 @@
     <string name="Low">低速</string>
     <string name="Medium">中速</string>
     <string name="High">高速</string>
+    <string name="home_desc">%s个房间/%s个设备</string>
+    <string name="home_desc_share">共享家庭</string>
+
     <string name="license_content">一. 本开源项目仅供个人学习交流使用, 方便 android 手表端可以控制米家的智能家居.\n二. 本项目完全免费, 可能存在较多漏洞, 维护者仅保证自己能正常使用, 存在问题请通过项目页 Issues 反馈.\n三. 本项目中所有适配的接口均来自小米公司 (北京小米科技有限责任公司) 旗下米家 (MIJIA), 本项目不对其控制的安全性负责.\n四. 本项目会将账户、密码、家庭等信息, 缓存在安装设备本地, 不含任何上传个人信息的接口.\n五. 真诚希望小米官方能够推出 `米家 For Android Watch`, 我们也能用上.\n六. 本项目仅供个人学习交流使用, 切勿进行传播、任何形式的盈利, 未涉及的问题请参见国家有关法律法规, 以国家法律法规为准.</string>
     <string name="logging_in">正在登录</string>
 </resources>

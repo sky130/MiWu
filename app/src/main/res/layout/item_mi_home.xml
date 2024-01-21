@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="miot.kotlin.model.miot.MiotHomes.Result.Home" />
@@ -14,67 +15,51 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:background="@drawable/bg_list_item"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginVertical="3dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="2dp"
-        android:paddingStart="9dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:layout_marginVertical="3dp"
+        android:background="@{!handler.isHome(item) ?@drawable/bg_list_item :@drawable/bg_list_item_mi}"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        tools:background="@drawable/bg_list_item_mi"
+        android:padding="12dp">
 
-        <ImageView
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:padding="4dp"
-            android:src="@drawable/home_icon" />
-
-        <RelativeLayout
-            android:layout_width="0dp"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
             android:duplicateParentState="true">
 
             <TextView
                 android:id="@+id/device_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:duplicateParentState="true"
                 android:singleLine="true"
-                android:textColor="@drawable/list_title"
-                android:textSize="14sp"
                 android:text="@{item.name}"
+                android:textColor="@drawable/list_title"
+                android:textSize="17sp"
                 tools:text="你的家" />
 
-            <TextView
-                android:id="@+id/device_item_room"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/device_item_name"
-                android:layout_alignStart="@id/device_item_name"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/bg_card_room"
-                android:duplicateParentState="true"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="9sp"
-                tools:text="共享家庭" />
+<!--            <TextView-->
+<!--                android:id="@+id/device_item_info"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:duplicateParentState="true"-->
+<!--                android:layout_gravity="end|center_vertical"-->
+<!--                android:singleLine="true"-->
+<!--                android:text="@{handler.isHome(item) ? `当前选择`   : ``}"-->
+<!--                android:textColor="@drawable/list_title"-->
+<!--                android:textSize="12sp"-->
+<!--                tools:text="当前选择" />-->
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/device_item_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/device_item_name"
-                android:layout_marginStart="3dp"
-                android:layout_toEndOf="@id/device_item_room"
-                android:duplicateParentState="true"
-                android:singleLine="true"
-                android:textColor="@drawable/list_title"
-                android:textSize="12sp"
-                android:text="@{handler.isHome(item) ? `当前选择`   : ``}"
-                tools:text="当前选择" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/device_item_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="13sp"
+            android:text="@{handler.getDesc(item)}"
+            tools:text="共享家庭" />
     </LinearLayout>
 </layout>

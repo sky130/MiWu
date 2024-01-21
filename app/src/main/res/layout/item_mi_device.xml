@@ -29,7 +29,7 @@
             android:layout_height="35dp"
             app:device="@{item}"
             app:fragment="@{handler}"
-            android:src="@drawable/mi_icon_small" />
+            android:src="@drawable/ic_miwu_placeholder" />
 
         <LinearLayout
             android:orientation="vertical"

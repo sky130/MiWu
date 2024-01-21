@@ -20,7 +20,7 @@ val iconMap = ArrayMap<String, String>()
 @BindingAdapter(value = ["device", "fragment"])
 fun miotIcon(imageView: ImageView, device: MiotDevices.Result.Device, fragment: MainFragment) {
     Glide.with(imageView.context)
-        .load(R.drawable.mi_icon_small)
+        .load(R.drawable.ic_miwu_placeholder)
         .into(imageView)
     val url = iconMap[device.model]
     if (url == null) {
@@ -60,15 +60,15 @@ fun loadImg(imageView: ImageView, scene: MiotScenes.Result.Scene) {
 fun loadImageUrl(imageView: ImageView, url: String) {
     Glide.with(imageView.context)
         .load(url)
-        .placeholder(R.drawable.mi_icon_small)
-        .error(R.drawable.mi_icon_small)
+        .placeholder(R.drawable.ic_miwu_placeholder)
+        .error(R.drawable.ic_miwu_placeholder)
         .into(imageView)
 }
 
 fun loadImageRes(imageView: ImageView, @DrawableRes res: Int) {
     Glide.with(imageView.context)
         .load(res)
-        .placeholder(R.drawable.mi_icon_small)
-        .error(R.drawable.mi_icon_small)
+        .placeholder(R.drawable.ic_miwu_placeholder)
+        .error(R.drawable.ic_miwu_placeholder)
         .into(imageView)
 }

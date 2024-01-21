@@ -5,14 +5,12 @@ import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.DimensionBuilders.weight
 import androidx.wear.protolayout.DimensionBuilders.wrap
 import androidx.wear.protolayout.LayoutElementBuilders.*
-import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.material.Typography
 import com.github.miwu.R
 import com.github.miwu.miot.manager.MiotQuickManager
 import com.github.miwu.miot.quick.MiotBaseQuick
 import kndroidx.KndroidX
-import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
@@ -30,7 +28,7 @@ class QuickActionTileService : KtxTileService() {
 
     init {
         imageMap.apply {
-            set("test_res", R.drawable.mi_icon_small.toImage())
+            set("test_res", R.drawable.ic_miwu_placeholder.toImage())
         }
     }
 

@@ -7,9 +7,11 @@ import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.service.QuickActionTileService
 import kndroidx.extension.RunnableX
+import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.helper.GetAtt
@@ -18,7 +20,7 @@ object MiotQuickManager {
     private val job = Job()
     private val scope = CoroutineScope(job)
     private val handler = Handler(Looper.getMainLooper())
-    private const val delayMillis = 1000L
+    private const val delayMillis = 10 * 60 * 1000L
     private val runnable = RunnableX {
         if (quickList.isNotEmpty()) refresh()
         delay()
@@ -38,6 +40,8 @@ object MiotQuickManager {
     }
 
     fun doQuick(position: Int) {
+        quickList[position].initValue()
+        job.cancelChildren()
         scope.launch(Dispatchers.IO) {
             quickList[position].doAction()
         }
@@ -48,7 +52,7 @@ object MiotQuickManager {
         handler.postDelayed(runnable, delayMillis)
     }
 
-    fun refresh() {
+    fun refresh(must: Boolean = false) {
         var isValueChanged = false
         scope.launch(Dispatchers.IO) {
             for (i in quickList) {
@@ -71,10 +75,12 @@ object MiotQuickManager {
                     }
                 }
             }
-            if (isValueChanged) withContext(Dispatchers.Main) {
+            "isValueChanged ${isValueChanged || must}".log.d()
+            if (must || isValueChanged) withContext(Dispatchers.Main) {
                 QuickActionTileService.update()
             }
         }
     }
+
 
 }

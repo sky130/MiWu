@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
+import androidx.wear.tiles.EventBuilders
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
 import androidx.wear.tiles.TileService
@@ -20,21 +21,28 @@ abstract class KtxTileService : TileService() {
 
     abstract fun onClick(id: String)
 
+    abstract fun onAttachedToWindow()
+
     open val imageMap = ArrayMap<String, Image>()
 
     override fun onTileRequest(requestParams: RequestBuilders.TileRequest): ListenableFuture<TileBuilders.Tile> =
         Futures.immediateFuture(
             TileBuilders.Tile.Builder()
+                .apply {
+                    if (requestParams.currentState.lastClickableId.isNotEmpty())
+                        onClick(requestParams.currentState.lastClickableId)
+                }
                 .setResourcesVersion(version)
                 .setTileTimeline(
                     TimelineBuilders.Timeline.fromLayoutElement(
                         onLayout()
                     )
                 ).build()
-        ).apply {
-            if (requestParams.currentState.lastClickableId.isNotEmpty())
-                onClick(requestParams.currentState.lastClickableId)
-        }
+        )
+
+    override fun onTileEnterEvent(requestParams: EventBuilders.TileEnterEvent) {
+        onAttachedToWindow()
+    }
 
     override fun onTileResourcesRequest(requestParams: RequestBuilders.ResourcesRequest): ListenableFuture<ResourceBuilders.Resources> =
         Futures.immediateFuture(
@@ -44,7 +52,6 @@ abstract class KtxTileService : TileService() {
                         when (res) {
                             is ResImage -> {
                                 addImage(id, res.resId)
-
                             }
 
                             is ByteImage -> {

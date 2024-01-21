@@ -13,7 +13,7 @@
     <item
         android:width="120dp"
         android:height="120dp"
-        android:drawable="@drawable/ic_mi_icon_round"
+        android:drawable="@drawable/ic_miwu_round"
         android:gravity="center"
         tools:ignore="PrivateResource,UnusedAttribute" />
 

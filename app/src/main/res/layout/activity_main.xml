@@ -22,13 +22,14 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:focusable="false"
-            android:focusedByDefault="false"
-            android:focusableInTouchMode="false"
             android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:focusedByDefault="false"
             android:overScrollMode="never" />
 
         <com.github.miwu.widget.app.AppTitleBar
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="@string/app_name" />

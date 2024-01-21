@@ -20,9 +20,6 @@ class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),
     SwipeRefreshLayout.OnRefreshListener {
 
     override fun init() {
-        binding.recycler.apply {
-            isEdgeItemsCenteringEnabled = true
-        }
         binding.swipe.setOnRefreshListener(this)
     }
 

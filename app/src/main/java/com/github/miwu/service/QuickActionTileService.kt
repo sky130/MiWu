@@ -10,12 +10,15 @@ import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.material.Typography
 import com.github.miwu.R
 import com.github.miwu.miot.manager.MiotQuickManager
+import com.github.miwu.miot.quick.MiotBaseQuick
 import kndroidx.KndroidX
+import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
 private const val RESOURCES_VERSION = "1"
 
+@Suppress("SameParameterValue")
 class QuickActionTileService : KtxTileService() {
 
     private val job = Job()
@@ -41,7 +44,7 @@ class QuickActionTileService : KtxTileService() {
                 for ((i, quick) in list.withIndex()) {
                     contents(
                         QuickCard(
-                            title = quick.name, iconId = "test_res", Clickable(i.toString())
+                            quick = quick, iconId = "test_res", Clickable(i.toString())
                         )
                     )
                 }
@@ -49,11 +52,23 @@ class QuickActionTileService : KtxTileService() {
         }
 
     @Suppress("FunctionName")
-    private fun QuickCard(title: String, iconId: String, clickable: Clickable? = null) =
+    private fun QuickCard(quick: MiotBaseQuick, iconId: String, clickable: Clickable? = null) =
         Box(weight(1f), wrap(), padding = PaddingValue(horizontal = 3.dp)) {
             contents(Box(expand(), wrap()) {
                 setModifiers(Modifiers {
-                    setBackground(Background(argb(0xFF202020.toInt()), 15.dp))
+                    quick.apply {
+                        if (this is MiotBaseQuick.DeviceQuick<*> &&
+                            value is Boolean &&
+                            value != null &&
+                            (value as Boolean)
+                        ) {
+                            setBackground(Background(argb(0xee57D1B8.toInt()), 15.dp))
+                        } else {
+                            setBackground(Background(argb(0xFF202020.toInt()), 15.dp))
+                        }
+                    }
+
+
                     clickable?.let { setClickable(it) }
                 })
                 contents(Column(
@@ -63,7 +78,7 @@ class QuickActionTileService : KtxTileService() {
                         Image(width = 25.dp, height = 25.dp, resId = iconId),
                         Spacer(width = 0.dp, height = 5.dp),
                         Text(
-                            text = title,
+                            text = quick.name,
                             textColors = argb(0xFFFFFFFF.toInt()),
                             typography = Typography.TYPOGRAPHY_BUTTON
                         )
@@ -80,6 +95,10 @@ class QuickActionTileService : KtxTileService() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onAttachedToWindow() {
+        MiotQuickManager.refresh(must = true)
     }
 
     companion object {

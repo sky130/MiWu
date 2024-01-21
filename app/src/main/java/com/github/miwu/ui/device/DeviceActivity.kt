@@ -36,6 +36,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
         )
     }
 
+
     fun onAddButtonClick() {
         if (deviceType == null) {
             "设备暂不支持".toast()

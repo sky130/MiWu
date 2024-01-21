@@ -15,24 +15,24 @@ import miot.kotlin.helper.getIconUrl
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotScenes
 
-val map = ArrayMap<String, String>()
+val iconMap = ArrayMap<String, String>()
 
 @BindingAdapter(value = ["device", "fragment"])
 fun miotIcon(imageView: ImageView, device: MiotDevices.Result.Device, fragment: MainFragment) {
     Glide.with(imageView.context)
         .load(R.drawable.mi_icon_small)
         .into(imageView)
-    val url = map[device.model]
+    val url = iconMap[device.model]
     if (url == null) {
         fragment.viewModel.viewModelScope.launch(Dispatchers.IO) {
             device.getIconUrl()?.also {
-                map[device.model] = it
+                iconMap[device.model] = it
                 withContext(Dispatchers.Main) {
                     loadImageUrl(imageView, it)
                 }
             }.let {
                 if (it == null) {
-                    map[device.model] = ""
+                    iconMap[device.model] = ""
                 }
             }
         }
@@ -53,7 +53,7 @@ fun loadImg(imageView: ImageView, scene: MiotScenes.Result.Scene) {
     if (scene.icon.isNotEmpty())
         loadImageUrl(imageView, scene.icon)
     else{
-        loadImageRes(imageView,R.drawable.ic_mi_scene)
+        loadImageRes(imageView,R.drawable.ic_miot_scene)
     }
 }
 

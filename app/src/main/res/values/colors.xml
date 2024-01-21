@@ -16,6 +16,7 @@
     <color name="lrc_bg">#33FFFFFF</color>
     <color name="gray_light">#FFE0E0E0</color>
     <color name="mi_green">#57D1B8</color>
+    <color name="mi_green_tile">#7057D1B8</color>
     <color name="red" tools:ignore="MissingDefaultResource">#FC4850</color>
     <color name="orange">#FE733A</color>
     <color name="color_temperature_start">#FEBF23</color>

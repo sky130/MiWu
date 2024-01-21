@@ -10,8 +10,9 @@ import miot.kotlin.model.miot.MiotScenes
 
 sealed class MiotBaseQuick {
 
-    abstract suspend fun doAction(): Unit
-    abstract val name:String
+    abstract suspend fun doAction()
+    abstract val name: String
+    abstract fun initValue()
 
     sealed class DeviceQuick<T>(
         val device: MiotDevices.Result.Device, val siid: Int,
@@ -28,7 +29,7 @@ sealed class MiotBaseQuick {
 
     class SceneQuick(private val scene: MiotScenes.Result.Scene) : MiotBaseQuick() {
         override val name = scene.sceneName
-
+        override fun initValue() = Unit
         override suspend fun doAction() {
             miot.runScene(scene)
         }

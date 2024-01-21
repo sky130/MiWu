@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="fragment"
             type="com.github.miwu.ui.main.fragment.SceneFragment" />
@@ -31,9 +32,9 @@
                 android:visibility="gone">
 
                 <ImageView
+                    android:id="@+id/deviceImage"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:id="@+id/deviceImage"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:src="@drawable/empty_list_icon" />
@@ -58,17 +59,17 @@
 
             <androidx.wear.widget.WearableRecyclerView
                 android:id="@+id/recycler"
-                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@color/transparent"
-                android:overScrollMode="never"
+                android:clipToPadding="false"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:overScrollMode="never"
                 android:paddingHorizontal="@dimen/device_activity_padding"
                 android:paddingTop="50dp"
                 android:paddingBottom="50dp"
                 android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 app:data="@{viewModel.sceneList}"
                 app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
                 app:itemEventHandler="@{fragment}"

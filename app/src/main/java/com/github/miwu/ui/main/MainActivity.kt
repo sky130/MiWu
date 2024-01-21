@@ -9,8 +9,10 @@ import kndroidx.activity.ViewActivityX
 
 class MainActivity : ViewActivityX<ActivityMainBinding, MainViewModel>(), OnPageChangeListener {
 
+    private val adapter = MainViewPagerAdapter(this)
     override fun init() {
-        binding.viewPager.adapter = MainViewPagerAdapter(this)
+        binding.viewPager.adapter = adapter
+        binding.viewPager.addOnPageChangeListener(this)
         AppRepository.loadHomes()
         AppRepository.loadDevice()
         AppRepository.loadScene()
@@ -19,7 +21,7 @@ class MainActivity : ViewActivityX<ActivityMainBinding, MainViewModel>(), OnPage
     override fun onPageScrolled(position: Int, offset: Float, offsetPixle: Int) = Unit
 
     override fun onPageSelected(position: Int) {
-        binding
+        binding.title.setTitle(adapter.list[position].first)
     }
 
     override fun onPageScrollStateChanged(state: Int) = Unit

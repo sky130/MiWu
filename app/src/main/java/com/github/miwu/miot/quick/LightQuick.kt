@@ -14,9 +14,12 @@ class LightQuick(
 
     override var value = false
 
-    override suspend fun doAction() {
-        miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, !value)))
+    override fun initValue() {
         value = !value
+    }
+
+    override suspend fun doAction() {
+        miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value)))
     }
 
 }

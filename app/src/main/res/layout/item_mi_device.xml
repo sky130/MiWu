@@ -21,7 +21,6 @@
         android:onLongClick="@{()->handler.onItemLongClick(item)}"
         android:orientation="vertical"
         android:layout_marginVertical="3dp"
-        android:layout_marginHorizontal="2dp"
         android:padding="12dp">
 
         <ImageView

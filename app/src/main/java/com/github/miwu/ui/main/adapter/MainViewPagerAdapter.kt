@@ -15,10 +15,10 @@ import kndroidx.extension.string
 class MainViewPagerAdapter(activity: AppCompatActivity) :
     FragmentPagerAdapter(activity.supportFragmentManager) {
 
-    private val list = listOf(
+    val list = listOf(
         R.string.app_name.string to MainFragment(),
-        R.string.app_name.string to SceneFragment(),
-        R.string.app_name.string to UserFragment(),
+        R.string.scene.string to SceneFragment(),
+        R.string.more.string to UserFragment(),
     )
 
     override fun getCount() = list.size

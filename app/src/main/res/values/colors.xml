@@ -20,6 +20,6 @@
     <color name="red" tools:ignore="MissingDefaultResource">#FC4850</color>
     <color name="orange">#FE733A</color>
     <color name="color_temperature_start">#FEBF23</color>
-    <color name="color_temperature_end">#FFFFFF</color>
+    <color name="color_temperature_end">#FFE9AE</color>
 
 </resources>

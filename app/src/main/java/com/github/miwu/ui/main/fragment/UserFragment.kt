@@ -6,6 +6,7 @@ import com.github.miwu.MainApplication
 import com.github.miwu.databinding.FragmentMainDeviceBinding
 import com.github.miwu.databinding.FragmentMainSettingsBinding
 import com.github.miwu.logic.preferences.AppPreferences
+import com.github.miwu.ui.about.AboutActivity
 import com.github.miwu.ui.home.HomeActivity
 import com.github.miwu.ui.login.LoginActivity
 import com.github.miwu.viewmodel.MainViewModel
@@ -26,6 +27,10 @@ class UserFragment : ViewFragmentX<FragmentMainSettingsBinding, MainViewModel>()
 
     fun startHomeActivity() {
         requireContext().start<HomeActivity>()
+    }
+
+    fun startAboutActivity() {
+        requireContext().start<AboutActivity>()
     }
 
     fun logout() {

@@ -49,7 +49,7 @@ object MiotQuickManager {
 
     fun delay() {
         handler.removeCallbacks(runnable)
-        handler.postDelayed(runnable, delayMillis)
+//        handler.postDelayed(runnable, delayMillis)
     }
 
     fun refresh(must: Boolean = false) {

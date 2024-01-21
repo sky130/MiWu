@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.viewmodel.LoginViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.login.LoginActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="@dimen/activity_padding_top"
+                android:orientation="vertical"
+                android:layout_marginBottom="50dp"
+                android:paddingHorizontal="@dimen/device_activity_padding">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/bg_miwu_card">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="15dp"
+                        android:adjustViewBounds="true"
+                        android:maxHeight="35dp"
+                        android:src="@drawable/ic_miwu" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/miwu"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <com.github.miwu.widget.app.AppTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:back="true"
+            app:title="@string/about" />
+    </FrameLayout>
+</layout>

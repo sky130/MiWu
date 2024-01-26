@@ -28,7 +28,8 @@ class QuickActionTileService : KtxTileService() {
 
     init {
         imageMap.apply {
-            set("test_res", R.drawable.ic_miwu_placeholder.toImage())
+            set("device", R.drawable.ic_miwu_placeholder.toImage())
+            set("scene", R.drawable.ic_miwu_scene_nobg.toImage())
         }
     }
 
@@ -40,9 +41,14 @@ class QuickActionTileService : KtxTileService() {
                 expand(), wrap(), spanCount = 2, rowPadding = PaddingValue(vertical = 3.dp)
             ) {
                 for ((i, quick) in list.withIndex()) {
+                    val iconId = when (quick) {
+                        is MiotBaseQuick.DeviceQuick<*> -> "device"
+                        is MiotBaseQuick.SceneQuick -> "scene"
+                        else -> ""
+                    }
                     contents(
                         QuickCard(
-                            quick = quick, iconId = "test_res", Clickable(i.toString())
+                            quick = quick, iconId = iconId, Clickable(i.toString())
                         )
                     )
                 }

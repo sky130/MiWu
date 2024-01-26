@@ -141,19 +141,6 @@ class Grid(
                 x--
             }
         }.build())
-//        var x = 0
-//        var row = getRowBuilder()
-//        for (i in list) {
-//            if (x == spanCount) {
-//                column.contents(row.build())
-//                row = getRowBuilder()
-//                x = 0
-//            }
-//            i.log.d()
-//            row.contents(i)
-//            x++
-//        }
-//        column.contents(row.build())
     }
 
     private fun getRowBuilder() = Row.Builder().setHeight(wrap()).setWidth(expand()).apply {

@@ -12,7 +12,7 @@
 > [!NOTE]
 > 测试硬件平台为 **Galaxy Watch 5 44mm 蓝牙版**
 
-<img width="160" alt="" src="./image/1.jpg"/> <img width="160" alt="" src="./image/2.jpg"/> <img width="160" alt="" src="./image/3.jpg"/> <img width="160" alt="" src="./image/4.jpg"/>
+<img width="160" alt="" src="./image/1.png"/> <img width="160" alt="" src="./image/2.png"/> <img width="160" alt="" src="./image/3.png"/> <img width="160" alt="" src="./image/4.png"/>
 
 ## 目前进度
 

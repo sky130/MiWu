@@ -26,3 +26,4 @@ suspend fun MiotDevices.Result.Device.getIconUrl(): String? = withContext(Dispat
         return@withContext null
     }
 }
+

@@ -25,38 +25,36 @@ data class MiotDevices(
             @SerializedName("isOnline") val isOnline: Boolean,
             @SerializedName("last_online") val lastOnline: Long,
             @SerializedName("latitude") val latitude: String,
-            @SerializedName("localip") val localIp: String,
+            @SerializedName("localip") val localIp: String?,
             @SerializedName("longitude") val longitude: String,
             @SerializedName("mac") val mac: String,
             @SerializedName("model") val model: String,
             @SerializedName("name") val name: String,
             @SerializedName("orderTime") val orderTime: Int,
             @SerializedName("owner") val owner: Owner,
-            @SerializedName("parent_id") val parentId: String,
+            @SerializedName("parent_id") val parentId: String?,
             @SerializedName("permitLevel") val permitLevel: Int,
             @SerializedName("pid") val pid: Int,
             @SerializedName("rssi") val rssi: Int,
             @SerializedName("show_mode") val showMode: Int,
             @SerializedName("spec_type") val specType: String?,
-            @SerializedName("ssid") val ssid: String,
+            @SerializedName("ssid") val ssid: String?,
             @SerializedName("token") val token: String,
             @SerializedName("uid") val uid: Long
         ) {
             data class Extra(
-                @SerializedName("fw_version") val fwVersion: String,
-                @SerializedName("isSetPincode") val isSetPinCode: Int,
-                @SerializedName("isSubGroup") val isSubGroup: Boolean,
-                @SerializedName("mcu_version") val mcuVersion: String,
-                @SerializedName("pincodeType") val pinCodeType: Int,
-                @SerializedName("platform") val platform: String,
-                @SerializedName("showGroupMember") val showGroupMember: Boolean,
-                @SerializedName("split") val split: Split
-            ) {
-                class Split
-            }
+                @SerializedName("fw_version") val fwVersion: String?,
+                @SerializedName("isSetPincode") val isSetPinCode: Int?,
+                @SerializedName("isSubGroup") val isSubGroup: Boolean?,
+                @SerializedName("mcu_version") val mcuVersion: String?,
+                @SerializedName("pincodeType") val pinCodeType: Int?,
+                @SerializedName("platform") val platform: String?,
+                @SerializedName("showGroupMember") val showGroupMember: Boolean?,
+            )
 
             data class Owner(
-                @SerializedName("nickname") val nickname: String, @SerializedName("userid") val userid: Int
+                @SerializedName("nickname") val nickname: String,
+                @SerializedName("userid") val userid: Int
             )
         }
 

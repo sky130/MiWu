@@ -5,6 +5,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.miwu.MainApplication.Companion.miot
+import com.github.miwu.logic.database.model.MiwuDevice
 import com.github.miwu.logic.preferences.AppPreferences
 import kndroidx.extension.log
 import kndroidx.extension.toast
@@ -30,6 +31,20 @@ object AppRepository {
     private val deviceRoomName = ArrayMap<String, String>()
 
     fun getRoomName(device: MiotDevices.Result.Device): String {
+        val name = deviceRoomName[device.did]
+        if (name != null) return name
+        for (home in homeList) {
+            for (room in home.rooms) {
+                if (device.did in room.dids) {
+                    deviceRoomName[device.did] = room.name
+                    return room.name
+                }
+            }
+        }
+        return "未知位置"
+    }
+
+    fun getRoomName(device: MiwuDevice): String {
         val name = deviceRoomName[device.did]
         if (name != null) return name
         for (home in homeList) {
@@ -82,12 +97,12 @@ object AppRepository {
                         deviceList.clear()
                         it.result.deviceInfo?.let { it1 -> deviceList.addAll(it1) }
                         devices.value = it
+                        sortDeviceList()
                     }
                 }
             }
         }
     }
-
 
     fun loadScene() {
         if (AppPreferences.homeId == 0L) return
@@ -108,6 +123,10 @@ object AppRepository {
         }
     }
 
+    fun sortDeviceList(){
+        deviceList.sortBy { !it.isOnline }
+    }
+
     suspend fun loadScenes() {
         if (AppPreferences.homeId == 0L) return
         miot.getScenes(AppPreferences.homeId)?.also {
@@ -120,6 +139,7 @@ object AppRepository {
                     sceneList.clear()
                     it.result.scenes?.let { it1 -> sceneList.addAll(it1) }
                     scenes.value = it
+                    sortDeviceList()
                 }
             }
         }

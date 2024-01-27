@@ -45,7 +45,7 @@ object MiotManager {
     private val random = Random.Default
     internal val gson by lazy { Gson() }
 
-    internal fun get(url: String, body: RequestBody? = null) = loginClient.run {
+    fun get(url: String, body: RequestBody? = null) = loginClient.run {
         newCall(
             Request.Builder().url(url).apply {
                 if (body != null) post(body)
@@ -53,7 +53,7 @@ object MiotManager {
         ).execute().body.string()
     }
 
-    internal fun getResponse(url: String, body: RequestBody? = null) = loginClient.run {
+    fun getResponse(url: String, body: RequestBody? = null) = loginClient.run {
         newCall(
             Request.Builder().url(url).apply {
                 if (body != null) post(body)

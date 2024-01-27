@@ -20,11 +20,4 @@ object AppPreferences : PreferencesX("app") {
 
     var homeUid by longPreference("homeUid", 0L)
 
-    private var quickList by stringPreference("quickList", "{\"quicks\":[]}")
-
-    fun getQuicks() = gson.fromJson(quickList, Quicks::class.java).quicks
-
-    fun putQuicks(quick: ArrayList<MiotBaseQuick>) = gson.toJson(Quicks(quick))
-
-    data class Quicks(@SerializedName("quicks") val quicks: ArrayList<MiotBaseQuick>)
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.model.miot.MiotDevices
 
-class MainFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),
+class DeviceFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),
     SwipeRefreshLayout.OnRefreshListener {
 
     override fun init() {
@@ -26,9 +26,11 @@ class MainFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),
     }
 
     fun getRoomName(item: Any?) = AppRepository.getRoomName(item as MiotDevices.Result.Device)
+
     fun onItemClick(item: Any?) {
         item as MiotDevices.Result.Device
-        requireContext().startDeviceActivity(item)
+        if (item.isOnline)
+            requireContext().startDeviceActivity(item)
     }
 
     fun onItemLongClick(item: Any?): Boolean {

@@ -27,15 +27,12 @@ object MiotQuickManager {
     }
     val quickList = arrayListOf<MiotBaseQuick>()
 
-    init {
-        quickList.addAll(AppPreferences.getQuicks())
-    }
+
 
     fun addQuick(quick: MiotBaseQuick) {
         if (quickList.size >= 4) return
         quickList.add(quick)
         runnable.run()
-        AppPreferences.putQuicks(quickList)
         QuickActionTileService.update()
     }
 

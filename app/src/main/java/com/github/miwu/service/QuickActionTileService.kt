@@ -29,7 +29,7 @@ class QuickActionTileService : KtxTileService() {
     init {
         imageMap.apply {
             set("device", R.drawable.ic_miwu_placeholder.toImage())
-            set("scene", R.drawable.ic_miwu_scene_nobg.toImage())
+            set("scene", R.drawable.ic_miwu_scene_tile.toImage())
         }
     }
 

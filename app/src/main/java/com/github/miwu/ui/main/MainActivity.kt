@@ -2,6 +2,7 @@ package com.github.miwu.ui.main
 
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.github.miwu.databinding.ActivityMainBinding
+import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.ui.main.adapter.MainViewPagerAdapter
 import com.github.miwu.viewmodel.MainViewModel
@@ -16,6 +17,15 @@ class MainActivity : ViewActivityX<ActivityMainBinding, MainViewModel>(), OnPage
         AppRepository.loadHomes()
         AppRepository.loadDevice()
         AppRepository.loadScene()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.homeId != AppPreferences.homeId){
+            AppRepository.loadDevice()
+            AppRepository.loadScene()
+            viewModel.homeId = AppPreferences.homeId
+        }
     }
 
     override fun onPageScrolled(position: Int, offset: Float, offsetPixle: Int) = Unit

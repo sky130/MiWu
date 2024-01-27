@@ -23,16 +23,6 @@
             android:name=".ui.login.LoginActivity"
             android:exported="false"
             android:taskAffinity="" />
-        <!--        <activity-->
-        <!--            android:name=".ui.SwitchHomeActivity"-->
-        <!--            android:exported="false" />-->
-        <!--        <activity-->
-        <!--            android:name=".ui.DeviceActivity"-->
-        <!--            android:exported="false"-->
-        <!--            android:launchMode="singleTask" />-->
-        <!--        <activity-->
-        <!--            android:name=".ui.LoginActivity"-->
-        <!--            android:exported="false" />-->
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -41,6 +31,23 @@
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:taskAffinity="" />
+        <activity
+            android:name=".ui.favorite.EditFavoriteActivity"
+            android:exported="true"
+            android:taskAffinity="android.task.tile_edit"
+            android:excludeFromRecents="true"
+            android:noHistory="true">
+            <intent-filter>
+                <action
+                    android:name="com.github.miwu.action.EditFavoriteActivity" />
+                <action
+                    android:name="android.intent.action.MAIN" />
+                <category
+                    android:name="android.intent.category.DEFAULT" />
+                <category
+                    android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.device.DeviceActivity"
             android:exported="false"
@@ -86,6 +93,10 @@
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/stub" />
+
+            <meta-data
+                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"
+                android:value="com.github.miwu.action.EditFavoriteActivity" />
         </service>
     </application>
 </manifest>

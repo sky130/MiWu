@@ -6,7 +6,7 @@
 
         <variable
             name="fragment"
-            type="com.github.miwu.ui.main.fragment.MainFragment" />
+            type="com.github.miwu.ui.main.fragment.DeviceFragment" />
 
         <variable
             name="viewModel"

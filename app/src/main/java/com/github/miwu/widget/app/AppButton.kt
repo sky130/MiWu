@@ -32,7 +32,6 @@ class AppButton(context: Context, attr: AttributeSet) : AppCompatButton(context,
         return super.onTouchEvent(paramMotionEvent)
     }
 
-    @SuppressLint("Recycle")
     private fun animateToNormal() {
         val animatorSet = AnimatorSet()
         animatorSet.duration = 250L
@@ -43,7 +42,6 @@ class AppButton(context: Context, attr: AttributeSet) : AppCompatButton(context,
         animatorSet.start()
     }
 
-    @SuppressLint("Recycle")
     private fun animateToPress() {
         val animatorSet = AnimatorSet()
         animatorSet.duration = 200L

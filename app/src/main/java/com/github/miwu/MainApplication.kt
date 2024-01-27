@@ -1,6 +1,7 @@
 package com.github.miwu
 
 import android.app.Application
+import com.github.miwu.logic.handler.CrashHandler
 import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.ui.login.LoginActivity
 import com.github.miwu.ui.main.MainActivity
@@ -27,6 +28,7 @@ class MainApplication : Application() {
         kndroidx {
             context = applicationContext
         }
+        CrashHandler.instance.init(this)
         if (AppPreferences.userId.isNotEmpty()) {
             AppPreferences.apply {
                 miotUser = Miot.MiotUser(userId, securityToken, serviceToken)

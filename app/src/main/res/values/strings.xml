@@ -22,6 +22,7 @@
     <string name="uid">账号</string>
     <string name="nickname">姓名</string>switchHome
     <string name="switch_home">切换家庭</string>
+    <string name="crash_log">闪退日志</string>
     <string name="exit_account">退出账号</string>
     <string name="goto_license">关于米屋</string>
     <string name="scene_tip">当前家庭暂无场景</string>
@@ -55,4 +56,6 @@
     <string name="unofficial_mihome_app">第三方手表版米家</string>
     <string name="license_for_use">使用须知</string>
     <string name="github_url">https://github.com/sky130/MiWu</string>
+    <string name="crash_test">com.github.miwu.ui.crash.model.CrashItemKt.main(CrashItem.kt:22)\ncom.github.miwu.ui.crash.model.CrashItemKt.main(CrashItem.kt)</string>
+    <string name="app_url_text">仓库项目地址</string>
 </resources>

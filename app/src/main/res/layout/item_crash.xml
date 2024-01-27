@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.github.miwu.ui.crash.CrashActivity" />
+
+        <variable
+            name="item"
+            type="com.github.miwu.ui.crash.model.CrashItem" />
+    </data>
+
+    <LinearLayout
+        android:onClick="@{()->handler.onClick(item)}"
+        android:id="@+id/scene_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="3dp"
+        android:background="@drawable/bg_list_item"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{item.title}"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:text="java.lang.Exception" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:breakStrategy="simple"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{item.message}"
+            android:textSize="13sp"
+            tools:text="@string/crash_test" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:alpha="0.7"
+            android:breakStrategy="simple"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@{item.time}"
+            android:textSize="11sp"
+            tools:text="24/1/27 10:50" />
+        <!--        tools:text="Exception in thread ''main'' java.lang.Exception: test"-->
+    </LinearLayout>
+</layout>

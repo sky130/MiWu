@@ -23,6 +23,10 @@
             android:name=".ui.login.LoginActivity"
             android:exported="false"
             android:taskAffinity="" />
+        <activity
+            android:name=".ui.crash.CrashActivity"
+            android:exported="false"
+            android:taskAffinity="" />
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />

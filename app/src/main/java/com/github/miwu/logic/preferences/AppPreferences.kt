@@ -20,4 +20,6 @@ object AppPreferences : PreferencesX("app") {
 
     var homeUid by longPreference("homeUid", 0L)
 
+    var isCrash by booleanPreference("isCrash", false)
+
 }

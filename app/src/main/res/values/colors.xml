@@ -11,6 +11,7 @@
     <color name="gray">#353638</color>
     <color name="transparent">#00000000</color>
     <color name="blue">#6186FC</color>
+    <color name="highlight">#0E84FF</color>
     <color name="dialog_black">#E6000000</color>
     <color name="lrc_disable">#80FFFFFF</color>
     <color name="lrc_bg">#33FFFFFF</color>

@@ -58,4 +58,6 @@
     <string name="github_url">https://github.com/sky130/MiWu</string>
     <string name="crash_test">com.github.miwu.ui.crash.model.CrashItemKt.main(CrashItem.kt:22)\ncom.github.miwu.ui.crash.model.CrashItemKt.main(CrashItem.kt)</string>
     <string name="app_url_text">仓库项目地址</string>
+    <string name="start_charge">开始回充</string>
+    <string name="start_clean">开始清洁</string>
 </resources>

@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import androidx.viewbinding.ViewBinding
 import com.github.miwu.miot.manager.MiotDeviceManager
 import miot.kotlin.model.att.SpecAtt
+import miot.kotlin.utils.parseUrn
 import java.lang.reflect.ParameterizedType
 
 sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(context) {
@@ -18,7 +19,7 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     val binding: VB
     val properties = arrayListOf<Pair<Int, SpecAtt.Service.Property>>()
     val actions = arrayListOf<Pair<Int, SpecAtt.Service.Action>>()
-    private lateinit var miotManager: MiotDeviceManager
+    internal lateinit var miotManager: MiotDeviceManager
 
     init {
         binding = createViewBinding()
@@ -28,6 +29,8 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
 
     abstract fun onValueChange(value: Any) // 需要自己转换类型
 
+    open fun onValueChange(siid: Int, piid: Int, value: Any) {} // 需要自己转换类型
+
     fun putValue(value: Any) {
         miotManager.putValue(value, siid, piid)
     }
@@ -35,6 +38,13 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     fun doAction(siid: Int, aiid: Int) {
         miotManager.doAction(siid, aiid)
     }
+
+    fun MiotBaseWidget<*>.getProperty(iid: Int) = properties.filter { it.second.iid == iid }[0].second
+
+    fun MiotBaseWidget<*>.getProperty(name: String) = properties.filter { it.second.type.parseUrn().name == name }[0].second
+
+    fun MiotBaseWidget<*>.getPropertyName(iid: Int) = properties.filter { it.second.iid == iid }[0].second.type.parseUrn().name
+
 
     fun stopRefresh() = miotManager.stopRefresh()
 

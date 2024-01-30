@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/miot_widget_card_height"
+    android:background="@drawable/bg_list_item_online"
+    android:orientation="horizontal"
+    android:paddingVertical="15dp"
+    android:paddingHorizontal="10dp"
+    tools:layout_marginHorizontal="@dimen/device_activity_padding">
+
+    <com.github.miwu.widget.app.MiotButton
+        android:id="@+id/down"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@color/transparent"
+        android:padding="5dp"
+        android:src="@drawable/ic_down" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            tools:text="25" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:text="°"
+            android:textSize="28sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <com.github.miwu.widget.app.MiotButton
+        android:id="@+id/up"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@color/transparent"
+        android:padding="5dp"
+        android:src="@drawable/ic_up" />
+</LinearLayout>

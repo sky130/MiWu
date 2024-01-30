@@ -22,7 +22,7 @@ import miot.kotlin.model.att.DeviceAtt
 import miot.kotlin.model.miot.MiotDevices
 
 class MiotDeviceManager(
-    private val device: MiotDevices.Result.Device,
+    internal val device: MiotDevices.Result.Device,
     private val miotLayout: ViewGroup,
 ) {
 
@@ -42,15 +42,12 @@ class MiotDeviceManager(
         view.setManager(this)
         viewList.add(view)
         miotLayout.apply {
-            addView(
-                view,
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, // 宽度为 MATCH_PARENT（填满父容器）
-                    ViewGroup.LayoutParams.WRAP_CONTENT // 高度为 WRAP_CONTENT（根据内容自适应）
-                ).apply {
-                    setMargins(0, 0, 0, 10.dp)
-                }
-            )
+            addView(view, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, // 宽度为 MATCH_PARENT（填满父容器）
+                ViewGroup.LayoutParams.WRAP_CONTENT // 高度为 WRAP_CONTENT（根据内容自适应）
+            ).apply {
+                setMargins(0, 0, 0, 10.dp)
+            })
             requestLayout()
             invalidate()
         }
@@ -114,10 +111,13 @@ class MiotDeviceManager(
         scope.launch(Dispatchers.IO) {
             val attList = arrayListOf<GetAtt>()
             for (i in viewList) {
-                if (i.piid != -1)
-                    i.apply {
-                        attList.add(GetAtt(siid, piid))
-                    }
+                if (i.piid != -1) i.apply {
+                    attList.add(GetAtt(siid, piid))
+                }
+                if (i.properties.isNotEmpty()) {
+                    attList.addAll(i.properties.filter { "read" in it.second.access }
+                        .map { GetAtt(it.first, it.second.iid) })
+                }
             }
             if (attList.isEmpty()) return@launch
             miot.getDeviceAtt(device, attList.toTypedArray())?.let {
@@ -129,8 +129,9 @@ class MiotDeviceManager(
     private suspend fun refreshValue(list: List<DeviceAtt.Att>) = withContext(Dispatchers.Main) {
         for (att in list) {
             for (view in viewList) {
-                if (att.siid == view.siid && att.piid == view.piid) {
+                if ((att.siid == view.siid && att.piid == view.piid) || (att.siid in view.properties.map { it.first } && att.siid in view.properties.map { it.second.iid })) {
                     view.onValueChange(att.value ?: continue)
+                    view.onValueChange(att.siid, att.piid, att.value ?: continue)
                 }
             }
         }

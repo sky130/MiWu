@@ -31,6 +31,10 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
 
     open fun onValueChange(siid: Int, piid: Int, value: Any) {} // 需要自己转换类型
 
+    fun putValue(value: Any, siid: Int, piid: Int) {
+        miotManager.putValue(value, siid, piid)
+    }
+
     fun putValue(value: Any) {
         miotManager.putValue(value, siid, piid)
     }
@@ -39,11 +43,17 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
         miotManager.doAction(siid, aiid)
     }
 
-    fun MiotBaseWidget<*>.getProperty(iid: Int) = properties.filter { it.second.iid == iid }[0].second
+    fun MiotBaseWidget<*>.getProperty(iid: Int) =
+        properties.first { it.second.iid == iid }.second
 
-    fun MiotBaseWidget<*>.getProperty(name: String) = properties.filter { it.second.type.parseUrn().name == name }[0].second
+    fun MiotBaseWidget<*>.getPropertyWithSiid(name: String) =
+        properties.first { it.second.type.parseUrn().name == name }
 
-    fun MiotBaseWidget<*>.getPropertyName(iid: Int) = properties.filter { it.second.iid == iid }[0].second.type.parseUrn().name
+    fun MiotBaseWidget<*>.getProperty(name: String) =
+        properties.first { it.second.type.parseUrn().name == name }.second
+
+    fun MiotBaseWidget<*>.getPropertyName(iid: Int) =
+        properties.first { it.second.iid == iid }.second.type.parseUrn().name
 
 
     fun stopRefresh() = miotManager.stopRefresh()

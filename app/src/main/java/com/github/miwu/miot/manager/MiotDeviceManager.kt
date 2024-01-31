@@ -38,16 +38,21 @@ class MiotDeviceManager(
     @get:Synchronized
     private val viewList = arrayListOf<MiotBaseWidget<*>>()
 
-    fun addView(view: MiotBaseWidget<*>) {
+    fun addView(view: MiotBaseWidget<*>, index: Int = -1) {
         view.setManager(this)
         viewList.add(view)
         miotLayout.apply {
-            addView(view, LinearLayout.LayoutParams(
+            val params =  LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, // 宽度为 MATCH_PARENT（填满父容器）
                 ViewGroup.LayoutParams.WRAP_CONTENT // 高度为 WRAP_CONTENT（根据内容自适应）
             ).apply {
                 setMargins(0, 0, 0, 10.dp)
-            })
+            }
+            if (index != -1){
+                addView(view,index,params)
+            }else{
+                addView(view,params)
+            }
             requestLayout()
             invalidate()
         }

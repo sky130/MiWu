@@ -26,8 +26,13 @@ sealed class DeviceType(
     inline fun <reified V : MiotBaseWidget<*>> createView(
         siid: Int = -1,
         piid: Int = -1,
+        property: SpecAtt.Service.Property? = null,
+        action: SpecAtt.Service.Action? = null,
+        index:Int = -1
     ) = manager.createView<V>(layout, siid, piid).apply {
-        manager.addView(this)
+        property?.let { properties.add(siid to it) }
+        action?.let { actions.add(siid to it) }
+        manager.addView(this,index)
     }
 
 

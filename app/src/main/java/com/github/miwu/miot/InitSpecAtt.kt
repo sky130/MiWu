@@ -1,11 +1,7 @@
 package com.github.miwu.miot
 
 import android.view.ViewGroup
-import com.github.miwu.miot.device.AirConditioner
-import com.github.miwu.miot.device.Airer
-import com.github.miwu.miot.device.DeviceType
-import com.github.miwu.miot.device.Light
-import com.github.miwu.miot.device.Vacuum
+import com.github.miwu.miot.device.*
 import com.github.miwu.miot.manager.MiotDeviceManager
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
@@ -17,26 +13,25 @@ fun initSpecAttFun(
     att: SpecAtt,
     layout: ViewGroup,
     manager: MiotDeviceManager
-): DeviceType? =
-    when (mode) {
-        "light" -> {
-            Light(device, layout, manager)
-        }
+): DeviceType? = when (mode) {
+    "light" -> Light(device, layout, manager)
 
-        "airer" -> {
-            Airer(device, layout, manager)
-        }
 
-        "vacuum" -> {
-            Vacuum(device, layout, manager)
-        }
+    "airer" -> Airer(device, layout, manager)
 
-        "air-conditioner" -> {
-            AirConditioner(device, layout, manager)
-        }
 
-        else -> {
-            null
-        }
-    }?.onLayout(att)
+    "vacuum" -> Vacuum(device, layout, manager)
+
+
+    "air-conditioner" -> AirConditioner(device, layout, manager)
+
+
+    "temperature-humidity-sensor" -> SensorHT(device, layout, manager)
+
+    "air-purifier" -> AirPurifier(device, layout, manager)
+
+    else -> {
+        null
+    }
+}?.onLayout(att)
 

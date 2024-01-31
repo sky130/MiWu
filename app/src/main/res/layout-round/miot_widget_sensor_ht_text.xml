@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:layout_marginHorizontal="@dimen/device_activity_padding">
+
+    <com.github.miwu.widget.app.NoPaddingTextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_bold"
+        android:gravity="center"
+        android:paddingBottom="3dp"
+        android:includeFontPadding="false"
+        android:scrollbarThumbVertical="@color/transparent"
+        android:scrollbars="none"
+        android:textColor="@color/white"
+        android:textSize="39sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="18.8" />
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_semi_bold"
+        android:includeFontPadding="false"
+        android:layout_marginTop="7dp"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/value"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="°C" />
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand_bold"
+        android:includeFontPadding="false"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/value"
+        tools:text="温度" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

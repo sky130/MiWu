@@ -26,6 +26,7 @@
 
         <TextView
             android:id="@+id/num"
+            android:fontFamily="@font/quicksand_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
@@ -35,6 +36,7 @@
             tools:text="25" />
 
         <TextView
+            android:fontFamily="@font/quicksand_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"

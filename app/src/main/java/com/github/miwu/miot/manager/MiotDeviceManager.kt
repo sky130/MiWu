@@ -114,6 +114,7 @@ class MiotDeviceManager(
                 if (i.piid != -1) i.apply {
                     attList.add(GetAtt(siid, piid))
                 }
+
                 if (i.properties.isNotEmpty()) {
                     attList.addAll(i.properties.filter { "read" in it.second.access }
                         .map { GetAtt(it.first, it.second.iid) })
@@ -129,8 +130,10 @@ class MiotDeviceManager(
     private suspend fun refreshValue(list: List<DeviceAtt.Att>) = withContext(Dispatchers.Main) {
         for (att in list) {
             for (view in viewList) {
-                if ((att.siid == view.siid && att.piid == view.piid) || (att.siid in view.properties.map { it.first } && att.siid in view.properties.map { it.second.iid })) {
+                if ((att.siid == view.siid && att.piid == view.piid)) {
                     view.onValueChange(att.value ?: continue)
+                }
+                if ((att.siid in view.properties.map { it.first } && att.siid in view.properties.map { it.second.iid })) {
                     view.onValueChange(att.siid, att.piid, att.value ?: continue)
                 }
             }

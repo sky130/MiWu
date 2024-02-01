@@ -107,7 +107,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     private fun initSpecAtt(att: SpecAtt) {
         mode ?: return // TODO
         deviceType = initSpecAttFun(device, mode!!, att, layout, manager)
-        manager.post(1000L)
+        manager.post(500L)
     }
 
     override fun onDestroy() {

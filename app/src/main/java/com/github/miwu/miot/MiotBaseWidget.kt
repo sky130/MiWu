@@ -52,8 +52,8 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     fun MiotBaseWidget<*>.getProperty(name: String) =
         properties.first { it.second.type.parseUrn().name == name }.second
 
-    fun MiotBaseWidget<*>.getPropertyName(iid: Int) =
-        properties.first { it.second.iid == iid }.second.type.parseUrn().name
+    fun MiotBaseWidget<*>.getPropertyName(piid: Int) =
+        properties.first { it.second.iid == piid }.second.type.parseUrn().name
 
 
     fun stopRefresh() = miotManager.stopRefresh()

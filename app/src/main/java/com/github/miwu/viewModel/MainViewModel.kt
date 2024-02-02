@@ -13,14 +13,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    val deviceList get() = AppRepository.deviceList
-    val sceneList get() = AppRepository.sceneList
 
     val deviceFlow = DeviceRepository.flow
     var homeId = AppPreferences.homeId
     val avatar = MutableLiveData<String>()
     val nickname = MutableLiveData<String>()
     val uid = MutableLiveData<String>()
+    val deviceList = AppRepository.deviceFlow.asLiveData()
+    val sceneList = AppRepository.sceneFlow.asLiveData()
+    val homeList = AppRepository.homeFlow.asLiveData()
 
     fun saveList(list: ArrayList<MiwuDevice>) {
         viewModelScope.launch {

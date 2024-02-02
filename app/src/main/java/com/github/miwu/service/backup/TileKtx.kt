@@ -1,14 +1,10 @@
-package com.github.miwu.service
+package com.github.miwu.service.backup
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ColorBuilders.ColorProp
-import androidx.wear.protolayout.DeviceParametersBuilders
 import androidx.wear.protolayout.DeviceParametersBuilders.*
-import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.DimensionBuilders.*
-import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.LayoutElementBuilders.*
 import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Padding
@@ -18,11 +14,8 @@ import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.ButtonColors
 import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.ChipColors
-import androidx.wear.protolayout.material.Colors
 import androidx.wear.protolayout.material.CompactChip
-import androidx.wear.protolayout.material.Typography
 import androidx.wear.tiles.TileService
-import kndroidx.extension.log
 
 fun Column(
     width: ContainerDimension,

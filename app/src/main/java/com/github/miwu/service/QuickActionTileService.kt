@@ -1,30 +1,24 @@
+@file:Suppress("FunctionName")
+
 package com.github.miwu.service
 
-import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.DimensionBuilders.weight
 import androidx.wear.protolayout.DimensionBuilders.wrap
-import androidx.wear.protolayout.LayoutElementBuilders.*
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.material.Typography
-import com.github.miwu.R
 import com.github.miwu.miot.manager.MiotQuickManager
 import com.github.miwu.miot.quick.MiotBaseQuick
+import kndroidx.wear.tile.*
+import kndroidx.wear.tile.layout.*
+import com.github.miwu.R
 import kndroidx.KndroidX
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kndroidx.wear.tile.widget.*
+import kndroidx.wear.tile.service.TileServiceX
 
-private const val RESOURCES_VERSION = "1"
-
-@Suppress("SameParameterValue")
-class QuickActionTileService : KtxTileService() {
-
-    private val job = Job()
-    private val scopes = CoroutineScope(job)
-
-    override val version = "4"
-
+class QuickActionTileService : TileServiceX() {
     val list get() = MiotQuickManager.quickList
+    override val version = "1"
 
     init {
         imageMap.apply {
@@ -32,65 +26,6 @@ class QuickActionTileService : KtxTileService() {
             set("scene", R.drawable.ic_miwu_scene_tile.toImage())
         }
     }
-
-    override fun onLayout() =
-        Box(width = expand(), height = expand(), padding = PaddingValue(horizontal = 25.dp)) {
-            setVerticalAlignment(Vertical(VERTICAL_ALIGN_CENTER))
-            setHorizontalAlignment(Horizontal(HORIZONTAL_ALIGN_CENTER))
-            contents(Grid(
-                expand(), wrap(), spanCount = 2, rowPadding = PaddingValue(vertical = 3.dp)
-            ) {
-                for ((i, quick) in list.withIndex()) {
-                    val iconId = when (quick) {
-                        is MiotBaseQuick.DeviceQuick<*> -> "device"
-                        is MiotBaseQuick.SceneQuick -> "scene"
-                        else -> ""
-                    }
-                    contents(
-                        QuickCard(
-                            quick = quick, iconId = iconId, Clickable(i.toString())
-                        )
-                    )
-                }
-            })
-        }
-
-    @Suppress("FunctionName")
-    private fun QuickCard(quick: MiotBaseQuick, iconId: String, clickable: Clickable? = null) =
-        Box(weight(1f), wrap(), padding = PaddingValue(horizontal = 3.dp)) {
-            contents(Box(expand(), wrap()) {
-                setModifiers(Modifiers {
-                    quick.apply {
-                        if (this is MiotBaseQuick.DeviceQuick<*> &&
-                            value is Boolean &&
-                            value != null &&
-                            (value as Boolean)
-                        ) {
-                            setBackground(Background(argb(0xee57D1B8.toInt()), 15.dp))
-                        } else {
-                            setBackground(Background(argb(0xFF202020.toInt()), 15.dp))
-                        }
-                    }
-
-
-                    clickable?.let { setClickable(it) }
-                })
-                contents(Column(
-                    width = weight(1f), height = wrap(), padding = PaddingValue(10.dp)
-                ) {
-                    contents(
-                        Image(width = 25.dp, height = 25.dp, resId = iconId),
-                        Spacer(width = 0.dp, height = 5.dp),
-                        Text(
-                            text = quick.name,
-                            textColors = argb(0xFFFFFFFF.toInt()),
-                            typography = Typography.TYPOGRAPHY_BUTTON
-                        )
-                    )
-                })
-            })
-        }
-
 
     override fun onClick(id: String) {
         try {
@@ -101,8 +36,59 @@ class QuickActionTileService : KtxTileService() {
         }
     }
 
-    override fun onAttachedToWindow() {
-        MiotQuickManager.refresh(must = true)
+    override fun onEnter() = MiotQuickManager.refresh(must = true)
+
+    override fun onLayout() = layout {
+        Grid(
+            width = expand(),
+            height = wrap(),
+            modifiers = Modifier.padding(horizontal = 25.dp),
+            rowModifiers = Modifier.padding(vertical = 3.dp),
+            spanCount = 2
+        ) {
+            for ((i, quick) in list.withIndex()) {
+                val resId = when (quick) {
+                    is MiotBaseQuick.DeviceQuick<*> -> "device"
+                    is MiotBaseQuick.SceneQuick -> "scene"
+                    else -> ""
+                }
+                QuickCard(
+                    quick = quick, resId = resId, Clickable(i.toString())
+                )
+            }
+        }
+    }
+
+    fun Any.QuickCard(
+        quick: MiotBaseQuick, resId: String, clickable: Clickable
+    ) = Box(width = weight(1f), height = wrap(),modifier = Modifier.padding(horizontal = 3.dp)) {
+        val background = quick.run {
+            if (this is MiotBaseQuick.DeviceQuick<*> && value is Boolean && value != null && (value as Boolean)) {
+                ShapeBackground(0xee57D1B8.color, 15.dp)
+            } else {
+                ShapeBackground(0xFF202020.color, 15.dp)
+            }
+        }
+        Box(
+            width = expand(),
+            height = wrap(),
+            modifier = Modifier.background(background)
+                .clickable(clickable)
+        ) {
+            Column(
+                width = weight(1f),
+                height = wrap(),
+                modifier = Modifier.padding(vertical = 10.dp, horizontal = 10.dp)
+            ) {
+                Image(width = 25.dp, height = 25.dp, resId = resId)
+                Spacer(width = 0.dp, height = 5.dp)
+                Text(
+                    text = quick.name,
+                    textColors = 0xFFFFFFFF.color,
+                    typography = Typography.TYPOGRAPHY_BUTTON
+                )
+            }
+        }
     }
 
     companion object {

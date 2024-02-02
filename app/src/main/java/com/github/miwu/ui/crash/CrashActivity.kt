@@ -10,11 +10,7 @@ import java.text.FieldPosition
 class CrashActivity : ViewActivityX<ActivityCrashBinding, CrashViewModel>() {
 
     override fun init() {
-//        viewModel.load()
-    }
-
-    fun onClick(item: CrashItem) {
-        CrashDialog(item.all).show(supportFragmentManager)
+        viewModel.load()
     }
 
     override fun onDestroy() {

@@ -59,7 +59,7 @@ class QuickActionTileService : TileServiceX() {
         }
     }
 
-    fun Any.QuickCard(
+    private fun Any.QuickCard(
         quick: MiotBaseQuick, resId: String, clickable: Clickable
     ) = Box(width = weight(1f), height = wrap(),modifier = Modifier.padding(horizontal = 3.dp)) {
         val background = quick.run {

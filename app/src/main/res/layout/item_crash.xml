@@ -15,7 +15,6 @@
     </data>
 
     <LinearLayout
-        android:onClick="@{()->handler.onClick(item)}"
         android:id="@+id/scene_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

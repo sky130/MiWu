@@ -26,32 +26,20 @@ import java.io.File
 
 class CrashViewModel : ViewModel() {
 
-    private val listFlow = flow<ArrayList<CrashItem>> {
-        File(CrashHandler.PATH).apply {
-            if (!isDirectory) {
-                return@flow emit(arrayListOf())
-            }
-            arrayListOf<CrashItem>().apply {
-                listFiles()?.forEach {
-                    if (it.isFile) {
-                        add(CrashItem.fromString(it.nameWithoutExtension, it.readText()))
-                    }
+    val crashText = MutableLiveData<String>("")
+    val crashPath get() = CrashHandler.PATH
+
+    fun load() {
+        viewModelScope.launch(Dispatchers.IO) {
+            File(CrashHandler.PATH).apply {
+                if (isDirectory) {
+                    val list = listFiles() ?: return@apply
+                    list.sortedBy { it.nameWithoutExtension }
+                    crashText.postValue(list.last().readText())
                 }
-                emit(this)
             }
         }
     }
-
-    val list = ObservableArrayList<CrashItem>()
-
-    fun load(){
-        viewModelScope.launch {
-            listFlow.collect{
-                list.addAll(it)
-            }
-        }
-    }
-
 
 
 }

@@ -20,11 +20,6 @@ class UserFragment : ViewFragmentX<FragmentMainSettingsBinding, MainViewModel>()
         viewModel.loadInfo()
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.root.requestFocus()
-    }
-
     fun startHomeActivity() {
         requireContext().start<HomeActivity>()
     }

@@ -14,16 +14,16 @@ class MainActivity : ViewActivityX<ActivityMainBinding, MainViewModel>(), OnPage
     override fun init() {
         binding.viewPager.adapter = adapter
         binding.viewPager.addOnPageChangeListener(this)
-        AppRepository.loadHomes()
-        AppRepository.loadDevice()
-        AppRepository.loadScene()
+        AppRepository.updateScene()
+        AppRepository.updateDevice()
+        AppRepository.updateHome()
     }
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.homeId != AppPreferences.homeId){
-            AppRepository.loadDevice()
-            AppRepository.loadScene()
+        if (viewModel.homeId != AppPreferences.homeId) {
+            AppRepository.updateScene()
+            AppRepository.updateDevice()
             viewModel.homeId = AppPreferences.homeId
         }
     }

@@ -22,7 +22,7 @@ android {
     }
     defaultConfig {
         applicationId = "com.github.miwu"
-        minSdk = 26 // 来个人把Base64换掉就能改成21了
+        minSdk = 26
         targetSdk = 34
         versionCode = 2
         versionName = "2.0.0"
@@ -68,7 +68,7 @@ android {
     flavorDimensions.add("miwu")
 }
 
-val lifecycle_version = "2.7.0-rc02"
+val lifecycle_version = "2.7.0"
 
 dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
@@ -80,7 +80,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
 
 
-    implementation("com.github.KndroidX:KndroidX:de68f7d259")
+    implementation("com.github.KndroidX:KndroidX:4d3d0ae9ac")
 
 
     //noinspection GradleDependency
@@ -112,10 +112,10 @@ dependencies {
 
 
     implementation("androidx.wear:wear:1.4.0-alpha01")
-    implementation("androidx.wear.tiles:tiles:1.3.0-beta01")
-    implementation("androidx.wear.protolayout:protolayout:1.1.0-beta01")
-    implementation("androidx.wear.protolayout:protolayout-material:1.1.0-beta01")
-    implementation("androidx.wear.protolayout:protolayout-expression:1.1.0-beta01")
+    implementation("androidx.wear.tiles:tiles:1.3.0-rc01")
+    implementation("androidx.wear.protolayout:protolayout:1.1.0-rc01")
+    implementation("androidx.wear.protolayout:protolayout-material:1.1.0-rc01")
+    implementation("androidx.wear.protolayout:protolayout-expression:1.1.0-rc01")
 
 
     implementation("com.google.code.gson:gson:2.10.1")
@@ -124,7 +124,7 @@ dependencies {
 
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("androidx.concurrent:concurrent-futures:1.1.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
     implementation("com.google.android.horologist:horologist-compose-tools:0.1.8")
     implementation("com.google.android.horologist:horologist-tiles:0.1.8")
 

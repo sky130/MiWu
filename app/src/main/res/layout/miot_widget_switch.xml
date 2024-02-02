@@ -8,25 +8,45 @@
 
     <ImageView
         android:id="@+id/img"
-        android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:adjustViewBounds="true"
         android:background="@drawable/bg_switch_button_off"
         android:maxHeight="45dp"
         android:padding="10dp"
         android:src="@drawable/ic_power" />
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="5dp"
-        android:gravity="center"
-        tools:text="开启"
-        android:includeFontPadding="false"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:textStyle="bold" />
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:scrollbars="none"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="开启" />
+
+        <TextView
+            android:id="@+id/sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:scrollbars="none"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="灯" />
+    </LinearLayout>
 
 </LinearLayout>

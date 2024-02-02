@@ -16,19 +16,17 @@ fun initSpecAttFun(
 ): DeviceType? = when (mode) {
     "light" -> Light(device, layout, manager)
 
-
     "airer" -> Airer(device, layout, manager)
-
 
     "vacuum" -> Vacuum(device, layout, manager)
 
-
     "air-conditioner" -> AirConditioner(device, layout, manager)
-
 
     "temperature-humidity-sensor" -> SensorHT(device, layout, manager)
 
     "air-purifier" -> AirPurifier(device, layout, manager)
+
+    "heater" -> Heater(device, layout, manager)
 
     else -> {
         null

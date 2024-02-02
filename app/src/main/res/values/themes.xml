@@ -10,6 +10,7 @@
         <item name="android:windowSwipeToDismiss">true</item>
         <item name="android:scrollbars">vertical</item>
         <item name="colorPrimary">@color/mi_green</item>
+        <item name="colorAccent">@color/mi_green</item>
     </style>
 
     <style name="Theme.MiHome" parent="Base.Theme.MiHome" />

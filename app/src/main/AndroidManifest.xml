@@ -96,7 +96,7 @@
 
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
-                android:resource="@drawable/stub" />
+                android:resource="@drawable/img_tile_quick" />
 
             <meta-data
                 android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"

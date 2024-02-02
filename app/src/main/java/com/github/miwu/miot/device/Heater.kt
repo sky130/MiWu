@@ -33,7 +33,7 @@ class Heater(
     ) {
         when (service to property) {
             "heater" to "on" -> {
-                createView<Switch>(siid, piid)
+                createView<Switch>(siid, piid,obj)
             }
 
             "heater" to "mode" -> {

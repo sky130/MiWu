@@ -30,7 +30,7 @@ class Airer(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
     ) {
         when (service to property) {
             "light" to "on" -> {
-                createView<Switch>(siid, piid, index = 1)
+                createView<Switch>(siid, piid, obj, index = 1)
             }
 
             "airer" to "motor-control" -> {

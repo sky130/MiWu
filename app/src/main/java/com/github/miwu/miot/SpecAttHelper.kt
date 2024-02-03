@@ -7,7 +7,7 @@ import miot.kotlin.utils.parseUrn
 
 interface SpecAttHelper {
 
-   fun DeviceType.forEachAtt(att: SpecAtt):DeviceType {
+    fun DeviceType.forEachAtt(att: SpecAtt): DeviceType {
         for (service in att.services) {
             val serviceUrn = service.type.parseUrn()
             val name = serviceUrn.name
@@ -29,7 +29,7 @@ interface SpecAttHelper {
                 }
             }
         }
-       return this
+        return this
     }
 
     fun onPropertyFound(

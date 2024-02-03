@@ -41,6 +41,6 @@ class DeviceFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>()
 
     override fun onRefresh() {
         binding.swipe.isRefreshing = true
-        AppRepository.updateHome()
+        AppRepository.updateDevice()
     }
 }

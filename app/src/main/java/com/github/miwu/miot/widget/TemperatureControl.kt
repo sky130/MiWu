@@ -8,16 +8,19 @@ import com.github.miwu.databinding.MiotWidgetAirConditionerTemperatureBinding as
 class TemperatureControl(context: Context) : MiotBaseWidget<Binding>(context) {
 
     private val temperature get() = properties[0].second
-    private var value: Float = 0f
-    private val step = temperature.valueRange!![2].toFloat()
-    private val max = temperature.valueRange!![1].toFloat()
-    private val min = temperature.valueRange!![0].toFloat()
-
+    private var value: Double = 0.0
+    private val step get() = temperature.valueRange!![2].toFloat()
+    private val max get() = temperature.valueRange!![1].toFloat()
+    private val min get() = temperature.valueRange!![0].toFloat()
 
     override fun onValueChange(value: Any) {
-        value as Float
+        value as Double
         this.value = value
-        binding.num <= value
+        binding.num <= if (value.toString().endsWith(".0")){
+            value.toInt()
+        }else{
+            value
+        }
     }
 
     override fun init() {
@@ -27,13 +30,15 @@ class TemperatureControl(context: Context) : MiotBaseWidget<Binding>(context) {
 
     fun up() {
         if (value >= max) return
-        onValueChange(value + step)
+        value += step
+        onValueChange(value)
         putValue(value)
     }
 
     fun down() {
         if (value <= min) return
-        onValueChange(value - step)
+        value -= step
+        onValueChange(value)
         putValue(value)
     }
 

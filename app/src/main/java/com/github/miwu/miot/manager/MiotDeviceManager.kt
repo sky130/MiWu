@@ -138,7 +138,7 @@ class MiotDeviceManager(
                 if ((att.siid == view.siid && att.piid == view.piid)) {
                     view.onValueChange(att.value ?: continue)
                 }
-                if ((att.siid in view.properties.map { it.first } && att.siid in view.properties.map { it.second.iid })) {
+                if ((att.siid in view.properties.map { it.first } && att.piid in view.properties.map { it.second.iid })) {
                     view.onValueChange(att.siid, att.piid, att.value ?: continue)
                 }
             }

@@ -5,24 +5,24 @@ import android.util.AttributeSet
 import com.github.miwu.R
 import com.github.miwu.databinding.MiotWidgetAirConditionerBarBinding as Binding
 import kndroidx.extension.compareTo
+import kndroidx.extension.log
 import miot.kotlin.utils.parseUrn
 
 
 class AirConditionerBar(context: Context) : MiotBaseWidget<Binding>(context) {
+
     private var on = false
         set(value) {
             field = value
             refreshOn(value)
-            val obj = getPropertyWithSiid("on")
-            putValue(value, obj.first, obj.second.iid)
         }
-    private val modeList get() = getProperty("mode").valueList!!
+
+    private val modeList  by lazy { getProperty("mode").valueList!! }
+
     private var modeValue = 0
         set(value) {
             field = value
             refreshMode(value)
-            val obj = getPropertyWithSiid("mode")
-            putValue(value, obj.first, obj.second.iid)
         }
 
     private fun getModeDesc(value: Int) =
@@ -33,6 +33,8 @@ class AirConditionerBar(context: Context) : MiotBaseWidget<Binding>(context) {
         modeValue = modeList.first().value
         binding.on.setOnClickListener {
             on = !on
+            val obj = getPropertyWithSiid("on")
+            putValue(on, obj.first, obj.second.iid)
         }
 
         binding.mode.setOnClickListener {
@@ -42,7 +44,11 @@ class AirConditionerBar(context: Context) : MiotBaseWidget<Binding>(context) {
             } else {
                 index++
             }
+            modeValue.log.d()
+            modeList[index].log.d()
             modeValue = modeList[index].value
+            val obj = getPropertyWithSiid("mode")
+            putValue(modeValue, obj.first, obj.second.iid)
         }
     }
 
@@ -67,7 +73,7 @@ class AirConditionerBar(context: Context) : MiotBaseWidget<Binding>(context) {
 
             "mode" -> {
                 modeValue = 0
-                refreshMode(value as Int)
+                refreshMode((value as Double).toInt())
             }
         }
     }

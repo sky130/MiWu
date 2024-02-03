@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.model.miot.MiotDevices
@@ -35,6 +36,10 @@ object AppRepository {
     private val _deviceFlow = MutableStateFlow<DeviceList>(emptyList())
     private val _homeFlow = MutableStateFlow<HomeList>(emptyList())
     private val _sceneFlow = MutableStateFlow<SceneList>(emptyList())
+    private val _deviceRefreshFlow = MutableSharedFlow<Unit>()
+    private val _sceneRefreshFlow = MutableSharedFlow<Unit>()
+    val sceneRefreshFlow: Flow<Unit> get() = _sceneRefreshFlow
+    val deviceRefreshFlow: Flow<Unit> get() = _deviceRefreshFlow
     val sceneFlow: Flow<SceneList> get() = _sceneFlow
     val homeFlow: Flow<HomeList> get() = _homeFlow
     val deviceFlow: Flow<DeviceList> get() = _deviceFlow
@@ -43,7 +48,7 @@ object AppRepository {
     private val roomMap = ArrayMap<String, String>()
 
     fun updateHome() {
-        scope.launch(Dispatchers.IO) {
+        scope.launch {
             miot.getHomes().also {
                 if (it == null) {
                     "加载家庭失败".toast()
@@ -73,34 +78,44 @@ object AppRepository {
 
     fun updateScene() {
         if (AppPreferences.homeId == 0L) return
-        scope.launch(Dispatchers.IO) {
-            miot.getScenes(AppPreferences.homeId)?.also {
-                it.log.d()
-            }.let {
+        scope.launch {
+            miot.getScenes(AppPreferences.homeId).let {
                 if (it == null) {
                     "加载设备失败".toast()
+                    _sceneFlow.emit(emptyList())
                 } else {
-                    it.result.scenes?.let { scenes -> _sceneFlow.emit(scenes) }
+                    it.result.scenes.let { scenes ->
+                        if (scenes == null) {
+                            _sceneFlow.emit(emptyList())
+                        } else {
+                            _sceneFlow.emit(scenes)
+                        }
+                    }
                 }
+                _sceneRefreshFlow.emit(Unit)
             }
         }
     }
 
     fun updateDevice() {
         if (AppPreferences.homeId == 0L) return
-        scope.launch(Dispatchers.IO) {
-            miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId).let {
-                withContext(Dispatchers.Main) {
-                    if (it == null) {
-                        "加载设备失败".toast()
-                    } else {
-                        it.result.deviceInfo?.let { device ->
+        scope.launch {
+            miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId).let { it ->
+                if (it == null) {
+                    "加载设备失败".toast()
+                    _deviceFlow.emit(emptyList())
+                } else {
+                    it.result.deviceInfo.let { device ->
+                        if (device == null) {
+                           _deviceFlow.emit(emptyList())
+                        } else {
                             val list = ArrayList(device)
-                            list.sortBy { !it.isOnline }
-                            _deviceFlow.emit(list)
+                            list.sortBy { item -> !item.isOnline }
+                             _deviceFlow.emit(list)
                         }
                     }
                 }
+                _deviceRefreshFlow.emit(Unit)
             }
         }
     }

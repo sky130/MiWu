@@ -9,10 +9,14 @@ import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.miot.manager.MiotQuickManager
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.viewmodel.MainViewModel
+import kndroidx.extension.log
 import kndroidx.extension.toast
 import kndroidx.fragment.ViewFragmentX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.model.miot.MiotDevices
@@ -23,14 +27,12 @@ class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),
 
     override fun init() {
         binding.swipe.setOnRefreshListener(this)
-        lifecycleScope.launch {
-            AppRepository.sceneFlow.collectLatest {
+        AppRepository.sceneRefreshFlow.onEach {
+            withContext(Dispatchers.Main) {
                 binding.swipe.isRefreshing = false
             }
-        }
+        }.launchIn(lifecycleScope)
     }
-
-    fun getRoomName(item: Any?) = AppRepository.getRoomName(item as MiotDevices.Result.Device)
 
     fun onItemClick(item: Any?) {
         item as MiotScenes.Result.Scene
@@ -47,6 +49,5 @@ class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),
 
     override fun onRefresh() {
         AppRepository.updateScene()
-        binding.swipe.isRefreshing = false
     }
 }

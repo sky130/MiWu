@@ -1,17 +1,15 @@
 package com.github.miwu.ui.main.fragment
 
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.miwu.databinding.FragmentMainDeviceBinding
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.ui.device.DeviceActivity.Companion.startDeviceActivity
 import com.github.miwu.viewmodel.MainViewModel
-import kndroidx.extension.toast
 import kndroidx.fragment.ViewFragmentX
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import miot.kotlin.model.miot.MiotDevices
 
@@ -20,11 +18,11 @@ class DeviceFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>()
 
     override fun init() {
         binding.swipe.setOnRefreshListener(this)
-        lifecycleScope.launch {
-            AppRepository.deviceFlow.collectLatest {
+        AppRepository.deviceRefreshFlow.onEach {
+            withContext(Dispatchers.Main) {
                 binding.swipe.isRefreshing = false
             }
-        }
+        }.launchIn(lifecycleScope)
     }
 
     fun getRoomName(item: Any?) = AppRepository.getRoomName(item as MiotDevices.Result.Device)
@@ -40,7 +38,6 @@ class DeviceFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>()
     }
 
     override fun onRefresh() {
-        binding.swipe.isRefreshing = true
         AppRepository.updateDevice()
     }
 }

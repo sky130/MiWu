@@ -154,13 +154,15 @@ class Miot(private val user: MiotUser) {
             return@withContext miotService.setDeviceAtt(SetParams(list)).execute().body()
         }
 
-    suspend fun doAction(device: MiotDevices.Result.Device, siid: Int, aiid: Int) =
+    suspend fun doAction(device: MiotDevices.Result.Device, siid: Int, aiid: Int, vararg obj: Any) =
         withContext(Dispatchers.IO) {
             return@withContext miotService.doAction(
                 ActionBody(
                     ActionBody.Action(
                         device.did, siid, aiid
-                    )
+                    ).apply {
+                        `in`.addAll(obj)
+                    }
                 )
             ).execute().body()
         }

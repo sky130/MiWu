@@ -1,5 +1,6 @@
 package miot.kotlin.service
 
+import miot.kotlin.model.att.Action
 import miot.kotlin.model.att.DeviceAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotHomes
@@ -41,7 +42,7 @@ interface MiotService {
     fun getDeviceAtt(@Body body: GetParams): Call<DeviceAtt>
 
     @POST("miotspec/action")
-    fun doAction(@Body body: ActionBody): Call<ResponseBody>
+    fun doAction(@Body body: ActionBody): Call<Action>
 
     @POST("home/profile")
     fun getUserInfo(@Body body: GetUserInfo): Call<MiotUserInfo>

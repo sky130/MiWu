@@ -9,5 +9,6 @@ data class ActionBody(
         @SerializedName("did") val did: String,
         @SerializedName("siid") val siid: Int,
         @SerializedName("aiid") val aiid: Int,
+        @SerializedName("in") val `in`:ArrayList<Any> = arrayListOf()
     )
 }

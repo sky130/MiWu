@@ -16,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import miot.kotlin.helper.Action
 import miot.kotlin.helper.GetAtt
 import miot.kotlin.helper.SetAtt
 import miot.kotlin.model.att.DeviceAtt
@@ -42,16 +43,16 @@ class MiotDeviceManager(
         view.setManager(this)
         viewList.add(view)
         miotLayout.apply {
-            val params =  LinearLayout.LayoutParams(
+            val params = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, // 宽度为 MATCH_PARENT（填满父容器）
                 ViewGroup.LayoutParams.WRAP_CONTENT // 高度为 WRAP_CONTENT（根据内容自适应）
             ).apply {
                 setMargins(0, 0, 0, 10.dp)
             }
-            if (index != -1){
-                addView(view,index,params)
-            }else{
-                addView(view,params)
+            if (index != -1) {
+                addView(view, index, params)
+            } else {
+                addView(view, params)
             }
             requestLayout()
             invalidate()
@@ -106,9 +107,16 @@ class MiotDeviceManager(
         }
     }
 
-    fun doAction(siid: Int, aiid: Int) {
+    fun doAction(siid: Int, aiid: Int, isOut: Boolean = false, vararg `in`: Any) {
         scope.launch(Dispatchers.IO) {
-            miot.doAction(device, siid, aiid)!!.log.d()
+            miot.doAction(device, siid, aiid, *`in`)?.result?.out?.apply {
+                if (!isOut) return@launch
+                for (view in viewList) {
+                    if ((siid in view.actions.map { it.first } && aiid in view.actions.map { it.second.iid })) {
+                        view.onActionFinish(siid, aiid, this)
+                    }
+                }
+            }
         }
     }
 

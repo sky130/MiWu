@@ -32,6 +32,8 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
 
     open fun onValueChange(siid: Int, piid: Int, value: Any) {} // 需要自己转换类型
 
+    open fun onActionFinish(siid: Int, aiid: Int, value: Any) {} // 需要自己转换类型
+
     fun putValue(value: Any, siid: Int, piid: Int) {
         miotManager.putValue(value, siid, piid)
     }
@@ -40,7 +42,7 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
         miotManager.putValue(value, siid, piid)
     }
 
-    fun doAction(siid: Int, aiid: Int) {
+    fun doAction(siid: Int, aiid: Int, isOut: Boolean = false, vararg `in`: Any) {
         miotManager.doAction(siid, aiid)
     }
 

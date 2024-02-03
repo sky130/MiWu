@@ -18,7 +18,7 @@ data class SpecAtt(
         data class Action(
             @SerializedName("description") var description: String,
             @SerializedName("iid") val iid: Int,
-            @SerializedName("in") val inX: List<Any>,
+            @SerializedName("in") val `in`: List<Any>,
             @SerializedName("out") val `out`: List<Any>,
             @SerializedName("type") val type: String
         )

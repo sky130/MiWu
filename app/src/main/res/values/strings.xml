@@ -62,5 +62,6 @@
     <string name="start_clean">开始清洁</string>
     <string name="check_crash">可至仓库 Issues 页寻求帮助\n下面是最新的一份闪退日志</string>
     <string name="crash_path">日志保存路径:</string>
+    <string name="feed_num">%s份 (约 %sg)</string>
 
 </resources>

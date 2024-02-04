@@ -26,7 +26,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
-          BUILD_TOOLS_VERSION: "34.0.5"
+          BUILD_TOOLS_VERSION: "34.0.0"
       - run: mv ${{steps.sign_app.outputs.signedReleaseFile}} MIWU_$GITHUB_REF_NAME.apk
       - name: Archive Apk File
         uses: actions/upload-artifact@v3

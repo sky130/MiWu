@@ -16,6 +16,7 @@ class FeederPlanList(context: Context) : MiotBaseWidget<Binding>(context) {
     val action by lazy { actions.first().second }
     private val itemList = arrayListOf<Item>()
     val adapter by lazy { ItemAdapter(itemList) }
+
     override fun init() {
         doAction(siid, action.iid, true, 0)
         doAction(siid, action.iid, true, 1)

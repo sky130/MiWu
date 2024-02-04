@@ -21,15 +21,33 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="30dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:orientation="vertical">
+                android:layout_marginHorizontal="@dimen/device_activity_padding"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/activity_padding_top"
+                android:paddingBottom="@dimen/activity_padding_top">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:maxHeight="62dp"
+                    android:src="@drawable/ic_miwu_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/login_by_mi" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -51,14 +69,36 @@
                     android:singleLine="true"
                     android:text="@={viewModel.password}" />
 
-                <com.github.miwu.widget.app.AppButton
-                    style="@style/ButtonStyle"
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_list_item"
+                    android:gravity="center"
+                    android:onClick="@{()->activity.login()}"
+                    android:text="@string/user_btn_login"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp" />
+
+                <Button
+                    android:id="@+id/gotoLicense"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_list_item"
+                    android:gravity="center"
+                    android:onClick="@{()->activity.startLicenseActivity()}"
+                    android:text="@string/license_for_use"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="7dp"
-                    android:onClick="@{()->activity.login()}"
-                    android:text="@string/user_btn_login" />
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/must_to_read" />
             </LinearLayout>
         </ScrollView>
 

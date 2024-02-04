@@ -1,5 +1,7 @@
 package com.github.miwu.ui.main.fragment
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,12 +23,14 @@ import miot.kotlin.model.miot.MiotDevices
 
 class MiWuFragment : ViewFragmentX<FragmentMainMiwuBinding, MainViewModel>() {
     private val adapter by lazy { MiWuAdapter(viewModel) }
+    val isEmpty = MutableLiveData(false)
 
     override fun init() {
         binding.recycler.adapter = adapter
         viewModel.viewModelScope.launch {
             viewModel.deviceFlow.collectLatest {
                 val list = ArrayList(it)
+                isEmpty.value = list.isEmpty()
                 list.sortBy { it.index }
                 adapter.updateList(list)
             }
@@ -39,7 +43,4 @@ class MiWuFragment : ViewFragmentX<FragmentMainMiwuBinding, MainViewModel>() {
         }
     }
 
-    fun saveList() {
-        viewModel.saveList(adapter.list)
-    }
 }

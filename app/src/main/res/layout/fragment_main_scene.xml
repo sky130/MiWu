@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="fragment"
             type="com.github.miwu.ui.main.fragment.SceneFragment" />
@@ -27,34 +28,31 @@
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                tools:visibility="visible"
+                android:visibility="@{fragment.isEmpty() ? View.VISIBLE : View.GONE}">
 
                 <ImageView
                     android:id="@+id/deviceImage"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:src="@drawable/empty_list_icon" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:src="@drawable/empty_list_icon"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_tip"
+                    android:textSize="17sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/deviceImage"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/scene_tip" />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="@string/scene_small_tip"
-                    android:textSize="10sp" />
+                    android:text="@string/device_small_tip"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <androidx.wear.widget.WearableRecyclerView
@@ -64,6 +62,7 @@
                 android:background="@color/transparent"
                 android:clipToPadding="false"
                 android:focusable="true"
+                android:visibility="@{fragment.isEmpty() ? View.GONE : View.VISIBLE}"
                 android:focusableInTouchMode="true"
                 android:overScrollMode="never"
                 android:paddingHorizontal="@dimen/device_activity_padding"

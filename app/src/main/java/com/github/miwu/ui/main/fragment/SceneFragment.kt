@@ -1,5 +1,6 @@
 package com.github.miwu.ui.main.fragment
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -24,9 +25,13 @@ import miot.kotlin.model.miot.MiotScenes
 
 class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),
     SwipeRefreshLayout.OnRefreshListener {
+    val isEmpty = MutableLiveData(false)
 
     override fun init() {
         binding.swipe.setOnRefreshListener(this)
+        AppRepository.sceneFlow.onEach {
+            isEmpty.value = it.isEmpty()
+        }.launchIn(lifecycleScope)
         AppRepository.sceneRefreshFlow.onEach {
             binding.swipe.isRefreshing = false
         }.launchIn(lifecycleScope)

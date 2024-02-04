@@ -72,6 +72,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
                             return@collectLatest
                         }
                     }
+                    "设备已添加".toast()
                     add(device.toMiwu())
                 })
             }

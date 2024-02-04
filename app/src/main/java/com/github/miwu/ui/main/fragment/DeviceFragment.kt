@@ -1,5 +1,6 @@
 package com.github.miwu.ui.main.fragment
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.miwu.databinding.FragmentMainDeviceBinding
@@ -15,9 +16,13 @@ import miot.kotlin.model.miot.MiotDevices
 
 class DeviceFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>(),
     SwipeRefreshLayout.OnRefreshListener {
+    val isEmpty = MutableLiveData(false)
 
     override fun init() {
         binding.swipe.setOnRefreshListener(this)
+        AppRepository.deviceFlow.onEach {
+            isEmpty.value = it.isEmpty()
+        }.launchIn(lifecycleScope)
         AppRepository.deviceRefreshFlow.onEach {
             binding.swipe.isRefreshing = false
         }.launchIn(lifecycleScope)

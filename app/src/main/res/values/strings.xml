@@ -26,9 +26,9 @@
     <string name="exit_account">退出账号</string>
     <string name="goto_license">关于米屋</string>
     <string name="scene_tip">当前家庭暂无场景</string>
-    <string name="scene_small_tip">您可以打开手机端应用添加场景</string>
+    <string name="scene_small_tip">打开手机端应用添加场景</string>
     <string name="device_tip">当前家庭暂无设备</string>
-    <string name="device_small_tip">您可以打开手机端应用添加设备</string>
+    <string name="device_small_tip">打开手机端应用添加设备</string>
     <string name="device_opened">已开启</string>
     <string name="device_closed">已关闭</string>
     <string name="Straight">直吹风</string>
@@ -56,7 +56,7 @@
     <string name="logging_in">正在登录</string>
     <string name="miwu">米屋</string>
     <string name="unofficial_mihome_app">第三方手表版米家</string>
-    <string name="license_for_use">使用须知</string>
+    <string name="license_for_use">免责声明</string>
     <string name="github_url">https://github.com/sky130/MiWu</string>
     <string name="crash_test">com.github.miwu.ui.crash.model.CrashItemKt.main(CrashItem.kt:22)\ncom.github.miwu.ui.crash.model.CrashItemKt.main(CrashItem.kt)</string>
     <string name="app_url_text">仓库项目地址</string>
@@ -67,5 +67,9 @@
     <string name="feed_num">%s份 (约 %sg)</string>
     <string name="auto_feed_plan">自动喂食计划</string>
     <string name="Normal">正常</string>
+    <string name="miwu_tips">请在设备页中收藏设备</string>
+    <string name="miwu_no_device">暂无收藏设备</string>
+    <string name="must_to_read">使用前必须阅读免责声明</string>
+    <string name="login_by_mi">使用小米账号登录至米屋</string>
 
 </resources>

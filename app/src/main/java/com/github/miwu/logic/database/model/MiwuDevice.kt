@@ -133,6 +133,6 @@ data class MiwuDevice(
 
     data class Owner(
         val nickname: String,
-        val userid: Int
+        val userid: Long
     )
 }

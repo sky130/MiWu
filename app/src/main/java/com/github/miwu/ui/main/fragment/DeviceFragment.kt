@@ -19,9 +19,7 @@ class DeviceFragment : ViewFragmentX<FragmentMainDeviceBinding, MainViewModel>()
     override fun init() {
         binding.swipe.setOnRefreshListener(this)
         AppRepository.deviceRefreshFlow.onEach {
-            withContext(Dispatchers.Main) {
-                binding.swipe.isRefreshing = false
-            }
+            binding.swipe.isRefreshing = false
         }.launchIn(lifecycleScope)
     }
 

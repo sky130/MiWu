@@ -28,9 +28,7 @@ class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),
     override fun init() {
         binding.swipe.setOnRefreshListener(this)
         AppRepository.sceneRefreshFlow.onEach {
-            withContext(Dispatchers.Main) {
-                binding.swipe.isRefreshing = false
-            }
+            binding.swipe.isRefreshing = false
         }.launchIn(lifecycleScope)
     }
 

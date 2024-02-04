@@ -19,19 +19,16 @@ jobs:
           arguments: assembleRelease
       - name: List Build Tools Files
         run: ls /usr/local/lib/android/sdk/build-tools/
-      - uses: Tlaster/android-sign@v1
-        name: Sign app APK
+      - uses: ilharp/sign-android-release@v1 # Or use @nightly
+      - name: Sign app APK
+        id: sign_app
         with:
-            releaseDirectory: |
-              app/build/outputs/apk/release
-              app/build/outputs/bundle/release
-            signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-            output: build/release/signed
-            alias: ${{ secrets.ALIAS }}
-            keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-            keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-            BUILD_TOOLS_VERSION: "34.0.0"
+          releaseDir: app/build/outputs/apk/release
+          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }}
+          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          buildToolsVersion: 33.0.0
       - run: mv ${{steps.sign_app.outputs.signedReleaseFile}} MIWU_$GITHUB_REF_NAME.apk
       - name: Archive Apk File
         uses: actions/upload-artifact@v3

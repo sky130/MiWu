@@ -19,8 +19,12 @@
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
 
+-renamesourcefileattribute SourceFile
 
 -keep class com.github.miwu.logic.** { *; }
 -keep class androidx.databinding.**{ *; }
+-keep class com.github.miwu.databinding.**{ *; }
+-keep class com.github.miwu.ui.**{ *; }
+-keep class com.github.miwu.miot.**{ *; }
+

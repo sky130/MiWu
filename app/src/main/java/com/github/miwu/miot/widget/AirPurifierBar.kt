@@ -67,7 +67,7 @@ class AirPurifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
 
             "mode" -> {
                 modeValue = 0
-                refreshMode(value as Int)
+                refreshMode((value as Double).toInt())
             }
         }
     }

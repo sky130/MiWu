@@ -113,7 +113,9 @@ class MiotDeviceManager(
                 if (!isOut) return@launch
                 for (view in viewList) {
                     if ((siid in view.actions.map { it.first } && aiid in view.actions.map { it.second.iid })) {
-                        view.onActionFinish(siid, aiid, this)
+                        withContext(Dispatchers.Main) {
+                            view.onActionFinish(siid, aiid, this@apply)
+                        }
                     }
                 }
             }

@@ -6,7 +6,7 @@
     android:layout_marginBottom="5dp"
     android:background="@drawable/bg_list_item"
     android:paddingVertical="10dp"
-    tools:paddingHorizontal="@dimen/device_activity_padding">
+    android:paddingHorizontal="10dp">
 
     <ImageView
         android:id="@+id/status"

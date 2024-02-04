@@ -1,7 +1,6 @@
 package com.github.miwu.miot
 
 import com.github.miwu.miot.device.DeviceType
-import com.github.miwu.miot.widget.MiotBaseWidget
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.utils.parseUrn
 
@@ -16,6 +15,7 @@ interface SpecAttHelper {
                 for (property in it) {
                     val propertyUrn = property.type.parseUrn()
                     property.apply {
+                        translate()
                         onPropertyFound(siid, name, iid, propertyUrn.name, this)
                     }
                 }
@@ -24,6 +24,7 @@ interface SpecAttHelper {
                 for (action in it) {
                     val actionUrn = action.type.parseUrn()
                     action.apply {
+                        action.translate()
                         onActionFound(siid, name, iid, actionUrn.name, this)
                     }
                 }

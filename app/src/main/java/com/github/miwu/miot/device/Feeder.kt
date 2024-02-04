@@ -7,8 +7,11 @@ import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.AirConditionerBar
+import com.github.miwu.miot.widget.Button
 import com.github.miwu.miot.widget.FeederPlanList
+import com.github.miwu.miot.widget.StatusText
 import com.github.miwu.miot.widget.TemperatureControl
+import kndroidx.extension.log
 import kndroidx.extension.string
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
@@ -35,7 +38,9 @@ class Feeder(
         obj: SpecAtt.Service.Property
     ) {
         when (service to property) {
-
+            "pet-feeder" to "pet-food-left-level" -> {
+                createView<StatusText>(siid, piid, obj)
+            }
         }
     }
 
@@ -47,6 +52,10 @@ class Feeder(
         obj: SpecAtt.Service.Action
     ) {
         when (service to action) {
+            "pet-feeder" to "pet-food-out" -> {
+                createView<Button>(action = obj)
+            }
+
             "feedplanserve" to "getfeedplan" -> {
                 list.actions.add(siid to obj)
                 list.siid = siid

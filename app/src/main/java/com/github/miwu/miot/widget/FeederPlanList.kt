@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.miwu.R
 import com.github.miwu.databinding.MiotWidgetItemFeederPlanBinding
+import com.github.miwu.widget.CustomLinearLayoutManager
 import kndroidx.extension.compareTo
+import kndroidx.extension.log
 import kndroidx.extension.string
 import com.github.miwu.databinding.MiotWidgetFeederPlanBinding as Binding
 import com.github.miwu.databinding.MiotWidgetItemFeederPlanBinding as ItemBinding
@@ -20,6 +22,7 @@ class FeederPlanList(context: Context) : MiotBaseWidget<Binding>(context) {
     override fun init() {
         doAction(siid, action.iid, true, 0)
         doAction(siid, action.iid, true, 1)
+        binding.recycler.layoutManager= CustomLinearLayoutManager(context)
         binding.recycler.adapter = adapter
     }
 
@@ -30,15 +33,23 @@ class FeederPlanList(context: Context) : MiotBaseWidget<Binding>(context) {
     override fun onActionFinish(siid: Int, aiid: Int, value: Any) {
         value as ArrayList<*>
         val list = value.first() as String
+        value.first().log.d()
         list.split(",").map { it.toInt() }.apply {
-            this.subList(0, 5).toItem()
-            this.subList(5, 11).toItem()
-            this.subList(11, 16).toItem()
-            this.subList(16, 21).toItem()
-            this.subList(21, 26).toItem()
+            subList(0, 5).log.d()
+            subList(20, 25).log.d()
+            subList(0, 5).toItem().add()
+            subList(5, 10).toItem().add()
+            subList(10, 15).toItem().add()
+            subList(15, 20).toItem().add()
+            subList(20, 25).toItem().add()
         }
         itemList.sortBy { it.hour * 100 + it.minute }
         adapter.notifyItemRangeChanged(0, list.length)
+    }
+
+    fun Item.add() {
+        if (hour <= 24 && minute <= 60)
+            itemList.add(this)
     }
 
     fun List<Int>.toItem() = Item(this[0], this[1], this[2], this[3], this[4].getItemStatus())
@@ -59,7 +70,7 @@ class FeederPlanList(context: Context) : MiotBaseWidget<Binding>(context) {
             status.setImageResource(
                 when (item.status) {
                     Status.Success -> {
-                        num <= R.string.feed_num.string.format(item.num, item.num * 5)
+                        num <= "出粮成功"
                         R.drawable.ic_radio_succes
                     }
 
@@ -78,10 +89,10 @@ class FeederPlanList(context: Context) : MiotBaseWidget<Binding>(context) {
             return@with
         }
 
-        fun Int.toTimeString() = if (Int.toString().length <= 1) {
+        fun Int.toTimeString() = if (this < 10) {
             "0$this"
         } else {
-            toString()
+            this.toString()
         }
     }
 

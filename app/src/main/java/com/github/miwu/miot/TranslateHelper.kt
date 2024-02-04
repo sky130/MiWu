@@ -5,8 +5,10 @@ import kndroidx.extension.string
 import miot.kotlin.model.att.SpecAtt
 
 fun SpecAtt.Service.Property.translate() {
-    for (i in valueList!!) {
-        i.description = i.description.translate()
+    valueList?.let {
+        for (i in it) {
+            i.description = i.description.translate()
+        }
     }
     description = description.translate()
 }

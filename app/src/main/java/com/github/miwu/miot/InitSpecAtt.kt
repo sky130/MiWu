@@ -28,7 +28,7 @@ fun initSpecAttFun(
 
     "heater" -> Heater(device, layout, manager)
 
-    "feeder" -> Feeder(device, layout, manager)
+    "pet-feeder" -> Feeder(device, layout, manager)
 
     else -> {
         null

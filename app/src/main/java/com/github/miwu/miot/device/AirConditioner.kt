@@ -39,17 +39,6 @@ class AirConditioner(
             }
 
             "air-conditioner" to "mode" -> {
-                // 居然没有官方翻译？？？
-                for (i in obj.valueList!!) {
-                    i.description = when (i.description) {
-                        "Auto" -> R.string.Auto.string
-                        "Cool" -> R.string.Cool.string
-                        "Dry" -> R.string.Dry.string
-                        "Heat" -> R.string.Heat.string
-                        "Fan" -> R.string.Fan.string
-                        else -> i.description
-                    }
-                }
                 bar.properties.add(siid to obj)
             }
 

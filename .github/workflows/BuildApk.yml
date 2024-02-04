@@ -1,4 +1,4 @@
-name: Release
+name: BuildApk
 on:
   workflow_dispatch:
 

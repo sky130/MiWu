@@ -45,6 +45,8 @@
     <string name="Heat">制热</string>
     <string name="Fan">送风</string>
     <string name="Low">低速</string>
+    <string name="LowFood">即将见底</string>
+    <string name="EmptyFood">已经没得吃了</string>
     <string name="Medium">中速</string>
     <string name="High">高速</string>
     <string name="home_desc">%s个房间/%s个设备</string>
@@ -63,5 +65,7 @@
     <string name="check_crash">可至仓库 Issues 页寻求帮助\n下面是最新的一份闪退日志</string>
     <string name="crash_path">日志保存路径:</string>
     <string name="feed_num">%s份 (约 %sg)</string>
+    <string name="auto_feed_plan">自动喂食计划</string>
+    <string name="Normal">正常</string>
 
 </resources>

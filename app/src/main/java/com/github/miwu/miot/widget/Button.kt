@@ -13,6 +13,7 @@ class Button(context: Context) : MiotBaseWidget<MiotWidgetButtonBinding>(context
     private val action get() = actions.first()
 
     override fun init() {
+        binding.title <= action.second.description
         setOnClickListener {
             doAction(action.first, action.second.iid)
         }

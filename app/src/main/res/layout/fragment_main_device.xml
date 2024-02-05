@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/scene_tip"
+                    android:text="@string/device_tip"
                     android:textSize="17sp" />
 
 
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/scene_small_tip"
+                    android:text="@string/device_small_tip"
                     android:textSize="14sp" />
             </LinearLayout>
 

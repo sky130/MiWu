@@ -36,6 +36,9 @@ fun initSpecAttFun(
 
     "dehumidifier" -> Dehumidifier(device, layout, manager)
 
+    "camera" -> Camera(device, layout, manager)
+
+
     else -> {
         null
     }

@@ -51,6 +51,11 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     fun onAddButtonClick() {
         if (deviceType == null) {
             "设备暂不支持".toast()
+        } else if (deviceType!!.isMoreQuick) {
+            for (i in deviceType!!.getQuickList()!!){
+                MiotQuickManager.addQuick(i)
+                "添加成功".toast()
+            }
         } else if (deviceType!!.isQuickActionable) {
             MiotQuickManager.addQuick(deviceType!!.getQuick()!!)
             "添加成功".toast()

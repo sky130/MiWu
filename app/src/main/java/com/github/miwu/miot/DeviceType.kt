@@ -18,6 +18,8 @@ sealed class DeviceType(
     open val type = this::class.java.name.lowercase()// 设备类型
 
     abstract val isQuickActionable: Boolean // 是否支持快捷操作
+    open val isMoreQuick: Boolean = false// 是否支持快捷操作
+    open fun getQuickList(): ArrayList<out MiotBaseQuick>? = null
 
     abstract fun getQuick(): MiotBaseQuick?
 
@@ -28,11 +30,11 @@ sealed class DeviceType(
         piid: Int = -1,
         property: SpecAtt.Service.Property? = null,
         action: SpecAtt.Service.Action? = null,
-        index:Int = -1
+        index: Int = -1
     ) = manager.createView<V>(layout, siid, piid).apply {
         property?.let { properties.add(siid to it) }
         action?.let { actions.add(siid to it) }
-        manager.addView(this,index)
+        manager.addView(this, index)
     }
 
 

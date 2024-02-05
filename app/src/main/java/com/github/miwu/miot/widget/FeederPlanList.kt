@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.miwu.R
-import com.github.miwu.databinding.MiotWidgetItemFeederPlanBinding
 import com.github.miwu.widget.CustomLinearLayoutManager
 import kndroidx.extension.compareTo
 import kndroidx.extension.log

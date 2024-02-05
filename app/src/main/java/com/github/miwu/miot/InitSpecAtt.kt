@@ -13,7 +13,7 @@ fun initSpecAttFun(
     att: SpecAtt,
     layout: ViewGroup,
     manager: MiotDeviceManager
-): DeviceType? = when (mode) {
+): DeviceType? = when (mode.lowercase()) {
     "light" -> Light(device, layout, manager)
 
     "airer" -> Airer(device, layout, manager)
@@ -32,6 +32,7 @@ fun initSpecAttFun(
 
     "switch" -> Switch(device, layout, manager)
 
+    "outlet" -> Outlet(device, layout, manager)
 
     else -> {
         null

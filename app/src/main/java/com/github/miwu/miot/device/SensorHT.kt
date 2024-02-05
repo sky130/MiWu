@@ -4,9 +4,7 @@ import android.view.ViewGroup
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.quick.MiotBaseQuick
-import com.github.miwu.miot.widget.SensorHTText
-import com.github.miwu.miot.widget.StatusText
-import kndroidx.extension.log
+import com.github.miwu.miot.widget.SensorText
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
@@ -26,11 +24,15 @@ class SensorHT(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Mi
     ) {
         when (service to property) {
             "temperature-humidity-sensor" to "temperature" -> {
-                createView<SensorHTText>(siid, piid, obj)
+                createView<SensorText>(siid, piid, obj)
             }
 
             "temperature-humidity-sensor" to "relative-humidity" -> {
-                createView<SensorHTText>(siid, piid, obj)
+                createView<SensorText>(siid, piid, obj)
+            }
+
+            "battery" to "battery-level" -> {
+                createView<SensorText>(siid, piid, obj)
             }
         }
     }

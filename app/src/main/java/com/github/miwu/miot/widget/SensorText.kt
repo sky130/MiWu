@@ -2,11 +2,10 @@ package com.github.miwu.miot.widget
 
 import android.content.Context
 import com.github.miwu.databinding.MiotWidgetSensorHtTextBinding
-import com.github.miwu.databinding.MiotWidgetStatusTextBinding
 import com.github.miwu.miot.utils.getUnitString
 import kndroidx.extension.compareTo
 
-class SensorHTText(context: Context) : MiotBaseWidget<MiotWidgetSensorHtTextBinding>(context) {
+class SensorText(context: Context) : MiotBaseWidget<MiotWidgetSensorHtTextBinding>(context) {
 
     private val property get() = properties.first().second
 

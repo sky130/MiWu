@@ -4,9 +4,7 @@ import android.view.ViewGroup
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.quick.MiotBaseQuick
-import com.github.miwu.miot.widget.AirPurifierBar
 import com.github.miwu.miot.widget.AirerBar
-import com.github.miwu.miot.widget.SensorHTText
 import com.github.miwu.miot.widget.StatusText
 import com.github.miwu.miot.widget.Switch
 import miot.kotlin.model.att.SpecAtt

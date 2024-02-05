@@ -5,10 +5,11 @@ import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.SensorText
+import com.github.miwu.miot.widget.StatusText
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
-class SensorHT(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
+class GasSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
     override val isQuickActionable = false
@@ -23,17 +24,14 @@ class SensorHT(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Mi
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
-            "temperature-humidity-sensor" to "temperature" -> {
+            "gas-sensor" to "status" -> {
+                createView<StatusText>(siid, piid, obj)
+            }
+
+            "gas-sensor" to "gas-concentration" -> {
                 createView<SensorText>(siid, piid, obj)
             }
 
-            "temperature-humidity-sensor" to "relative-humidity" -> {
-                createView<SensorText>(siid, piid, obj)
-            }
-
-            "battery" to "battery-level" -> {
-                createView<SensorText>(siid, piid, obj)
-            }
         }
     }
 

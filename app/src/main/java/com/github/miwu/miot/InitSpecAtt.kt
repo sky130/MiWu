@@ -22,7 +22,7 @@ fun initSpecAttFun(
 
     "air-conditioner" -> AirConditioner(device, layout, manager)
 
-    "temperature-humidity-sensor" -> SensorHT(device, layout, manager)
+    "temperature-humidity-sensor" -> HTSensor(device, layout, manager)
 
     "air-purifier" -> AirPurifier(device, layout, manager)
 
@@ -39,6 +39,10 @@ fun initSpecAttFun(
     "camera" -> Camera(device, layout, manager)
 
     "speaker" -> Speaker(device, layout, manager)
+
+    "gas-sensor" -> GasSensor(device, layout, manager)
+
+    "magnet-sensor" ->MagnetSensor(device, layout, manager)
 
     else -> {
         null

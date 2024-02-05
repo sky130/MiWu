@@ -38,6 +38,7 @@ fun initSpecAttFun(
 
     "camera" -> Camera(device, layout, manager)
 
+    "speaker" -> Speaker(device, layout, manager)
 
     else -> {
         null

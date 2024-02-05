@@ -16,12 +16,9 @@ import miot.kotlin.model.miot.MiotDevices
 class Switch(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager), SpecAttHelper {
 
-    override val isQuickActionable = true
-    override val isMoreQuick = true
+    override val isQuickActionable = false
     override fun getQuick() = null
-    val list = arrayListOf<SwitchQuick>()
 
-    override fun getQuickList() = list
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
@@ -33,22 +30,8 @@ class Switch(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
-            "switch" to "on" -> {
-                SwitchQuick(device, siid, piid)
-                createView<Switch>(siid, piid, obj)
-            }
 
-            "switch" to "fault" -> {
-                createView<StatusText>(siid, piid, obj, index = 0)
-            }
 
-            "power-consumption" to "power-consumption" -> {
-                createView<StatusText>(siid, piid, obj, index = 1)
-            }
-
-            "power-consumption" to "electric-power" -> {
-                createView<StatusText>(siid, piid, obj, index = 1)
-            }
         }
     }
 

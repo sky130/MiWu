@@ -16,6 +16,8 @@ class AppSeekBar(
     context: Context,
     attr: AttributeSet,
 ) : AppCompatSeekBar(context, attr) {
+    private var minProgress: Int = 0
+    private var maxProgress: Int = 100
     var listener: ((Int) -> Unit)? = null
     var isOnTouching = false
 
@@ -23,7 +25,6 @@ class AppSeekBar(
         thumb = null
         splitTrack = false
         isDuplicateParentStateEnabled = true
-//        progressDrawable = context.getDrawable(R.drawable.seek_seekbar)
     }
 
 
@@ -68,6 +69,34 @@ class AppSeekBar(
         val objectAnimator2 = ObjectAnimator.ofFloat(this, "scaleY", 1.0f, 1.1f)
         animatorSet.play(objectAnimator1).with(objectAnimator2)
         animatorSet.start()
+    }
+
+    fun getCurrentProgress(): Int {
+        return getCurrentProgress(progress)
+    }
+
+    fun setCurrentProgress(progress: Int) {
+        this.progress = getRelativeProgress(progress)
+    }
+
+    private fun getCurrentProgress(progress: Int): Int {
+        val currentProgress =
+            (progress.toFloat() / 100f) * (maxProgress - minProgress) + minProgress
+        return currentProgress.toInt()
+    }
+
+    private fun getRelativeProgress(progress: Int): Int {
+        val currentProgress =
+            (progress.toFloat() - minProgress) / (maxProgress - minProgress) * 100f
+        return currentProgress.toInt()
+    }
+
+    fun setMaxProgress(max: Int) {
+        this.maxProgress = max
+    }
+
+    fun setMinProgress(min: Int) {
+        this.minProgress = min
     }
 
 }

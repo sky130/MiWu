@@ -3,7 +3,7 @@ package com.github.miwu.miot.widget
 import android.content.Context
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import com.github.miwu.databinding.MiotWidgetBrightnessSeekbarBinding as Binding
+import com.github.miwu.databinding.MiotWidgetVolumeSeekbarBinding as Binding
 
 class VolumeSeekBar(context: Context) : MiotBaseWidget<Binding>(context),
     OnSeekBarChangeListener {

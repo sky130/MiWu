@@ -31,7 +31,7 @@ jobs:
           keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           buildToolsVersion: 34.0.0
-      - run: mv ${{steps.sign_app.outputs.signedFile}} MIWU_$GITHUB_REF_NAME.apk
+      - run: mv ${{steps.sign_app.outputs.signedFile}} MiWu_$GITHUB_REF_NAME.apk
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "*.apk"

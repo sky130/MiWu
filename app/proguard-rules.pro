@@ -27,4 +27,5 @@
 -keep class com.github.miwu.databinding.**{ *; }
 -keep class com.github.miwu.ui.**{ *; }
 -keep class com.github.miwu.miot.**{ *; }
-
+-keep class com.github.miwu.viewmodel.**{ *; }
+-keep class androidx.lifecycle.**{ *; }

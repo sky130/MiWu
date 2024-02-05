@@ -30,3 +30,4 @@
 -keep class com.github.miwu.viewmodel.**{ *; }
 -keep class androidx.lifecycle.**{ *; }
 -keep class kndroidx.**{ *; }
+-keep class miot.**{ *; }

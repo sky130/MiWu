@@ -30,6 +30,9 @@ fun initSpecAttFun(
 
     "pet-feeder" -> Feeder(device, layout, manager)
 
+    "switch" -> Switch(device, layout, manager)
+
+
     else -> {
         null
     }

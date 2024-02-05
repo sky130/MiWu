@@ -29,11 +29,11 @@ jobs:
           keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           buildToolsVersion: 34.0.0
-      - run: mkdir release/apk/
-      - run: mv ${{steps.sign_app.outputs.signedFile}} release/apk/MiWu.apk
+      - run: mkdir release_apk
+      - run: mv ${{steps.sign_app.outputs.signedFile}} release_apk/MiWu.apk
     
       - name: Archive Apk File
         uses: actions/upload-artifact@v3
         with:
           name: apk_file
-          path: release/apk/
+          path: release_apk/

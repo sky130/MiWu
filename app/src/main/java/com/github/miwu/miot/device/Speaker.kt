@@ -9,6 +9,7 @@ import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.AirConditionerBar
 import com.github.miwu.miot.widget.Button
 import com.github.miwu.miot.widget.FeederPlanList
+import com.github.miwu.miot.widget.SpeakerReadContent
 import com.github.miwu.miot.widget.StatusText
 import com.github.miwu.miot.widget.TemperatureControl
 import com.github.miwu.miot.widget.VolumeSeekBar
@@ -51,5 +52,10 @@ class Speaker(
         action: String,
         obj: SpecAtt.Service.Action
     ) {
+        when (service to action) {
+            "intelligent-speaker" to "play-text" -> {
+                createView<SpeakerReadContent>(siid = siid, action = obj)
+            }
+        }
     }
 }

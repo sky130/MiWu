@@ -13,16 +13,12 @@ class AirPurifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
         set(value) {
             field = value
             refreshOn(value)
-            val obj = getPropertyWithSiid("on")
-            putValue(value, obj.first, obj.second.iid)
         }
     private val modeList get() = getProperty("mode").valueList!!
     private var modeValue = 0
         set(value) {
             field = value
             refreshMode(value)
-            val obj = getPropertyWithSiid("mode")
-            putValue(value, obj.first, obj.second.iid)
         }
 
     private fun getModeDesc(value: Int) =
@@ -33,6 +29,8 @@ class AirPurifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
         modeValue = modeList.first().value
         binding.on.setOnClickListener {
             on = !on
+            val obj = getPropertyWithSiid("on")
+            putValue(on, obj.first, obj.second.iid)
         }
 
         binding.mode.setOnClickListener {
@@ -43,6 +41,8 @@ class AirPurifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
                 index++
             }
             modeValue = modeList[index].value
+            val obj = getPropertyWithSiid("mode")
+            putValue(modeValue, obj.first, obj.second.iid)
         }
     }
 

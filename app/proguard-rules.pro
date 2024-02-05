@@ -69,3 +69,14 @@
 -keep class okhttp3.** { *; }
 -keep class com.squareup.okhttp.** { *; }
 -keep class com.google.gson.** { *; }
+
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn com.oracle.svm.core.annotate.AutomaticFeature
+-dontwarn com.oracle.svm.core.annotate.Delete
+-dontwarn com.oracle.svm.core.annotate.Substitute
+-dontwarn com.oracle.svm.core.annotate.TargetClass
+-dontwarn com.oracle.svm.core.configure.ResourcesRegistry
+-dontwarn org.graalvm.nativeimage.ImageSingletons
+-dontwarn org.graalvm.nativeimage.hosted.Feature$BeforeAnalysisAccess
+-dontwarn org.graalvm.nativeimage.hosted.Feature

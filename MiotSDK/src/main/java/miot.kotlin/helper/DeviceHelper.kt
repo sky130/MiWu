@@ -1,9 +1,12 @@
 package miot.kotlin.helper
 
+import android.bluetooth.BluetoothClass.Device
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miot.kotlin.Miot
 import miot.kotlin.MiotManager
+import miot.kotlin.MiotManager.gson
 import miot.kotlin.model.miot.MiotDevices
 import org.json.JSONObject
 
@@ -22,12 +25,19 @@ suspend fun MiotDevices.Result.Device.getIconUrl(): String? = withContext(Dispat
     try {
         val url =
             "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${this@getIconUrl.model}"
-        val json = MiotManager.get(url) ?: return@withContext null
-        val jsonObject = JSONObject(json)
-        if (jsonObject.getInt("code") != 0) return@withContext null
-        return@withContext jsonObject.getJSONObject("data").getString("realIcon")
+        val json = MiotManager.get(url)
+        val info = gson.fromJson(json, DeviceInfo::class.java)
+        if (info.code != 0) return@withContext null
+        return@withContext info.data.realIcon
     } catch (_: Exception) {
         return@withContext null
     }
+}
+
+data class DeviceInfo(
+    @SerializedName("code") val code: Int,
+    @SerializedName("data") val data: Data
+) {
+    data class Data(@SerializedName("realIcon") val realIcon: String)
 }
 

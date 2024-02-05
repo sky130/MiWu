@@ -99,9 +99,10 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
                 }
 
             }.let {
-                withContext(Dispatchers.Main) {
-                    "设备不支持哦哦哦".toast()
-                }
+                if (it == null)
+                    withContext(Dispatchers.Main) {
+                        "设备不支持哦哦哦".toast()
+                    }
             }
         }
     }

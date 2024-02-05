@@ -8,6 +8,7 @@ import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.AirConditionerBar
 import com.github.miwu.miot.widget.TemperatureControl
+import kndroidx.extension.log
 import kndroidx.extension.string
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices

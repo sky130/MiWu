@@ -34,6 +34,8 @@ fun initSpecAttFun(
 
     "outlet" -> Outlet(device, layout, manager)
 
+    "dehumidifier" -> Dehumidifier(device, layout, manager)
+
     else -> {
         null
     }

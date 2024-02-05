@@ -9,7 +9,8 @@ class StatusText(context: Context) : MiotBaseWidget<MiotWidgetStatusTextBinding>
     private val property by lazy { properties.first().second }
 
     override fun init() {
-        binding.title <= property.description
+        binding.title <= "--"
+        binding.subTitle <= property.description
     }
 
     override fun onValueChange(value: Any) {

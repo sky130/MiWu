@@ -11,6 +11,7 @@ class SensorHTText(context: Context) : MiotBaseWidget<MiotWidgetSensorHtTextBind
     private val property get() = properties.first().second
 
     override fun init() {
+        binding.value <= "--"
         binding.unit <= getUnitString(property.unit)
         binding.desc <= getUnitString(property.description)
     }

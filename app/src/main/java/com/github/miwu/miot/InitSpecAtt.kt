@@ -42,7 +42,9 @@ fun initSpecAttFun(
 
     "gas-sensor" -> GasSensor(device, layout, manager)
 
-    "magnet-sensor" ->MagnetSensor(device, layout, manager)
+    "magnet-sensor" -> MagnetSensor(device, layout, manager)
+
+    "fan" -> Fan(device, layout, manager)
 
     else -> {
         null

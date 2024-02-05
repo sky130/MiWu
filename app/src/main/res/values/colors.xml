@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lrc">#FFFFFFFF</color>
     <color name="gray">#353638</color>
+    <color name="item_bg">#b3202020</color>
     <color name="transparent">#00000000</color>
     <color name="blue">#6186FC</color>
     <color name="highlight">#0E84FF</color>

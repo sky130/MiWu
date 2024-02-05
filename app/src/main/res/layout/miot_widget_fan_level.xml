@@ -17,32 +17,39 @@
         android:src="@drawable/ic_down" />
 
     <LinearLayout
+        android:paddingVertical="15dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingVertical="15dp"
         android:gravity="center">
 
         <TextView
             android:id="@+id/num"
-            android:fontFamily="@font/quicksand_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_bold"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="@color/white"
             android:textSize="26sp"
-            tools:text="25" />
+            tools:text="1" />
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="15dp"
+            android:background="@drawable/bg_block"
+            android:layout_marginHorizontal="5dp" />
 
         <TextView
-            android:fontFamily="@font/quicksand_bold"
+            android:id="@+id/num_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_bold"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:text="°"
-            android:textSize="28sp"
-            tools:ignore="HardcodedText" />
+            android:textSize="26sp"
+            tools:text="5" />
+
     </LinearLayout>
 
     <com.github.miwu.widget.app.MiotButton

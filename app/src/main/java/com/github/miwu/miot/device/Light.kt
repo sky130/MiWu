@@ -31,6 +31,14 @@ class Light(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
+            "fan" to "fan-level" -> {
+                createFanControl(siid, property = obj)
+            }
+
+            "fan" to "on" -> {
+                createView<Switch>(siid, piid, obj)
+            }
+
             "light" to "on" -> {
                 quickLight = siid to piid
                 createView<Switch>(siid, piid, obj)

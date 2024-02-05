@@ -2,9 +2,13 @@
 
 package com.github.miwu.miot.device
 
+import android.content.Context
 import android.view.ViewGroup
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
+import com.github.miwu.miot.widget.FanControl
+import com.github.miwu.miot.widget.FanLevelControl
+import com.github.miwu.miot.widget.FanSeekbar
 import com.github.miwu.miot.widget.MiotBaseWidget
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
@@ -37,5 +41,35 @@ sealed class DeviceType(
         manager.addView(this, index)
     }
 
-
+    fun createFanControl(
+        siid: Int,
+        piid: Int = -1,
+        property: SpecAtt.Service.Property,
+        action: SpecAtt.Service.Action? = null,
+        index: Int = -1
+    ) {
+        val view = if (property.valueList != null) {
+            FanLevelControl::class.java
+        } else if (property.valueRange != null) {
+            if (property.valueRange!![2] == 100) {
+                FanSeekbar::class.java
+            } else {
+                FanControl::class.java
+            }
+        } else {
+            null
+        }
+        if (view == null) return
+        view.getDeclaredConstructor(
+            Context::class.java
+        ).newInstance(layout.context).apply {
+            this.siid = siid
+            this.piid = piid
+            this.setManager(manager)
+            properties.add(siid to property)
+            action?.let { actions.add(siid to it) }
+        }.apply {
+            manager.addView(this, index)
+        }
+    }
 }

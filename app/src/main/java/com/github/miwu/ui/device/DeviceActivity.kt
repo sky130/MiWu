@@ -66,13 +66,12 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
                     sortBy { it.index }
                     forEach {
                         if (it.did == device.did) {
-                            withContext(Dispatchers.Main) {
-                                "设备已添加".toast()
-                            }
                             return@collectLatest
                         }
                     }
-                    "设备已添加".toast()
+                    withContext(Dispatchers.Main) {
+                        "设备已添加".toast()
+                    }
                     add(device.toMiwu())
                 })
             }
@@ -100,7 +99,9 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
                 }
 
             }.let {
-
+                withContext(Dispatchers.Main) {
+                    "设备不支持哦哦哦".toast()
+                }
             }
         }
     }

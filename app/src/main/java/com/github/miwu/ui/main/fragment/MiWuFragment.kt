@@ -1,5 +1,6 @@
 package com.github.miwu.ui.main.fragment
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -25,6 +26,7 @@ class MiWuFragment : ViewFragmentX<FragmentMainMiwuBinding, MainViewModel>() {
     private val adapter by lazy { MiWuAdapter(viewModel) }
     val isEmpty = MutableLiveData(false)
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun init() {
         binding.recycler.adapter = adapter
         viewModel.viewModelScope.launch {
@@ -33,6 +35,11 @@ class MiWuFragment : ViewFragmentX<FragmentMainMiwuBinding, MainViewModel>() {
                 isEmpty.value = list.isEmpty()
                 list.sortBy { it.index }
                 adapter.updateList(list)
+            }
+        }
+        viewModel.viewModelScope.launch {
+            viewModel.homeList.observe(viewLifecycleOwner) {
+                adapter.notifyDataSetChanged()
             }
         }
         adapter.onLongClickBlock = {

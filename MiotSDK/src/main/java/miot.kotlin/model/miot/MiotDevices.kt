@@ -53,8 +53,8 @@ data class MiotDevices(
             )
 
             data class Owner(
-                @SerializedName("nickname") val nickname: String,
-                @SerializedName("userid") val userid: Long
+                @SerializedName("nickname") val nickname: String?,
+                @SerializedName("userid") val userid: Long?
             )
         }
 

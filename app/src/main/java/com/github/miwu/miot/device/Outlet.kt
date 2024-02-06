@@ -1,6 +1,7 @@
 package com.github.miwu.miot.device
 
 import android.view.ViewGroup
+import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.SwitchQuick
@@ -9,6 +10,7 @@ import com.github.miwu.miot.widget.Switch
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
+@SpecAttClass("outlet")
 class Outlet(
     device: MiotDevices.Result.Device,
     layout: ViewGroup,
@@ -17,7 +19,6 @@ class Outlet(
     SpecAttHelper {
 
     override val isQuickActionable = true
-    override val isMoreQuick = true
     override fun getQuick() = null
     val list = arrayListOf<SwitchQuick>()
 
@@ -25,17 +26,16 @@ class Outlet(
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
-override fun onPropertyFound(
+    override fun onPropertyFound(
         siid: Int,
         service: String,
         piid: Int,
         property: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Property,
-    ){
+    ) {
         when (service to property) {
             "switch" to "on" -> {
-                SwitchQuick(device, siid, piid)
                 createView<Switch>(siid, piid, obj)
             }
 
@@ -45,14 +45,14 @@ override fun onPropertyFound(
         }
     }
 
-override fun onActionFound(
+    override fun onActionFound(
         siid: Int,
         service: String,
         aiid: Int,
         action: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Action,
-    ){
+    ) {
 
     }
 }

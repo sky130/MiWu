@@ -11,6 +11,7 @@ import com.github.miwu.logic.repository.DeviceRepository
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.manager.MiotQuickManager
 import com.github.miwu.miot.device.DeviceType
+import com.github.miwu.miot.initSpecAttByAnnotation
 import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.viewmodel.DeviceViewModel
 import kndroidx.activity.ViewActivityX
@@ -114,7 +115,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
 
     private fun initSpecAtt(att: SpecAtt) {
         mode ?: return // TODO
-        deviceType = initSpecAttFun(device, mode!!, att, layout, manager)
+        deviceType = initSpecAttByAnnotation(device, mode!!, att, layout, manager)
         manager.post(700L)
     }
 

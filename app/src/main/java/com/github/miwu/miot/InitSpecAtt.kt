@@ -1,10 +1,17 @@
 package com.github.miwu.miot
 
+import android.content.Context
+import android.util.ArrayMap
 import android.view.ViewGroup
 import com.github.miwu.miot.device.*
 import com.github.miwu.miot.manager.MiotDeviceManager
+import kndroidx.KndroidX
+import kndroidx.extension.log
+import kndroidx.kndroidx
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
+import kotlin.annotation.AnnotationRetention.*
+import kotlin.annotation.AnnotationTarget.*
 
 // 未来考虑换成注解
 fun initSpecAttFun(
@@ -46,8 +53,45 @@ fun initSpecAttFun(
 
     "fan" -> Fan(device, layout, manager)
 
+    "control-panel" -> ControlPanel(device, layout, manager)
+
     else -> {
         null
     }
 }?.onLayout(att)
 
+@Target(CLASS)
+@Retention(RUNTIME)
+annotation class SpecAttClass(val name: String)
+
+val classList by lazy {
+    ClassesReader.reader("com.github.miwu.miot.device", KndroidX.context)
+        .filter { !it.name.contains("$") }
+}
+val classMap = ArrayMap<String, Class<*>>()
+
+fun initClassList() {
+    classList.forEach {
+        it.annotations.forEach { annotation ->
+            if (annotation is SpecAttClass) {
+                classMap[annotation.name] = it
+            }
+        }
+    }
+}
+
+fun initSpecAttByAnnotation(
+    device: MiotDevices.Result.Device,
+    mode: String,
+    att: SpecAtt,
+    layout: ViewGroup,
+    manager: MiotDeviceManager
+): DeviceType? {
+    (classMap[mode] ?: return null).apply {
+        return (getDeclaredConstructor(
+            MiotDevices.Result.Device::class.java,
+            ViewGroup::class.java,
+            MiotDeviceManager::class.java
+        ).newInstance(device, layout, manager) as DeviceType).onLayout(att)
+    }
+}

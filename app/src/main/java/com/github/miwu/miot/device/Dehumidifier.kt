@@ -2,6 +2,7 @@ package com.github.miwu.miot.device
 
 import android.view.ViewGroup
 import com.github.miwu.R
+import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.miot.manager.MiotDeviceManager
@@ -16,6 +17,7 @@ import kndroidx.extension.string
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
+@SpecAttClass("dehumidifier")
 class Dehumidifier(
     device: MiotDevices.Result.Device,
     layout: ViewGroup,
@@ -47,16 +49,12 @@ class Dehumidifier(
                 bar.properties.add(siid to obj)
             }
 
-            "dehumidifier" to "fault" -> {
-                createView<StatusText>(siid, piid, obj, index = 0)
-            }
-
             "environment" to "temperature" -> {
-                createView<SensorText>(siid, piid, obj, index = 1)
+                createView<SensorText>(siid, piid, obj, index = 0)
             }
 
             "environment" to "relative-humidity" -> {
-                createView<SensorText>(siid, piid, obj, index = 1)
+                createView<SensorText>(siid, piid, obj, index = 0)
             }
 
         }

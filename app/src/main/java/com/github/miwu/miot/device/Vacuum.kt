@@ -1,6 +1,7 @@
 package com.github.miwu.miot.device
 
 import android.view.ViewGroup
+import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.widget.StatusText
@@ -8,6 +9,7 @@ import com.github.miwu.miot.widget.VacuumButtonBar
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
+@SpecAttClass("vacumm")
 class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager),
     SpecAttHelper {

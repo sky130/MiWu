@@ -6,22 +6,22 @@ import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.quick.LightQuick
 import com.github.miwu.miot.quick.MiotBaseQuick
+import com.github.miwu.miot.quick.SwitchQuick
 import com.github.miwu.miot.widget.BrightnessSeekBar
 import com.github.miwu.miot.widget.ColorTemperatureSeekbar
+import com.github.miwu.miot.widget.SensorText
+import com.github.miwu.miot.widget.StatusText
 import com.github.miwu.miot.widget.Switch
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
-@SpecAttClass("light")
-class Light(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
-    DeviceType(device, layout, manager),
-    SpecAttHelper {
+@SpecAttClass("control-panel")
+class ControlPanel(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
+    DeviceType(device, layout, manager), SpecAttHelper {
 
-    private lateinit var quickLight: Pair<Int, Int>
-    override val isQuickActionable = true
-    override fun getQuick(): MiotBaseQuick {
-        return LightQuick(device, quickLight.first, quickLight.second)
-    }
+    override val isQuickActionable = false
+    override fun getQuick() = null
+
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
@@ -34,30 +34,20 @@ class Light(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
-            "fan" to "fan-level" -> {
-                createFanControl(siid, property = obj)
-            }
-
-            "fan" to "on" -> {
+            "switch" to "on" -> {
+                SwitchQuick(device, siid, piid)
+                obj.description = serviceDesc
                 createView<Switch>(siid, piid, obj)
             }
 
-            "light" to "on" -> {
-                quickLight = siid to piid
-                createView<Switch>(siid, piid, obj)
+            "environment" to "temperature" -> {
+                createView<SensorText>(siid, piid, obj, index = 0)
             }
 
-            "light" to "brightness" -> {
-                createView<BrightnessSeekBar>(siid, piid).apply {
-                    properties.add(siid to obj)
-                }
+            "environment" to "relative-humidity" -> {
+                createView<SensorText>(siid, piid, obj, index = 0)
             }
 
-            "light" to "color-temperature" -> {
-                createView<ColorTemperatureSeekbar>(siid, piid).apply {
-                    properties.add(siid to obj)
-                }
-            }
         }
     }
 

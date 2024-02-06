@@ -1,6 +1,7 @@
 package com.github.miwu.miot.device
 
 import android.view.ViewGroup
+import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.widget.AirPurifierBar
@@ -8,6 +9,7 @@ import com.github.miwu.miot.widget.SensorText
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
+@SpecAttClass("air-purifier")
 class AirPurifier(
     device: MiotDevices.Result.Device,
     layout: ViewGroup,

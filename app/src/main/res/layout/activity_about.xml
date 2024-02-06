@@ -115,6 +115,7 @@
                     android:layout_marginHorizontal="15dp"
                     android:text="@string/github_url"
                     android:textSize="12sp" />
+
             </LinearLayout>
 
 

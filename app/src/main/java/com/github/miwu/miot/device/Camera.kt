@@ -2,12 +2,8 @@ package com.github.miwu.miot.device
 
 import android.view.ViewGroup
 import com.github.miwu.miot.SpecAttClass
-import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
-import com.github.miwu.miot.quick.LightQuick
-import com.github.miwu.miot.quick.MiotBaseQuick
-import com.github.miwu.miot.widget.BrightnessSeekBar
-import com.github.miwu.miot.widget.ColorTemperatureSeekbar
+import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.widget.Switch
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices

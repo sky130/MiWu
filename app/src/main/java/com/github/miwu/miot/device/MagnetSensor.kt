@@ -11,6 +11,8 @@ import com.github.miwu.miot.widget.StatusText
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
+
+// 门窗传感器
 @SpecAttClass("magnet-sensor")
 class MagnetSensor(
     device: MiotDevices.Result.Device,
@@ -33,11 +35,13 @@ class MagnetSensor(
     ) {
         when (service to property) {
             "magnet-sensor" to "contact-state" -> {
-                createView<BoolStatusText>(siid, piid, obj)
+                createView<BoolStatusText>(siid, piid, obj).apply {
+                    isReversal = true
+                }
             }
 
             "magnet-sensor" to "illumination" -> {
-                createView<SensorText>(siid, piid, obj)
+                createView<StatusText>(siid, piid, obj)
             }
 
             "battery" to "battery-level" -> {

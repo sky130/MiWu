@@ -9,6 +9,7 @@ import kndroidx.extension.string
 class BoolStatusText(context: Context) : MiotBaseWidget<MiotWidgetStatusTextBinding>(context) {
 
     private val property by lazy { properties.first().second }
+    var isReversal = false
 
     override fun init() {
         binding.title <= "--"
@@ -17,7 +18,12 @@ class BoolStatusText(context: Context) : MiotBaseWidget<MiotWidgetStatusTextBind
 
     override fun onValueChange(value: Any) {
         value as Boolean
-        binding.title <= if (value) {
+        binding.title <= if (if (isReversal) {
+                !value
+            } else {
+                value
+            }
+        ) {
             R.string.enabled
         } else {
             R.string.disabled

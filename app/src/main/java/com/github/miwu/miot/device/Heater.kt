@@ -24,13 +24,14 @@ class Heater(
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
-    override fun onPropertyFound(
+override fun onPropertyFound(
         siid: Int,
         service: String,
         piid: Int,
         property: String,
-        obj: SpecAtt.Service.Property
-    ) {
+        serviceDesc:String,
+        obj: SpecAtt.Service.Property,
+    ){
         when (service to property) {
             "heater" to "on" -> {
                 createView<Switch>(siid, piid, obj)
@@ -50,13 +51,14 @@ class Heater(
         }
     }
 
-    override fun onActionFound(
+override fun onActionFound(
         siid: Int,
         service: String,
         aiid: Int,
         action: String,
-        obj: SpecAtt.Service.Action
-    ) {
+        serviceDesc:String,
+        obj: SpecAtt.Service.Action,
+    ){
 
     }
 }

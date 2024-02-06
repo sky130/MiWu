@@ -27,6 +27,9 @@ android {
         versionCode = 3
         versionName = "2.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
     buildFeatures {
         buildConfig = true

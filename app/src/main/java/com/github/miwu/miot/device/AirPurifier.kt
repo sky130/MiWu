@@ -22,13 +22,14 @@ class AirPurifier(
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
-    override fun onPropertyFound(
+override fun onPropertyFound(
         siid: Int,
         service: String,
         piid: Int,
         property: String,
-        obj: SpecAtt.Service.Property
-    ) {
+        serviceDesc:String,
+        obj: SpecAtt.Service.Property,
+    ){
         when (service to property) {
             "air-purifier" to "on" -> {
                 bar.properties.add(siid to obj)
@@ -44,13 +45,14 @@ class AirPurifier(
         }
     }
 
-    override fun onActionFound(
+override fun onActionFound(
         siid: Int,
         service: String,
         aiid: Int,
         action: String,
-        obj: SpecAtt.Service.Action
-    ) {
+        serviceDesc:String,
+        obj: SpecAtt.Service.Action,
+    ){
 
     }
 }

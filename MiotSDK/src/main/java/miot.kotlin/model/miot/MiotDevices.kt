@@ -31,7 +31,6 @@ data class MiotDevices(
             @SerializedName("model") val model: String,
             @SerializedName("name") val name: String,
             @SerializedName("orderTime") val orderTime: Int,
-            @SerializedName("owner") val owner: Owner,
             @SerializedName("parent_id") val parentId: String?,
             @SerializedName("permitLevel") val permitLevel: Int,
             @SerializedName("pid") val pid: Int,
@@ -50,11 +49,6 @@ data class MiotDevices(
                 @SerializedName("pincodeType") val pinCodeType: Int?,
                 @SerializedName("platform") val platform: String?,
                 @SerializedName("showGroupMember") val showGroupMember: Boolean?,
-            )
-
-            data class Owner(
-                @SerializedName("nickname") val nickname: String?,
-                @SerializedName("userid") val userid: Long?
             )
         }
 

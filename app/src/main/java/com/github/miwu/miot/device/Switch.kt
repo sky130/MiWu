@@ -27,11 +27,15 @@ class Switch(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         service: String,
         piid: Int,
         property: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
-
-
+            "switch" to "on" -> {
+                SwitchQuick(device, siid, piid)
+                obj.description = serviceDesc
+                createView<Switch>(siid, piid, obj)
+            }
         }
     }
 
@@ -40,6 +44,7 @@ class Switch(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         service: String,
         aiid: Int,
         action: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Action,
     ) {
 

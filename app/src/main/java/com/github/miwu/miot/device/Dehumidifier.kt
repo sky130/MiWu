@@ -35,8 +35,9 @@ class Dehumidifier(
         service: String,
         piid: Int,
         property: String,
-        obj: SpecAtt.Service.Property
-    ) {
+        serviceDesc:String,
+        obj: SpecAtt.Service.Property,
+    ){
         when (service to property) {
             "dehumidifier" to "on" -> {
                 bar.properties.add(siid to obj)
@@ -61,13 +62,14 @@ class Dehumidifier(
         }
     }
 
-    override fun onActionFound(
+override fun onActionFound(
         siid: Int,
         service: String,
         aiid: Int,
         action: String,
-        obj: SpecAtt.Service.Action
-    ) {
+        serviceDesc:String,
+        obj: SpecAtt.Service.Action,
+    ){
 
     }
 }

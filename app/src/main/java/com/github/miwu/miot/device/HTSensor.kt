@@ -20,6 +20,7 @@ class HTSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Mi
         service: String,
         piid: Int,
         property: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
@@ -42,6 +43,7 @@ class HTSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Mi
         service: String,
         aiid: Int,
         action: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Action,
     ) {
 

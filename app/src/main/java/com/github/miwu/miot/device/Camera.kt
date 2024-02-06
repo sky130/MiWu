@@ -25,6 +25,7 @@ class Camera(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         service: String,
         piid: Int,
         property: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
@@ -40,6 +41,7 @@ class Camera(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         service: String,
         aiid: Int,
         action: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Action,
     ) {
 

@@ -16,7 +16,7 @@ interface SpecAttHelper {
                     val propertyUrn = property.type.parseUrn()
                     property.apply {
                         translate()
-                        onPropertyFound(siid, name, iid, propertyUrn.name, this)
+                        onPropertyFound(siid, name, iid, propertyUrn.name, service.description, this)
                     }
                 }
             }
@@ -25,7 +25,7 @@ interface SpecAttHelper {
                     val actionUrn = action.type.parseUrn()
                     action.apply {
                         action.translate()
-                        onActionFound(siid, name, iid, actionUrn.name, this)
+                        onActionFound(siid, name, iid, actionUrn.name, service.description, this)
                     }
                 }
             }
@@ -38,6 +38,7 @@ interface SpecAttHelper {
         service: String,
         piid: Int,
         property: String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Property,
     )
 
@@ -46,6 +47,7 @@ interface SpecAttHelper {
         service: String,
         aiid: Int,
         action: String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Action,
     )
 

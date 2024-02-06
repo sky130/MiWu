@@ -26,6 +26,7 @@ class MagnetSensor(
         service: String,
         piid: Int,
         property: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
@@ -48,6 +49,7 @@ class MagnetSensor(
         service: String,
         aiid: Int,
         action: String,
+        serviceDesc:String,
         obj: SpecAtt.Service.Action,
     ) {
 

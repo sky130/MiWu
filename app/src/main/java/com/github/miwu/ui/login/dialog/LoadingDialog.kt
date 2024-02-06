@@ -31,9 +31,9 @@ class LoadingDialog(private val user: String, private val pwd: String) :
                             this.securityToken = it.securityToken
                             this.serviceToken = it.serviceToken
                         }
-                        MainApplication.miotUser = it
+                        MainApplication.miotUser = it.copy(deviceId = MainApplication.androidId)
                         R.string.toast_login_success.toast()
-                        exit{
+                        exit {
                             requireActivity().start<MainActivity>()
                             requireActivity().finish()
                         }

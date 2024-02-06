@@ -27,29 +27,31 @@
             android:name=".ui.crash.CrashActivity"
             android:exported="false"
             android:taskAffinity="" />
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
+        <activity
+            android:name=".ui.help.HelpActivity"
+            android:exported="false"
+            android:taskAffinity="" />
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:taskAffinity="" />
         <activity
             android:name=".ui.favorite.EditFavoriteActivity"
-            android:exported="true"
-            android:taskAffinity="android.task.tile_edit"
             android:excludeFromRecents="true"
-            android:noHistory="true">
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity="android.task.tile_edit">
             <intent-filter>
-                <action
-                    android:name="com.github.miwu.action.EditFavoriteActivity" />
-                <action
-                    android:name="android.intent.action.MAIN" />
-                <category
-                    android:name="android.intent.category.DEFAULT" />
-                <category
-                    android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+                <action android:name="com.github.miwu.action.EditFavoriteActivity" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
             </intent-filter>
         </activity>
         <activity

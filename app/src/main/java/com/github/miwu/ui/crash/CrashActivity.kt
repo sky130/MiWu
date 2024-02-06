@@ -18,4 +18,9 @@ class CrashActivity : ViewActivityX<ActivityCrashBinding, CrashViewModel>() {
         super.onDestroy()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.recycler.requestFocus()
+    }
+
 }

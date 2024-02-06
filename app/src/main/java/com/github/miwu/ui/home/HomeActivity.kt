@@ -8,6 +8,11 @@ import miot.kotlin.model.miot.MiotHomes
 
 class HomeActivity : ViewActivityX<ActivityHomeBinding, HomeViewModel>() {
 
+    override fun onResume() {
+        super.onResume()
+        binding.recycler.requestFocus()
+    }
+
     fun onItemClick(item: Any?) {
         item as MiotHomes.Result.Home
         AppPreferences.apply {

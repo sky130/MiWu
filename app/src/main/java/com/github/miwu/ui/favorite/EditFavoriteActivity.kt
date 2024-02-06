@@ -29,6 +29,11 @@ class EditFavoriteActivity : ViewActivityX<ActivityEditFavoriteBinding, EditFavo
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.recycler.requestFocus()
+    }
+
     override fun onPause() {
         super.onPause()
         appScope.launch {

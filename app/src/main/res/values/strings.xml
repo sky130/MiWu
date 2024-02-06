@@ -22,6 +22,7 @@
     <string name="uid">账号</string>
     <string name="nickname">姓名</string>switchHome
     <string name="switch_home">切换家庭</string>
+    <string name="help_title">使用帮助</string>
     <string name="crash_log">闪退日志</string>
     <string name="exit_account">退出账号</string>
     <string name="goto_license">关于米屋</string>
@@ -73,5 +74,4 @@
     <string name="login_by_mi">使用小米账号登录至米屋</string>
     <string name="enabled">已开启</string>
     <string name="disabled">已关闭</string>
-
 </resources>

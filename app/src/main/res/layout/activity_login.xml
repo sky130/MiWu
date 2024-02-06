@@ -20,6 +20,7 @@
 
 
         <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -90,6 +91,17 @@
                     android:gravity="center"
                     android:onClick="@{()->activity.startLicenseActivity()}"
                     android:text="@string/license_for_use"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="17sp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_list_item"
+                    android:gravity="center"
+                    android:onClick="@{()->activity.startHelpActivity()}"
+                    android:text="@string/help_title"
                     android:textColor="#FFFFFFFF"
                     android:textSize="17sp" />
 

@@ -48,6 +48,11 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.scroll.requestFocus()
+    }
+
 
     fun onAddButtonClick() {
         if (deviceType == null) {

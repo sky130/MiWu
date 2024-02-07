@@ -16,8 +16,8 @@ import miot.kotlin.model.miot.MiotDevices
 @SpecAttClass("magnet-sensor")
 class MagnetSensor(
     device: MiotDevices.Result.Device,
-    layout: ViewGroup,
-    manager: MiotDeviceManager
+    layout: ViewGroup?,
+    manager: MiotDeviceManager?
 ) :
     DeviceType(device, layout, manager),
     SpecAttHelper {

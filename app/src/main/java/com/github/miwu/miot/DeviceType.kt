@@ -6,6 +6,7 @@ import android.content.Context
 import android.view.ViewGroup
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
+import com.github.miwu.miot.utils.getUnitString
 import com.github.miwu.miot.widget.FanControl
 import com.github.miwu.miot.widget.FanLevelControl
 import com.github.miwu.miot.widget.FanSeekbar
@@ -15,8 +16,8 @@ import miot.kotlin.model.miot.MiotDevices
 
 sealed class DeviceType(
     val device: MiotDevices.Result.Device,
-    val layout: ViewGroup,
-    val manager: MiotDeviceManager,
+    val layout: ViewGroup?,
+    val manager: MiotDeviceManager?,
 ) {
 
     open val type = this::class.java.name.lowercase()// 设备类型
@@ -25,7 +26,10 @@ sealed class DeviceType(
     open val isTextQuick: Boolean = false // 是否是文字
     open fun getQuickList(): ArrayList<out MiotBaseQuick>? = null
     open fun getQuick(): MiotBaseQuick? = null
-    open fun getTextQuick(): MiotBaseQuick? = null
+    open fun getTextQuick(): MiotBaseQuick.TextQuick? = null
+    val textPropertyList = arrayListOf<Pair<Int, SpecAtt.Service.Property>>()
+
+    fun getBaseTextQuick()= MiotBaseQuick.TextQuick(device, textPropertyList)
 
     abstract fun onLayout(att: SpecAtt): DeviceType
 
@@ -35,11 +39,11 @@ sealed class DeviceType(
         property: SpecAtt.Service.Property? = null,
         action: SpecAtt.Service.Action? = null,
         index: Int = -1
-    ) = manager.createView<V>(layout, siid, piid).apply {
+    ) = manager?.createView<V>(layout!!, siid, piid)?.apply {
         property?.let { properties.add(siid to it) }
         action?.let { actions.add(siid to it) }
         manager.addView(this, index)
-    }
+    }!!
 
     fun createFanControl(
         siid: Int,
@@ -48,6 +52,7 @@ sealed class DeviceType(
         action: SpecAtt.Service.Action? = null,
         index: Int = -1
     ) {
+        if (layout == null || manager == null) return
         val view = if (property.valueList != null) {
             FanLevelControl::class.java
         } else if (property.valueRange != null) {

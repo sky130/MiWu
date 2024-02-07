@@ -22,8 +22,8 @@ import miot.kotlin.model.miot.MiotDevices
 @SpecAttClass("speaker")
 class Speaker(
     device: MiotDevices.Result.Device,
-    layout: ViewGroup,
-    manager: MiotDeviceManager
+    layout: ViewGroup?,
+    manager: MiotDeviceManager?
 ) : DeviceType(device, layout, manager),
     SpecAttHelper {
 

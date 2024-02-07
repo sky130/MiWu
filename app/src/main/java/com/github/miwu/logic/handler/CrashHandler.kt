@@ -12,6 +12,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.io.PrintWriter
+import java.lang.reflect.InvocationTargetException
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -44,12 +45,17 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
         val current = System.currentTimeMillis()
         val file = File("${PATH}${current}.log")
         try {
+            e.printStackTrace()
             PrintWriter(BufferedWriter(FileWriter(file))).use { pw ->
                 pw.println(e::class.java.name)
                 pw.println("----------------")
                 dumpPhoneInfo(pw)
                 pw.println("----------------")
                 e.printStackTrace(pw)
+                if (e is InvocationTargetException){
+                    pw.println("----------------")
+                    e.cause?.printStackTrace(pw)
+                }
             }
         } catch (_: Exception) {
         }

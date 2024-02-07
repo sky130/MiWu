@@ -1,6 +1,6 @@
 package com.github.miwu.miot.utils
 
-fun getUnitString(unit: String) = when (unit) {
+fun getUnitString(unit: String?) = when (unit) {
     "celsius" -> "°C"
     "percentage" -> "%"
     "seconds" -> "s"
@@ -9,5 +9,5 @@ fun getUnitString(unit: String) = when (unit) {
     "minutes" -> "min"
     "pascal" -> "Pa"
     "arcdegrees" -> "Rad"
-    else -> unit
+    else -> unit ?: ""
 }

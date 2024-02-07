@@ -9,6 +9,7 @@ import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.ui.about.AboutActivity
 import com.github.miwu.ui.home.HomeActivity
 import com.github.miwu.ui.login.LoginActivity
+import com.github.miwu.ui.smart.SmartActivity
 import com.github.miwu.viewmodel.MainViewModel
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
@@ -38,5 +39,9 @@ class UserFragment : ViewFragmentX<FragmentMainSettingsBinding, MainViewModel>()
         }
         requireActivity().start<LoginActivity>()
         requireActivity().finish()
+    }
+
+    fun startSmartActivity() {
+        requireContext().start<SmartActivity>()
     }
 }

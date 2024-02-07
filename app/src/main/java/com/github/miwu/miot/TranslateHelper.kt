@@ -26,5 +26,9 @@ private fun String.translate(): String = when (this) {
     "Normal" -> R.string.Normal.string
     "Low" -> R.string.LowFood.string
     "Empty" -> R.string.EmptyFood.string
+    "Temperature" ->R.string.Temperature.string
+    "Relative Humidity" ->R.string.relative_humidity.string
+    "Battery" ->R.string.battery.string
+    "Pet Food Out" ->R.string.pet_food_out.string
     else -> this
 }

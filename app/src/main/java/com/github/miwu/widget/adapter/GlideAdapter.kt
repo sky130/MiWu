@@ -11,6 +11,7 @@ import com.github.miwu.R
 import com.github.miwu.logic.database.model.MiwuDevice
 import com.github.miwu.ui.main.fragment.DeviceFragment
 import com.github.miwu.ui.main.fragment.MiWuFragment
+import kndroidx.activity.ViewActivityX
 import kndroidx.fragment.ViewFragmentX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +31,28 @@ fun miotIcon(imageView: ImageView, device: MiotDevices.Result.Device, fragment: 
     val url = iconMap[device.model]
     if (url == null) {
         fragment.viewModel.viewModelScope.launch(Dispatchers.IO) {
+            device.getIconUrl().apply {
+                withContext(Dispatchers.Main) {
+                    if (this@apply == null) {
+                        iconMap[device.model] = ""
+                    } else {
+                        iconMap[device.model] = this@apply
+                        loadImageUrl(imageView, this@apply)
+                    }
+                }
+            }
+        }
+    } else if (url.isNotEmpty()) {
+        loadImageUrl(imageView, url)
+    }
+}
+
+@BindingAdapter(value = ["deviceItem"])
+fun miotIcon(imageView: ImageView, device: MiotDevices.Result.Device) {
+    Glide.with(imageView.context).load(R.drawable.ic_miwu_placeholder).into(imageView)
+    val url = iconMap[device.model]
+    if (url == null) {
+        (imageView.context as ViewActivityX<*, *>).viewModel.viewModelScope.launch(Dispatchers.IO) {
             device.getIconUrl().apply {
                 withContext(Dispatchers.Main) {
                     if (this@apply == null) {

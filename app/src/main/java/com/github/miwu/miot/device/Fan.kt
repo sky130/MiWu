@@ -18,8 +18,8 @@ import miot.kotlin.model.miot.MiotDevices
 @SpecAttClass("fan")
 class Fan(
     device: MiotDevices.Result.Device,
-    layout: ViewGroup,
-    manager: MiotDeviceManager
+    layout: ViewGroup?,
+    manager: MiotDeviceManager?
 ) : DeviceType(device, layout, manager),
     SpecAttHelper {
     private val bar by lazy { createView<AirConditionerBar>() }

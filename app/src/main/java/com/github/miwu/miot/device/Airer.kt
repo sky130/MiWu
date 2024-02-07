@@ -12,9 +12,8 @@ import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
 @SpecAttClass("airer")
-class Airer(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
-    DeviceType(device, layout, manager),
-    SpecAttHelper {
+class Airer(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
+    DeviceType(device, layout, manager), SpecAttHelper {
     override val isQuick = false
     private val bar by lazy { createView<AirerBar>() }
 
@@ -26,7 +25,7 @@ class Airer(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
         service: String,
         piid: Int,
         property: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
@@ -50,7 +49,7 @@ class Airer(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
         service: String,
         aiid: Int,
         action: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Action,
     ) {
 

@@ -5,6 +5,7 @@ import com.github.miwu.databinding.ActivityAboutBinding
 import com.github.miwu.ui.crash.CrashActivity
 import com.github.miwu.ui.help.HelpActivity
 import com.github.miwu.ui.license.LicenseActivity
+import com.github.miwu.ui.smart.SmartActivity
 import com.github.miwu.viewmodel.AboutViewModel
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start

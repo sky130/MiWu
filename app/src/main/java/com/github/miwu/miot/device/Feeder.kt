@@ -12,7 +12,7 @@ import miot.kotlin.model.miot.MiotDevices
 
 @SpecAttClass("pet-feeder")
 class Feeder(
-    device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager
+    device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?
 ) : DeviceType(device, layout, manager), SpecAttHelper {
     private val list by lazy { createView<FeederPlanList>() }
 

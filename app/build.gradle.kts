@@ -130,6 +130,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
     implementation("com.google.android.horologist:horologist-compose-tools:0.1.8")
     implementation("com.google.android.horologist:horologist-tiles:0.1.8")
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    
 
     implementation(project(":MiotSDK"))
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.viewmodel.HomeViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.smart.SmartActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingHorizontal="@dimen/device_activity_padding"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            <requestFocus />
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.github.miwu.widget.app.AppTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:back="true"
+            app:title="全屋" />
+    </FrameLayout>
+</layout>

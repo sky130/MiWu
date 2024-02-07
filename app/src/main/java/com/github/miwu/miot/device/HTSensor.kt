@@ -5,16 +5,19 @@ import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.quick.MiotBaseQuick
+import com.github.miwu.miot.utils.getUnitString
 import com.github.miwu.miot.widget.SensorText
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
 @SpecAttClass("temperature-humidity-sensor")
-class HTSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
+class HTSensor(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
 
+    override val isTextQuick = true
 
+    override fun getTextQuick() = getBaseTextQuick()
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
@@ -23,15 +26,17 @@ class HTSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Mi
         service: String,
         piid: Int,
         property: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
             "temperature-humidity-sensor" to "temperature" -> {
+                textPropertyList.add(siid to obj)
                 createView<SensorText>(siid, piid, obj)
             }
 
             "temperature-humidity-sensor" to "relative-humidity" -> {
+                textPropertyList.add(siid to obj)
                 createView<SensorText>(siid, piid, obj)
             }
 
@@ -46,7 +51,7 @@ class HTSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Mi
         service: String,
         aiid: Int,
         action: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Action,
     ) {
 

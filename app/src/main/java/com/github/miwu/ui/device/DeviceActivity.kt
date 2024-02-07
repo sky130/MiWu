@@ -6,6 +6,7 @@ import com.github.miwu.MainApplication.Companion.appScope
 import com.github.miwu.MainApplication.Companion.gson
 import com.github.miwu.databinding.ActivityDeviceBinding
 import com.github.miwu.logic.database.model.MiwuDevice.Companion.toMiwu
+import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.manager.MiotQuickManager
@@ -50,7 +51,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
         if (deviceType == null) {
             "设备暂不支持".toast()
         } else if (deviceType!!.isMoreQuick) {
-            for (i in deviceType!!.getQuickList()!!){
+            for (i in deviceType!!.getQuickList()!!) {
                 MiotQuickManager.addQuick(i)
                 "添加成功".toast()
             }
@@ -82,30 +83,13 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     }
 
     override fun init() {
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
+        viewModel.viewModelScope.launch() {
             device.specType?.also {
-                File(this@DeviceActivity.cacheDir.absolutePath + "/" + it.hashCode()).let { file ->
-                    if (file.isFile) {
-                        val att = gson.fromJson(file.readText(), SpecAtt::class.java)
-                        withContext(Dispatchers.Main) {
-                            initSpecAtt(att)
-                        }
-                    } else {
-                        val att = MiotManager.getSpecAttWithLanguage(it)
-                        att?.let { at ->
-                            file.writeText(gson.toJson(at))
-                            withContext(Dispatchers.Main) {
-                                initSpecAtt(at)
-                            }
-                        }
-                    }
-                }
-
+                val att = AppRepository.getDeviceSpecAtt(it)
+                initSpecAtt(att ?: return@launch "设备不支持哦哦哦".toast())
             }.let {
                 if (it == null)
-                    withContext(Dispatchers.Main) {
-                        "设备不支持哦哦哦".toast()
-                    }
+                    "设备不支持哦哦哦".toast()
             }
         }
     }

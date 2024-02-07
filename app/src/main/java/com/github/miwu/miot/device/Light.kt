@@ -13,7 +13,7 @@ import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
 @SpecAttClass("light")
-class Light(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
+class Light(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
 

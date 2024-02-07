@@ -73,5 +73,10 @@
     <string name="must_to_read">使用前必须阅读免责声明</string>
     <string name="login_by_mi">使用小米账号登录至米屋</string>
     <string name="enabled">已开启</string>
+    <string name="all_home">全屋</string>
     <string name="disabled">已关闭</string>
+    <string name="Temperature">温度</string>
+    <string name="relative_humidity">相对湿度</string>
+    <string name="battery">电池电量</string>
+    <string name="pet_food_out">喂食机出粮</string>
 </resources>

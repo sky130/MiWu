@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.SpecAttHelper
 import com.github.miwu.miot.manager.MiotDeviceManager
+import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.AirPurifierBar
 import com.github.miwu.miot.widget.SensorText
 import miot.kotlin.model.att.SpecAtt
@@ -12,26 +13,25 @@ import miot.kotlin.model.miot.MiotDevices
 @SpecAttClass("air-purifier")
 class AirPurifier(
     device: MiotDevices.Result.Device,
-    layout: ViewGroup,
-    manager: MiotDeviceManager
+    layout: ViewGroup?,
+    manager: MiotDeviceManager?
 ) : DeviceType(device, layout, manager),
     SpecAttHelper {
     private val bar by lazy { createView<AirPurifierBar>() }
 
-    override val isQuick = false
+    override val isTextQuick = true
 
-    override fun getQuick() = null
-
+    override fun getTextQuick() = getBaseTextQuick()
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
-override fun onPropertyFound(
+    override fun onPropertyFound(
         siid: Int,
         service: String,
         piid: Int,
         property: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Property,
-    ){
+    ) {
         when (service to property) {
             "air-purifier" to "on" -> {
                 bar.properties.add(siid to obj)
@@ -42,19 +42,20 @@ override fun onPropertyFound(
             }
 
             "environment" to "pm2.5-density" -> {
-                createView<SensorText>(siid, piid,obj, index = 0)
+                textPropertyList.add(siid to obj)
+                createView<SensorText>(siid, piid, obj, index = 0)
             }
         }
     }
 
-override fun onActionFound(
+    override fun onActionFound(
         siid: Int,
         service: String,
         aiid: Int,
         action: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Action,
-    ){
+    ) {
 
     }
 }

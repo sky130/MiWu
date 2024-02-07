@@ -5,6 +5,8 @@ package com.github.miwu.service
 import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.DimensionBuilders.weight
 import androidx.wear.protolayout.DimensionBuilders.wrap
+import androidx.wear.protolayout.LayoutElementBuilders
+import androidx.wear.protolayout.LayoutElementBuilders.*
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.material.Typography
 import com.github.miwu.miot.manager.MiotQuickManager
@@ -24,6 +26,7 @@ class QuickActionTileService : TileServiceX() {
         imageMap.apply {
             set("device", R.drawable.ic_miwu_placeholder.toImage())
             set("scene", R.drawable.ic_miwu_scene_tile.toImage())
+            set("icon", R.drawable.ic_miwu_round.toImage())
         }
     }
 
@@ -39,29 +42,42 @@ class QuickActionTileService : TileServiceX() {
     override fun onEnter() = MiotQuickManager.refresh(must = true)
 
     override fun onLayout() = layout {
-        Grid(
-            width = expand(),
-            height = wrap(),
-            modifiers = Modifier.padding(horizontal = 25.dp),
-            rowModifiers = Modifier.padding(vertical = 3.dp),
-            spanCount = 2
-        ) {
-            for ((i, quick) in list.withIndex()) {
-                val resId = when (quick) {
-                    is MiotBaseQuick.DeviceQuick<*> -> "device"
-                    is MiotBaseQuick.SceneQuick -> "scene"
-                    else -> ""
-                }
-                QuickCard(
-                    quick = quick, resId = resId, Clickable(i.toString())
+        if (list.isEmpty()) {
+            setVerticalAlignment(Vertical(VERTICAL_ALIGN_CENTER))
+            setHorizontalAlignment(Horizontal(HORIZONTAL_ALIGN_CENTER))
+            Column(wrap(), wrap()) {
+                Image(50.dp, 50.dp, resId = "icon")
+                Text(
+                    "暂无未添加内容",
+                    typography = Typography.TYPOGRAPHY_BODY1,
+                    textColors = 0xFFFFFFFF.color,
                 )
+            }
+        } else {
+            Grid(
+                width = expand(),
+                height = wrap(),
+                modifiers = Modifier.padding(horizontal = 25.dp),
+                rowModifiers = Modifier.padding(vertical = 3.dp),
+                spanCount = 2
+            ) {
+                for ((i, quick) in list.withIndex()) {
+                    val resId = when (quick) {
+                        is MiotBaseQuick.DeviceQuick<*> -> "device"
+                        is MiotBaseQuick.SceneQuick -> "scene"
+                        else -> ""
+                    }
+                    QuickCard(
+                        quick = quick, resId = resId, Clickable(i.toString())
+                    )
+                }
             }
         }
     }
 
     private fun Any.QuickCard(
         quick: MiotBaseQuick, resId: String, clickable: Clickable
-    ) = Box(width = weight(1f), height = wrap(),modifier = Modifier.padding(horizontal = 3.dp)) {
+    ) = Box(width = weight(1f), height = wrap(), modifier = Modifier.padding(horizontal = 3.dp)) {
         val background = quick.run {
             if (this is MiotBaseQuick.DeviceQuick<*> && value is Boolean && value != null && (value as Boolean)) {
                 ShapeBackground(0xee57D1B8.color, 15.dp)

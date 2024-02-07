@@ -9,9 +9,8 @@ import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
 @SpecAttClass("camera")
-class Camera(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
-    DeviceType(device, layout, manager),
-    SpecAttHelper {
+class Camera(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
+    DeviceType(device, layout, manager), SpecAttHelper {
 
     override val isQuick = false
     override fun getQuick() = null
@@ -23,7 +22,7 @@ class Camera(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         service: String,
         piid: Int,
         property: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Property,
     ) {
         when (service to property) {
@@ -39,7 +38,7 @@ class Camera(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
         service: String,
         aiid: Int,
         action: String,
-        serviceDesc:String,
+        serviceDesc: String,
         obj: SpecAtt.Service.Action,
     ) {
 

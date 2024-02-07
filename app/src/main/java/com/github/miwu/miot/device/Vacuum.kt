@@ -10,7 +10,7 @@ import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
 @SpecAttClass("vacuum")
-class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
+class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
     override val isQuick = false

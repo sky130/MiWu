@@ -13,7 +13,7 @@ class Camera(device: MiotDevices.Result.Device, layout: ViewGroup, manager: Miot
     DeviceType(device, layout, manager),
     SpecAttHelper {
 
-    override val isQuickActionable = false
+    override val isQuick = false
     override fun getQuick() = null
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)

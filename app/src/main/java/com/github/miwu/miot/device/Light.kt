@@ -18,7 +18,7 @@ class Light(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotD
     SpecAttHelper {
 
     private lateinit var quickLight: Pair<Int, Int>
-    override val isQuickActionable = true
+    override val isQuick = true
     override fun getQuick(): MiotBaseQuick {
         return LightQuick(device, quickLight.first, quickLight.second)
     }

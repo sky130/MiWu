@@ -27,7 +27,7 @@ class Speaker(
 ) : DeviceType(device, layout, manager),
     SpecAttHelper {
 
-    override val isQuickActionable = false
+    override val isQuick = false
 
     override fun getQuick() = null
 

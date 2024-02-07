@@ -43,7 +43,7 @@ sealed class MiotBaseWidget<VB : ViewBinding>(context: Context) : FrameLayout(co
     }
 
     fun doAction(siid: Int, aiid: Int, isOut: Boolean = false, vararg `in`: Any) {
-        miotManager.doAction(siid, aiid,isOut,*`in`)
+        miotManager.doAction(siid, aiid, isOut, *`in`)
     }
 
     fun MiotBaseWidget<*>.getProperty(iid: Int) =

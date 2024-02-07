@@ -14,7 +14,7 @@ import miot.kotlin.model.miot.MiotDevices
 class GasSensor(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
-    override val isQuickActionable = false
+    override val isQuick = false
     override fun getQuick(): MiotBaseQuick? = null
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 

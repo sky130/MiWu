@@ -19,7 +19,7 @@ import miot.kotlin.model.miot.MiotDevices
 class ControlPanel(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager), SpecAttHelper {
 
-    override val isQuickActionable = false
+    override val isQuick = false
     override fun getQuick() = null
 
 

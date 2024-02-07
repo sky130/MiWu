@@ -16,7 +16,7 @@ class Feeder(
 ) : DeviceType(device, layout, manager), SpecAttHelper {
     private val list by lazy { createView<FeederPlanList>() }
 
-    override val isQuickActionable = false
+    override val isQuick = false
 
     override fun getQuick() = null
 

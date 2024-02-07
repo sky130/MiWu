@@ -19,7 +19,7 @@ import miot.kotlin.model.miot.MiotDevices
 class Switch(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager), SpecAttHelper {
 
-    override val isQuickActionable = false
+    override val isQuick = false
     override val isMoreQuick = true
     override fun getQuick() = null
     override fun getQuickList() = list

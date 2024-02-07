@@ -14,8 +14,9 @@ sealed class MiotBaseQuick {
     abstract val name: String
     abstract fun initValue()
 
-    sealed class DeviceQuick<T>(
-        val device: MiotDevices.Result.Device, val siid: Int,
+    abstract class DeviceQuick<T>(
+        val device: MiotDevices.Result.Device,
+        val siid: Int,
         val piid: Int,
     ) : MiotBaseQuick() {
         abstract var value: T
@@ -25,6 +26,12 @@ sealed class MiotBaseQuick {
         fun putValue(value: Any) {
             this.value = value as T
         }
+    }
+
+    class TextQuick(val text: String) : MiotBaseQuick() {
+        override suspend fun doAction() = Unit
+        override val name = text
+        override fun initValue() = Unit
     }
 
     class SceneQuick(private val scene: MiotScenes.Result.Scene) : MiotBaseQuick() {

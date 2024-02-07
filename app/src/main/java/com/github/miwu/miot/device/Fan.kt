@@ -24,7 +24,7 @@ class Fan(
     SpecAttHelper {
     private val bar by lazy { createView<AirConditionerBar>() }
 
-    override val isQuickActionable = false
+    override val isQuick = false
 
     override fun getQuick() = null
 

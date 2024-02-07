@@ -18,7 +18,7 @@ class AirPurifier(
     SpecAttHelper {
     private val bar by lazy { createView<AirPurifierBar>() }
 
-    override val isQuickActionable = false
+    override val isQuick = false
 
     override fun getQuick() = null
 

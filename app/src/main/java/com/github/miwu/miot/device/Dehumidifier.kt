@@ -26,7 +26,7 @@ class Dehumidifier(
     SpecAttHelper {
     private val bar by lazy { createView<DehumidifierBar>() }
 
-    override val isQuickActionable = false
+    override val isQuick = false
 
     override fun getQuick() = null
 

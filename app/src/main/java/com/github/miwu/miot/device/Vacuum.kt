@@ -9,11 +9,11 @@ import com.github.miwu.miot.widget.VacuumButtonBar
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
-@SpecAttClass("vacumm")
+@SpecAttClass("vacuum")
 class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup, manager: MiotDeviceManager) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
-    override val isQuickActionable = false
+    override val isQuick = false
     override fun getQuick() = null
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 

@@ -1,7 +1,6 @@
 package com.github.miwu.ui.device
 
 import android.content.Context
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.miwu.MainApplication.Companion.appScope
 import com.github.miwu.MainApplication.Companion.gson
@@ -12,20 +11,13 @@ import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.manager.MiotQuickManager
 import com.github.miwu.miot.device.DeviceType
 import com.github.miwu.miot.initSpecAttByAnnotation
-import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.viewmodel.DeviceViewModel
 import kndroidx.activity.ViewActivityX
-import kndroidx.extension.log
 import kndroidx.extension.start
 import kndroidx.extension.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.lastOrNull
-import kotlinx.coroutines.flow.reduce
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.MiotManager
@@ -62,7 +54,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
                 MiotQuickManager.addQuick(i)
                 "添加成功".toast()
             }
-        } else if (deviceType!!.isQuickActionable) {
+        } else if (deviceType!!.isQuick) {
             MiotQuickManager.addQuick(deviceType!!.getQuick()!!)
             "添加成功".toast()
         } else {

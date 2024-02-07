@@ -18,7 +18,7 @@ class Outlet(
 ) : DeviceType(device, layout, manager),
     SpecAttHelper {
 
-    override val isQuickActionable = true
+    override val isQuick = true
     override fun getQuick() = null
     val list = arrayListOf<SwitchQuick>()
 

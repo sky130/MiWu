@@ -20,12 +20,12 @@ sealed class DeviceType(
 ) {
 
     open val type = this::class.java.name.lowercase()// 设备类型
-
-    abstract val isQuickActionable: Boolean // 是否支持快捷操作
-    open val isMoreQuick: Boolean = false// 是否支持快捷操作
+    open val isQuick = false// 是否支持快捷操作
+    open val isMoreQuick: Boolean = false // 是否支持快捷操作
+    open val isTextQuick: Boolean = false // 是否是文字
     open fun getQuickList(): ArrayList<out MiotBaseQuick>? = null
-
-    abstract fun getQuick(): MiotBaseQuick?
+    open fun getQuick(): MiotBaseQuick? = null
+    open fun getTextQuick(): MiotBaseQuick? = null
 
     abstract fun onLayout(att: SpecAtt): DeviceType
 

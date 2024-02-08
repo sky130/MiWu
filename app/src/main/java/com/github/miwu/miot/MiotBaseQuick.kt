@@ -34,7 +34,7 @@ sealed class MiotBaseQuick {
 
     class TextQuick(
         val device: MiotDevices.Result.Device,
-        private val textPropertyList: ArrayList<Pair<Int, SpecAtt.Service.Property>>
+        val textPropertyList: ArrayList<Pair<Int, SpecAtt.Service.Property>>
     ) : MiotBaseQuick() {
         override suspend fun doAction() = Unit
         override val name = device.name
@@ -43,29 +43,31 @@ sealed class MiotBaseQuick {
         fun Pair<Int, SpecAtt.Service.Property>.getBaseText() =
             "${second.description.getDesc()}P[${first},${second.iid}]${getUnitString(second.unit)}"
 
-        private fun String.getDesc()= try {
+        private fun String.getDesc() = try {
             last().toString().toInt()
             "$this "
-        }catch (_:Exception){
+        } catch (_: Exception) {
             this
         }
 
-        suspend fun getTexts() = withContext(Dispatchers.IO) {
-            val list = arrayListOf<String>()
-            val attList = textPropertyList.filter { "read" in it.second.access }
-                .map { GetAtt(it.first, it.second.iid) }.toTypedArray()
+        suspend fun getTexts(textPropertyList: List<Pair<Int, SpecAtt.Service.Property>>) =
+            withContext(Dispatchers.IO) {
+                val list = arrayListOf<String>()
+                val attList = textPropertyList.filter { "read" in it.second.access }
+                    .map { GetAtt(it.first, it.second.iid) }.toTypedArray()
 
-            miot.getDeviceAtt(device, attList)?.let {
-                it.result?.forEach { i ->
-                    val regex = "P[${i.siid},${i.piid}]"
-                    textPropertyList.find { i.siid == it.first && i.piid == it.second.iid }?.apply {
-                        list.add(this.getBaseText().replace(regex, i.value.toString()))
+                miot.getDeviceAtt(device, attList)?.let {
+                    it.result?.forEach { i ->
+                        val regex = "P[${i.siid},${i.piid}]"
+                        textPropertyList.find { i.siid == it.first && i.piid == it.second.iid }
+                            ?.apply {
+                                list.add(this.getBaseText().replace(regex, i.value.toString()))
+                            }
                     }
                 }
-            }
 
-            return@withContext list
-        }
+                return@withContext list
+            }
 
         // "P[15,15]"
         // "A[15,15]"

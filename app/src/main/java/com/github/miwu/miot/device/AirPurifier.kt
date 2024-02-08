@@ -7,6 +7,7 @@ import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.widget.AirPurifierBar
 import com.github.miwu.miot.widget.SensorText
+import com.github.miwu.miot.widget.StatusText
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
@@ -41,10 +42,17 @@ class AirPurifier(
                 bar.properties.add(siid to obj)
             }
 
-            "environment" to "pm2.5-density" -> {
+            "environment" to "pm2.5-density",
+            "environment" to "relative-humidity",
+            "environment" to "temperature",-> {
                 textPropertyList.add(siid to obj)
                 createView<SensorText>(siid, piid, obj, index = 0)
             }
+
+            "environment" to "air-quality"-> {
+                createView<StatusText>(siid, piid, obj, index = 0)
+            }
+
         }
     }
 

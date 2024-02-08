@@ -21,22 +21,5 @@ class MainViewPagerAdapter(activity: AppCompatActivity) :
         )
 
     override fun getCount() = list.size
-    override fun getItem(position: Int) = list[position].second.apply {
-        try {
-            when(this){
-                is DeviceFragment->{
-                    binding.recycler.requestFocus()
-                }
-                is MiWuFragment->{
-                    binding.recycler.requestFocus()
-                }
-                is SceneFragment->{
-                    binding.recycler.requestFocus()
-                }
-                is UserFragment->{
-                    binding.scroll.requestFocus()
-                }
-            }
-        }catch (_:Exception){}
-    }
+    override fun getItem(position: Int) = list[position].second
 }

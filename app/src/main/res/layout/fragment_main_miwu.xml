@@ -63,10 +63,10 @@
             android:focusableInTouchMode="true"
             android:overScrollMode="never"
             android:paddingHorizontal="@dimen/device_activity_padding"
-            android:visibility="@{fragment.isEmpty() ? View.GONE : View.VISIBLE}"
             android:paddingTop="50dp"
             android:paddingBottom="50dp"
             android:scrollbars="vertical"
+            android:visibility="@{fragment.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:visibility="visible">
 

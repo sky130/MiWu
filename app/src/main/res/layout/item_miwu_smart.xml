@@ -38,6 +38,7 @@
                 app:data="@{item.value.textList}"
                 app:itemLayout="@{@layout/item_miwu_smart_desc}"
                 android:layout_width="match_parent"
+                android:overScrollMode="never"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager" />

@@ -19,6 +19,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -58,8 +59,8 @@ object AppRepository {
     fun loadSmart() {
         scope.launch(Dispatchers.IO) {
             val room = ArrayMap<String, DeviceArrayList>()
-            deviceFlow.take(1).collect { deviceList ->
-                homeFlow.take(1).collect { homeList ->
+            deviceFlow.take(1).collectLatest { deviceList ->
+                homeFlow.take(1).collectLatest { homeList ->
 
                     for (i in homeList) {
                         if (i.id == AppPreferences.homeId.toString()) {
@@ -80,25 +81,34 @@ object AppRepository {
 
                     for ((i, devList) in room) {
                         SmartHome(i).apply {
-                            devList.forEach { device ->
-                                if (device.specType == null) return@forEach
-                                getSpecAttByAnnotation(
-                                    device,
-                                    device.specType!!.parseUrn().name,
-                                    getDeviceSpecAtt(device.specType!!) ?: return@forEach
-                                )?.let {
-                                    if (!it.isTextQuick) return@forEach
-                                    this.deviceList.add(device)
-                                    textList.clear()
-                                    jobs.add(async {
-                                        textList.addAll(
-                                            it.getTextQuick()?.getTexts() ?: return@async
-                                        )
-                                        textList.log.d()
-                                    })
+                            jobs.add(async {
+                                val type = mutableSetOf<String>()
+                                devList.forEach { device ->
+                                    if (device.specType == null) return@forEach
+                                    getSpecAttByAnnotation(
+                                        device,
+                                        device.specType!!.parseUrn().name,
+                                        getDeviceSpecAtt(device.specType!!) ?: return@forEach
+                                    )?.let {
+                                        if (!it.isTextQuick) return@forEach
+                                        this@apply.deviceList.add(device)
+                                        it.getTextQuick()?.let { quick ->
+                                            type.log.d()
+                                            val quickList = quick.textPropertyList.filter { item ->
+                                                type.forEach { t ->
+                                                    if (item.second.description in t || t in item.second.description) return@filter false
+                                                }
+                                                true
+                                            }
+                                            quickList.log.d()
+                                            textList.addAll(quick.getTexts(quickList))
+                                            type.addAll(quick.textPropertyList.map { item -> item.second.description })
+                                            type.log.d()
+                                        }
+                                    }
                                 }
-                            }
-                            list.add(this)
+                            })
+                            list.add(this@apply)
                         }
                     }
 

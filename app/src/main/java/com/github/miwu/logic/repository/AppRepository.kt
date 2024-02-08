@@ -78,12 +78,9 @@ object AppRepository {
 
                     val jobs: ArrayList<Deferred<*>> = arrayListOf()
 
-                    for ((i, l) in room) {
-                        list.add(SmartHome(i).apply {
-                            this.deviceList.addAll(l)
-//                            this.deviceList.log.d()
-                            this.deviceList.forEach { device ->
-                                device.name.log.d()
+                    for ((i, devList) in room) {
+                        SmartHome(i).apply {
+                            devList.forEach { device ->
                                 if (device.specType == null) return@forEach
                                 getSpecAttByAnnotation(
                                     device,
@@ -91,6 +88,7 @@ object AppRepository {
                                     getDeviceSpecAtt(device.specType!!) ?: return@forEach
                                 )?.let {
                                     if (!it.isTextQuick) return@forEach
+                                    this.deviceList.add(device)
                                     textList.clear()
                                     jobs.add(async {
                                         textList.addAll(
@@ -100,11 +98,12 @@ object AppRepository {
                                     })
                                 }
                             }
-                        })
+                            list.add(this)
+                        }
                     }
 
                     jobs.awaitAll()
-                    _smartFlow.emit(list)
+                    _smartFlow.emit(list.filter { it.textList.isNotEmpty() })
                     _smartRefreshFlow.emit(Unit)
                 }
             }
@@ -119,7 +118,9 @@ object AppRepository {
         scope.launch {
             miot.getHomes().also {
                 if (it == null) {
-                    "加载家庭失败".toast()
+                    withContext(Dispatchers.Main) {
+                        "加载家庭失败".toast()
+                    }
                 } else {
                     val list = HomeArrayList()
                     it.result.homes.let { home -> list.addAll(home) }
@@ -149,7 +150,9 @@ object AppRepository {
         scope.launch {
             miot.getScenes(AppPreferences.homeId).let {
                 if (it == null) {
-                    "加载设备失败".toast()
+                    withContext(Dispatchers.Main) {
+                        "加载情景失败".toast()
+                    }
                     _sceneFlow.emit(emptyList())
                 } else {
                     it.result.scenes.let { scenes ->
@@ -170,7 +173,9 @@ object AppRepository {
         scope.launch {
             miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId).let { it ->
                 if (it == null) {
-                    "加载设备失败".toast()
+                    withContext(Dispatchers.Main) {
+                        "加载设备失败".toast()
+                    }
                     _deviceFlow.emit(emptyList())
                 } else {
                     it.result.deviceInfo.let { device ->

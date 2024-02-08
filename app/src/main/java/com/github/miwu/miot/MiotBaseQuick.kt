@@ -41,7 +41,14 @@ sealed class MiotBaseQuick {
         override fun initValue() = Unit
 
         fun Pair<Int, SpecAtt.Service.Property>.getBaseText() =
-            "${second.description}P[${first},${second.iid}]${getUnitString(second.unit)}"
+            "${second.description.getDesc()}P[${first},${second.iid}]${getUnitString(second.unit)}"
+
+        private fun String.getDesc()= try {
+            last().toString().toInt()
+            "$this "
+        }catch (_:Exception){
+            this
+        }
 
         suspend fun getTexts() = withContext(Dispatchers.IO) {
             val list = arrayListOf<String>()

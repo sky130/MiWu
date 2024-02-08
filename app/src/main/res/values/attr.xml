@@ -3,12 +3,15 @@
     <attr name="title" format="string" />
     <attr name="maxProgress" format="integer" tools:ignore="PrivateResource" />
     <attr name="minProgress" format="integer" tools:ignore="PrivateResource" />
+
     <attr name="progressBarColor" format="color" tools:ignore="PrivateResource" />
+
     <attr name="unit" format="string" />
     <attr name="siid" format="integer" />
     <attr name="piid" format="integer" />
     <attr name="value" format="string" />
     <attr name="dotSize" format="integer" />
+
 
 
     <declare-styleable name="MiSeekBarCard">

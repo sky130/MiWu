@@ -53,7 +53,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <androidx.wear.widget.WearableRecyclerView
+        <com.github.miwu.widget.app.SmoothRecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -71,7 +71,7 @@
             tools:visibility="visible">
 
             <requestFocus />
-        </androidx.wear.widget.WearableRecyclerView>
+        </com.github.miwu.widget.app.SmoothRecyclerView>
 
     </FrameLayout>
 

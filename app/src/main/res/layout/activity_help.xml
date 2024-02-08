@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.github.miwu.widget.app.SmoothRecyclerView
             android:background="@color/transparent"
             android:id="@+id/recycler"
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
             <requestFocus />
-        </androidx.recyclerview.widget.RecyclerView>
+        </com.github.miwu.widget.app.SmoothRecyclerView>
 
         <com.github.miwu.widget.app.AppTitleBar
             android:layout_width="match_parent"

@@ -83,7 +83,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
 
 
-    implementation("com.github.kndroidx:kndroidx:30e463e854")
+    implementation("com.github.kndroidx:kndroidx:9e2095ac42")
 
 
     //noinspection GradleDependency

@@ -44,8 +44,8 @@
         android:fontFamily="@font/quicksand_bold"
         android:includeFontPadding="false"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/value"
+        app:layout_constraintStart_toStartOf="@+id/value"
         app:layout_constraintTop_toBottomOf="@+id/value"
         tools:text="温度" />
 

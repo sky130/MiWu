@@ -11,8 +11,7 @@ class BrightnessSeekBar(context: Context) : MiotBaseWidget<Binding>(context),
     override fun init() {
         binding.seekbar.setOnSeekBarChangeListener(this)
     }
-
-
+    
     override fun onValueChange(value: Any) {
         value as Number
         binding.seekbar.progress = value.toInt()

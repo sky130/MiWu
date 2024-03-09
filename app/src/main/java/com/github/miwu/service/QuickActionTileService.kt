@@ -88,8 +88,7 @@ class QuickActionTileService : TileServiceX() {
         Box(
             width = expand(),
             height = wrap(),
-            modifier = Modifier.background(background)
-                .clickable(clickable)
+            modifier = Modifier.background(background).clickable(clickable)
         ) {
             Column(
                 width = weight(1f),

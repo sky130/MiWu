@@ -131,9 +131,8 @@ dependencies {
     implementation("com.google.android.horologist:horologist-compose-tools:0.1.8")
     implementation("com.google.android.horologist:horologist-tiles:0.1.8")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
-    
+    implementation(project(":miot-api"))
 
-    implementation(project(":MiotSDK"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

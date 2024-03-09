@@ -7,6 +7,7 @@ import miot.kotlin.exception.MiotUnauthorizedException
 import miot.kotlin.helper.Action
 import miot.kotlin.helper.GetAtt
 import miot.kotlin.helper.SetAtt
+import miot.kotlin.model.att.DeviceAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotScenes
 import miot.kotlin.service.MiotService
@@ -18,7 +19,9 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import okio.Buffer
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -96,110 +99,67 @@ class Miot(private val user: MiotUser) {
     )
 
 
-    suspend fun getHomes(
+    fun getHomes(
         appVer: Int = 7,
         fetchShare: Boolean = true,
         fetchShareDev: Boolean = true,
         limit: Int = 300,
-    ) = withContext(Dispatchers.IO) {
-        try {
-            return@withContext miotService.getHomes(
-                GetHome(
-                    appVer, fetchShare, fetchShareDev, false, limit
-                )
-            ).execute().body()
-        } catch (e: Exception) {
-            return@withContext null
-        }
-    }
+    ) = miotService.getHomes(
+        GetHome(
+            appVer, fetchShare, fetchShareDev, false, limit
+        )
+    )
 
-    suspend fun getDevices(
+    fun getDevices(
         homeOwnerId: Long, homeId: Long, limit: Int = 200,
-    ) = withContext(Dispatchers.IO) {
-        try {
-            return@withContext miotService.getDevices(
-                GetDevices(homeOwnerId, homeId, limit)
-            ).execute().body()
-        } catch (e: Exception) {
-            return@withContext null
-        }
-    }
+    ) = miotService.getDevices(
+        GetDevices(homeOwnerId, homeId, limit)
+    )
 
-    suspend fun getScenes(
+    fun getScenes(
         homeId: Long,
-    ) = withContext(Dispatchers.IO) {
-        try {
-            return@withContext miotService.getScenes(GetScene(homeId)).execute().body()
-        } catch (e: Exception) {
-            return@withContext null
-        }
-    }
+    ) = miotService.getScenes(GetScene(homeId))
 
     /**
      * @return 目前不考虑返回结果
      */
-    suspend fun runScene(scene: MiotScenes.Result.Scene) = withContext(Dispatchers.IO) {
-        try {
-            return@withContext if (scene.icon.isEmpty()) {
-                miotService.runScene(RunScene(scene.sceneId.toLong()))
-            } else {
-                miotService.runScene(RunCommonScene(scene.sceneId.toLong()))
-            }.execute().body()
-        } catch (e: Exception) {
-            return@withContext null
-        }
+    fun runScene(scene: MiotScenes.Result.Scene) = if (scene.icon.isEmpty()) {
+        miotService.runScene(RunScene(scene.sceneId.toLong()))
+    } else {
+        miotService.runScene(RunCommonScene(scene.sceneId.toLong()))
     }
 
-    suspend fun getDeviceAtt(device: MiotDevices.Result.Device, att: Array<out GetAtt>) =
-        withContext(Dispatchers.IO) {
-            try {
-                val list = Array(att.size) {
-                    att[it].run {
-                        GetParams.Att(device.did, siid, piid)
-                    }
-                }
-                return@withContext miotService.getDeviceAtt(GetParams(list)).execute().body()
-            } catch (e: Exception) {
-                return@withContext null
+    fun getDeviceAtt(device: MiotDevices.Result.Device, att: Array<out GetAtt>): Call<DeviceAtt> {
+        val list = Array(att.size) {
+            att[it].run {
+                GetParams.Att(device.did, siid, piid)
             }
         }
+        return miotService.getDeviceAtt(GetParams(list))
+    }
 
-    suspend fun setDeviceAtt(device: MiotDevices.Result.Device, att: Array<out SetAtt>) =
-        withContext(Dispatchers.IO) {
-            try {
-                val list = Array(att.size) {
-                    att[it].run {
-                        SetParams.Att(device.did, siid, piid, value)
-                    }
-                }
-                return@withContext miotService.setDeviceAtt(SetParams(list)).execute().body()
-            } catch (e: Exception) {
-                return@withContext null
+    fun setDeviceAtt(
+        device: MiotDevices.Result.Device,
+        att: Array<out SetAtt>
+    ): Call<ResponseBody> {
+        val list = Array(att.size) {
+            att[it].run {
+                SetParams.Att(device.did, siid, piid, value)
             }
         }
+        return miotService.setDeviceAtt(SetParams(list))
+    }
 
     suspend fun doAction(device: MiotDevices.Result.Device, siid: Int, aiid: Int, vararg obj: Any) =
-        withContext(Dispatchers.IO) {
-            try {
-                return@withContext miotService.doAction(
-                    ActionBody(
-                        ActionBody.Action(
-                            device.did, siid, aiid
-                        ).apply {
-                            `in`.addAll(obj)
-                        }
-                    )
-                ).execute().body()
-            } catch (e: Exception) {
-                return@withContext null
-            }
-        }
+        miotService.doAction(
+            ActionBody(
+                ActionBody.Action(
+                    device.did, siid, aiid
+                ).apply {
+                    `in`.addAll(obj)
+                }
+            )
+        )
 
-    suspend fun getUserInfo() = withContext(Dispatchers.IO) {
-        try {
-            return@withContext miotService.getUserInfo(GetUserInfo(user.userId)).execute().body()
-        } catch (e: Exception) {
-            return@withContext null
-        }
-    }
+    fun getUserInfo() = miotService.getUserInfo(GetUserInfo(user.userId))
 }

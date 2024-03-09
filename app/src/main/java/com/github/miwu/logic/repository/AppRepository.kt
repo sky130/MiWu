@@ -28,6 +28,10 @@ import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotHomes
 import miot.kotlin.model.miot.MiotScenes
+import miot.kotlin.utils.onEach
+import miot.kotlin.utils.onFailure
+import miot.kotlin.utils.onNull
+import miot.kotlin.utils.onSuccess
 import miot.kotlin.utils.parseUrn
 import java.io.File
 
@@ -120,87 +124,73 @@ object AppRepository {
         }
     }
 
-
     @get:Synchronized
     private val roomMap = ArrayMap<String, String>()
 
     fun updateHome() {
-        scope.launch {
-            miot.getHomes().also {
-                if (it == null) {
-                    withContext(Dispatchers.Main) {
-                        "加载家庭失败".toast()
-                    }
-                } else {
-                    val list = HomeArrayList()
-                    it.result.homes.let { home -> list.addAll(home) }
-                    it.result.shareHomes?.let { home -> list.addAll(home) }
-                    _homeFlow.emit(list)
-                    for (home in list) {
-                        for (room in home.rooms) {
-                            for (did in room.dids) {
-                                roomMap[did] = room.name
-                            }
-                        }
-                    }
-                }
-            }?.let {
-                if (AppPreferences.homeId == 0L) {
-                    it.result.homes.firstNotNullOf { home ->
-                        AppPreferences.homeId = home.id.toLong()
-                        AppPreferences.homeUid = home.uid
+        miot.getHomes().onSuccess {
+            val list = HomeArrayList()
+            it.result.homes.let { home -> list.addAll(home) }
+            it.result.shareHomes?.let { home -> list.addAll(home) }
+            _homeFlow.emit(list)
+            for (home in list) {
+                for (room in home.rooms) {
+                    for (did in room.dids) {
+                        roomMap[did] = room.name
                     }
                 }
             }
-        }
+            if (AppPreferences.homeId == 0L) {
+                it.result.homes.firstNotNullOf { home ->
+                    AppPreferences.homeId = home.id.toLong()
+                    AppPreferences.homeUid = home.uid
+                }
+            }
+        }.onNull {
+            "加载家庭失败".toast()
+        }.onFailure {
+            "加载家庭失败".toast()
+        }.call(scope)
     }
 
     fun updateScene() {
         if (AppPreferences.homeId == 0L) return
-        scope.launch {
-            miot.getScenes(AppPreferences.homeId).let {
-                if (it == null) {
-                    withContext(Dispatchers.Main) {
-                        "加载情景失败".toast()
-                    }
+        miot.getScenes(AppPreferences.homeId).onSuccess {
+            it.result.scenes.let { scenes ->
+                if (scenes == null) {
                     _sceneFlow.emit(emptyList())
                 } else {
-                    it.result.scenes.let { scenes ->
-                        if (scenes == null) {
-                            _sceneFlow.emit(emptyList())
-                        } else {
-                            _sceneFlow.emit(scenes)
-                        }
-                    }
+                    _sceneFlow.emit(scenes)
                 }
-                _sceneRefreshFlow.emit(Unit)
             }
-        }
+        }.onFailure {
+            "加载情景失败".toast()
+        }.onNull {
+            "加载情景失败".toast()
+        }.onEach {
+            _sceneRefreshFlow.emit(Unit)
+        }.call(scope)
     }
 
     fun updateDevice() {
         if (AppPreferences.homeId == 0L) return
-        scope.launch {
-            miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId).let { it ->
-                if (it == null) {
-                    withContext(Dispatchers.Main) {
-                        "加载设备失败".toast()
-                    }
+        miot.getDevices(AppPreferences.homeUid, AppPreferences.homeId).onSuccess {
+            it.result.deviceInfo.let { device ->
+                if (device == null) {
                     _deviceFlow.emit(emptyList())
                 } else {
-                    it.result.deviceInfo.let { device ->
-                        if (device == null) {
-                            _deviceFlow.emit(emptyList())
-                        } else {
-                            val list = ArrayList(device)
-                            list.sortBy { item -> !item.isOnline }
-                            _deviceFlow.emit(list)
-                        }
-                    }
+                    val list = ArrayList(device)
+                    list.sortBy { item -> !item.isOnline }
+                    _deviceFlow.emit(list)
                 }
-                _deviceRefreshFlow.emit(Unit)
             }
-        }
+        }.onNull {
+            "加载设备失败".toast()
+        }.onFailure {
+            "加载设备失败".toast()
+        }.onEach {
+            _deviceRefreshFlow.emit(Unit)
+        }.call(scope)
     }
 
     fun getRoomName(device: MiwuDevice): String {

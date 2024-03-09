@@ -21,6 +21,8 @@ import miot.kotlin.helper.GetAtt
 import miot.kotlin.helper.SetAtt
 import miot.kotlin.model.att.DeviceAtt
 import miot.kotlin.model.miot.MiotDevices
+import miot.kotlin.utils.call
+import miot.kotlin.utils.onSuccess
 
 class MiotDeviceManager(
     internal val device: MiotDevices.Result.Device,
@@ -109,12 +111,16 @@ class MiotDeviceManager(
 
     fun doAction(siid: Int, aiid: Int, isOut: Boolean = false, vararg `in`: Any) {
         scope.launch(Dispatchers.IO) {
-            miot.doAction(device, siid, aiid, *`in`)?.result?.out?.apply {
-                if (!isOut) return@launch
-                for (view in viewList) {
-                    if ((siid in view.actions.map { it.first } && aiid in view.actions.map { it.second.iid })) {
-                        withContext(Dispatchers.Main) {
-                            view.onActionFinish(siid, aiid, this@apply)
+            miot.doAction(device, siid, aiid, *`in`).call().apply action@{
+                onSuccess {
+                    it.result?.out?.apply {
+                        if (!isOut) return@apply
+                        for (view in viewList) {
+                            if ((siid in view.actions.map { it.first } && aiid in view.actions.map { it.second.iid })) {
+                                withContext(Dispatchers.Main) {
+                                    view.onActionFinish(siid, aiid, this)
+                                }
+                            }
                         }
                     }
                 }
@@ -136,8 +142,10 @@ class MiotDeviceManager(
                 }
             }
             if (attList.isEmpty()) return@launch
-            miot.getDeviceAtt(device, attList.toTypedArray())?.let {
-                refreshValue(it.result ?: return@let)
+            miot.getDeviceAtt(device, attList.toTypedArray()).call().apply {
+                onSuccess {
+                    refreshValue(it.result ?: return@onSuccess)
+                }
             }
         }
     }

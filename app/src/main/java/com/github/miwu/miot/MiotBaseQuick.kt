@@ -4,13 +4,14 @@ package com.github.miwu.miot.quick
 
 import com.github.miwu.MainApplication.Companion.miot
 import com.github.miwu.miot.utils.getUnitString
-import kndroidx.extension.log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miot.kotlin.helper.GetAtt
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotScenes
+import miot.kotlin.utils.call
+import miot.kotlin.utils.onSuccess
 
 sealed class MiotBaseQuick {
 
@@ -56,13 +57,15 @@ sealed class MiotBaseQuick {
                 val attList = textPropertyList.filter { "read" in it.second.access }
                     .map { GetAtt(it.first, it.second.iid) }.toTypedArray()
 
-                miot.getDeviceAtt(device, attList)?.let {
-                    it.result?.forEach { i ->
-                        val regex = "P[${i.siid},${i.piid}]"
-                        textPropertyList.find { i.siid == it.first && i.piid == it.second.iid }
-                            ?.apply {
-                                list.add(this.getBaseText().replace(regex, i.value.toString()))
-                            }
+                miot.getDeviceAtt(device, attList).call().apply {
+                    onSuccess {
+                        it.result?.forEach { i ->
+                            val regex = "P[${i.siid},${i.piid}]"
+                            textPropertyList.find { i.siid == it.first && i.piid == it.second.iid }
+                                ?.apply {
+                                    list.add(this.getBaseText().replace(regex, i.value.toString()))
+                                }
+                        }
                     }
                 }
 

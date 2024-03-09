@@ -11,10 +11,13 @@ import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miot.kotlin.helper.GetAtt
+import miot.kotlin.utils.call
+import miot.kotlin.utils.onSuccess
 
 object MiotQuickManager {
     private val job = Job()
@@ -55,12 +58,14 @@ object MiotQuickManager {
             for (i in quickList) {
                 when (i) {
                     is MiotBaseQuick.DeviceQuick<*> -> {
-                        launch {
-                            miot.getDeviceAtt(i.device, arrayOf(GetAtt(i.siid, i.piid)))?.let {
-                                it.result?.let { att ->
-                                    att[0].value?.let { it1 ->
-                                        isValueChanged = i.value != it1
-                                        i.putValue(it1)
+                        async {
+                            miot.getDeviceAtt(i.device, arrayOf(GetAtt(i.siid, i.piid))).call().apply {
+                                onSuccess {
+                                    it.result?.let { att ->
+                                        att[0].value?.let { it1 ->
+                                            isValueChanged = i.value != it1
+                                            i.putValue(it1)
+                                        }
                                     }
                                 }
                             }
@@ -72,7 +77,6 @@ object MiotQuickManager {
                     }
                 }
             }
-            "isValueChanged ${isValueChanged || must}".log.d()
             if (must || isValueChanged) withContext(Dispatchers.Main) {
                 QuickActionTileService.update()
             }

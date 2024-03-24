@@ -19,7 +19,7 @@ class SwitchQuick(
     }
 
     override suspend fun doAction() {
-        miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value)))
+        miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value))).execute()
     }
 
 }

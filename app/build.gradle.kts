@@ -103,6 +103,9 @@ dependencies {
     implementation("com.loongwind.ardf:recyclerview-ext:1.3.3")
 
 
+    implementation("com.github.alexzhirkevich:custom-qr-generator:1.6.2")
+
+
     implementation("com.microsoft.appcenter:appcenter-analytics:4.4.5")
     implementation("com.microsoft.appcenter:appcenter-crashes:4.4.5")
 

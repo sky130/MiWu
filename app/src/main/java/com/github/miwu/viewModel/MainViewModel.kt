@@ -11,6 +11,8 @@ import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import miot.kotlin.utils.call
+import miot.kotlin.utils.onSuccess
 
 class MainViewModel : ViewModel() {
 
@@ -31,10 +33,12 @@ class MainViewModel : ViewModel() {
 
     fun loadInfo() {
         viewModelScope.launch(Dispatchers.IO) {
-            miot.getUserInfo()?.let {
-                avatar.postValue(it.info.avatar)
-                nickname.postValue(it.info.nickname)
-                uid.postValue(it.info.uid)
+            miot.getUserInfo().call().apply {
+                onSuccess {
+                    avatar.postValue(it.info.avatar)
+                    nickname.postValue(it.info.nickname)
+                    uid.postValue(it.info.uid)
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,6 +12,8 @@
         <variable
             name="activity"
             type="com.github.miwu.ui.login.LoginActivity" />
+
+        <import type="android.view.View" />
     </data>
 
     <FrameLayout
@@ -50,26 +53,75 @@
                     android:gravity="center"
                     android:text="@string/login_by_mi" />
 
-                <EditText
+                <LinearLayout
+                    android:id="@+id/user_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:background="@drawable/bg_item"
-                    android:hint="@string/login_edit_user"
-                    android:padding="15dp"
-                    android:singleLine="true"
-                    android:text="@={viewModel.user}" />
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="@{ viewModel.isQrCode ? View.GONE : View.VISIBLE}"
 
-                <EditText
+                    tools:visibility="gone">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item"
+                        android:hint="@string/login_edit_user"
+                        android:padding="15dp"
+                        android:singleLine="true"
+                        android:text="@={viewModel.user}"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_item"
+                        android:hint="@string/login_edit_pwd"
+                        android:padding="15dp"
+                        android:singleLine="true"
+                        android:text="@={viewModel.password}"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_list_item"
+                        android:gravity="center"
+                        android:onClick="@{()->activity.login()}"
+                        android:text="@string/user_btn_login"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:background="@drawable/bg_item"
-                    android:hint="@string/login_edit_pwd"
-                    android:padding="15dp"
-                    android:singleLine="true"
-                    android:text="@={viewModel.password}" />
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
 
+                    android:visibility="@{ viewModel.isQrCode ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="15dp"
+                        android:adjustViewBounds="true"
+                        app:bitmap="@{viewModel.qrcode}"
+                        tools:src="@drawable/qr_code_stub" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:lineSpacingExtra="-4dp"
+                        android:text="@string/plz_user_mi_app_scan_qrcode" />
+
+                </LinearLayout>
 
                 <Button
                     android:layout_width="match_parent"
@@ -77,40 +129,70 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_list_item"
                     android:gravity="center"
-                    android:onClick="@{()->activity.login()}"
-                    android:text="@string/user_btn_login"
+                    android:onClick="@{()->viewModel.change()}"
+                    android:text="@{ !viewModel.isQrCode ? @string/qrcode_btn_login : @string/pw_btn_login}"
                     android:textColor="#FFFFFFFF"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"
+                    tools:text="@string/pw_btn_login" />
 
-                <Button
-                    android:id="@+id/gotoLicense"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_list_item"
-                    android:gravity="center"
-                    android:onClick="@{()->activity.startLicenseActivity()}"
-                    android:text="@string/license_for_use"
-                    android:textColor="#FFFFFFFF"
-                    android:textSize="17sp" />
+                    android:gravity="center">
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_list_item"
-                    android:gravity="center"
-                    android:onClick="@{()->activity.startHelpActivity()}"
-                    android:text="@string/help_title"
-                    android:textColor="#FFFFFFFF"
-                    android:textSize="17sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:text="@string/must_to_read" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:onClick="@{()->activity.startLicenseActivity()}"
+                        android:text="@string/license_for_use"
+                        android:textColor="@color/mi_green" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:text="@string/must_to_read" />
+                    android:gravity="center_horizontal"
+                    android:onClick="@{()->activity.startHelpActivity()}"
+                    android:text="@string/qa_login"
+                    android:textColor="@color/mi_green" />
+
+
+                <!--                <Button-->
+                <!--                    android:id="@+id/gotoLicense"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="48dp"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:background="@drawable/bg_list_item"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:onClick="@{()->activity.startLicenseActivity()}"-->
+                <!--                    android:text="@string/license_for_use"-->
+                <!--                    android:textColor="#FFFFFFFF"-->
+                <!--                    android:textSize="17sp" />-->
+
+                <!--                <Button-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="48dp"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:background="@drawable/bg_list_item"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:onClick="@{()->activity.startHelpActivity()}"-->
+                <!--                    android:text="@string/help_title"-->
+                <!--                    android:textColor="#FFFFFFFF"-->
+                <!--                    android:textSize="17sp" />-->
+
+
             </LinearLayout>
         </ScrollView>
 

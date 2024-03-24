@@ -7,4 +7,6 @@ data class Sid(
     @SerializedName("sid") val sid: String,
     @SerializedName("_sign") val sign: String,
     @SerializedName("callback") val callback: String,
+    @SerializedName("location") val location:String,
+    @SerializedName("ssecurity") val securityToken:String
 )

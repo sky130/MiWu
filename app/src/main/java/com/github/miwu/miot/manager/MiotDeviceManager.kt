@@ -104,7 +104,7 @@ class MiotDeviceManager(
         job.cancelChildren()
         handler.removeCallbacks(runnable)
         scope.launch(Dispatchers.IO) {
-            miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value)))
+            miot.setDeviceAtt(device, arrayOf(SetAtt(siid, piid, value))).execute()
             delay()
         }
     }

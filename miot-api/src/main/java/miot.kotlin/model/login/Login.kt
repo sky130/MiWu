@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class Login(
     @SerializedName("code") val code:Int,
     @SerializedName("desc") val desc:String,
-    @SerializedName("location") val location:String,
+    @SerializedName("location") var location:String,
     @SerializedName("userId") val userId:String,
-    @SerializedName("ssecurity") val securityToken:String
+    @SerializedName("ssecurity") var securityToken:String
 )

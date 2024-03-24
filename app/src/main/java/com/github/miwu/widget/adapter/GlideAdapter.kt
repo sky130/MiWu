@@ -1,5 +1,7 @@
 package com.github.miwu.widget.adapter
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.ArrayMap
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -7,12 +9,13 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.github.miwu.R
 import com.github.miwu.logic.database.model.MiwuDevice
 import com.github.miwu.ui.main.fragment.DeviceFragment
-import com.github.miwu.ui.main.fragment.MiWuFragment
 import kndroidx.activity.ViewActivityX
-import kndroidx.fragment.ViewFragmentX
+import kndroidx.extension.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,6 +24,7 @@ import miot.kotlin.helper.getIconUrl
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.model.miot.MiotScenes
 import org.json.JSONObject
+
 
 @get:Synchronized
 val iconMap = ArrayMap<String, String>()
@@ -93,6 +97,18 @@ fun ImageView.loadMiotIcon(device: MiwuDevice, viewModel: ViewModel) {
 @BindingAdapter(value = ["url"])
 fun loadImg(imageView: ImageView, url: String?) {
     if (url != null) loadImageUrl(imageView, url)
+}
+
+@BindingAdapter(value = ["drawable"])
+fun loadImg(imageView: ImageView, drawable: Drawable?) {
+    Glide.with(imageView).load(drawable).error(R.drawable.ic_miwu_placeholder).into(imageView)
+}
+
+var options = RequestOptions.bitmapTransform(RoundedCorners(20.dp))
+
+@BindingAdapter(value = ["bitmap"])
+fun loadImg(imageView: ImageView, bitmap: Bitmap?) {
+    Glide.with(imageView).load(bitmap).apply(options).error(R.drawable.ic_miwu_placeholder).into(imageView)
 }
 
 @BindingAdapter(value = ["scene"])

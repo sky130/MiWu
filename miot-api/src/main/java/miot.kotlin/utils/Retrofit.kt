@@ -119,3 +119,13 @@ suspend fun <T> Result<T>.onFailure(block: suspend (error: Throwable) -> Unit) {
         block(error)
     }
 }
+
+inline fun <T> T?.isNull(block: () -> Unit): T? {
+    if (this == null) block()
+    return this
+}
+
+inline fun <T> T?.isNotNull(block: T.() -> Unit): T? {
+    if (this != null) block()
+    return this
+}

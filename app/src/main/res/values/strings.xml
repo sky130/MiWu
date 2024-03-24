@@ -4,6 +4,10 @@
     <string name="login_edit_user">账号/手机号/邮箱</string>
     <string name="login_edit_pwd">密码</string>
     <string name="user_btn_login">登录</string>
+    <string name="qrcode_btn_login">扫码登录</string>
+    <string name="pw_btn_login">账号密码登录</string>
+
+
     <string name="tile_description">快捷操作</string>
     <string name="edit_favorite">修改收藏</string>
 
@@ -70,7 +74,11 @@
     <string name="Normal">正常</string>
     <string name="miwu_tips">请在设备页中收藏设备</string>
     <string name="miwu_no_device">暂无收藏设备</string>
-    <string name="must_to_read">使用前必须阅读免责声明</string>
+    <string name="must_to_read">登录后默认已同意</string>
+    <string name="plz_user_mi_app_scan_qrcode">请使用米家等\n小米旗下应用扫码登录</string>
+
+    <string name="qa_login">遇到问题?</string>
+
     <string name="login_by_mi">使用小米账号登录至米屋</string>
     <string name="enabled">已开启</string>
     <string name="all_home">全屋</string>

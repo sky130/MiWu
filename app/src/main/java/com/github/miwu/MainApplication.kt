@@ -8,6 +8,7 @@ import com.github.miwu.logic.preferences.AppPreferences
 import com.github.miwu.miot.initClassList
 import com.google.gson.Gson
 import kndroidx.KndroidX
+import kndroidx.extension.log
 import kndroidx.kndroidx
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -44,5 +45,6 @@ class MainApplication : Application() {
                 miotUser = Miot.MiotUser(userId, securityToken, serviceToken, androidId)
             }
         }
+        MiotManager.log
     }
 }

@@ -104,7 +104,7 @@ fun loadImg(imageView: ImageView, drawable: Drawable?) {
     Glide.with(imageView).load(drawable).error(R.drawable.ic_miwu_placeholder).into(imageView)
 }
 
-var options = RequestOptions.bitmapTransform(RoundedCorners(20.dp))
+var options = RequestOptions.bitmapTransform(RoundedCorners(15.dp))
 
 @BindingAdapter(value = ["bitmap"])
 fun loadImg(imageView: ImageView, bitmap: Bitmap?) {

@@ -1,5 +1,7 @@
 package com.github.miwu.ui.login
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.lifecycleScope
 import com.github.miwu.MainApplication
 import com.github.miwu.R
@@ -24,6 +26,9 @@ class LoginActivity : ViewActivityX<ActivityLoginBinding, LoginViewModel>() {
                 .show(supportFragmentManager)
         }
 
+    val handler = Handler(Looper.getMainLooper())
+
+
     override fun init() {
         viewModel.qrcode()
         viewModel.qrcodeMiot.onEach {
@@ -37,6 +42,9 @@ class LoginActivity : ViewActivityX<ActivityLoginBinding, LoginViewModel>() {
             start<MainActivity>()
             finish()
         }.launchIn(lifecycleScope)
+        viewModel.isQrCode.observe(this) {
+           handler.postDelayed({ binding.scroll.smoothScrollTo(0, windowManager.defaultDisplay.height / 2)},50)
+        }
     }
 
     override fun onResume() {

@@ -109,6 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="15dp"
                         android:adjustViewBounds="true"
+                        android:onClick="@{()->viewModel.qrcode()}"
                         app:bitmap="@{viewModel.qrcode}"
                         tools:src="@drawable/qr_code_stub" />
 

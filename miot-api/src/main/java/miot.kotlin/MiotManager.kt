@@ -36,25 +36,21 @@ import kotlin.random.Random
 
 
 object MiotManager {
-    private val loginClient by lazy {
-        OkHttpClient.Builder().addInterceptor { chain ->
-            val request: Request = chain.request().newBuilder().removeHeader("User-Agent") //移除旧的
-                .addHeader(
-                    "User-Agent",
-                    USER_AGENT,
-                ).build()
-            chain.proceed(request)
-        }.cookieJar(SimpleCookieJar()).readTimeout(5, TimeUnit.MINUTES).build()
-    }
-    private val retrofit by lazy {
-        Retrofit.Builder().baseUrl(SPEC_SERVER_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create()).build()
-    }
-    private val specService by lazy { retrofit.create<SpecService>() }
+    private val loginClient = OkHttpClient.Builder().addInterceptor { chain ->
+        val request: Request = chain.request().newBuilder().removeHeader("User-Agent") //移除旧的
+            .addHeader(
+                "User-Agent",
+                USER_AGENT,
+            ).build()
+        chain.proceed(request)
+    }.cookieJar(SimpleCookieJar()).readTimeout(5, TimeUnit.MINUTES).build()
+    private val retrofit = Retrofit.Builder().baseUrl(SPEC_SERVER_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(ScalarsConverterFactory.create()).build()
+    private val specService = retrofit.create<SpecService>()
     private val RANDOM_TEMP_CHARS = "0123456789ABCDEF".toCharArray()
     private val random = Random.Default
-    internal val gson by lazy { Gson() }
+    internal val gson = Gson()
 
     fun get(url: String, body: RequestBody? = null) = loginClient.run {
         newCall(

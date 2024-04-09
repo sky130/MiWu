@@ -39,9 +39,7 @@ class SceneFragment : ViewFragmentX<FragmentMainSceneBinding, MainViewModel>(),
 
     fun onItemClick(item: Any?) {
         item as MiotScenes.Result.Scene
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            miot.runScene(item)
-        }
+        miot.runScene(item).call(viewModel.viewModelScope)
     }
 
     fun onItemLongClick(item: Any?): Boolean {

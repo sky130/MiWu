@@ -136,7 +136,7 @@ dependencies {
     // implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.guava)
     implementation(libs.google.horologist.compose.tools)
     implementation(libs.google.horologist.tiles)
-    
+
 
 
     implementation(libs.gson)
@@ -157,23 +157,10 @@ dependencies {
 }
 
 afterEvaluate {
-//    tasks.named("kspDebugKotlin") {
-//        dependsOn("dataBindingGenBaseClassesDebug")
-////        dependsOn("kaptGenerateStubsDebugKotlin")
-//    }
-    tasks.withType(KspTaskJvm::class.java){
+    tasks.named("kspDebugKotlin") {
         dependsOn("dataBindingGenBaseClassesDebug")
     }
-
+    tasks.named("kspReleaseKotlin") {
+        dependsOn("dataBindingGenBaseClassesRelease")
+    }
 }
-
-//pluginManager.withPlugin("com.google.devtools.ksp") {
-//    val generateProtoTaskVariantName = (generateProtoTask.variant as BaseVariant).name
-//
-//    tasks.withType(KspTaskJvm::class.java)
-//        .matching { it.name.contains(generateProtoTaskVariantName, ignoreCase = true) }
-//        .configureEach { kspTask ->
-//            kspTask.dependsOn(generateProtoTask)
-//            kspTask.setSource(generateProtoTask.outputBaseDir)
-//        }
-//}

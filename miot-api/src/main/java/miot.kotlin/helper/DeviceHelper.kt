@@ -1,6 +1,5 @@
 package miot.kotlin.helper
 
-import android.bluetooth.BluetoothClass.Device
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,7 +7,6 @@ import miot.kotlin.Miot
 import miot.kotlin.MiotManager
 import miot.kotlin.MiotManager.gson
 import miot.kotlin.model.miot.MiotDevices
-import org.json.JSONObject
 
 data class GetAtt(val siid: Int, val piid: Int)
 data class SetAtt(val siid: Int, val piid: Int, val value: Any)

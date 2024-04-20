@@ -5,10 +5,11 @@ import androidx.annotation.Keep
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
-import miot.kotlin.model.miot.MiotDevices
+import com.github.miwu.databinding.ItemMiMiwuDeviceBinding
+import kndroidx.recycler.live.BindingClass
 import miot.kotlin.model.miot.MiotDevices.Result.Device
 
+@BindingClass(ItemMiMiwuDeviceBinding::class)
 @Keep
 @Entity(tableName = "miwu_device")
 data class MiwuDevice(
@@ -115,7 +116,6 @@ data class MiwuDevice(
             uid = this.uid
         )
     }
-
 
     data class Extra(
         val fwVersion: String?,

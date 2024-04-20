@@ -1,8 +1,9 @@
+@file:Suppress("DEPRECATION")
+
 package miot.kotlin.utils
 
 import okhttp3.Request
 import java.net.URLEncoder
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.*
@@ -24,9 +25,9 @@ fun generateSignature(uri: String, signedNonce: String, nonce: String, data: Str
     return Base64.getEncoder().encodeToString(digest)
 }
 
-fun String.urlEncode() = URLEncoder.encode(this)
+fun String.urlEncode(): String = URLEncoder.encode(this)
 
-inline fun String.request(noinline block: (Request.Builder.() -> Unit)? = null) =
+fun String.request(block: (Request.Builder.() -> Unit)? = null) =
     Request.Builder().url(this).apply {
         block?.let { block() }
     }.build()

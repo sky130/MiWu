@@ -1,6 +1,5 @@
 package miot.kotlin
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -97,10 +96,7 @@ object MiotManager {
             add("_json", "true")
         }.build()
         val result = get(url, body).substring(11)
-        gson.fromJson<Login>(result).apply {
-            return@withContext login()
-        }
-        return@withContext null
+        return@withContext gson.fromJson<Login>(result).login()
     }
 
     suspend fun loginByQrCode(

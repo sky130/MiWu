@@ -1,34 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    kotlin("jvm")
+    `maven-publish`
 }
 
-android {
-    namespace = "com.github.sky130.miot.sdk"
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 23
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+kotlin {
+    jvmToolchain(8)
 }
 
 dependencies {
@@ -40,4 +16,30 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.okio:okio:3.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("release") {
+                groupId = "com.github.sky233.miwu"
+                artifactId = "miot"
+                version = latestGitTag()
+
+                afterEvaluate {
+                    from(components["release"])
+                }
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
+    }
+}
+
+fun latestGitTag(): String {
+    val process = ProcessBuilder("git", "describe", "--tags", "--abbrev=0").start()
+    return process.inputStream.bufferedReader().use { bufferedReader ->
+        bufferedReader.readText().trim().replace("v", "").ifEmpty { "debug" }
+    }
 }

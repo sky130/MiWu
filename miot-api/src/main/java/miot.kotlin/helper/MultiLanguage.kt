@@ -2,7 +2,6 @@
 
 package miot.kotlin.helper
 
-import android.util.ArrayMap
 import miot.kotlin.MiotManager.gson
 import miot.kotlin.model.att.SpecAtt
 import org.json.JSONObject
@@ -13,7 +12,7 @@ fun getLanguageMap(language: String, languageCode: String): Map<String, String>?
             JSONObject(language)
                 .getJSONObject("data")
                 .getJSONObject(languageCode).toString(),
-            ArrayMap::class.java
+            HashMap::class.java
         ) as Map<String, String>
     } catch (_: Exception) {
         null

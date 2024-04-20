@@ -1,11 +1,14 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
 }
+
+
 
 android {
     namespace = "com.github.miwu"
@@ -53,7 +56,7 @@ android {
                 }
             }
         }
-        debug{
+        debug {
             isMinifyEnabled = false
             isShrinkResources = false
             isDebuggable = true
@@ -69,6 +72,10 @@ android {
     )
     lint.warning += "UnsafeOptInUsageError"
     flavorDimensions.add("miwu")
+    sourceSets {
+        this["release"].java.srcDir("build/generated/data_binding_base_class_source_out/release/out")
+        this["debug"].java.srcDir("build/generated/data_binding_base_class_source_out/debug/out")
+    }
 }
 
 val lifecycle_version = "2.7.0"
@@ -140,4 +147,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
+
+afterEvaluate {
+    tasks.named("kspDebugKotlin") {
+        dependsOn("dataBindingGenBaseClassesDebug")
+    }
 }

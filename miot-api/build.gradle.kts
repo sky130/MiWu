@@ -5,6 +5,23 @@ plugins {
     `maven-publish`
 }
 
+group = "com.github.sky130"
+version = latestGitTag
+
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 kotlin {
     jvmToolchain(8)
 }
@@ -19,3 +36,11 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.jetbrains.kotlinx.coroutines.core)
 }
+
+val latestGitTag: String
+    get() {
+        val process = ProcessBuilder("git", "describe", "--tags", "--abbrev=0").start()
+        return process.inputStream.bufferedReader().use { bufferedReader ->
+            bufferedReader.readText().replace("v","").trim().ifEmpty { "debug" }
+        }
+    }

@@ -5,5 +5,4 @@
     <dimen name="miot_widget_card_height">65dp</dimen>
     <dimen name="device_activity_padding">10dp</dimen>
     <dimen name="activity_padding_top">45dp</dimen>
-
 </resources>

@@ -80,7 +80,7 @@ class LoginViewModel : ViewModel() {
         isQrCode.value = !isQrCode.value!!
     }
 
-    val options = createQrOptions(512, 512, 0.1f) {
+    private val options = createQrOptions(512, 512, 0.1f) {
         errorCorrectionLevel = QrErrorCorrectionLevel.Low
     }
 }

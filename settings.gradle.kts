@@ -1,5 +1,4 @@
 
-
 pluginManagement {
     repositories {
         google()
@@ -11,6 +10,7 @@ pluginManagement {
         }
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -20,11 +20,9 @@ dependencyResolutionManagement {
             setUrl("https://jitpack.io/")
             isAllowInsecureProtocol = true
         }
-//        maven("https://jitpack.io/")
     }
 }
 
 rootProject.name = "MiWu"
 include(":app")
-
 include(":miot-api")

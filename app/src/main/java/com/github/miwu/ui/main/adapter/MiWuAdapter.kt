@@ -1,10 +1,7 @@
 package com.github.miwu.ui.main.adapter
 
-import android.R.attr
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.miwu.databinding.ItemMiMiwuDeviceBinding
 import com.github.miwu.logic.database.model.MiwuDevice
 import com.github.miwu.logic.repository.AppRepository
-import com.github.miwu.ui.main.fragment.MiWuFragment
 import com.github.miwu.widget.adapter.loadMiotIcon
 import kndroidx.extension.compareTo
-import kndroidx.extension.log
-import kndroidx.fragment.ViewFragmentX
 import java.util.Collections
 
 

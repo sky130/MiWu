@@ -12,11 +12,6 @@ import kndroidx.extension.isDebug
     version = 11,
     entities = [MiwuDevice::class],
     exportSchema = true,
-//    autoMigrations = [
-//        AutoMigration(from = 8, to = 9),
-//        AutoMigration(from = 9, to = 10),
-//        AutoMigration(from = 10, to = 11),
-//    ]
 )
 abstract class AppDatabase : RoomDatabase() {
 

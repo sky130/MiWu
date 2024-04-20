@@ -10,7 +10,7 @@ data class SmartHome(val name: String) {
     val deviceList = DeviceArrayList()
     val textList = ArrayList<String>()
 
-    sealed class Base()
+    sealed class Base
 
     data class Home(val value: SmartHome) : Base()
 

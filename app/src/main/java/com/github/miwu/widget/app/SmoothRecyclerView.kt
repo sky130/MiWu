@@ -602,8 +602,8 @@ class SmoothRecyclerView(context: Context, attr: AttributeSet) : RV(context, att
     }
 
     override fun onBezelEventTimerFinished() {
-        this.mSeslwBezelEventTimer = null;
-        this.mIsFastMode = false;
+        this.mSeslwBezelEventTimer = null
+        this.mIsFastMode = false
     }
 
 

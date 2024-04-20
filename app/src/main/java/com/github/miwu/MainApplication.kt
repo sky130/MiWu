@@ -10,6 +10,7 @@ import com.google.gson.Gson
 import kndroidx.KndroidX
 import kndroidx.extension.log
 import kndroidx.kndroidx
+import kndroidx.kndroidxConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import miot.kotlin.Miot
@@ -35,7 +36,7 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        kndroidx {
+        kndroidxConfig {
             context = applicationContext
         }
         initClassList()

@@ -83,7 +83,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     }
 
     override fun init() {
-        viewModel.viewModelScope.launch() {
+        viewModel.viewModelScope.launch {
             device.specType?.also {
                 val att = AppRepository.getDeviceSpecAtt(it)
                 initSpecAtt(att ?: return@launch "设备不支持哦哦哦".toast())

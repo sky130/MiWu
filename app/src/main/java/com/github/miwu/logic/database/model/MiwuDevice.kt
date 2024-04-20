@@ -6,10 +6,10 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.miwu.databinding.ItemMiMiwuDeviceBinding
-import kndroidx.recycler.live.BindingClass
+//import kndroidx.recycler.live.BindingClass
 import miot.kotlin.model.miot.MiotDevices.Result.Device
 
-@BindingClass(ItemMiMiwuDeviceBinding::class)
+//@BindingClass(ItemMiMiwuDeviceBinding::class)
 @Keep
 @Entity(tableName = "miwu_device")
 data class MiwuDevice(

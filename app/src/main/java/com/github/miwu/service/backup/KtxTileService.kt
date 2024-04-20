@@ -88,7 +88,7 @@ abstract class KtxTileService : TileService() {
                 ).build()
         ).build()
 
-    sealed class Image()
+    sealed class Image
 
     class ResImage(@DrawableRes val resId: Int) : Image()
 

@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
+import kotlin.coroutines.CoroutineContext
 
 inline fun <reified T> Retrofit.create(): T = this.create(T::class.java)
 
@@ -59,12 +60,12 @@ open class MutableRequest<T>(private val call: Call<T>) : Request<T> {
     var onNullBlock: (suspend CoroutineScope.(response: Response<T>) -> Unit)? = null
     var onEachBlock: (suspend CoroutineScope.() -> Unit)? = null
 
-    override fun call(scope: CoroutineScope) {
+    override fun call(scope: CoroutineScope, context: CoroutineContext) {
         scope.launch(Dispatchers.IO) {
             try {
                 call.execute().let { body ->
                     body.body().let {
-                        withContext(Dispatchers.Main) {
+                        withContext(context) {
                             if (it == null) {
                                 onNullBlock?.invoke(this, body)
                             } else {
@@ -74,7 +75,7 @@ open class MutableRequest<T>(private val call: Call<T>) : Request<T> {
                     }
                 }
             } catch (e: Throwable) {
-                withContext(Dispatchers.Main) {
+                withContext(context) {
                     onFailureBlock?.invoke(this, e)
                 }
             }
@@ -96,7 +97,7 @@ open class MutableRequest<T>(private val call: Call<T>) : Request<T> {
 
 interface Request<T> {
 
-    fun call(scope: CoroutineScope)
+    fun call(scope: CoroutineScope, context: CoroutineContext = Dispatchers.Main)
 
     suspend fun call(): Result<T>
 

@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
+import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
 
@@ -104,6 +105,7 @@ object MiotManager {
         onSuccess: suspend CoroutineScope.(Miot.MiotUser) -> Unit,
         onTimeout: suspend CoroutineScope.() -> Unit,
         onFailure: suspend CoroutineScope.(Throwable?) -> Unit,
+        context:CoroutineContext = Dispatchers.Main
     ): Unit = withContext(Dispatchers.IO) {
         try {
             gson.fromJson<Login>(get(loginUrl).substring(11)).apply {
@@ -111,7 +113,7 @@ object MiotManager {
                     location = it.location
                     securityToken = it.securityToken
                     login().let { user ->
-                        withContext(Dispatchers.Main) {
+                        withContext(context) {
                             if (user == null) {
                                 onFailure(null)
                             } else {
@@ -122,7 +124,7 @@ object MiotManager {
                 }
             }
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
+            withContext(context) {
                 if (e is SocketTimeoutException || e is TimeoutException) {
                     onTimeout()
                 } else {

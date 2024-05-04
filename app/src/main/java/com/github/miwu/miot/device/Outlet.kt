@@ -18,8 +18,9 @@ class Outlet(
 ) : DeviceType(device, layout, manager),
     SpecAttHelper {
 
-    override val isQuick = true
-    override fun getQuick() = null
+    override val isSwitchQuick = ::quick.isInitialized
+    override fun getQuick() = SwitchQuick(device, quick.first, quick.second)
+    private lateinit var quick: Pair<Int, Int>
     val list = arrayListOf<SwitchQuick>()
 
     override fun getQuickList() = list
@@ -36,6 +37,7 @@ class Outlet(
     ) {
         when (service to property) {
             "switch" to "on" -> {
+                quick = siid to piid
                 createView<Switch>(siid, piid, obj)
             }
 

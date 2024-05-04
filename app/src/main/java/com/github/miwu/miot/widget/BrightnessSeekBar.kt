@@ -3,6 +3,7 @@ package com.github.miwu.miot.widget
 import android.content.Context
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import com.github.miwu.widget.app.AppSeekBar
 import com.github.miwu.databinding.MiotWidgetBrightnessSeekbarBinding as Binding
 
 class BrightnessSeekBar(context: Context) : MiotBaseWidget<Binding>(context),
@@ -14,7 +15,7 @@ class BrightnessSeekBar(context: Context) : MiotBaseWidget<Binding>(context),
     
     override fun onValueChange(value: Any) {
         value as Number
-        binding.seekbar.progress = value.toInt()
+        binding.seekbar.setCurrentProgress(value.toInt())
     }
 
     override fun onProgressChanged(p0: SeekBar, p1: Int, fromUser: Boolean) = Unit
@@ -24,7 +25,7 @@ class BrightnessSeekBar(context: Context) : MiotBaseWidget<Binding>(context),
     }
 
     override fun onStopTrackingTouch(p0: SeekBar) {
-        putValue(p0.progress)
+        putValue(binding.seekbar.getCurrentProgress())
         startRefresh()
     }
 }

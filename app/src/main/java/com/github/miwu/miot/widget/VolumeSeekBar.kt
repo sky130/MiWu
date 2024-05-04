@@ -1,6 +1,8 @@
 package com.github.miwu.miot.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.view.MotionEvent
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.github.miwu.databinding.MiotWidgetVolumeSeekbarBinding as Binding
@@ -21,6 +23,12 @@ class VolumeSeekBar(context: Context) : MiotBaseWidget<Binding>(context),
     override fun onValueChange(value: Any) {
         value as Number
         binding.seekbar.setCurrentProgress(value.toInt())
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        parent.requestDisallowInterceptTouchEvent(true)
+        return super.onTouchEvent(event)
     }
 
 

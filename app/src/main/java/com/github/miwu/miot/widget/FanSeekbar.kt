@@ -1,6 +1,8 @@
 package com.github.miwu.miot.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.view.MotionEvent
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.databinding.adapters.SeekBarBindingAdapter.OnProgressChanged
@@ -21,6 +23,12 @@ class FanSeekbar(context: Context) : MiotBaseWidget<Binding>(context),
     override fun onValueChange(value: Any) {
         value as Number
         binding.seekbar.setCurrentProgress(value.toInt())
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        parent.requestDisallowInterceptTouchEvent(true)
+        return super.onTouchEvent(event)
     }
 
     override fun onProgressChanged(p0: SeekBar, p1: Int, p2: Boolean) {

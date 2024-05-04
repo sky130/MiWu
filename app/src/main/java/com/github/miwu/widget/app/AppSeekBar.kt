@@ -32,7 +32,7 @@ class AppSeekBar(
     private var x1 = 0f
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-
+        parent.requestDisallowInterceptTouchEvent(true)
         when (event.action) {
             MotionEvent.ACTION_UP -> {
                 isOnTouching = false
@@ -43,7 +43,7 @@ class AppSeekBar(
             MotionEvent.ACTION_MOVE->{
                 val x2 = event.x
                 if(x1 - x2 > 50 || x2 - x1 > 50) {
-                    parent.requestDisallowInterceptTouchEvent(true) // 解决手势冲突问题
+                    // 解决手势冲突问题
                 }
             }
         }

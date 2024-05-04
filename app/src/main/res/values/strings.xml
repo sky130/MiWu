@@ -54,7 +54,7 @@
     <string name="EmptyFood">已经没得吃了</string>
     <string name="Medium">中速</string>
     <string name="High">高速</string>
-    <string name="home_desc">%s个房间/%s个设备</string>
+    <string name="home_desc">%1$s个房间/%2$s个设备</string>
     <string name="home_desc_share">共享家庭</string>
     <string name="about">关于</string>
     <string name="license_content">一. 本开源项目仅供个人学习交流使用, 方便 Android 手表端可以控制米家的智能家居.\n二. 本项目完全免费, 可能存在较多漏洞, 维护者仅保证自己能正常使用, 存在问题请通过项目页 Issues 反馈.\n三. 本项目中所有适配的接口均来自小米公司 (北京小米科技有限责任公司) 旗下米家 (MIJIA), 本项目不对其控制的安全性负责.\n四. 本项目会将账户、密码、家庭等信息, 缓存在安装设备本地, 不含任何上传个人信息的接口.\n五. 真诚希望小米官方能够推出 `米家 For Android Watch`, 使广大消费者能用上.\n六. 本项目仅供个人学习交流使用, 切勿进行传播、任何形式的盈利, 未涉及的问题请参见国家有关法律法规, 以国家法律法规为准.\n\n项目仓库地址:\nhttps://github.com/sky130/MiWu</string>
@@ -69,7 +69,7 @@
     <string name="start_clean">开始清洁</string>
     <string name="check_crash">可至仓库 Issues 页寻求帮助\n下面是最新的一份闪退日志</string>
     <string name="crash_path">日志保存路径:</string>
-    <string name="feed_num">%s份 (约 %sg)</string>
+    <string name="feed_num">%1$s份 (约 %2$sg)</string>
     <string name="auto_feed_plan">自动喂食计划</string>
     <string name="Normal">正常</string>
     <string name="miwu_tips">请在设备页中收藏设备</string>

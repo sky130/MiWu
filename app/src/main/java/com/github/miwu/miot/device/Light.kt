@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
-import com.github.miwu.miot.quick.LightQuick
 import com.github.miwu.miot.quick.MiotBaseQuick
+import com.github.miwu.miot.quick.SwitchQuick
 import com.github.miwu.miot.widget.BrightnessSeekBar
 import com.github.miwu.miot.widget.ColorTemperatureSeekbar
 import com.github.miwu.miot.widget.Switch
@@ -18,10 +18,8 @@ class Light(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: Miot
     SpecAttHelper {
 
     private lateinit var quickLight: Pair<Int, Int>
-    override val isQuick = true
-    override fun getQuick(): MiotBaseQuick {
-        return LightQuick(device, quickLight.first, quickLight.second)
-    }
+    override val isSwitchQuick = true
+    override fun getQuick() = SwitchQuick(device, quickLight.first, quickLight.second)
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 

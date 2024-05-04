@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.SpecAttHelper
-import com.github.miwu.miot.quick.LightQuick
 import com.github.miwu.miot.quick.MiotBaseQuick
 import com.github.miwu.miot.quick.SwitchQuick
 import com.github.miwu.miot.widget.BrightnessSeekBar
@@ -19,7 +18,7 @@ import miot.kotlin.model.miot.MiotDevices
 class Switch(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
     DeviceType(device, layout, manager), SpecAttHelper {
 
-    override val isQuick = false
+    override val isSwitchQuick = false
     override val isMoreQuick = true
     override fun getQuick() = null
     override fun getQuickList() = list

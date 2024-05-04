@@ -14,7 +14,7 @@ import miot.kotlin.model.miot.MiotDevices
 @SpecAttClass("airer")
 class Airer(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
     DeviceType(device, layout, manager), SpecAttHelper {
-    override val isQuick = false
+    override val isSwitchQuick = false
     private val bar by lazy { createView<AirerBar>() }
 
     override fun getQuick(): MiotBaseQuick? = null

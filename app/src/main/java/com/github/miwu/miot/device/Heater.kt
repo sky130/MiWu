@@ -20,7 +20,7 @@ class Heater(
     SpecAttHelper {
     private val bar by lazy { createView<HeaterBar>() }
 
-    override val isQuick = false
+    override val isSwitchQuick = false
 
     override fun getQuick() = null
 

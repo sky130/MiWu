@@ -13,7 +13,7 @@ import miot.kotlin.model.miot.MiotDevices
 class Vacuum(device: MiotDevices.Result.Device, layout: ViewGroup?, manager: MiotDeviceManager?) :
     DeviceType(device, layout, manager),
     SpecAttHelper {
-    override val isQuick = false
+    override val isSwitchQuick = false
     override fun getQuick() = null
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 

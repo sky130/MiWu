@@ -21,11 +21,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import miot.kotlin.MiotManager
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 import miot.kotlin.utils.parseUrn
-import java.io.File
 
 class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
     private lateinit var device: MiotDevices.Result.Device
@@ -55,7 +53,7 @@ class DeviceActivity : ViewActivityX<ActivityDeviceBinding, DeviceViewModel>() {
                 MiotQuickManager.addQuick(i)
                 "添加成功".toast()
             }
-        } else if (deviceType!!.isQuick) {
+        } else if (deviceType!!.isSwitchQuick) {
             MiotQuickManager.addQuick(deviceType!!.getQuick()!!)
             "添加成功".toast()
         } else {

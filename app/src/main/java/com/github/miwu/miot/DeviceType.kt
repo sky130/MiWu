@@ -6,7 +6,6 @@ import android.content.Context
 import android.view.ViewGroup
 import com.github.miwu.miot.manager.MiotDeviceManager
 import com.github.miwu.miot.quick.MiotBaseQuick
-import com.github.miwu.miot.utils.getUnitString
 import com.github.miwu.miot.widget.FanControl
 import com.github.miwu.miot.widget.FanLevelControl
 import com.github.miwu.miot.widget.FanSeekbar
@@ -21,8 +20,8 @@ sealed class DeviceType(
 ) {
 
     open val type = this::class.java.name.lowercase()// 设备类型
-    open val isQuick = false// 是否支持快捷操作
-    open val isMoreQuick: Boolean = false // 是否支持快捷操作
+    open val isSwitchQuick = false// 是否支持快捷操作
+    open val isMoreQuick: Boolean = false // 是否拥有两个及以上快捷操作
     open val isTextQuick: Boolean = false // 是否是文字
     open fun getQuickList(): ArrayList<out MiotBaseQuick>? = null
     open fun getQuick(): MiotBaseQuick? = null

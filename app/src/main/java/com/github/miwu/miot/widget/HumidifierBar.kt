@@ -19,7 +19,7 @@ class HumidifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
     private var level = 1
         set(value) {
             field = value
-            setLevel(value)
+            setLevelDebug(value)
         }
     private val levelList = getProperty("fan-level").valueList!!
 
@@ -38,12 +38,12 @@ class HumidifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
                 index++
             }
             val obj = getPropertyWithSiid("fan-level")
-            level = levelList[index].value
+            this.level = levelList[index].value
             putValue(level, obj.first, obj.second.iid)
         }
     }
 
-    private fun setLevel(value: Int) {
+    private fun setLevelDebug(value: Int) {
         binding.modeText.text = levelList.first { it.value == value }.description
     }
 

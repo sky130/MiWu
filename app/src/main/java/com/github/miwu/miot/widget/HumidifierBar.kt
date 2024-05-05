@@ -16,12 +16,14 @@ class HumidifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
             field = value
             refreshOn(value)
         }
+
+    private val levelList get() = getProperty("fan-level").valueList!!
+
     private var level = 1
         set(value) {
             field = value
             setLevelDebug(value)
         }
-    private val levelList = getProperty("fan-level").valueList!!
 
 
     override fun init() {
@@ -37,6 +39,16 @@ class HumidifierBar(context: Context) : MiotBaseWidget<Binding>(context) {
             } else {
                 index++
             }
+
+            // 如果当前索引对应的元素的值为 4，则再增加一次索引，跳过该元素
+            if (index < levelList.size && levelList[index].value == 4) {
+                index++
+            }
+            // 如果索引超出了列表范围，则重置为 0
+            if (index >= levelList.size) {
+                index = 0
+            }//该段为暂时屏蔽没有用的恒湿模式使用，后续如果上线恒湿可以删掉
+
             val obj = getPropertyWithSiid("fan-level")
             this.level = levelList[index].value
             putValue(level, obj.first, obj.second.iid)

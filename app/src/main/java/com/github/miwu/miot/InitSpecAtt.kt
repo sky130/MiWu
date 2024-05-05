@@ -50,6 +50,8 @@ fun initSpecAttFun(
 
     "fan" -> Fan(device, layout, manager)
 
+    "Humidifier" -> Humidifier(device, layout, manager)
+
     "control-panel" -> ControlPanel(device, layout, manager)
 
     else -> {

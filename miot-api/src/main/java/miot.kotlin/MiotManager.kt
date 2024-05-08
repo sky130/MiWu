@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
-
+import java.util.*
 
 object MiotManager {
     private val loginClient = OkHttpClient.Builder().addInterceptor { chain ->
@@ -51,6 +51,13 @@ object MiotManager {
     private val RANDOM_TEMP_CHARS = "0123456789ABCDEF".toCharArray()
     private val random = Random.Default
     internal val gson = Gson()
+    internal val base64Encode : (String)->String = {
+        Base64.getEncoder().encodeToString(it)
+    }
+
+    fun configBase64(encode:(String)->String){
+        base64Encode = encode
+    }
 
     fun get(url: String, body: RequestBody? = null) = loginClient.run {
         newCall(

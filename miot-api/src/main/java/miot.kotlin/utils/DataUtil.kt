@@ -9,12 +9,13 @@ import java.security.MessageDigest
 import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import miot.kotlin.MiotManager.base64Encode
 
 fun generateSignedNonce(secret: String, nonce: String): String {
     val sha = MessageDigest.getInstance("SHA-256")
     sha.update(Base64.getDecoder().decode(secret))
     sha.update(Base64.getDecoder().decode(nonce))
-    return Base64.getEncoder().encodeToString(sha.digest())
+    return base64Encode(sha.digest())
 }
 
 fun generateSignature(uri: String, signedNonce: String, nonce: String, data: String): String {
@@ -22,7 +23,7 @@ fun generateSignature(uri: String, signedNonce: String, nonce: String, data: Str
     val mac = Mac.getInstance("HmacSHA256")
     mac.init(SecretKeySpec(Base64.getDecoder().decode(signedNonce), "HmacSHA256"))
     val digest = mac.doFinal(sign)
-    return Base64.getEncoder().encodeToString(digest)
+    return base64Encode(digest)
 }
 
 fun String.urlEncode(): String = URLEncoder.encode(this)

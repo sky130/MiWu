@@ -12,24 +12,21 @@
 implementation("com.github.sky130:MiWu:2.0.6")
 ```
 
-## 入门
+## 项目树
 
 ```
- `-- miot.kotlin
+miot.kotlin
      |-- Config.kt 配置文件
      |-- Miot.kt 
-     |-- MiotManager.kt 类库入口，提供登录和其他功能
-     |-- exception 
-     |   `-- MiotUnauthorizedException.kt 没啥用的错误
+     |-- MiotManager.kt 类库入口
      |-- helper
-     |   |-- DeviceHelper.kt 
-     |   |-- MultiLanguage.kt 
+     |   |-- DeviceHelper.kt 设备辅助
+     |   |-- MultiLanguage.kt 多语言翻译
      |-- model 
-     |-- service Retrofit接口
+     |-- service Retrofit 接口
      `-- utils
          |-- DataUtil.kt
          |-- Retrofit.kt
-         `-- UrnUtil.kt
-
+         `-- UrnUtil.kt 
 ```
 

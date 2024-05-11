@@ -7,5 +7,5 @@ data class RunCommonScene(
     @SerializedName("scene_id")
     val sceneId: Long,
     @SerializedName("trigger_key")
-    val triggerKey: String = ""
+    val triggerKey: String = "user.click"
 )

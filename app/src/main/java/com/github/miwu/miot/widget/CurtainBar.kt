@@ -3,7 +3,7 @@ package com.github.miwu.miot.widget
 import android.content.Context
 import android.util.AttributeSet
 import com.github.miwu.R
-import com.github.miwu.databinding.MiotWidgetAirerBarBinding as Binding
+import com.github.miwu.databinding.MiotWidgetCurtainBarBinding as Binding
 import kndroidx.extension.compareTo
 import miot.kotlin.utils.parseUrn
 

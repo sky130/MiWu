@@ -1,16 +1,12 @@
 package com.github.miwu.miot.device
 
 import android.view.ViewGroup
-import com.github.miwu.R
 import com.github.miwu.miot.SpecAttClass
 import com.github.miwu.miot.SpecAttHelper
-import com.github.miwu.miot.initSpecAttFun
 import com.github.miwu.miot.manager.MiotDeviceManager
-import com.github.miwu.miot.quick.MiotBaseQuick
+import com.github.miwu.miot.quick.SwitchQuick
 import com.github.miwu.miot.widget.AirConditionerBar
 import com.github.miwu.miot.widget.TemperatureControl
-import kndroidx.extension.log
-import kndroidx.extension.string
 import miot.kotlin.model.att.SpecAtt
 import miot.kotlin.model.miot.MiotDevices
 
@@ -23,9 +19,9 @@ class AirConditioner(
     SpecAttHelper {
     private val bar by lazy { createView<AirConditionerBar>() }
 
-    override val isSwitchQuick = false
-
-    override fun getQuick() = null
+    override val isSwitchQuick = true
+    private lateinit var pair: Pair<Int, Int>
+    override fun getQuick() = SwitchQuick(device, pair.first, pair.second)
 
     override fun onLayout(att: SpecAtt) = forEachAtt(att)
 
@@ -39,6 +35,7 @@ class AirConditioner(
     ) {
         when (service to property) {
             "air-conditioner" to "on" -> {
+                pair = siid to piid
                 bar.properties.add(siid to obj)
             }
 

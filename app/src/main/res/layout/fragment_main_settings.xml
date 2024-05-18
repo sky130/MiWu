@@ -21,11 +21,11 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:paddingHorizontal="@dimen/device_activity_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:orientation="vertical"
+            android:paddingHorizontal="@dimen/device_activity_padding"
             android:paddingTop="@dimen/activity_padding_top"
             android:paddingBottom="50dp">
 
@@ -61,54 +61,25 @@
 
             <Button
                 android:id="@+id/switchHome"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bg_list_item"
+                style="@style/WearButton"
                 android:onClick="@{()->fragment.startHomeActivity()}"
-                android:text="@string/switch_home"
-                android:textColor="#FFFFFFFF"
-                android:textSize="17sp" />
+                android:text="@string/switch_home" />
 
             <Button
                 android:id="@+id/exitAccount"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/bg_list_item"
-                android:gravity="center"
+                style="@style/WearButton"
                 android:onClick="@{()->fragment.logout()}"
-                android:text="@string/exit_account"
-                android:textColor="#FFFFFFFF"
-                android:textSize="17sp" />
+                android:text="@string/exit_account" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/bg_list_item"
-                android:gravity="center"
+                style="@style/WearButton"
                 android:onClick="@{()->fragment.startSmartActivity()}"
-                android:text="全屋环境"
-                android:textColor="#FFFFFFFF"
-                android:textSize="17sp" />
+                android:text="全屋环境" />
 
             <Button
-                android:id="@+id/gotoLicense"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginVertical="3dp"
-                android:background="@drawable/bg_list_item"
-                android:gravity="center"
+                style="@style/WearButton"
                 android:onClick="@{()->fragment.startAboutActivity()}"
-                android:text="@string/goto_license"
-                android:textColor="#FFFFFFFF"
-                android:textSize="17sp" />
+                android:text="@string/goto_license" />
 
 
         </LinearLayout>

@@ -15,12 +15,7 @@
         <requestFocus />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/device_activity_padding"
-            android:paddingVertical="60dp">
+            style="@style/WearLayout">
 
             <LinearLayout
                 android:id="@+id/miot_widget_layout"
@@ -31,22 +26,12 @@
             </LinearLayout>
 
             <com.github.miwu.widget.app.AppButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
+                style="@style/WearAppButton"
                 android:onClick="@{()->activity.onAddButtonClick()}"
-                android:background="@drawable/bg_button"
-                android:paddingHorizontal="20dp"
                 android:text="添加到卡片" />
             <com.github.miwu.widget.app.AppButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
+                style="@style/WearAppButton"
                 android:onClick="@{()->activity.onStarButtonClick()}"
-                android:background="@drawable/bg_button"
-                android:paddingHorizontal="20dp"
                 android:text="收藏设备" />
         </LinearLayout>
     </ScrollView>

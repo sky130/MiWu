@@ -14,30 +14,18 @@
     </data>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+       style="@style/WearBox">
 
         <com.github.miwu.widget.app.SmoothRecyclerView
             android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:clipToPadding="false"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:overScrollMode="never"
-            android:paddingHorizontal="@dimen/device_activity_padding"
-            android:paddingTop="50dp"
-            android:paddingBottom="50dp"
-            android:scrollbars="vertical"
+            style="@style/WearRecycler"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
             <requestFocus />
         </com.github.miwu.widget.app.SmoothRecyclerView>
 
         <com.github.miwu.widget.app.AppTitleBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/WearTitleBar"
             app:back="true"
             app:title="全屋" />
     </FrameLayout>

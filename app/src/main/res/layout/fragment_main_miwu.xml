@@ -55,17 +55,8 @@
 
         <com.github.miwu.widget.app.SmoothRecyclerView
             android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:clipToPadding="false"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:overScrollMode="never"
-            android:paddingHorizontal="@dimen/device_activity_padding"
-            android:paddingTop="50dp"
-            android:paddingBottom="50dp"
-            android:scrollbars="vertical"
+            style="@style/WearRecycler"
+
             android:visibility="@{fragment.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:visibility="visible">

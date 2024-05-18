@@ -17,24 +17,15 @@
     </data>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        style="@style/WearBox">
 
 
         <ScrollView
             android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            style="@style/WearScrollLayout">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/device_activity_padding"
-                android:clipToPadding="false"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/activity_padding_top"
-                android:paddingBottom="@dimen/activity_padding_top">
+                style="@style/WearLayout">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -136,10 +127,11 @@
                     android:textSize="17sp"
                     tools:text="@string/pw_btn_login" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.google.android.flexbox.FlexboxLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
                     android:gravity="center">
 
                     <TextView
@@ -157,7 +149,7 @@
                         android:onClick="@{()->activity.startLicenseActivity()}"
                         android:text="@string/license_for_use"
                         android:textColor="@color/mi_green" />
-                </LinearLayout>
+                </com.google.android.flexbox.FlexboxLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -168,30 +160,6 @@
                     android:onClick="@{()->activity.startHelpActivity()}"
                     android:text="@string/qa_login"
                     android:textColor="@color/mi_green" />
-
-
-                <!--                <Button-->
-                <!--                    android:id="@+id/gotoLicense"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="48dp"-->
-                <!--                    android:layout_marginTop="10dp"-->
-                <!--                    android:background="@drawable/bg_list_item"-->
-                <!--                    android:gravity="center"-->
-                <!--                    android:onClick="@{()->activity.startLicenseActivity()}"-->
-                <!--                    android:text="@string/license_for_use"-->
-                <!--                    android:textColor="#FFFFFFFF"-->
-                <!--                    android:textSize="17sp" />-->
-
-                <!--                <Button-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="48dp"-->
-                <!--                    android:layout_marginTop="10dp"-->
-                <!--                    android:background="@drawable/bg_list_item"-->
-                <!--                    android:gravity="center"-->
-                <!--                    android:onClick="@{()->activity.startHelpActivity()}"-->
-                <!--                    android:text="@string/help_title"-->
-                <!--                    android:textColor="#FFFFFFFF"-->
-                <!--                    android:textSize="17sp" />-->
 
 
             </LinearLayout>

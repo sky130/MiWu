@@ -87,4 +87,6 @@
     <string name="relative_humidity">相对湿度</string>
     <string name="battery">电池电量</string>
     <string name="pet_food_out">喂食机出粮</string>
+    <string name="dev_desc">有可能损坏米屋的应用结构\n如不清楚如何使用请退出</string>
+    <string name="dev_mode">开发者模式</string>
 </resources>

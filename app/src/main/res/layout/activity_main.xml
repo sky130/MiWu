@@ -30,8 +30,7 @@
 
         <com.github.miwu.widget.app.AppTitleBar
             android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/WearTitleBar"
             app:title="@string/app_name" />
     </FrameLayout>
 </layout>

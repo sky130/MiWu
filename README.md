@@ -1,13 +1,16 @@
-<!--<div align="center">
+<div align="center">
+
 
 <img width="85" height="85" alt="" src="./image/icon.png" style="transform: translateY(42px)">
 
 # 米屋
 
 第三方手表版米家应用
-</div>-->
+</div>
 
+<!--
 ![MiWu](https://socialify.git.ci/sky130/MiWu/image?description=1&font=Jost&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fsky130%2FMiWu%2Fmaster%2Fimage%2Ficon.png&name=1&owner=1&pulls=1&stargazers=1&theme=Light)
+-->
 
 ## 实机截图
 

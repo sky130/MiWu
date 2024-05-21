@@ -51,11 +51,11 @@ object MiotManager {
     private val RANDOM_TEMP_CHARS = "0123456789ABCDEF".toCharArray()
     private val random = Random.Default
     internal val gson = Gson()
-    internal val base64Encode : (String)->String = {
+    internal var base64Encode : (ByteArray) -> String = {
         Base64.getEncoder().encodeToString(it)
     }
 
-    fun configBase64(encode:(String)->String){
+    fun configBase64(encode:(ByteArray) -> String){
         base64Encode = encode
     }
 

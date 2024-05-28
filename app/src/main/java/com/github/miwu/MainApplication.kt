@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import miot.kotlin.Miot
 import miot.kotlin.MiotManager
+import android.util.Base64
 
 class MainApplication : Application() {
 
@@ -38,6 +39,9 @@ class MainApplication : Application() {
         super.onCreate()
         kndroidxConfig {
             context = applicationContext
+        }
+        MiotManager.configBase64{
+            Base64.encodeToString(it.toBytes(), Base64.DEFAULT)
         }
         initClassList()
         CrashHandler.instance.init(this)

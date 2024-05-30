@@ -19,7 +19,6 @@ class AppSeekBar(
     private var minProgress: Int = 0
     private var maxProgress: Int = 100
     var listener: ((Int) -> Unit)? = null
-    var isOnTouching = false
 
     init {
         thumb = null
@@ -29,25 +28,9 @@ class AppSeekBar(
 
 
 
-    private var x1 = 0f
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         parent.requestDisallowInterceptTouchEvent(true)
-        when (event.action) {
-            MotionEvent.ACTION_UP -> {
-                isOnTouching = false
-            }
-            MotionEvent.ACTION_DOWN->{
-                x1 = event.x
-            }
-            MotionEvent.ACTION_MOVE->{
-                val x2 = event.x
-                if(x1 - x2 > 50 || x2 - x1 > 50) {
-                    // 解决手势冲突问题
-                }
-            }
-        }
-        return super.onTouchEvent(event)
+        return super.dispatchTouchEvent(event)
     }
 
 

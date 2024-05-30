@@ -26,7 +26,7 @@ android {
     }
     defaultConfig {
         applicationId = "com.github.miwu"
-        minSdk = 26
+        minSdk = 21
         targetSdk = 34
         versionCode = 8
         versionName = "2.0.6"

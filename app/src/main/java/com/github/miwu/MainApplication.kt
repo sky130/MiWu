@@ -41,7 +41,7 @@ class MainApplication : Application() {
             context = applicationContext
         }
         MiotManager.configBase64{
-            Base64.encodeToString(it.toByteArray(), Base64.DEFAULT)
+            Base64.encodeToString(it Base64.DEFAULT)
         }
         initClassList()
         CrashHandler.instance.init(this)

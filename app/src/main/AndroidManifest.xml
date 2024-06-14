@@ -7,7 +7,7 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
-    <uses-sdk tools:overrideLibrary="androidx.wear.watchface.complications,androidx.wear.protolayout.renderer , androidx.wear.protolayout,androidx.wear.protolayout.expression.pipeline,  androidx.wear.protolayout.material,androidx.wear.protolayout.expression,com.google.android.horologist.compose.tools,  androidx.wear.tiles,  androidx.wear.protolayout.materialcore,  androidx.wear.watchface.complications.data,  androidx.wear.compose.foundation,  androidx.wear.compose.material, com.google.android.horologist.tiles,  androidx.wear.watchface.complications.datasource, kndroidx.wear.tile" />
+    <uses-sdk tools:overrideLibrary="androidx.wear.watchface.complications,androidx.wear.protolayout.renderer,androidx.wear.compose.navigation , androidx.wear.protolayout,androidx.wear.protolayout.expression.pipeline,  androidx.wear.protolayout.material,androidx.wear.protolayout.expression,com.google.android.horologist.compose.tools,  androidx.wear.tiles,  androidx.wear.protolayout.materialcore,  androidx.wear.watchface.complications.data,  androidx.wear.compose.foundation,  androidx.wear.compose.material, com.google.android.horologist.tiles,  androidx.wear.watchface.complications.datasource, kndroidx.wear.tile" />
     
     <application
         android:name=".MainApplication"

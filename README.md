@@ -6,6 +6,9 @@
 # 米屋
 
 第三方手表版米家应用
+
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sky130/MiWu)](https://github.com/sky130/MiWu/releases)  ![GitHub All Releases](https://img.shields.io/github/downloads/sky130/MiWu/total) ![GitHub stars](https://img.shields.io/github/stars/sky130/MiWu?style=flat) ![GitHub forks](https://img.shields.io/github/forks/sky130/MiWu)
+
 </div>
 
 <!--

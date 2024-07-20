@@ -10,6 +10,7 @@ import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import miot.kotlin.MiotManager.base64Encode
+import miot.kotlin.MiotManager.base64Decode
 
 fun generateSignedNonce(secret: String, nonce: String): String {
     val sha = MessageDigest.getInstance("SHA-256")

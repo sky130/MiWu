@@ -163,8 +163,8 @@ object AppRepository {
                     _sceneFlow.emit(scenes)
                 }
             }
-        }.onFailure {
-            "加载情景失败".toast()
+        }.onFailure { error ->
+            "加载情景失败\${error.toString()}\${error.message}".toast()
         }.onNull {
             "加载情景失败".toast()
         }.onEach {

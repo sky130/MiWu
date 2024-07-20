@@ -164,7 +164,7 @@ object AppRepository {
                 }
             }
         }.onFailure { error ->
-            "加载情景失败\${error.toString()}\${error.message}".toast()
+            "加载情景失败\n${error.toString()}\n${error.message}".toast()
         }.onNull {
             "加载情景失败".toast()
         }.onEach {

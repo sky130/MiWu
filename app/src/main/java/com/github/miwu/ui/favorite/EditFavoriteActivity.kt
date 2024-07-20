@@ -35,16 +35,16 @@ class EditFavoriteActivity : ViewActivityX<ActivityEditFavoriteBinding, EditFavo
 
     override fun init() {
         "左滑可以删除设备".toast()
-        binding.recycler.liveAdapter = liveAdapter
-//        binding.recycler.adapter = adapter
-//        itemTouchHelper.attachToRecyclerView(binding.recycler)
-//        viewModel.viewModelScope.launch {
-//            viewModel.deviceFlow.collectLatest {
-//                val list = ArrayList(it)
-//                list.sortBy { it.index }
-//                adapter.updateList(list)
-//            }
-//        }
+        //binding.recycler.liveAdapter = liveAdapter
+        binding.recycler.adapter = adapter
+        itemTouchHelper.attachToRecyclerView(binding.recycler)
+        viewModel.viewModelScope.launch {
+            viewModel.deviceFlow.collectLatest {
+                val list = ArrayList(it)
+                list.sortBy { it.index }
+                adapter.updateList(list)
+            }
+        }
     }
 
 

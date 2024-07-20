@@ -148,8 +148,8 @@ object AppRepository {
             }
         }.onNull {
             "加载家庭失败".toast()
-        }.onFailure {
-            "加载家庭失败".toast()
+        }.onFailure { error ->
+            "加载家庭失败\${error.toString()}\${error.message}".toast()
         }.call(scope)
     }
 

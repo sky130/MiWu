@@ -13,15 +13,15 @@ import miot.kotlin.MiotManager.base64Encode
 
 fun generateSignedNonce(secret: String, nonce: String): String {
     val sha = MessageDigest.getInstance("SHA-256")
-    sha.update(Base64.getDecoder().decode(secret))
-    sha.update(Base64.getDecoder().decode(nonce))
+    sha.update(base64Dcode(secret))
+    sha.update(base64Dcode(nonce))
     return base64Encode(sha.digest())
 }
 
 fun generateSignature(uri: String, signedNonce: String, nonce: String, data: String): String {
     val sign = "$uri&$signedNonce&$nonce&data=$data".toByteArray(StandardCharsets.UTF_8)
     val mac = Mac.getInstance("HmacSHA256")
-    mac.init(SecretKeySpec(Base64.getDecoder().decode(signedNonce), "HmacSHA256"))
+    mac.init(SecretKeySpec(base64Dncode(signedNonce), "HmacSHA256"))
     val digest = mac.doFinal(sign)
     return base64Encode(digest)
 }

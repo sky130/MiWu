@@ -40,9 +40,14 @@ class MainApplication : Application() {
         kndroidxConfig {
             context = applicationContext
         }
-        MiotManager.configBase64{
-            Base64.encodeToString(it,Base64.NO_WRAP)
-        }
+        MiotManager.configBase64(
+            encode = {
+                Base64.encodeToString(it, Base64.NO_WRAP)
+            },
+            decode = {
+                Base64.decode(it, Base64.NO_WRAP)
+            }
+        )
         initClassList()
         CrashHandler.instance.init(this)
         if (AppPreferences.userId.isNotEmpty()) {

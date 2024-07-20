@@ -54,11 +54,11 @@ object MiotManager {
     internal var base64Encode : (ByteArray) -> String = {
         Base64.getEncoder().encodeToString(it)
     }
-    internal var base64Decode : (ByteArray) -> ByteArray = {
+    internal var base64Decode : (String) -> ByteArray = {
         Base64.getDecoder().decode(signedNonce)
     }
 
-    fun configBase64(encode:(ByteArray) -> String, decode:(ByteArray) -> ByteArray){
+    fun configBase64(encode:(ByteArray) -> String, decode:(String) -> ByteArray){
         base64Encode = encode
         base64Decode = decode
     }

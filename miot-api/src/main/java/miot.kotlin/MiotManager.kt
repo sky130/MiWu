@@ -54,9 +54,13 @@ object MiotManager {
     internal var base64Encode : (ByteArray) -> String = {
         Base64.getEncoder().encodeToString(it)
     }
+    internal var base64Decode : (ByteArray) -> ByteArray = {
+        Base64.getDecoder().decode(signedNonce)
+    }
 
-    fun configBase64(encode:(ByteArray) -> String){
+    fun configBase64(encode:(ByteArray) -> String, decode:(ByteArray) -> ByteArray){
         base64Encode = encode
+        base64Decode = decode
     }
 
     fun get(url: String, body: RequestBody? = null) = loginClient.run {

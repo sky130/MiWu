@@ -28,8 +28,8 @@ android {
         applicationId = "com.github.miwu"
         minSdk = 21
         targetSdk = 34
-        versionCode = 9
-        versionName = "2.0.7"
+        versionCode = 10
+        versionName = "2.0.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")

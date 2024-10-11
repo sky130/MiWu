@@ -72,8 +72,8 @@
     <string name="feed_num">%1$s份 (约 %2$sg)</string>
     <string name="auto_feed_plan">自动喂食计划</string>
     <string name="Normal">正常</string>
-    <string name="miwu_tips">请在设备页中收藏设备</string>
-    <string name="miwu_no_device">暂无收藏设备</string>
+    <string name="miwu_tips">可在设备页中收藏设备</string>
+    <string name="miwu_no_device">暂无收藏设备，左右滑动去设备页收藏</string>
     <string name="must_to_read">登录后默认已同意</string>
     <string name="plz_user_mi_app_scan_qrcode">请使用米家等\n小米旗下应用扫码登录</string>
 

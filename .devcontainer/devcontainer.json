@@ -1,0 +1,11 @@
+{
+  "name": "minimal_ubuntu",
+  "image": "ubuntu:latest",
+  "onCreateCommand": {
+    "update": "apt update && apt -y upgrade",
+    "installDependencies": "apt install -y git"
+  },
+  "customizations": {
+    "jetbrains" : {"backend": "IntelliJ"},
+  }
+}

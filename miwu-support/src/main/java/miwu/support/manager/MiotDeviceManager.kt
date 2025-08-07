@@ -122,7 +122,7 @@ class MiotDeviceManager(
                     }
                 }
 
-                if (widgetClass.hasValueList()) {
+                if (widgetClass.hasValueList() || property.valueList?.isNotEmpty() ?: false) {
                     val pointTo = widgetClass.getPointTo()
                     when(pointTo){
                         ValueList::class -> {

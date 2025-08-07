@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.about.AboutViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.about.AboutActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <requestFocus />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/device_activity_padding"
+                android:paddingTop="@dimen/activity_padding_top"
+                android:paddingBottom="50dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:maxHeight="62dp"
+                    android:src="@drawable/ic_miwu_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/miwu"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/unofficial_mihome_app"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{viewModel.versionName}"
+                    android:textSize="13sp"
+                    tools:text="2.0.0" />
+
+                <Button
+                    style="@style/WearButton"
+                    android:onClick="@{()->activity.startLicenseActivity()}"
+                    android:text="@string/license_for_use" />
+
+                <Button
+                    style="@style/WearButton"
+
+                    android:onClick="@{()->activity.startCrashActivity()}"
+                    android:text="@string/crash_log"/>
+
+
+                <Button
+                    style="@style/WearButton"
+                    android:onClick="@{()->activity.startHelpActivity()}"
+                    android:text="@string/help_title" />
+
+                <TextView
+                    style="@style/WearDescText"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/app_url_text"/>
+
+                <TextView
+                    style="@style/WearDescSubText"
+                    android:text="@string/github_url"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+        <com.github.miwu.view.AppTitleBar
+            style="@style/WearTitleBar"
+            app:back="true"
+            app:title="@string/about" />
+    </FrameLayout>
+</layout>

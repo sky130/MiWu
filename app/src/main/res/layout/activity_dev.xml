@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.about.AboutViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.about.AboutActivity" />
+    </data>
+
+    <FrameLayout style="@style/WearBox">
+
+        <ScrollView
+            android:id="@+id/scroll"
+            style="@style/WearScrollLayout">
+
+            <requestFocus />
+
+            <LinearLayout style="@style/WearLayout">
+
+                <Button
+                    android:id="@+id/gotoLicense"
+                    style="@style/WearButton"
+                    android:onClick="@{()->activity.startLicenseActivity()}"
+                    android:text="@string/license_for_use" />
+
+                <Button
+                    style="@style/WearButton"
+                    android:onClick="@{()->activity.startCrashActivity()}"
+                    android:text="@string/crash_log" />
+
+
+                <Button
+                    style="@style/WearButton"
+                    android:onClick="@{()->activity.startHelpActivity()}"
+                    android:text="@string/help_title" />
+
+                <TextView
+                    style="@style/WearDescText"
+                    android:text="@string/dev_mode" />
+
+                <TextView
+                    style="@style/WearDescSubText"
+                    android:text="@string/dev_desc" />
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+        <com.github.miwu.view.AppTitleBar
+            style="@style/WearTitleBar"
+            app:back="true"
+            app:title="@string/dev_mode" />
+    </FrameLayout>
+</layout>

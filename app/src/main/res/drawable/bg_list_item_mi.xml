@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/lrc_bg">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <corners android:radius="15dp" />
+            <gradient
+                android:angle="-135"
+                android:endColor="#b3202020"
+                android:centerX="0.98"
+                android:centerY="0.02"
+                android:gradientRadius="25dp"
+                android:startColor="@color/mi_green"
+                android:type="radial" />
+            <!--            <solid android:color="#b3202020" />-->
+        </shape>
+    </item>
+</ripple>

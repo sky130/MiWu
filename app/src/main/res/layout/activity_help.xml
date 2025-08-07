@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.help.HelpViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.help.HelpActivity" />
+    </data>
+
+    <FrameLayout
+        style="@style/WearBox">
+
+        <com.github.miwu.view.SmoothRecyclerView
+            android:id="@+id/recycler"
+            style="@style/WearRecycler"
+            app:item="@{viewModel.list}"
+            app:itemLayout="@{@layout/item_help}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            <requestFocus />
+        </com.github.miwu.view.SmoothRecyclerView>
+
+        <com.github.miwu.view.AppTitleBar
+            style="@style/WearTitleBar"
+            app:back="true"
+            app:title="@string/help_title" />
+    </FrameLayout>
+</layout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fragment"
+            type="com.github.miwu.ui.main.fragment.MiWuFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.main.MainViewModel" />
+    </data>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="@{fragment.isEmpty() ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone">
+
+            <ImageView
+                android:id="@+id/deviceImage"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/empty_list_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/miwu_no_device"
+                android:textSize="17sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/miwu_tips"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <com.github.miwu.view.SmoothRecyclerView
+            android:id="@+id/recycler"
+            style="@style/WearRecycler"
+
+            android:visibility="@{fragment.isEmpty() ? View.GONE : View.VISIBLE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:visibility="visible">
+
+            <requestFocus />
+        </com.github.miwu.view.SmoothRecyclerView>
+
+    </FrameLayout>
+
+
+</layout>

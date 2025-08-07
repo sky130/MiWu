@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Valkyrie.Settings">
+    <option name="iconPackDestination" value="E:\AndroidStudioProjects\MiWuV3\app\src\main\res\drawable" />
+    <option name="iconPackName" value="ValkyrieIcons" />
+    <option name="iconPackPackage" value="io.github.composegears.valkyrie" />
+    <option name="packageName" value="io.github.composegears.valkyrie" />
+  </component>
+</project>

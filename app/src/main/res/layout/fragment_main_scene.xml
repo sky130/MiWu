@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="fragment"
+            type="com.github.miwu.ui.main.fragment.SceneFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.main.MainViewModel" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        app:onRefresh="@{() -> viewModel.loadScene()}"
+        app:isRefreshing="@{viewModel.appRepository.scenes}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:visibility="visible"
+                app:state="@{viewModel.sceneState}"
+                app:reverse="@{false}">
+
+                <ImageView
+                    android:id="@+id/deviceImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:src="@drawable/empty_list_icon"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/scene_tip"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/scene_small_tip"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <com.github.miwu.view.SmoothRecyclerView
+                android:id="@+id/recycler"
+                android:visibility="@{viewModel.sceneState.toVisibility(true)}"
+                style="@style/WearRecycler"
+                app:item="@{viewModel.scenes}"
+                app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
+                app:itemEventHandler="@{fragment}"
+                app:itemLayout="@{@layout/item_mi_scene}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.crash.CrashViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.crash.CrashActivity" />
+    </data>
+
+    <FrameLayout
+        style="@style/WearBox">
+
+        <ScrollView
+            android:id="@+id/recycler"
+            style="@style/WearScrollLayout">
+
+            <LinearLayout
+                style="@style/WearLayout">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@{@string/crash_path + viewModel.crashPath}" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/check_crash" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.crashText}" />
+
+            </LinearLayout>
+
+
+            <requestFocus />
+        </ScrollView>
+
+        <com.github.miwu.view.AppTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:back="true"
+            app:title="@string/crash_log" />
+    </FrameLayout>
+</layout>

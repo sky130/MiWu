@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="lrc">#FFFFFFFF</color>
+    <color name="gray">#353638</color>
+    <color name="item_bg">#b3202020</color>
+    <color name="transparent">#00000000</color>
+    <color name="blue">#6186FC</color>
+    <color name="highlight">#0E84FF</color>
+    <color name="dialog_black">#E6000000</color>
+    <color name="lrc_disable">#80FFFFFF</color>
+    <color name="lrc_bg">#33FFFFFF</color>
+    <color name="gray_light">#FFE0E0E0</color>
+    <color name="mi_green">#57D1B8</color>
+    <color name="mi_green_tile">#7057D1B8</color>
+    <color name="red" tools:ignore="MissingDefaultResource">#FC4850</color>
+    <color name="orange">#FE733A</color>
+    <color name="color_temperature_start">#FEBF23</color>
+    <color name="color_temperature_end">#FFE9AE</color>
+
+</resources>

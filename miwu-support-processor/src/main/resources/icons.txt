@@ -1,0 +1,16 @@
+ArrowUp
+ArrowDown
+CurtainOpen
+CurtainClose
+Down
+Hot
+Ice
+Power
+Auto
+Cool
+Dry
+Heat
+Fan
+Sleep
+Favorite
+Brightness

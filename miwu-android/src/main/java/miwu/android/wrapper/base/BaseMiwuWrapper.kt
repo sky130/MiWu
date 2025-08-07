@@ -70,7 +70,10 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
 
     abstract fun initWrapper()
 
+    protected inline fun <reified VB : ViewBinding> viewBinding(crossinline inflate: (LayoutInflater) -> VB) = lazy { inflate(LayoutInflater.from(context)) }
+
     @Suppress("UNCHECKED_CAST")
+    @Deprecated("avoid unchecked cast", replaceWith= ReplaceWith("viewBinding(inflate: (LayoutInflater) -> VB)"))
     protected inline fun <reified VB : ViewBinding> viewBinding() =
         lazy {
             (VB::class.java.getDeclaredMethod(

@@ -13,7 +13,7 @@ import miwu.widget.ColorTemperatureSeekbar
 class ColorTemperatureSeekbarWrapper(context: Context, widget: MiwuWidget<Int>) :
     BaseMiwuWrapper<Int>(context, widget), OnSeekBarChangeListener {
 
-    private val binding by viewBinding<MiotWidgetColorTemperatureSeekbarBinding>()
+    private val binding by viewBinding(MiotWidgetColorTemperatureSeekbarBinding::inflate)
     override val view get() = binding.root
 
     override fun onUpdateValue(value: Int) {

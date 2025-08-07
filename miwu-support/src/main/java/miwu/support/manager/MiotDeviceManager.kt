@@ -123,12 +123,26 @@ class MiotDeviceManager(
                 }
 
                 if (widgetClass.hasValueList()) {
-                    property.valueList?.forEach {
-                        val widget = widgetClass.createWidget().config()
-                        widget._desc = it.description
-                        widget._descTranslation = it.descriptionTranslation
-                        widget.setDefaultValue(it.value)
-                        addWidget(widget, widgetClass)
+                    val pointTo = widgetClass.getPointTo()
+                    when(pointTo){
+                        ValueList::class -> {
+                            property.valueList?.forEach {
+                                val widget = widgetClass.createWidget().config()
+                                widget._desc = it.description
+                                widget._descTranslation = it.descriptionTranslation
+                                widget.setDefaultValue(it.value)
+                                addWidget(widget, widgetClass)
+                            }
+                        }
+                        MiwuWidget::class -> {
+                            property.valueList?.forEach {
+                                val widget = (pointTo.java as Class<MiwuWidget<*>>).createWidget().config()
+                                widget._desc = it.description
+                                widget._descTranslation = it.descriptionTranslation
+                                widget.setDefaultValue(it.value)
+                                addWidget(widget, widgetClass)
+                            }
+                        }
                     }
                 } else {
                     val widget = widgetClass.createWidget().config()
@@ -195,6 +209,8 @@ class MiotDeviceManager(
 
 
     private fun Class<MiwuWidget<*>>.hasValueList() = annotations.find { it is ValueList } != null
+
+    private fun Class<MiwuWidget<*>>.getPointTo() = (annotations.find { it is ValueList } as ValueList).pointTo
 
     private fun Class<MiwuWidget<*>>.getPosition() =
         annotations.find { it is Body || it is Footer || it is Header || it is SubHeader || it is SubFooter }

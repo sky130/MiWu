@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="miwu.miot.model.miot.MiotHomes.Result.Home" />
+
+        <variable
+            name="handler"
+            type="com.github.miwu.ui.home.HomeViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginVertical="3dp"
+        android:background="@{!handler.isCurrentHome(item) ?@drawable/bg_list_item :@drawable/bg_list_item_mi}"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        tools:background="@drawable/bg_list_item_mi"
+        android:padding="12dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true">
+
+            <TextView
+                android:id="@+id/device_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:duplicateParentState="true"
+                android:singleLine="true"
+                android:text="@{item.name}"
+                android:textColor="@drawable/list_title"
+                android:textSize="17sp"
+                tools:text="你的家" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/device_item_info"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:duplicateParentState="true"-->
+<!--                android:layout_gravity="end|center_vertical"-->
+<!--                android:singleLine="true"-->
+<!--                android:text="@{handler.isHome(item) ? `当前选择`   : ``}"-->
+<!--                android:textColor="@drawable/list_title"-->
+<!--                android:textSize="12sp"-->
+<!--                tools:text="当前选择" />-->
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/device_item_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="13sp"
+            android:text="@{handler.getDesc(item)}"
+            tools:text="共享家庭" />
+    </LinearLayout>
+</layout>

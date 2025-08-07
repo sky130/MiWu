@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fragment"
+            type="com.github.miwu.ui.main.fragment.DeviceFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.main.MainViewModel" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isRefreshing="@{viewModel.appRepository.devices}"
+        app:onRefresh="@{() -> viewModel.loadScene()}">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:reverse="@{false}"
+                app:state="@{viewModel.deviceState}">
+
+                <ImageView
+                    android:id="@+id/deviceImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/empty_list_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/device_tip"
+                    android:textSize="17sp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/device_small_tip"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <com.github.miwu.view.SmoothRecyclerView
+                android:id="@+id/recycler"
+                style="@style/WearRecycler"
+                android:visibility="@{viewModel.deviceState.toVisibility(true)}"
+                app:item="@{viewModel.devices}"
+                app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
+                app:itemEventHandler="@{fragment}"
+                app:itemLayout="@{@layout/item_mi_device}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:viewModel="@{viewModel}">
+
+                <requestFocus />
+            </com.github.miwu.view.SmoothRecyclerView>
+
+        </FrameLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

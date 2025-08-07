@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.home.HomeViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.home.HomeActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.miwu.view.SmoothRecyclerView
+            android:id="@+id/recycler"
+            style="@style/WearRecycler"
+            app:item="@{viewModel.homeList}"
+            app:itemClick="@{(item,i)->activity.onItemClick(item)}"
+            app:itemEventHandler="@{viewModel}"
+            app:itemLayout="@{@layout/item_mi_home}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            <requestFocus />
+        </com.github.miwu.view.SmoothRecyclerView>
+
+        <com.github.miwu.view.AppTitleBar
+            style="@style/WearTitleBar"
+            app:back="true"
+            app:title="@string/switch_home" />
+    </FrameLayout>
+</layout>

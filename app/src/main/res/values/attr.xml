@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <attr name="title" format="string" />
+    <attr name="maxProgress" format="integer" tools:ignore="PrivateResource" />
+    <attr name="minProgress" format="integer" tools:ignore="PrivateResource" />
+
+    <attr name="progressBarColor" format="color" tools:ignore="PrivateResource" />
+
+    <attr name="unit" format="string" />
+    <attr name="siid" format="integer" />
+    <attr name="piid" format="integer" />
+    <attr name="value" format="string" />
+    <attr name="dotSize" format="integer" />
+
+
+
+    <declare-styleable name="MiSeekBarCard">
+        <attr name="title" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
+        <attr name="progressBarColor" />
+        <attr name="unit" />
+        <attr name="piid" />
+        <attr name="siid" />
+    </declare-styleable>
+
+    <declare-styleable name="MiRoundSeekBarCard">
+        <attr name="title" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
+        <attr name="progressBarColorStart" format="color" />
+        <attr name="progressBarColorEnd" format="color" />
+        <attr name="unit" />
+        <attr name="piid" />
+        <attr name="siid" />
+
+    </declare-styleable>
+
+    <declare-styleable name="MainTitleBar">
+        <attr name="title" />
+    </declare-styleable>
+
+    <declare-styleable name="BackTitleBar">
+        <attr name="title" />
+    </declare-styleable>
+
+    <declare-styleable name="AppTitleBar">
+        <attr name="title" />
+        <attr name="back" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MiSwitchCard">
+        <attr name="piid" />
+        <attr name="siid" />
+    </declare-styleable>
+
+    <declare-styleable name="MiTextView">
+        <attr name="title" />
+        <attr name="unit" />
+        <attr name="piid" />
+        <attr name="siid" />
+    </declare-styleable>
+
+    <declare-styleable name="MiIndicators">
+        <attr name="dotSize" />
+    </declare-styleable>
+
+    <declare-styleable name="MiLineIndicators">
+        <attr name="dotSize" />
+        <!--        <attr name="dotWidth"/>-->
+    </declare-styleable>
+
+    <declare-styleable name="MiIndicatorsCard">
+        <attr name="title" />
+        <attr name="unit" />
+        <attr name="dotMode" format="integer" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
+    </declare-styleable>
+
+    <declare-styleable name="MiButtonIndicatorsCard">
+        <attr name="title" />
+    </declare-styleable>
+
+    <declare-styleable name="MiButtonCard">
+        <attr name="title" />
+        <attr name="srcIcon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MiButtonIndicators">
+        <attr name="title" />
+        <attr name="unit" />
+        <attr name="maxProgress" />
+        <attr name="minProgress" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-sdk tools:overrideLibrary="androidx.wear.tiles.tooling.preview,androidx.wear.compose.material.core,androidx.wear,androidx.wear.watchface.complications,androidx.wear.protolayout.renderer,androidx.wear.compose.navigation , androidx.wear.protolayout,androidx.wear.protolayout.expression.pipeline,  androidx.wear.protolayout.material,androidx.wear.protolayout.expression,com.google.android.horologist.compose.tools,  androidx.wear.tiles,  androidx.wear.protolayout.materialcore,  androidx.wear.watchface.complications.data,  androidx.wear.compose.foundation,  androidx.wear.compose.material, com.google.android.horologist.tiles,  androidx.wear.watchface.complications.datasource, kndroidx.wear.tile" />
+
+    <application
+        android:name=".MainApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MiHome"
+        tools:targetApi="31">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.crash.CrashActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.smart.SmartActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <activity
+            android:name=".ui.help.HelpActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.favorite.EditFavoriteActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity="android.task.tile_edit">
+            <intent-filter>
+                <action android:name="com.github.miwu.action.EditFavoriteActivity" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.google.android.clockwork.tiles.category.PROVIDER_CONFIG" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.device.DeviceActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.about.AboutActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.license.LicenseActivity"
+            android:exported="false"
+            android:taskAffinity="" />
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.MiHome.Splash"
+            tools:ignore="WearSplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+<!--        <service-->
+<!--            android:name=".service.QuickActionTileService"-->
+<!--            android:description="@string/tile_description"-->
+<!--            android:exported="true"-->
+<!--            android:icon="@mipmap/ic_launcher"-->
+<!--            android:label="@string/tile_description"-->
+<!--            android:networkSecurityConfig="@xml/network_config"-->
+<!--            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER"-->
+<!--            android:roundIcon="@mipmap/ic_launcher_round">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />-->
+<!--            </intent-filter>-->
+
+<!--            <meta-data-->
+<!--                android:name="androidx.wear.tiles.PREVIEW"-->
+<!--                android:resource="@drawable/img_tile_quick" />-->
+
+<!--            <meta-data-->
+<!--                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"-->
+<!--                android:value="com.github.miwu.action.EditFavoriteActivity" />-->
+<!--        </service>-->
+    </application>
+</manifest>

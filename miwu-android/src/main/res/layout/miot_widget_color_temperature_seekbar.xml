@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <miwu.android.view.app.AppTrackSeekbar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/miot_widget_card_height"
+        android:minHeight="@dimen/miot_widget_card_height"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
+        android:progressDrawable="@drawable/seek_color_temperature"
+        android:splitTrack="false"
+        android:thumb="@drawable/thumb_shape"
+        android:thumbOffset="-6dp"
+        tools:progress="0" />
+
+</FrameLayout>

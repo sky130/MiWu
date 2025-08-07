@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.crash.CrashViewModel" />
+
+        <variable
+            name="dialog"
+            type="com.github.miwu.ui.crash.CrashDialog" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:overScrollMode="never"
+            android:paddingHorizontal="@dimen/device_activity_padding"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:scrollbars="vertical">
+
+            <TextView
+                tools:text="@string/crash_test"
+                android:id="@+id/text"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <requestFocus />
+        </ScrollView>
+
+        <com.github.miwu.view.AppTitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:back="true"
+            android:id="@+id/title"
+            app:title="@string/crash_log" />
+    </FrameLayout>
+</layout>

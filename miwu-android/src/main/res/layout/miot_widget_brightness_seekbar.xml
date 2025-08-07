@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/device_miwu_layout_margin_top"
+    android:orientation="vertical">
+
+    <miwu.android.view.app.AppSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/miot_widget_card_height"
+        android:minHeight="@dimen/miot_widget_card_height"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
+        android:progressDrawable="@drawable/seek_brightness"
+        tools:progress="50" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="15dp"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:importantForAccessibility="no"
+        android:maxWidth="25dp"
+        android:maxHeight="25dp"
+        tools:src="@drawable/ic_brightness" />
+</FrameLayout>

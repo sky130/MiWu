@@ -1,0 +1,22 @@
+<resources>
+    <string name="Straight">直吹风</string>
+    <string name="Natural">自然风</string>
+    <string name="Smart">智能风</string>
+    <string name="Sleep">睡眠风</string>
+    <string name="Normal">正常</string>
+    <string name="disabled">已关闭</string>
+    <string name="Temperature">温度</string>
+    <string name="relative_humidity">相对湿度</string>
+    <string name="battery">电池电量</string>
+    <string name="pet_food_out">喂食机出粮</string>
+    <string name="Auto">自动</string>
+    <string name="Cool">制冷</string>
+    <string name="Dry">除湿</string>
+    <string name="Heat">制热</string>
+    <string name="Fan">送风</string>
+    <string name="Low">低速</string>
+    <string name="LowFood">即将见底</string>
+    <string name="EmptyFood">已经没得吃了</string>
+    <string name="Medium">中速</string>
+    <string name="High">高速</string>
+</resources>

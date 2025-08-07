@@ -12,7 +12,7 @@ import miwu.widget.DoubleValueController
 class DoubleValueControllerWrapper(context: Context, widget: MiwuWidget<Double>) :
     BaseMiwuWrapper<Double>(context, widget) {
 
-    private val binding by viewBinding<MiotWidgetIntValueControllerBinding>()
+    private val binding by viewBinding(MiotWidgetIntValueControllerBinding::inflate)
     private var value = 0.0
         get() = field
         set(value) {

@@ -14,7 +14,7 @@ import miwu.widget.SwitchButton
 class SwitchButtonWrapper(context: Context, widget: MiwuWidget<Boolean>) :
     MiwuWrapper<Boolean>(context, widget) {
 
-    private val binding by viewBinding<MiotWidgetListButtonBinding>()
+    private val binding by viewBinding(MiotWidgetListButtonBinding::inflate)
     private var value = false
 
     override val view get() = binding.root

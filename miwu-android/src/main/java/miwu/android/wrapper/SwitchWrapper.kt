@@ -15,7 +15,7 @@ class SwitchWrapper(context: Context, widget: MiwuWidget<Boolean>) :
     MiwuWrapper<Boolean>(context, widget) {
 
     private var value = false
-    private val binding by viewBinding<MiotWidgetSwitchBinding>()
+    private val binding by viewBinding(MiotWidgetSwitchBinding::inflate)
     override val view get() = binding.root
 
     override fun onUpdateValue(

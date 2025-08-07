@@ -13,7 +13,7 @@ import miwu.widget.IntSeekbar
 class IntSeekbarWrapper(context: Context, widget: MiwuWidget<Int>) :
     BaseMiwuWrapper<Int>(context, widget), OnSeekBarChangeListener {
 
-    private val binding by viewBinding<MiotWidgetSeekbarBinding>()
+    private val binding by viewBinding(MiotWidgetSeekbarBinding::inflate)
     override val view get() = binding.root
 
     override fun onUpdateValue(value: Int) {

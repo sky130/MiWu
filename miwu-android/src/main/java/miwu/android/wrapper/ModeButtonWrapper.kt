@@ -13,7 +13,7 @@ import miwu.widget.ModeButton
 @Wrapper(ModeButton::class)
 class ModeButtonWrapper(context: Context, widget: MiwuWidget<Int>) : MiwuWrapper<Int>(context, widget) {
 
-    private val binding by viewBinding<MiotWidgetListButtonBinding>()
+    private val binding by viewBinding(MiotWidgetListButtonBinding::inflate)
     override val view get() = binding.root
     override val onClickView get() = binding.on
 

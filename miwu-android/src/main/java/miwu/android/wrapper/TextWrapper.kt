@@ -11,7 +11,7 @@ import miwu.widget.Text
 class TextWrapper(context: Context, widget: MiwuWidget<String>) :
     BaseMiwuWrapper<String>(context, widget) {
 
-    private val binding by viewBinding<MiotWidgetTextBinding>()
+    private val binding by viewBinding(MiotWidgetTextBinding::inflate)
     override val view get() = binding.root
 
     override fun onUpdateValue(value: String) {

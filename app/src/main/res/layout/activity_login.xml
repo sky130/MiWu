@@ -16,16 +16,14 @@
         <import type="android.view.View" />
     </data>
 
-    <FrameLayout
-        style="@style/WearBox">
+    <FrameLayout style="@style/WearBox">
 
 
         <ScrollView
             android:id="@+id/scroll"
             style="@style/WearScrollLayout">
 
-            <LinearLayout
-                style="@style/WearLayout">
+            <LinearLayout style="@style/WearLayout">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -55,25 +53,15 @@
                     tools:visibility="gone">
 
                     <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_item"
+                        style="@style/MiwuEditView"
                         android:hint="@string/login_edit_user"
-                        android:padding="15dp"
-                        android:singleLine="true"
-                        android:text="@={viewModel.user}"
-                        android:textSize="16sp" />
+                        android:text="@={viewModel.user}" />
 
                     <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/MiwuEditView"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_item"
                         android:hint="@string/login_edit_pwd"
-                        android:padding="15dp"
-                        android:singleLine="true"
-                        android:text="@={viewModel.password}"
-                        android:textSize="16sp" />
+                        android:text="@={viewModel.password}" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -130,8 +118,8 @@
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
                     android:gravity="center">
 
                     <TextView
@@ -165,8 +153,7 @@
         </ScrollView>
 
         <com.github.miwu.view.AppTitleBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/WearTitleBar"
             app:back="false"
             app:title="@string/login_bar" />
     </FrameLayout>

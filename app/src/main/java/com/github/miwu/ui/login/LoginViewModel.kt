@@ -19,6 +19,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import miwu.miot.MiotManager
 import miwu.miot.MiotManagerImpl
 import miwu.miot.model.MiotUser
@@ -50,7 +51,9 @@ class LoginViewModel(internal val manager : MiotManager, val appRepository: AppR
                 manager.Login.loginByQrCode(qrcode.loginUrl)!!
             }.onFailure { e ->
                 if (e is SocketTimeoutException || e is TimeoutException) return@launch qrcode()
-                "登录失败,原因可能为${e?.message ?: "unknown"}".toast()
+                withContext(Dispatchers.Main){
+                    "登录失败,原因可能为${e.message ?: "unknown"}".toast()
+                }
             }.onSuccess {
                 _miotUser.emit(it)
             }

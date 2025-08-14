@@ -14,11 +14,11 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSetting.isCrash){
+        if (AppSetting.isCrash.value){
             start<CrashActivity>()
             return finish()
         }
-        if (AppSetting.userId.isEmpty()){
+        if (AppSetting.userId.value.isEmpty()){
             start<LoginActivity>()
         }else{
             start<MainActivity>()

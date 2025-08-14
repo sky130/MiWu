@@ -16,7 +16,7 @@ class HomeViewModel(val appRepository: AppRepository) : ViewModel() {
         .map { it.getOrNull() ?: emptyList() }
         .asLiveData()
 
-    fun isCurrentHome(item: MiotHome) = item.id.toLong() == AppSetting.homeId
+    fun isCurrentHome(item: MiotHome) = item.id.toLong() == AppSetting.homeId.value
 
     fun getDesc(item: MiotHome): String {
         return if (!item.isShareHome) {

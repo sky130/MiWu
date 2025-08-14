@@ -9,7 +9,7 @@ class CrashActivity : ViewActivityX<Binding>(Binding::inflate) {
     override val viewModel: CrashViewModel by viewModel()
 
     override fun onDestroy() {
-        AppSetting.isCrash = false
+        AppSetting.isCrash.value = false
         super.onDestroy()
     }
 

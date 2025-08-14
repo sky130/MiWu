@@ -35,9 +35,15 @@ class MainApplication : Application() {
     }
 
     fun configMiotUser() {
-        if (AppSetting.userId.isNotEmpty()) {
+        if (AppSetting.userId.value.isNotEmpty()) {
             AppSetting.apply {
-                appRepository.miotUser = MiotUser(userId, securityToken, serviceToken, androidId)
+                appRepository.miotUser =
+                    MiotUser(
+                        userId.value,
+                        securityToken.value,
+                        serviceToken.value,
+                        androidId
+                    )
             }
         }
     }
@@ -53,32 +59,24 @@ class MainApplication : Application() {
             androidLogger()
             androidContext(this@MainApplication)
             modules(
-                singleModule,
-                repositoryModule,
-                normalModule,
-                viewModelModule,
-                databaseModule
+                singleModule, repositoryModule, normalModule, viewModelModule, databaseModule
             )
         }
     }
 
     fun configManager() {
-        manager.Base64.config(
-            encode = {
-                Base64.encodeToString(it, Base64.NO_WRAP)
-            },
-            decode = {
-                Base64.decode(it, Base64.NO_WRAP)
-            }
-        )
+        manager.Base64.config(encode = {
+            Base64.encodeToString(it, Base64.NO_WRAP)
+        }, decode = {
+            Base64.decode(it, Base64.NO_WRAP)
+        })
     }
 
     companion object {
         @Suppress("HardwareIds")
         val androidId: String by lazy {
             Settings.Secure.getString(
-                KndroidX.context.contentResolver,
-                Settings.Secure.ANDROID_ID
+                KndroidX.context.contentResolver, Settings.Secure.ANDROID_ID
             )
         }
         val appJob = Job()

@@ -29,11 +29,15 @@ class LoadingDialog(private val user: String, private val pwd: String) :
                         dismiss()
                     } else {
                         AppSetting.apply {
-                            this.userId = it.userId
-                            this.securityToken = it.securityToken
-                            this.serviceToken = it.serviceToken
+                            var userId by this.userId
+                            var securityToken by this.securityToken
+                            var serviceToken by this.serviceToken
+                            securityToken = it.securityToken
+                            userId = it.userId
+                            serviceToken = it.serviceToken
                         }
-                        viewModel.appRepository.miotUser = it.copy(deviceId = MainApplication.androidId)
+                        viewModel.appRepository.miotUser =
+                            it.copy(deviceId = MainApplication.androidId)
                         R.string.toast_login_success.toast()
                         requireActivity().start<MainActivity>()
                         dismiss()

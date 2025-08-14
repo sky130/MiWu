@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:isRefreshing="@{viewModel.appRepository.devices}"
-        app:onRefresh="@{() -> viewModel.loadScene()}">
+        app:onRefresh="@{() -> viewModel.loadDevice()}">
 
         <FrameLayout
             android:layout_width="match_parent"

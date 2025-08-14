@@ -26,5 +26,7 @@ fun SwipeRefreshLayout.isRefreshing(resultat: Resultat<*>) {
         isRefreshing = false
     }.onLoading {
         isRefreshing = true
+    }.onFailure {
+        isRefreshing = false
     }
 }

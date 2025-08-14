@@ -26,7 +26,7 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
 
     override fun uncaughtException(thread: Thread, ex: Throwable) {
         try {
-            AppSetting.isCrash = true
+            AppSetting.isCrash.value = true
             Thread.sleep(1000L)
             dumpExceptionToSDCard(ex)
         } catch (e: IOException) {

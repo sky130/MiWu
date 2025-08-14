@@ -56,11 +56,11 @@ class AppRepository : KoinComponent {
                             }
                         }
                     }
-                    if (AppSetting.homeId != 0L) return@buildList
+                    if (AppSetting.homeId.value != 0L) return@buildList
                     withContext(Dispatchers.Main) {
                         firstNotNullOf { home ->
-                            AppSetting.homeId = home.id.toLong()
-                            AppSetting.homeUid = home.uid
+                            AppSetting.homeId.value = home.id.toLong()
+                            AppSetting.homeUid.value = home.uid
                             loadDevices()
                             loadScenes()
                         }
@@ -76,15 +76,17 @@ class AppRepository : KoinComponent {
         scope.launch {
             device.emit(Resultat.Loading())
             runCatching {
-                device.emit(buildList {
-
-                    val devices =
-                        miotClient.Home.getDevices(AppSetting.homeUid.takeIf { it != 0L }
-                            ?: return@buildList,
-                            AppSetting.homeId.takeIf { it != 0L }
-                                ?: return@buildList).result.deviceInfo
-                    devices?.let { addAll(it) }
-                }.let { Resultat.Success(it) })
+                device.emit(
+                    buildList {
+                        val homeUid = AppSetting.homeUid.value.takeIf { it != 0L }
+                            ?: throw IllegalStateException()
+                        val homeId = AppSetting.homeId.value.takeIf { it != 0L }
+                            ?: throw IllegalStateException()
+                        val devices = miotClient.Home.getDevices(homeUid, homeId).result.deviceInfo
+                            ?: throw IllegalStateException()
+                        addAll(devices)
+                    }.let { Resultat.Success(it) }
+                )
             }.onFailure {
                 device.emit(Resultat.Failure(it))
             }
@@ -95,11 +97,15 @@ class AppRepository : KoinComponent {
         scope.launch {
             scene.emit(Resultat.Loading())
             runCatching {
-                scene.emit(buildList {
-                    val scenes = miotClient.Home.getScenes(AppSetting.homeId.takeIf { it != 0L }
-                        ?: return@buildList).result.scenes
-                    scenes?.let { addAll(it) }
-                }.let { Resultat.Success(it) })
+                scene.emit(
+                    buildList {
+                        val homeId = AppSetting.homeId.value.takeIf { it != 0L }
+                            ?: throw IllegalStateException()
+                        val scenes = miotClient.Home.getScenes(homeId).result.scenes
+                            ?: throw IllegalStateException()
+                        addAll(scenes)
+                    }.let { Resultat.Success(it) }
+                )
             }.onFailure {
                 scene.emit(Resultat.Failure(it))
             }

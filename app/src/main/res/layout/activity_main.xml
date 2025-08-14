@@ -6,11 +6,11 @@
 
         <variable
             name="viewModel"
-            type="com.github.miwu.ui.login.LoginViewModel" />
+            type="com.github.miwu.ui.main.MainViewModel" />
 
         <variable
             name="activity"
-            type="com.github.miwu.ui.login.LoginActivity" />
+            type="com.github.miwu.ui.main.MainActivity" />
     </data>
 
     <FrameLayout

@@ -123,7 +123,7 @@ class MiotDeviceManager(
                 }
 
                 fun load(widgetClass: Class<MiwuWidget<*>>) {
-                    if (widgetClass.hasValueList() || property.valueList?.isNotEmpty() ?: false) {
+                    if (widgetClass.hasValueList()) {
                         val pointTo = widgetClass.getPointTo()
                         when (pointTo) {
                             ValueList::class -> {
@@ -136,8 +136,11 @@ class MiotDeviceManager(
                                 }
                             }
 
-                            MiwuWidget::class -> {
-                                load(widgetClass)
+                            else -> {
+                                runCatching {
+                                    pointTo as KClass<MiwuWidget<*>>
+                                    load(pointTo.java)
+                                }
                             }
                         }
                     } else {
@@ -148,7 +151,7 @@ class MiotDeviceManager(
                         addWidget(widget, widgetClass)
                     }
                 }
-                
+
                 load(widgetClass)
             }
             // TODO actions
@@ -209,7 +212,12 @@ class MiotDeviceManager(
     private fun Class<MiwuWidget<*>>.hasValueList() = annotations.find { it is ValueList } != null
 
     private fun Class<MiwuWidget<*>>.getPointTo() =
-        (annotations.find { it is ValueList } as ValueList).pointTo
+        annotations.find { it is ValueList }.let {
+            return@let when (it) {
+                is ValueList -> it.pointTo
+                else -> ValueList::class
+            }
+        }
 
     private fun Class<MiwuWidget<*>>.getPosition() =
         annotations.find { it is Body || it is Footer || it is Header || it is SubHeader || it is SubFooter }

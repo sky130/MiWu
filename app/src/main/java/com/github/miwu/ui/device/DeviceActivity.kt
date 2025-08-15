@@ -79,7 +79,6 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                         viewGroup.addWrapper(it)
                     }
                 }
-
             }
             Body { widget ->
                 binding.body.let { viewGroup ->

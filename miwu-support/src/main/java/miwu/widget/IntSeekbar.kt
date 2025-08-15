@@ -9,5 +9,5 @@ import miwu.support.base.MiwuWidget
 @Property("brightness")
 @SubHeader
 class IntSeekbar : MiwuWidget<Int>() {
-    override val icon get() = Icons.mapTo(description)
+    override val icon get() = Icons.mapTo(propertyName)
 }

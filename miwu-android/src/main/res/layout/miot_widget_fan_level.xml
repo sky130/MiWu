@@ -7,12 +7,8 @@
     android:orientation="horizontal">
 
     <miwu.android.view.app.MiotButton
+        style="@style/MiotIconButton"
         android:id="@+id/minus"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:background="@color/transparent"
-        android:padding="20dp"
         android:src="@drawable/ic_down" />
 
     <LinearLayout
@@ -30,14 +26,14 @@
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="26sp"
+            android:textSize="28sp"
             tools:text="1" />
 
         <View
             android:layout_width="3dp"
             android:layout_height="15dp"
             android:background="@drawable/bg_block"
-            android:layout_marginHorizontal="5dp" />
+            android:layout_marginHorizontal="7dp" />
 
         <TextView
             android:id="@+id/num_large"
@@ -46,17 +42,13 @@
             android:fontFamily="@font/quicksand_bold"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textSize="26sp"
+            android:textSize="28sp"
             tools:text="5" />
 
     </LinearLayout>
 
     <miwu.android.view.app.MiotButton
+        style="@style/MiotIconButton"
         android:id="@+id/plus"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:background="@color/transparent"
-        android:padding="20dp"
         android:src="@drawable/ic_up" />
 </LinearLayout>

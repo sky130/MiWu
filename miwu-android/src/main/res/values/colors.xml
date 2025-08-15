@@ -21,6 +21,9 @@
     <color name="mi_green_tile">#7057D1B8</color>
     <color name="red" tools:ignore="MissingDefaultResource">#FC4850</color>
     <color name="orange">#FE733A</color>
+
+    <color name="int_seekbar_icon">#353535</color>
+
     <color name="color_temperature_start">#FEBF23</color>
     <color name="color_temperature_end">#FFE9AE</color>
 

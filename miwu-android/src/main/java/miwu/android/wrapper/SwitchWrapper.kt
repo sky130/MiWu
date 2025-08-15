@@ -34,8 +34,8 @@ class SwitchWrapper(context: Context, widget: MiwuWidget<Boolean>) :
     }
 
     override fun initWrapper() {
-        binding.subTitle.text = descriptionTranslation
-        if (description !in arrayOf("Switch Status", "开关")) {
+        if (serviceName != "light") {
+            binding.subTitle.text = translateHelper.translate(serviceName)
             binding.subTitle.visibility = View.VISIBLE
         }
         AndroidIcon {

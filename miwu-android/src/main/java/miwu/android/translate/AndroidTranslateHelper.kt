@@ -6,18 +6,25 @@ import miwu.support.translate.TranslateHelper
 
 object AndroidTranslateHelper : TranslateHelper {
     override fun translate(origin: String) = when (origin) {
-        "Auto" -> R.string.Auto.string
-        "Cool" -> R.string.Cool.string
-        "Dry" -> R.string.Dry.string
-        "Heat" -> R.string.Heat.string
-        "Fan" -> R.string.Fan.string
-        "Normal" -> R.string.Normal.string
-        "Low" -> R.string.LowFood.string
-        "Empty" -> R.string.EmptyFood.string
-        "Temperature" -> R.string.Temperature.string
-        "Relative Humidity" -> R.string.relative_humidity.string
-        "Battery" -> R.string.battery.string
-        "Pet Food Out" -> R.string.pet_food_out.string
+        "Auto" -> R.string.Auto
+        "Cool" -> R.string.Cool
+        "Dry" -> R.string.Dry
+        "Heat" -> R.string.Heat
+        "Fan" -> R.string.Fan
+        "Normal" -> R.string.Normal
+        "Low" -> R.string.LowFood
+        "Empty" -> R.string.EmptyFood
+        "Temperature" -> R.string.Temperature
+        "Relative Humidity" -> R.string.relative_humidity
+        "Battery" -> R.string.battery
+        "Pet Food Out" -> R.string.pet_food_out
+        "fan" -> R.string.fan
         else -> origin
+    }.let {
+        when (it) {
+            is String -> it
+            is Int -> it.string
+            else -> throw IllegalArgumentException("Unknown type: $it")
+        }
     }
 }

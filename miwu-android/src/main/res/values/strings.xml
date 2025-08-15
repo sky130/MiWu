@@ -9,6 +9,7 @@
     <string name="relative_humidity">相对湿度</string>
     <string name="battery">电池电量</string>
     <string name="pet_food_out">喂食机出粮</string>
+    <string name="fan">风扇</string>
     <string name="Auto">自动</string>
     <string name="Cool">制冷</string>
     <string name="Dry">除湿</string>

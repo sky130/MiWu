@@ -5,7 +5,7 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("light")
+@Service("light", "fan")
 @Property("on")
 @Header
 class Switch : MiwuWidget<Boolean>(){

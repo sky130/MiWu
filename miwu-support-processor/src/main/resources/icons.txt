@@ -14,3 +14,4 @@ Fan
 Sleep
 Favorite
 Brightness
+FanLevel

@@ -45,8 +45,8 @@
             android:scrollbars="none"
             android:textSize="15sp"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="灯" />
+            tools:text="灯"
+            tools:visibility="visible" />
     </LinearLayout>
 
 </LinearLayout>

@@ -2,14 +2,18 @@ package com.github.miwu.ui.device
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.github.miwu.MainApplication.Companion.gson
 import com.github.miwu.logic.repository.AppRepository
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import kotlinx.coroutines.Dispatchers
+import miwu.android.R
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.android.wrapper.base.BaseMiwuWrapper
+import miwu.android.wrapper.base.MiwuWrapper
 import miwu.miot.MiotManager
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
@@ -44,6 +48,18 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         )
     }
 
+
+    private fun ViewGroup.addWrapper(wrapper: BaseMiwuWrapper<*>) {
+        addView(wrapper.view.apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, context.resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom))
+            }
+        })
+    }
+
     override fun onDeviceInitiated() {
         on(manager.layout) {
             Header { widget ->
@@ -51,7 +67,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                     viewGroup.visibility = View.VISIBLE
                     createWrapper(widget)?.let {
                         wrapperList.add(it)
-                        viewGroup.addView(it.view)
+                        viewGroup.addWrapper(it)
                     }
                 }
             }
@@ -60,7 +76,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                     viewGroup.visibility = View.VISIBLE
                     createWrapper(widget)?.let {
                         wrapperList.add(it)
-                        viewGroup.addView(it.view)
+                        viewGroup.addWrapper(it)
                     }
                 }
 
@@ -79,7 +95,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                     viewGroup.visibility = View.VISIBLE
                     createWrapper(widget)?.let {
                         wrapperList.add(it)
-                        viewGroup.addView(it.view)
+                        viewGroup.addWrapper(it)
                     }
                 }
             }
@@ -88,7 +104,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                     viewGroup.visibility = View.VISIBLE
                     createWrapper(widget)?.let {
                         wrapperList.add(it)
-                        viewGroup.addView(it.view)
+                        viewGroup.addWrapper(it)
                     }
                 }
             }

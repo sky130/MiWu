@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/miot_widget_card_height"
     android:background="@drawable/bg_list_item_online"
-    android:orientation="horizontal"
-    tools:layout_marginHorizontal="@dimen/device_activity_padding">
+    android:orientation="horizontal">
 
     <miwu.android.view.app.MiotButton
-        android:id="@+id/down"
+        android:id="@+id/minus"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
@@ -53,7 +52,7 @@
     </LinearLayout>
 
     <miwu.android.view.app.MiotButton
-        android:id="@+id/up"
+        android:id="@+id/plus"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"

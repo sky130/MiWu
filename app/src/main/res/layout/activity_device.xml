@@ -26,72 +26,33 @@
                 <LinearLayout
                     android:id="@+id/header"
                     style="@style/MiotLayout"
-                    android:layout_marginTop="@dimen/device_miwu_layout_margin_top"
                     android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/sub_header"
                     style="@style/MiotLayout"
-                    android:layout_marginTop="@dimen/device_miwu_layout_margin_top"
                     android:visibility="gone" />
 
                 <com.github.miwu.view.RecyclerGridLayout
                     android:id="@+id/body"
                     style="@style/MiotLayout"
-                    android:layout_marginTop="@dimen/device_miwu_layout_margin_top"
                     android:clipToPadding="false"
-                    android:paddingBottom="20dp"
-                    android:visibility="gone">
-
-                    <!--                <androidx.gridlayout.widget.GridLayout-->
-                    <!--                    android:id="@+id/body"-->
-                    <!--                    style="@style/MiotLayout"-->
-                    <!--                    android:clipToPadding="false"-->
-                    <!--                    android:paddingBottom="20dp"-->
-                    <!--                    app:columnCount="2"-->
-                    <!--                    app:orientation="horizontal">-->
-
-                    <!--                    <com.github.miwu.view.MiotButton-->
-                    <!--                        android:layout_width="0dp"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:adjustViewBounds="true"-->
-                    <!--                        android:background="@drawable/bg_item"-->
-                    <!--                        android:maxHeight="55dp"-->
-                    <!--                        android:padding="14dp"-->
-                    <!--                        android:src="@drawable/ic_power"-->
-                    <!--                        app:layout_columnWeight="1"-->
-                    <!--                        tools:background="@drawable/bg_item_blue" />-->
-
-                    <!--                    <com.github.miwu.view.MiotButton-->
-                    <!--                        android:layout_width="0dp"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:adjustViewBounds="true"-->
-                    <!--                        android:background="@drawable/bg_item"-->
-                    <!--                        android:maxHeight="55dp"-->
-                    <!--                        android:padding="14dp"-->
-                    <!--                        android:src="@drawable/ic_power"-->
-                    <!--                        app:layout_columnWeight="1"-->
-                    <!--                        tools:background="@drawable/bg_item_blue" />-->
-
-                </com.github.miwu.view.RecyclerGridLayout>
+                    android:layout_marginBottom="@dimen/device_miwu_layout_margin_bottom"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/sub_footer"
                     style="@style/MiotLayout"
-                    android:layout_marginTop="@dimen/device_miwu_layout_margin_top"
-                    android:columnCount="2"
                     android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/footer"
                     style="@style/MiotLayout"
-                    android:layout_marginTop="@dimen/device_miwu_layout_margin_top"
                     android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/unknown"
                     style="@style/MiotLayout"
-                    android:layout_marginTop="@dimen/device_miwu_layout_margin_top"
                     android:visibility="gone" />
             </LinearLayout>
 

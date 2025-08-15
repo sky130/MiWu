@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/device_miwu_layout_margin_top"
     android:orientation="vertical">
 
     <miwu.android.view.app.AppSeekBar

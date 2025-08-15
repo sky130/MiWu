@@ -4,18 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/miot_widget_card_height"
     android:background="@drawable/bg_list_item_online"
-    android:orientation="horizontal"
-    tools:layout_marginHorizontal="@dimen/device_activity_padding">
+    android:orientation="horizontal">
 
     <miwu.android.view.app.MiotButton
+        style="@style/MiotIconButton"
         android:id="@+id/down"
-        android:maxWidth="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginVertical="5dp"
-        android:adjustViewBounds="true"
-        android:background="@color/transparent"
-        android:padding="12dp"
         android:src="@drawable/ic_down" />
 
     <LinearLayout
@@ -48,13 +41,7 @@
     </LinearLayout>
 
     <miwu.android.view.app.MiotButton
+        style="@style/MiotIconButton"
         android:id="@+id/up"
-        android:maxWidth="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginVertical="5dp"
-        android:adjustViewBounds="true"
-        android:background="@color/transparent"
-        android:padding="15dp"
         android:src="@drawable/ic_up" />
 </LinearLayout>

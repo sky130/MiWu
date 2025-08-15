@@ -12,10 +12,6 @@ import androidx.appcompat.widget.AppCompatImageView
 @SuppressLint("UseCompatLoadingForDrawables")
 class MiotButton(context: Context, attr: AttributeSet) : AppCompatImageView(context, attr) {
 
-//    init {
-//        setBackgroundResource(R.drawable.bg_item)
-//    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(paramMotionEvent: MotionEvent): Boolean {
         if (isClickable) {

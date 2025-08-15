@@ -39,10 +39,11 @@ class IconsProcessor(
             .apply {
                 iconNames.forEach { name ->
                     addStatement(
-                        "%S, %S -> %L",
+                        "%S, %S, %S -> %L",
                         name,
                         name.replace(Regex("([A-Z])"), "_$1").lowercase().trim('_'),
-                        name
+                        name.replace(Regex("([a-z])([A-Z])"), "$1-$2").lowercase().trim('-'),
+                        name,
                     )
                 }
                 addStatement("else -> %T", noneIconClass)

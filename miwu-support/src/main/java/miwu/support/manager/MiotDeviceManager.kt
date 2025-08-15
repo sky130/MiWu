@@ -113,7 +113,8 @@ class MiotDeviceManager(
                 fun MiwuWidget<*>.config() = this.apply {
                     _siid = service.iid
                     _piid = property.iid
-                    _aiid = property.iid
+                    _propertyName = Urn.parseFrom(property.type).name
+                    _serviceName = Urn.parseFrom(service.type).name
                     _desc = property.description
                     _valueOriginUnit = property.unit ?: "null"
                     _descTranslation = property.descriptionTranslation

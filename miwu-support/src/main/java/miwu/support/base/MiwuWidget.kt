@@ -46,7 +46,7 @@ abstract class MiwuWidget<T>() {
     internal var _valueOriginUnit: String = "null"
     internal val _valueList = arrayListOf<Value>()
     internal lateinit var _icons: Icons
-    internal lateinit var translateHelper: TranslateHelper
+    lateinit var translateHelper: TranslateHelper
 
 
     val siid get() = _siid

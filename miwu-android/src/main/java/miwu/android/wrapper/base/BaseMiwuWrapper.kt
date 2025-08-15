@@ -15,6 +15,10 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
     abstract val view: View
     val description get() = widget.description
     val descriptionTranslation get() = widget.descriptionTranslation
+    val translateHelper get() = widget.translateHelper
+    val actionName get() = widget.actionName
+    val serviceName get() = widget.serviceName
+    val propertyName get() = widget.propertyName
     val siid get() = widget.siid
     val piid get() = widget.piid
     val aiid get() = widget.aiid

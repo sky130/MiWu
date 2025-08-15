@@ -5,5 +5,11 @@ import miwu.annotation.*
 import miwu.widget.*
 
 @Device("light")
-@Widgets(Switch::class, ColorTemperatureSeekbar::class, IntSeekbar::class)
+@Widgets(
+    Switch::class,
+    ColorTemperatureSeekbar::class,
+    IntSeekbar::class,
+    FanController::class,
+    FanLevelController::class
+)
 class Light : MiwuDevice()

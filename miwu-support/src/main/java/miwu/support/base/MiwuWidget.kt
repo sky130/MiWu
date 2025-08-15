@@ -36,6 +36,9 @@ abstract class MiwuWidget<T>() {
     internal var _piid = -1
     internal var _aiid = -1
     internal var _desc = ""
+    internal var _serviceName = ""
+    internal var _propertyName = ""
+    internal var _actionName = ""
     internal var _descTranslation = ""
     internal var _defaultValue: T? = null
     internal var _valueRange: Pair<T, T>? = null
@@ -49,6 +52,9 @@ abstract class MiwuWidget<T>() {
     val siid get() = _siid
     val piid get() = _piid
     val aiid get() = _aiid
+    val actionName get() = _actionName
+    val serviceName get() = _serviceName
+    val propertyName get() = _propertyName
     val description get() = _desc
     val defaultValue get() = _defaultValue!!
     val valueRange get() = _valueRange!!

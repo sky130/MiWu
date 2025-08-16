@@ -55,7 +55,12 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(0, 0, 0, context.resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom))
+                setMargins(
+                    0,
+                    0,
+                    0,
+                    context.resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom)
+                )
             }
         })
     }

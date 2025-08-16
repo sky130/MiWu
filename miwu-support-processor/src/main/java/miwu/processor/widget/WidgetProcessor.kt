@@ -54,11 +54,18 @@ internal class WidgetProcessor(
             .filterIsInstance<KSClassDeclaration>().forEach { declaration ->
                 val services = declaration.annotations.get("Service")
                 val properties = declaration.annotations.get("Property")
-                if (services.isEmpty() || properties.isEmpty()) return emptyList()
+                val actions = declaration.annotations.get("Action")
+
+                if (services.isEmpty() || (properties.isEmpty() && actions.isEmpty())) return emptyList()
                 services.forEach { service ->
                     properties.forEach { property ->
                         val map = serviceMap[service] ?: mutableMapOf()
                         map[property] = declaration.toClassName()
+                        serviceMap[service] = map
+                    }
+                    actions.forEach { action ->
+                        val map = serviceMap[service] ?: mutableMapOf()
+                        map[action] = declaration.toClassName()
                         serviceMap[service] = map
                     }
                 }

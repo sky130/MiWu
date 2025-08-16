@@ -8,6 +8,7 @@ import miwu.support.api.Controller
 import miwu.support.icon.Icon
 import miwu.icon.Icons
 import miwu.icon.NoneIcon
+import miwu.miot.model.att.SpecAtt
 import miwu.support.manager.MiotDeviceManager.ControllerWrapper
 import miwu.miot.model.att.SpecAtt.Service.Property.Value
 import miwu.support.translate.TranslateHelper
@@ -16,7 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 
 abstract class MiwuWidget<T>() {
-
     val serviceList by lazy {
         val services = this::class.java.annotations.find {
             it is Service
@@ -31,6 +31,7 @@ abstract class MiwuWidget<T>() {
     }
 
     open val icon: Icon = NoneIcon
+    open val isMultiAttribute = false
     internal var controllers = CopyOnWriteArrayList<Controller>()
     internal var _siid = -1
     internal var _piid = -1
@@ -46,8 +47,9 @@ abstract class MiwuWidget<T>() {
     internal var _valueOriginUnit: String = "null"
     internal val _valueList = arrayListOf<Value>()
     internal lateinit var _icons: Icons
+    internal lateinit var miotSpecAtt: SpecAtt
     lateinit var translateHelper: TranslateHelper
-
+    internal val iidList = mutableListOf<Pair<Int, Int>>()
 
     val siid get() = _siid
     val piid get() = _piid
@@ -80,8 +82,15 @@ abstract class MiwuWidget<T>() {
         _valueStep = step as T
     }
 
-
     internal fun onValueChange(value: T) {
+        controllers
+            .filter { it !is ControllerWrapper }
+            .forEach { controller ->
+                controller.onUpdateValue(siid, piid, value as Any)
+            }
+    }
+
+    internal fun onValueChange(siid: Int, piid: Int, value: T) {
         controllers
             .filter { it !is ControllerWrapper }
             .forEach { controller ->
@@ -130,6 +139,29 @@ abstract class MiwuWidget<T>() {
         }
     }
 
+    /**
+     * 用于非用户操作的更新
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun updateValue(siid: Int, piid: Int, value: Any?) {
+        if (siid to piid !in iidList) return
+        try {
+            val t = value as T
+            onValueChange(siid, piid, t)
+        } catch (_: Exception) {
+            try {
+                val t = value.toString() as T
+                onValueChange(siid, piid, t)
+            } catch (_: Exception) {
+
+            }
+        }
+    }
+
+    fun register(siid: Int, piid: Int) {
+        iidList.add(siid to piid)
+    }
+
     fun bind(controller: Controller) {
         controllers.add(controller)
     }
@@ -140,6 +172,23 @@ abstract class MiwuWidget<T>() {
         } else {
             controllers.remove(controller)
         }
+    }
+
+    fun getService(serviceName: String): SpecAtt.Service? {
+        if (!::miotSpecAtt.isInitialized) return null
+        return miotSpecAtt.services.find { it.type == serviceName }
+    }
+
+    fun getProperty(serviceName: String, propertyName: String): SpecAtt.Service.Property? {
+        if (!::miotSpecAtt.isInitialized) return null
+        val service = miotSpecAtt.services.find { it.type == serviceName } ?: return null
+        return service.properties?.find { it.type == propertyName }
+    }
+
+    fun getAction(serviceName: String, actionName: String): SpecAtt.Service.Action? {
+        if (!::miotSpecAtt.isInitialized) return null
+        val service = miotSpecAtt.services.find { it.type == serviceName } ?: return null
+        return service.actions?.find { it.type == actionName }
     }
 
 }

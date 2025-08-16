@@ -100,65 +100,91 @@ class MiotDeviceManager(
         att.initVariable()
         att.convertLanguage(languageMap)
 
+        fun MiwuWidget<*>.setAttr() {
+            if (isMultiAttribute)
+                miotSpecAtt = att
+        }
+
         val services = att.services
 
         for (service in services) {
-            val properties = service.properties ?: continue
+            val properties = service.properties
+            val actions = service.actions
+            properties?.let { properties ->
+                for (property in properties) {
+                    val widgetClass = getWidgetClass(service.type, property.type) ?: continue
 
-            for (property in properties) {
-                val widgetClass = getWidgetClass(service.type, property.type) ?: continue
+                    if (widgetClass !in supportWidget) continue
 
-                if (widgetClass !in supportWidget) continue
-
-                fun MiwuWidget<*>.config() = this.apply {
-                    _siid = service.iid
-                    _piid = property.iid
-                    _propertyName = Urn.parseFrom(property.type).name
-                    _serviceName = Urn.parseFrom(service.type).name
-                    _desc = property.description
-                    _valueOriginUnit = property.unit ?: "null"
-                    _descTranslation = property.descriptionTranslation
-                    property.valueList?.let {
-                        _valueList.addAll(it)
+                    fun MiwuWidget<*>.config() = this.apply {
+                        _siid = service.iid
+                        _piid = property.iid
+                        _propertyName = Urn.parseFrom(property.type).name
+                        _serviceName = Urn.parseFrom(service.type).name
+                        _desc = property.description
+                        _valueOriginUnit = property.unit ?: "null"
+                        _descTranslation = property.descriptionTranslation
+                        property.valueList?.let {
+                            _valueList.addAll(it)
+                        }
+                        setAttr()
                     }
-                }
 
-                fun load(widgetClass: Class<MiwuWidget<*>>) {
-                    if (widgetClass.hasValueList()) {
-                        val pointTo = widgetClass.getPointTo()
-                        when (pointTo) {
-                            ValueList::class -> {
-                                property.valueList?.forEach {
-                                    val widget = widgetClass.createWidget().config()
-                                    widget._desc = it.description
-                                    widget._descTranslation = it.descriptionTranslation
-                                    widget.setDefaultValue(it.value)
-                                    addWidget(widget, widgetClass)
+                    fun load(widgetClass: Class<MiwuWidget<*>>) {
+                        if (widgetClass.hasValueList()) {
+                            val pointTo = widgetClass.getPointTo()
+                            when (pointTo) {
+                                ValueList::class -> {
+                                    property.valueList?.forEach {
+                                        val widget = widgetClass.createWidget().config()
+                                        widget._desc = it.description
+                                        widget._descTranslation = it.descriptionTranslation
+                                        widget.setDefaultValue(it.value)
+                                        addWidget(widget, widgetClass)
+                                    }
+                                }
+
+                                else -> {
+                                    runCatching {
+                                        pointTo as KClass<MiwuWidget<*>>
+                                        load(pointTo.java)
+                                    }
                                 }
                             }
-
-                            else -> {
-                                runCatching {
-                                    pointTo as KClass<MiwuWidget<*>>
-                                    load(pointTo.java)
-                                }
+                        } else {
+                            val widget = widgetClass.createWidget().config()
+                            property.valueRange?.let {
+                                widget.setValueRange(it[0], it[1], it[2])
                             }
+                            addWidget(widget, widgetClass)
                         }
-                    } else {
-                        val widget = widgetClass.createWidget().config()
-                        property.valueRange?.let {
-                            widget.setValueRange(it[0], it[1], it[2])
-                        }
-                        addWidget(widget, widgetClass)
                     }
-                }
 
-                load(widgetClass)
+                    load(widgetClass)
+                }
             }
-            // TODO actions
+            actions?.let { actions ->
+                for (action in actions) {
+                    val widgetClass = getWidgetClass(service.type, action.type) ?: continue
+
+                    if (widgetClass !in supportWidget) continue
+
+                    fun MiwuWidget<*>.config() = this.apply {
+                        _siid = service.iid
+                        _aiid = action.iid
+                        _actionName = Urn.parseFrom(action.type).name
+                        _serviceName = Urn.parseFrom(service.type).name
+                        _desc = action.description
+                        _descTranslation = action.descriptionTranslation
+                        setAttr()
+                    }
+
+                    val widget = widgetClass.createWidget().config()
+                    addWidget(widget, widgetClass)
+                }
+            }
         }
     }
-
 
     override fun onUpdateValue(siid: Int, piid: Int, value: Any) {
         scope.launch {
@@ -166,6 +192,7 @@ class MiotDeviceManager(
             for (i in widgetHolders) {
                 val widget = i.widget
                 if (widget.siid == siid && widget.piid == piid) widget.updateValue(value)
+                if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
             }
             miot.Device.set(device, arrayOf(siid to piid to value))
         }
@@ -208,7 +235,6 @@ class MiotDeviceManager(
         val map = ServiceRegistry.registry[Urn.parseFrom(serviceType).name] ?: return null
         return map[Urn.parseFrom(propertyType).name] as? Class<MiwuWidget<*>>
     }
-
 
     private fun Class<MiwuWidget<*>>.hasValueList() = annotations.find { it is ValueList } != null
 

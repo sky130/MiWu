@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
-    `maven-publish`
     alias(libs.plugins.ksp)
+    `maven-publish`
 }
 
 group = "com.github.sky130"
@@ -16,6 +16,8 @@ publishing {
 }
 
 java {
+    withSourcesJar()
+    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }

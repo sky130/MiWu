@@ -2,11 +2,18 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
-
+    `maven-publish`
 }
 
-val miwuVersion = libs.versions.miwu.get()
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+
+
+val miwuVersion = libs.versions.miwu.get()
 
 android {
     namespace = "miwu.android"
@@ -18,7 +25,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+            group = "com.github.sky130"
+            version = libs.versions.miwu.get()
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,9 +45,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }
     buildFeatures {
         viewBinding = true

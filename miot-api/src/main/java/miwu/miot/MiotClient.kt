@@ -85,7 +85,7 @@ interface MiotClient {
          */
         suspend fun action(
             device: MiotDevice, siid: Int, aiid: Int, vararg obj: Any
-        ): Any // 可替换为具体的 Action 返回类型
+        ): Any? // 可替换为具体的 Action 返回类型
 
         /**
          * 获取带语言的设备属性

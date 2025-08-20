@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.viewbinding.ViewBinding
 import miwu.android.icon.AndroidIcon
-import miwu.annotation.Service
 import miwu.support.api.Controller
 import miwu.support.base.MiwuWidget
 import miwu.icon.NoneIcon
@@ -14,7 +13,9 @@ import miwu.miot.model.att.SpecAtt
 abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T>) : Controller {
 
     private var canUpdate = true
-    internal val listenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
+    internal val propertyListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
+    internal val actionListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
+
     abstract val view: View
     val description get() = widget.description
     val descriptionTranslation get() = widget.descriptionTranslation
@@ -37,6 +38,7 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
     val Pair<T, T>.to get() = second
 
     abstract fun onUpdateValue(value: T)
+    open fun onActionCallback(value: Any) = Unit
 
     fun AndroidIcon(block: AndroidIcon.() -> Unit) {
         if (icon is AndroidIcon) (icon as AndroidIcon).block()
@@ -54,12 +56,20 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
         canUpdate = true
     }
 
+    override fun onActionCallback(siid: Int, aiid: Int, output: Any) {
+        if (widget.isMultiAttribute)
+            actionListenerList[siid to piid]?.invoke(output)
+        if (siid != this.siid || aiid != this.aiid) return
+        if (!canUpdate) return
+        onActionCallback(output)
+    }
+
     @Suppress("UNCHECKED_CAST")
     override fun onUpdateValue(
         siid: Int, piid: Int, value: Any
     ) {
         if (widget.isMultiAttribute)
-            listenerList[siid to piid]?.invoke(value)
+            propertyListenerList[siid to piid]?.invoke(value)
         if (siid != this.siid || piid != this.piid) return
         if (!canUpdate) return
         onUpdateValue(value as T)
@@ -67,6 +77,14 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
 
     fun update(value: T) {
         widget.update(value)
+    }
+
+    fun action(input: Any? = null) {
+        widget.action(input)
+    }
+
+    fun action(siid: Int, aiid: Int, input: Any? = null) {
+        widget.action(siid, aiid, input)
     }
 
     init {
@@ -85,7 +103,7 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
         val siid = getService(serviceName)?.iid ?: return
         val piid = getProperty(serviceName, propertyName)?.iid ?: return
         register(siid, piid)
-        listenerList[siid to piid] = block
+        propertyListenerList[siid to piid] = block
     }
 
     fun register(siid: Int, piid: Int) {

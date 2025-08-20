@@ -18,7 +18,7 @@ abstract class MiwuActionWrapper(context: Context, widget: MiwuWidget<Unit>) : B
     open fun onClick() {}
 
     override fun onUpdateValue(siid: Int, piid: Int, value: Any) {
-        listenerList[siid to piid]?.invoke(value)
+        propertyListenerList[siid to piid]?.invoke(value)
     }
 
     override fun onUpdateValue(value: Unit) = Unit

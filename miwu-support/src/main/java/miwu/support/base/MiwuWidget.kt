@@ -44,7 +44,7 @@ abstract class MiwuWidget<T>() {
     internal var _defaultValue: T? = null
     internal var _valueRange: Pair<T, T>? = null
     internal var _valueStep: T? = null
-    internal var _valueOriginUnit: String = "null"
+    internal var _valueOriginUnit: String = ""
     internal val _valueList = arrayListOf<Value>()
     internal lateinit var _icons: Icons
     internal lateinit var miotSpecAtt: SpecAtt
@@ -110,14 +110,23 @@ abstract class MiwuWidget<T>() {
             }
     }
 
-    fun action(input: Any? = null) {
+    fun action(vararg input: Any) {
         for (controller in controllers) {
-            controller.doAction(siid, aiid, input)
+            controller.doAction(siid, aiid, *input)
         }
     }
 
+    fun action(siid: Int, aiid: Int, vararg input: Any) {
+        for (controller in controllers) {
+            controller.doAction(siid, aiid, *input)
+        }
+    }
 
-    open fun onActionFinish(siid: Int, aiid: Int, value: Any) {}
+    fun onActionCallback(siid: Int, aiid: Int, output: Any) {
+        for (controller in controllers) {
+            controller.onActionCallback(siid, aiid, output)
+        }
+    }
 
     open fun init() {}
 

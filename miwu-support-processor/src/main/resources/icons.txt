@@ -18,3 +18,4 @@ FanLevel
 Clean
 Charge
 StartSweep -> Clean
+StartCharge -> Charge

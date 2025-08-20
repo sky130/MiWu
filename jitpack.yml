@@ -1,6 +1,6 @@
 before_install:
-  - sdk install java 21.0.7-open
-  - sdk use java 21.0.7-open
+  - sdk install java 21.0.7
+  - sdk use java 21.0.7
 
 jdk:
   - openjdk11

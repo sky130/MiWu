@@ -122,7 +122,7 @@ class MiotDeviceManager(
                         _propertyName = Urn.parseFrom(property.type).name
                         _serviceName = Urn.parseFrom(service.type).name
                         _desc = property.description
-                        _valueOriginUnit = property.unit ?: "null"
+                        _valueOriginUnit = property.unit ?: ""
                         _descTranslation = property.descriptionTranslation
                         property.valueList?.let {
                             _valueList.addAll(it)
@@ -198,10 +198,15 @@ class MiotDeviceManager(
         }
     }
 
-    override fun doAction(siid: Int, aiid: Int, input: Any?) {
+    override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
         scope.launch {
-            if (input != null) miot.Device.action(device, siid, aiid, input)
-            else miot.Device.action(device, siid, aiid)
+            val result = miot.Device.action(device, siid, aiid, *input)
+            if (result == null) return@launch
+            for (i in widgetHolders) {
+                val widget = i.widget
+                if ((widget.siid == siid && widget.aiid == aiid) || widget.isMultiAttribute)
+                    widget.onActionCallback(siid, aiid, result)
+            }
         }
     }
 
@@ -301,8 +306,8 @@ class MiotDeviceManager(
             controller.onUpdateValue(siid, piid, value)
         }
 
-        override fun doAction(siid: Int, aiid: Int, input: Any?) {
-            controller.doAction(siid, aiid, input)
+        override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
+            controller.doAction(siid, aiid, *input)
         }
 
     }

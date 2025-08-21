@@ -79,11 +79,11 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
         widget.update(value)
     }
 
-    fun action(input: Any? = null) {
+    fun action(vararg input: Any) {
         widget.action(input)
     }
 
-    fun action(siid: Int, aiid: Int, input: Any? = null) {
+    fun action(siid: Int, aiid: Int, vararg input: Any) {
         widget.action(siid, aiid, input)
     }
 

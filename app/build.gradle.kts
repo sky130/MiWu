@@ -73,7 +73,6 @@ dependencies {
     implementation(project(":miot-api-impl"))
 
     implementation(project(":miwu-android"))
-    ksp(project(":miwu-icon-android-processor"))
 
 
     implementation(libs.glide)

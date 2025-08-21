@@ -48,15 +48,6 @@ android {
     }
 }
 
-kotlin{
-    sourceSets.main {
-        kotlin.srcDir("build/generated/ksp/debug/kotlin")
-    }
-    sourceSets.test {
-        kotlin.srcDir("build/generated/ksp/debug/kotlin/")
-    }
-}
-
 dependencies {
     implementation(project(":miot-api"))
     implementation(project(":miwu-support"))

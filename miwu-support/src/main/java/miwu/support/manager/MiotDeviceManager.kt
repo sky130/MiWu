@@ -59,18 +59,10 @@ class MiotDeviceManager(
     private val supportWidget = mutableSetOf<Class<MiwuWidget<*>>>()
     private val deviceUrn = device.specType!!
     private var isOutdated = false
+    private val job = Job()
+    private val scope = CoroutineScope(job)
 
     val layout = MiwuLayout()
-    val job = Job()
-    val scope = CoroutineScope(job)
-
-
-    fun initDevice() {
-        val device = DeviceRegistry.registry[Urn.parseFrom(deviceUrn).name] ?: return
-        val widgetAnnotations =
-            device.annotations.firstOrNull { it is Widgets } as? Widgets ?: return
-        supportWidget += (widgetAnnotations.widgets as Array<KClass<MiwuWidget<*>>>).map { it.java }
-    }
 
     fun init() {
         scope.launch {
@@ -81,7 +73,15 @@ class MiotDeviceManager(
         }
     }
 
-    fun run() {
+
+    private fun initDevice() {
+        val device = DeviceRegistry.registry[Urn.parseFrom(deviceUrn).name] ?: return
+        val widgetAnnotations =
+            device.annotations.firstOrNull { it is Widgets } as? Widgets ?: return
+        supportWidget += (widgetAnnotations.widgets as Array<KClass<MiwuWidget<*>>>).map { it.java }
+    }
+
+    private fun run() {
         scope.launch {
             while (true) {
                 forEach()
@@ -286,30 +286,19 @@ class MiotDeviceManager(
     }
 
     private class WidgetHolder(val widget: MiwuWidget<*>) {
-        private var _controller: ControllerWrapper? = null
+        private var _controller: MiotDeviceManagerController? = null
 
         fun bind(controller: Controller) {
-            _controller = ControllerWrapper(controller)
+            _controller = MiotDeviceManagerController(controller)
             widget.bind(_controller!!)
         }
 
         fun unbind(controller: Controller? = null) {
-            _controller = null
             widget.unbind(_controller)
+            _controller = null
         }
-
     }
 
-    class ControllerWrapper(private val controller: Controller) : Controller {
-
-        override fun onUpdateValue(siid: Int, piid: Int, value: Any) {
-            controller.onUpdateValue(siid, piid, value)
-        }
-
-        override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
-            controller.doAction(siid, aiid, *input)
-        }
-
-    }
+    class MiotDeviceManagerController(private val controller: Controller) : Controller by controller
 }
 

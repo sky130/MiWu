@@ -9,7 +9,7 @@ import miwu.support.icon.Icon
 import miwu.icon.Icons
 import miwu.icon.NoneIcon
 import miwu.miot.model.att.SpecAtt
-import miwu.support.manager.MiotDeviceManager.ControllerWrapper
+import miwu.support.manager.MiotDeviceManager.MiotDeviceManagerController
 import miwu.miot.model.att.SpecAtt.Service.Property.Value
 import miwu.support.translate.TranslateHelper
 import miwu.support.unit.Unit
@@ -84,7 +84,7 @@ abstract class MiwuWidget<T>() {
 
     internal fun onValueChange(value: T) {
         controllers
-            .filter { it !is ControllerWrapper }
+            .filter { it !is MiotDeviceManagerController }
             .forEach { controller ->
                 controller.onUpdateValue(siid, piid, value as Any)
             }
@@ -92,7 +92,7 @@ abstract class MiwuWidget<T>() {
 
     internal fun onValueChange(siid: Int, piid: Int, value: T) {
         controllers
-            .filter { it !is ControllerWrapper }
+            .filter { it !is MiotDeviceManagerController }
             .forEach { controller ->
                 controller.onUpdateValue(siid, piid, value as Any)
             }
@@ -102,9 +102,10 @@ abstract class MiwuWidget<T>() {
      * 用于用户操作的更新
      */
     fun update(value: T) {
-        controllers.find { it is ControllerWrapper }?.onUpdateValue(siid, piid, value as Any)
+        controllers.find { it is MiotDeviceManagerController }
+            ?.onUpdateValue(siid, piid, value as Any)
         controllers
-            .filter { it !is ControllerWrapper }
+            .filter { it !is MiotDeviceManagerController }
             .forEach { controller ->
                 controller.onUpdateValue(siid, piid, value as Any)
             }
@@ -135,15 +136,13 @@ abstract class MiwuWidget<T>() {
      */
     @Suppress("UNCHECKED_CAST")
     fun updateValue(value: Any?) {
-        try {
+        runCatching {
             val t = value as T
             onValueChange(t)
-        } catch (_: Exception) {
-            try {
+        }.onFailure {
+            runCatching {
                 val t = value.toString() as T
                 onValueChange(t)
-            } catch (_: Exception) {
-
             }
         }
     }
@@ -154,15 +153,13 @@ abstract class MiwuWidget<T>() {
     @Suppress("UNCHECKED_CAST")
     fun updateValue(siid: Int, piid: Int, value: Any?) {
         if (siid to piid !in iidList) return
-        try {
+        runCatching {
             val t = value as T
             onValueChange(siid, piid, t)
-        } catch (_: Exception) {
-            try {
+        }.onFailure {
+            runCatching {
                 val t = value.toString() as T
                 onValueChange(siid, piid, t)
-            } catch (_: Exception) {
-
             }
         }
     }

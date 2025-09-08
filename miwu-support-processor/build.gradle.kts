@@ -33,7 +33,10 @@ dependencies {
     implementation(project(":miwu-support-annotation"))
     implementation(libs.square.kotlin.poet)
     implementation(libs.squareup.kotlinpoet.ksp)
-
+    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     implementation(libs.symbol.processing.api)
 }
 

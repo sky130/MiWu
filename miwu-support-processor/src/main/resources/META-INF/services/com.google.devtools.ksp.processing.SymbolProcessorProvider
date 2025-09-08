@@ -1,4 +1,4 @@
+miwu.processor.spec.SpecProcessorProvider
 miwu.processor.widget.WidgetProcessorProvider
 miwu.processor.device.DeviceProcessorProvider
 miwu.processor.icon.IconsProcessorProvider
-

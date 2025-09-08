@@ -5,14 +5,13 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import kotlinx.coroutines.runBlocking
 import miwu.processor.spec.logic.SpecProvider
-import miwu.processor.spec.logic.Urn
 import java.util.Locale.getDefault
-import kotlin.collections.forEach
 import com.google.devtools.ksp.processing.SymbolProcessor as Processor
 
 class SpecProcessor(
@@ -48,6 +47,7 @@ class SpecProcessor(
                     val typeName = name.split("-").joinToString("") { it.up() }.replace(".", "_")
                     addProperty(
                         PropertySpec.builder(typeName, String::class)
+                            .addModifiers(KModifier.CONST)
                             .initializer("%S", name)
                             .build()
                     )

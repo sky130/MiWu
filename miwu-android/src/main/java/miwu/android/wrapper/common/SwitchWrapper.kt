@@ -1,14 +1,13 @@
-package miwu.android.wrapper
+package miwu.android.wrapper.common
 
 import android.content.Context
 import android.view.View
 import miwu.android.R
 import miwu.android.databinding.MiotWidgetSwitchBinding
 import miwu.android.wrapper.base.MiwuWrapper
-import miwu.support.base.MiwuWidget
 import miwu.annotation.Wrapper
+import miwu.support.base.MiwuWidget
 import miwu.widget.Switch
-
 
 @Wrapper(Switch::class)
 class SwitchWrapper(context: Context, widget: MiwuWidget<Boolean>) :

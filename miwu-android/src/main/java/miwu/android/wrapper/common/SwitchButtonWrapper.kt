@@ -1,4 +1,4 @@
-package miwu.android.wrapper
+package miwu.android.wrapper.common
 
 import android.content.Context
 import miwu.android.R
@@ -6,9 +6,7 @@ import miwu.android.databinding.MiotWidgetListButtonBinding
 import miwu.android.wrapper.base.MiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
-import kotlin.getValue
 import miwu.widget.SwitchButton
-
 
 @Wrapper(SwitchButton::class)
 class SwitchButtonWrapper(context: Context, widget: MiwuWidget<Boolean>) :

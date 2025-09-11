@@ -1,21 +1,21 @@
-package miwu.android.wrapper
+package miwu.android.wrapper.common
 
 import android.content.Context
 import miwu.android.databinding.MiotWidgetTextBinding
 import miwu.android.wrapper.base.BaseMiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
-import miwu.widget.ValueText
+import miwu.widget.Text
 
-@Wrapper(ValueText::class)
-class ValueTextWrapper(context: Context, widget: MiwuWidget<Int>) :
-    BaseMiwuWrapper<Int>(context, widget) {
+@Wrapper(Text::class)
+class TextWrapper(context: Context, widget: MiwuWidget<String>) :
+    BaseMiwuWrapper<String>(context, widget) {
 
     private val binding by viewBinding(MiotWidgetTextBinding::inflate)
     override val view get() = binding.root
 
-    override fun onUpdateValue(value: Int) {
-        binding.value.text = valueList.firstOrNull { it.value == value }?.descriptionTranslation ?: "--"
+    override fun onUpdateValue(value: String) {
+        binding.value.text = value
     }
 
     override fun initWrapper() {

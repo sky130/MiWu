@@ -33,12 +33,12 @@
                     style="@style/MiotLayout"
                     android:visibility="gone" />
 
-                <com.github.miwu.view.RecyclerGridLayout
+                <miwu.android.view.app.RecyclerGridLayout
                     android:id="@+id/body"
                     style="@style/MiotLayout"
-                    android:clipToPadding="false"
                     android:layout_marginBottom="@dimen/device_miwu_layout_margin_bottom"
-                    android:visibility="gone"/>
+                    android:clipToPadding="false"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/sub_footer"

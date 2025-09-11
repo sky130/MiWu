@@ -126,7 +126,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     }
 
     fun onStarButtonClick() {
-
+        viewModel.addFavorite(device)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -144,11 +144,9 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         manager.init()
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
     }
-
 
     companion object {
         fun Context.startDeviceActivity(device: MiotDevice) {

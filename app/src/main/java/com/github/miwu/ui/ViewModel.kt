@@ -32,7 +32,7 @@ val viewModelModule = module {
         EditFavoriteViewModel(get(),get())
     }
     viewModel {
-        DeviceViewModel()
+        DeviceViewModel(get())
     }
     viewModel {
         CrashViewModel()

@@ -13,7 +13,6 @@ import com.github.miwu.databinding.ActivityEditFavoriteBinding as Binding
 
 class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
     override val viewModel: EditFavoriteViewModel by viewModel()
-
     val adapter by lazy { MiWuAdapter(viewModel,viewModel.appRepository) }
     val itemTouchHelper by lazy { ItemTouchHelper(MiWuAdapter.TouchCallback(adapter)) }
 

@@ -3,12 +3,14 @@ package miwu.android.wrapper.base
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import androidx.viewbinding.ViewBinding
 import miwu.android.icon.AndroidIcon
 import miwu.support.api.Controller
 import miwu.support.base.MiwuWidget
 import miwu.icon.NoneIcon
 import miwu.miot.model.att.SpecAtt
+import miwu.support.icon.Icon
 
 abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T>) : Controller {
 
@@ -39,14 +41,6 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
 
     abstract fun onUpdateValue(value: T)
     open fun onActionCallback(value: Any) = Unit
-
-    fun AndroidIcon(block: AndroidIcon.() -> Unit) {
-        if (icon is AndroidIcon) (icon as AndroidIcon).block()
-    }
-
-    fun NoneIcon(block: NoneIcon.() -> Unit) {
-        if (icon is NoneIcon) (icon as NoneIcon).block()
-    }
 
     fun stopUpdate() {
         canUpdate = false
@@ -113,6 +107,22 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
 
     open fun init() {
         initWrapper()
+    }
+
+    fun View.onClick(block: View.() -> Unit) {
+        setOnClickListener(block)
+    }
+
+    fun ImageView.setIcon(icon: Icon) {
+        when (icon) {
+            is AndroidIcon -> {
+                setImageResource(icon.resId)
+            }
+
+            is NoneIcon -> {
+                setImageDrawable(null)
+            }
+        }
     }
 
     abstract fun initWrapper()

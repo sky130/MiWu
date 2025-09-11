@@ -1,4 +1,4 @@
-package miwu.android.wrapper
+package miwu.android.wrapper.common
 
 import android.content.Context
 import miwu.android.databinding.MiotWidgetIntValueControllerBinding

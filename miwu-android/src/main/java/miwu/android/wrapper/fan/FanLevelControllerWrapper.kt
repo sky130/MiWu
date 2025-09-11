@@ -1,4 +1,4 @@
-package miwu.android.wrapper
+package miwu.android.wrapper.fan
 
 import android.content.Context
 import miwu.android.databinding.MiotWidgetFanLevelBinding

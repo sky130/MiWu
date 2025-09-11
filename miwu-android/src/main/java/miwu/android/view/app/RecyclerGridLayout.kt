@@ -1,4 +1,4 @@
-package com.github.miwu.view
+package miwu.android.view.app
 
 import android.content.Context
 import android.graphics.Rect
@@ -62,7 +62,6 @@ class RecyclerGridLayout(context: Context, attr: AttributeSet) : RecyclerView(co
             state: State
         ) {
             super.getItemOffsets(outRect, view, parent, state)
-
             val spacingPx = dpToPx(spacing, parent.context)
             outRect.left = spacingPx
             outRect.right = spacingPx

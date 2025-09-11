@@ -1,8 +1,7 @@
-package miwu.android.wrapper
+package miwu.android.wrapper.light
 
 import android.content.Context
 import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import miwu.android.databinding.MiotWidgetColorTemperatureSeekbarBinding
 import miwu.android.wrapper.base.BaseMiwuWrapper
 import miwu.annotation.Wrapper
@@ -11,7 +10,7 @@ import miwu.widget.ColorTemperatureSeekbar
 
 @Wrapper(ColorTemperatureSeekbar::class)
 class ColorTemperatureSeekbarWrapper(context: Context, widget: MiwuWidget<Int>) :
-    BaseMiwuWrapper<Int>(context, widget), OnSeekBarChangeListener {
+    BaseMiwuWrapper<Int>(context, widget), SeekBar.OnSeekBarChangeListener {
 
     private val binding by viewBinding(MiotWidgetColorTemperatureSeekbarBinding::inflate)
     override val view get() = binding.root

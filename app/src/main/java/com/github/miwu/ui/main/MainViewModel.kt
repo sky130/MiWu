@@ -13,14 +13,25 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import miwu.miot.model.miot.MiotDevices
 import miwu.miot.model.miot.MiotUserInfo
+import kotlin.collections.sorted
+import kotlin.collections.sortedWith
 
 class MainViewModel(val appRepository: AppRepository, val deviceRepository: DeviceRepository) :
     ViewModel() {
     val scenes = appRepository.scenes
-        .map { if (it.isSuccess) it.getOrNull() else emptyList() }
+        .map { it.getOrNull() ?: emptyList() }
         .asLiveData()
     val devices = appRepository.devices
-        .map { if (it.isSuccess) it.getOrNull() else emptyList() }
+        .map { it.getOrNull() ?: emptyList() }
+        .map {
+            it.sortedWith(
+                compareBy(
+                    { !it.isOnline },
+                    { getRoomName(it) },
+                    { it.name.lowercase() }
+                )
+            )
+        }
         .asLiveData()
     val deviceState = appRepository.devices
         .map {
@@ -50,7 +61,8 @@ class MainViewModel(val appRepository: AppRepository, val deviceRepository: Devi
         }
     }.asLiveData()
 
-    fun getRoomName(item: Any?) = appRepository.getRoomName(item as MiotDevices.Result.Device)
+    fun getRoomName(item: MiotDevices.Result.Device) =
+        appRepository.getRoomName(item as MiotDevices.Result.Device)
 
     fun init() {
         appRepository.loadAll()

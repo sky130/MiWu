@@ -5,7 +5,7 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("environment")
-@Property("air-purifier")
+@Service("environment", "vacuum")
+@Property("air-purifier", "status")
 @Header
 class ValueText : MiwuWidget<Int>()

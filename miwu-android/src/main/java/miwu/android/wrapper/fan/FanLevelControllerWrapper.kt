@@ -36,8 +36,8 @@ class FanLevelControllerWrapper(context: Context, widget: MiwuWidget<Int>) :
             fun updateValue(delta: Int) {
                 value = (value + delta).coerceIn(min, max)
             }
-            plus.setOnClickListener { updateValue(1) }
-            minus.setOnClickListener { updateValue(-1) }
+            plus.onClick { updateValue(1) }
+            minus.onClick { updateValue(-1) }
         }
     }
 

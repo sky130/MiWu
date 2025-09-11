@@ -20,9 +20,7 @@ class FanControllerWrapper(context: Context, widget: MiwuWidget<Int>) :
     }
 
     override fun initWrapper() {
-        AndroidIcon {
-            binding.icon.setImageResource(resId)
-        }
+        binding.icon.setIcon(icon)
         binding.seekbar.setOnSeekBarChangeListener(this)
     }
 

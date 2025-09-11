@@ -21,9 +21,7 @@ class VacuumButtonWrapper(context: Context, widget: MiwuWidget<Unit>) :
     override val onClickView: View get() = binding.on
 
     override fun initWrapper() {
-        AndroidIcon {
-            binding.on.setImageResource(resId)
-        }
+        binding.on.setIcon(icon)
         binding.desc.text = descriptionTranslation
         register(Service.Vacuum, Property.Mode) { value ->
             if (value !is Int) return@register

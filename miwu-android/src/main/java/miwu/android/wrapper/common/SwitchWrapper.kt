@@ -37,9 +37,7 @@ class SwitchWrapper(context: Context, widget: MiwuWidget<Boolean>) :
             binding.subTitle.text = translateHelper.translate(serviceName)
             binding.subTitle.visibility = View.VISIBLE
         }
-        AndroidIcon {
-            binding.img.setImageResource(resId)
-        }
+        binding.img.setIcon(icon)
     }
 
     override fun onClick() {

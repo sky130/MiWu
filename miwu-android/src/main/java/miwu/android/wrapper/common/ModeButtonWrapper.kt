@@ -24,9 +24,7 @@ class ModeButtonWrapper(context: Context, widget: MiwuWidget<Int>) : MiwuWrapper
     }
 
     override fun initWrapper() {
-        AndroidIcon {
-            binding.on.setImageResource(resId)
-        }
+        binding.on.setIcon(icon)
         binding.desc.text = descriptionTranslation
     }
 

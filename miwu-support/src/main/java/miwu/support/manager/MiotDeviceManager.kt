@@ -124,6 +124,9 @@ class MiotDeviceManager(
                         _desc = property.description
                         _valueOriginUnit = property.unit ?: ""
                         _descTranslation = property.descriptionTranslation
+                        _allowWrite = "write" in property.access
+                        _allowRead = "read" in property.access
+                        _allowNotify = "notify" in property.access
                         property.valueList?.let {
                             _valueList.addAll(it)
                         }
@@ -260,6 +263,7 @@ class MiotDeviceManager(
         val attList = arrayListOf<GetAtt>()
         for (i in widgetHolders) {
             val widget = i.widget
+            if (!widget.allowRead) continue
             if (widget.piid == -1) continue
             attList.add(widget.siid to widget.piid)
         }

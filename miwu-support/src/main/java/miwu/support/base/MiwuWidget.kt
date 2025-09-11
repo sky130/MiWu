@@ -46,6 +46,10 @@ abstract class MiwuWidget<T>() {
     internal var _valueStep: T? = null
     internal var _valueOriginUnit: String = ""
     internal val _valueList = arrayListOf<Value>()
+    internal var _allowWrite: Boolean = false
+    internal var _allowRead: Boolean = false
+    internal var _allowNotify: Boolean = false
+
     internal lateinit var _icons: Icons
     internal lateinit var miotSpecAtt: SpecAtt
     lateinit var translateHelper: TranslateHelper
@@ -64,7 +68,9 @@ abstract class MiwuWidget<T>() {
     val valueOriginUnit get() = _valueOriginUnit
     val valueUnit by lazy { Unit.from(_valueOriginUnit) }
     val valueList: List<Value> get() = _valueList
-
+    val allowWrite get() = _allowWrite
+    val allowRead get() = _allowRead
+    val allowNotify get() = _allowNotify
     val Icons get() = _icons
     val descriptionTranslation by lazy {
         if (_desc != _descTranslation) // 如果已经在miot有对应翻译, 则不再重复翻译

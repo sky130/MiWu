@@ -52,21 +52,23 @@ class MiotClientImpl : MiotClient {
         }
     }
     private val iconClient by lazy {
-        OkHttpClient {  }
+        OkHttpClient { }
     }
     private val miotRetrofit by lazy {
         Retrofit(
-            url = MIOT_SERVER_URL, factories = arrayOf(
+            url = MIOT_SERVER_URL,
+            factories = arrayOf(
                 GsonConverterFactory.create(),
                 ScalarsConverterFactory.create(),
-            ), client = miotClient
+            ),
+            client = miotClient
         )
     }
     private val miotService: MiotService by lazy {
         miotRetrofit.create<MiotService>()
     }
     private val specAttClient by lazy { MiotSpecAttClientImpl() }
-    private lateinit var user : MiotUser
+    private lateinit var user: MiotUser
     override val Home = MiotClientHome()
     override val Device = MiotClientDevice()
 
@@ -148,14 +150,14 @@ class MiotClientImpl : MiotClient {
                     device.did, siid, aiid
                 ).apply {
                     `in`.addAll(obj)
-                })
+                }
+            )
         )
 
         override suspend fun getSpecAttWithLanguage(
             device: MiotDevices.Result.Device,
             languageCode: String
         ) = specAttClient.getSpecAttWithLanguage(device.specType!!, languageCode)
-
 
         override suspend fun getIconUrl(model: String) = withContext(Dispatchers.IO) {
             try {
@@ -169,7 +171,6 @@ class MiotClientImpl : MiotClient {
             }
         }
     }
-
 
     inner class MiotAuthInterceptor(private val user: MiotUser) : Interceptor {
 
@@ -216,7 +217,12 @@ class MiotClientImpl : MiotClient {
             return MiotBase64Impl.encode(sha.digest())
         }
 
-        fun generateSignature(uri: String, signedNonce: String, nonce: String, data: String): String {
+        fun generateSignature(
+            uri: String,
+            signedNonce: String,
+            nonce: String,
+            data: String
+        ): String {
             val sign = "$uri&$signedNonce&$nonce&data=$data".toByteArray(StandardCharsets.UTF_8)
             val mac = Mac.getInstance("HmacSHA256")
             mac.init(SecretKeySpec(MiotBase64Impl.decode(signedNonce), "HmacSHA256"))

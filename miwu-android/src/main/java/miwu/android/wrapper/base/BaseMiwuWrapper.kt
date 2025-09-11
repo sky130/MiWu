@@ -80,11 +80,11 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
     }
 
     fun action(vararg input: Any) {
-        widget.action(input)
+        widget.action(*input)
     }
 
     fun action(siid: Int, aiid: Int, vararg input: Any) {
-        widget.action(siid, aiid, input)
+        widget.action(siid, aiid, *input)
     }
 
     init {

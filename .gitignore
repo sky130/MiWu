@@ -15,3 +15,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+kls_database.db
+/kls_database.db

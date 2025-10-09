@@ -25,10 +25,10 @@ import org.koin.core.context.GlobalContext.startKoin
 class MainApplication : Application() {
     val appRepository: AppRepository by inject()
     val manager: MiotManager by inject()
-
+    
     override fun onCreate() {
         super.onCreate()
-        configKoin()
+        configKoin() 
         configKndroidx()
         configManager()
         configMiotUser()

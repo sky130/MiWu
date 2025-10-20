@@ -29,61 +29,131 @@ internal class WidgetProcessor(
     private var isProcessingOver = false
 
     fun Sequence<KSAnnotation>.get(name: String): List<String> {
-        val annotation = firstOrNull { it.shortName.asString() == name } ?: return emptyList()
+        val annotation = filter { it.shortName.asString() == name }.toList()
+        if (annotation.isEmpty()) return emptyList()
         val valueList =
-            annotation.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? List<*>
-                ?: return emptyList()
+            buildList {
+                annotation.forEach {
+                    val arg =
+                        it.arguments.firstOrNull { arg -> arg.name?.asString() == "name" }?.value
+                    if (arg is List<*>) addAll(arg)
+                }
+            }
         return valueList.map {
             it as String
         }
     }
 
+    fun Sequence<KSAnnotation>.getBind(name: String): List<Pair<String, Pair<String, String>>> {
+        val annotation = filter { it.shortName.asString() == name }.toList()
+        if (annotation.isEmpty()) return emptyList()
+        val valueList =
+            buildList {
+                annotation.forEach {
+                    fun get(name: String) =
+                        it.arguments.firstOrNull { arg -> arg.name?.asString() == name }?.value as String
+
+                    val typeName =
+                        it.annotationType.resolve().arguments.firstOrNull()?.type?.resolve()?.declaration?.qualifiedName?.asString()
+                            ?: ""
+                    add(get("service") to (get("item") to typeName))
+                }
+            }
+        return valueList
+    }
+
+    private val mapType = Map::class.asClassName()
+        .parameterizedBy(
+            Pair::class
+                .asClassName()
+                .parameterizedBy(
+                    String::class.asTypeName(), String::class.asTypeName()
+                ),
+            Class::class.asTypeName().parameterizedBy(STAR)
+        )
+
+//    private val mapType = Map::class.asClassName()
+//        .parameterizedBy(
+//            String::class.asTypeName(),
+//            Map::class.asClassName()
+//                .parameterizedBy(
+//                    String::class.asTypeName(),
+//                    Class::class.asTypeName().parameterizedBy(STAR)
+//                )
+//        )
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (isProcessingOver) return emptyList()
-        val serviceMap = mutableMapOf<String, MutableMap<String, ClassName>>()
-        val mapType = Map::class.asClassName()
-            .parameterizedBy(
-                String::class.asTypeName(),
-                Map::class.asClassName().parameterizedBy(
-                    String::class.asTypeName(),
-                    Class::class.asTypeName().parameterizedBy(STAR)
-                )
-            )
+        val propertyClassMap = mutableMapOf<Pair<String, String>, ClassName>()
+        val actionClassMap = mutableMapOf<Pair<String, String>, ClassName>()
+
         resolver.getSymbolsWithAnnotation(Widget::class.qualifiedName!!)
             .filterIsInstance<KSClassDeclaration>().forEach { declaration ->
                 val services = declaration.annotations.get("Service")
                 val properties = declaration.annotations.get("Property")
                 val actions = declaration.annotations.get("Action")
+                val bind = declaration.annotations.getBind("Bind")
+                if (services.isEmpty() && properties.isEmpty() && actions.isEmpty() && bind.isEmpty()) return@forEach
+                val className = declaration.toClassName()
 
-                if (services.isEmpty() || (properties.isEmpty() && actions.isEmpty())) return emptyList()
-                services.forEach { service ->
-                    properties.forEach { property ->
-                        val map = serviceMap[service] ?: mutableMapOf()
-                        map[property] = declaration.toClassName()
-                        serviceMap[service] = map
-                    }
-                    actions.forEach { action ->
-                        val map = serviceMap[service] ?: mutableMapOf()
-                        map[action] = declaration.toClassName()
-                        serviceMap[service] = map
+                bind.forEach { (service, pair) ->
+                    val (item, type) = pair
+                    when (type) {
+                        "miwu.annotation.Property" -> {
+                            propertyClassMap[service to item] = className
+                        }
+
+                        "miwu.annotation.Action" -> {
+                            actionClassMap[service to item] = className
+                        }
                     }
                 }
+                runCatching {
+                    services.forEachIndexed { index, service ->
+                        val property = properties[index]
+                        val action = properties[index]
+
+                        if (property.isNotBlank()) {
+                            propertyClassMap[service to property] = className
+                        }
+                        if (action.isNotBlank()) {
+                            actionClassMap[service to action] = className
+                        }
+                    }
+                }.onFailure {
+                    throw IllegalStateException(
+                        "Please check ${className.canonicalName} whether `Service` and the corresponding `Property` or `Action` are correctly implemented.",
+                        it
+                    )
+                }
+                // services.forEach { service ->
+                //     properties.forEach { property ->
+                //         val map = serviceMap[service] ?: mutableMapOf()
+                //         map[property] = declaration.toClassName()
+                //         serviceMap[service] = map
+                //     }
+                //     actions.forEach { action ->
+                //         val map = serviceMap[service] ?: mutableMapOf()
+                //         map[action] = declaration.toClassName()
+                //         serviceMap[service] = map
+                //     }
+                // }
             }
 
-        val objectName = "ServiceRegistry"
+        handle("PropertyRegistry", propertyClassMap)
+        handle("ActionRegistry", actionClassMap)
+        isProcessingOver = true
+        return emptyList()
+    }
+
+    fun handle(objectName: String, classMap: Map<Pair<String, String>, ClassName>) {
+        // val objectName = "PropertyRegistry"
         val codeBlock = CodeBlock.builder()
             .add("mapOf(\n")
             .indent()
             .apply {
-                serviceMap.entries.forEachIndexed { i, (service, properties) ->
-                    add("%S to mapOf(", service)
-                    properties.entries.forEachIndexed { j, (property, className) ->
-                        add("%S to %T::class.java", property, className)
-                        if (j != properties.size - 1) add(", ")
-                    }
-                    add(")")
-                    if (i != serviceMap.size - 1) add(",\n") else add("\n")
+                classMap.forEach { (service, item), className ->
+                    add("(%S to %S) to %T::class.java,\n", service, item, className)
                 }
             }
             .unindent()
@@ -91,15 +161,15 @@ internal class WidgetProcessor(
             .build()
         val registry = TypeSpec.objectBuilder(objectName)
             .addProperty(
-                PropertySpec.builder("registry", mapType).initializer(codeBlock).build()
+                PropertySpec
+                    .builder("registry", mapType)
+                    .initializer(codeBlock).build()
             ).build()
 
         FileSpec.builder("miwu.widget.generated.widget", objectName)
             .addType(registry)
             .build()
             .writeTo(codeGenerator = codeGenerator, aggregating = true)
-        isProcessingOver = true
-        return emptyList()
     }
 }
 

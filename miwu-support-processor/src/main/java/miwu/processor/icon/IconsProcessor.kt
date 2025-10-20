@@ -39,6 +39,7 @@ class IconsProcessor(
             .beginControlFlow("return when(name)")
             .apply {
                 iconNames.forEach { name ->
+                    if (name.startsWith("#")) return@forEach
                     if (splitSymbol !in name) {
                         addStatement(
                             "%S, %S, %S -> %L",

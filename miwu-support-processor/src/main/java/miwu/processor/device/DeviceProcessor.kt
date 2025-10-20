@@ -54,7 +54,7 @@ internal class DeviceProcessor(
             .indent()
             .apply {
                 deviceMap.entries.forEachIndexed { i, (model,className) ->
-                    add("%S to %T::class.java, ", model, className)
+                    add("%S to %T::class.java,\n", model, className)
                 }
             }
             .unindent()

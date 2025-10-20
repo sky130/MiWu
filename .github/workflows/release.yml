@@ -6,6 +6,13 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
+  validation:
+    name: "Validation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/wrapper-validation@v5
+      
   build:
     runs-on: ubuntu-latest
     permissions:
@@ -20,8 +27,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5    
+      #- name: Setup Gradle
+      #  uses: gradle/actions/setup-gradle@v5    
         
       - name: Build APK
         run: ./gradlew assembleRelease

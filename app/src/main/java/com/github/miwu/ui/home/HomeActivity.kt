@@ -12,8 +12,7 @@ class HomeActivity : ViewActivityX<Binding>(Binding::inflate) {
     fun onItemClick(item: Any?) {
         when (item) {
             is MiotHomes.Result.Home -> {
-                AppSetting.homeUid.value = item.uid
-                AppSetting.homeId.value = item.id.toLong()
+                viewModel.setHome(item)
                 finish()
             }
         }

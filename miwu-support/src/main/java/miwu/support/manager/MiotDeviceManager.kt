@@ -23,7 +23,7 @@ import miwu.icon.Icons
 import miwu.support.layout.MiwuLayout
 import miwu.support.manager.callback.DeviceManagerCallback
 import miwu.widget.generated.device.DeviceRegistry
-import miwu.widget.generated.widget.ServiceRegistry
+import miwu.widget.generated.widget.PropertyRegistry
 import miwu.miot.MiotClient
 import miwu.miot.MiotManager
 import miwu.miot.att.get.GetAtt
@@ -31,6 +31,7 @@ import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.support.translate.TranslateHelper
 import miwu.support.urn.Urn
+import miwu.widget.generated.widget.ActionRegistry
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.reflect.KClass
 
@@ -112,7 +113,8 @@ class MiotDeviceManager(
             val actions = service.actions
             properties?.let { properties ->
                 for (property in properties) {
-                    val widgetClass = getWidgetClass(service.type, property.type) ?: continue
+                    val widgetClass =
+                        getPropertyWidgetClass(service.type, property.type) ?: continue
 
                     if (widgetClass !in supportWidget) continue
 
@@ -168,7 +170,7 @@ class MiotDeviceManager(
             }
             actions?.let { actions ->
                 for (action in actions) {
-                    val widgetClass = getWidgetClass(service.type, action.type) ?: continue
+                    val widgetClass = getActionWidgetClass(service.type, action.type) ?: continue
 
                     if (widgetClass !in supportWidget) continue
 
@@ -239,9 +241,24 @@ class MiotDeviceManager(
     private suspend fun getLanguageMap() =
         cache.getLanguageMap(deviceUrn) ?: device.getSpecAttLanguageMap(manager)
 
-    private fun getWidgetClass(serviceType: String, propertyType: String): Class<MiwuWidget<*>>? {
-        val map = ServiceRegistry.registry[Urn.parseFrom(serviceType).name] ?: return null
-        return map[Urn.parseFrom(propertyType).name] as? Class<MiwuWidget<*>>
+    private fun getPropertyWidgetClass(
+        serviceType: String,
+        propertyType: String
+    ): Class<MiwuWidget<*>>? {
+        val map =
+            PropertyRegistry.registry[Urn.parseFrom(serviceType).name to Urn.parseFrom(propertyType).name]
+                ?: return null
+        return map as? Class<MiwuWidget<*>>
+    }
+
+    private fun getActionWidgetClass(
+        serviceType: String,
+        propertyType: String
+    ): Class<MiwuWidget<*>>? {
+        val map =
+            ActionRegistry.registry[Urn.parseFrom(serviceType).name to Urn.parseFrom(propertyType).name]
+                ?: return null
+        return map as? Class<MiwuWidget<*>>
     }
 
     private fun Class<MiwuWidget<*>>.hasValueList() = annotations.find { it is ValueList } != null

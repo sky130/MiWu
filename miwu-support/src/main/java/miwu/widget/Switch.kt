@@ -6,8 +6,8 @@ import miwu.support.base.MiwuWidget
 
 @Widget
 @Service("light", "fan")
-@Property("on")
+@Property("on", "on")
 @Header
-class Switch : MiwuWidget<Boolean>(){
+class Switch : MiwuWidget<Boolean>() {
     override val icon get() = Icons.Power
 }

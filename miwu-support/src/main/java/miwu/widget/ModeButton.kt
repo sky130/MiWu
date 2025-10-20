@@ -5,8 +5,8 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("air-conditioner", "air-purifier")
-@Property("mode")
+@Bind<Property>("air-conditioner", "mode")
+@Bind<Property>("air-purifier", "mode")
 @Body
 @ValueList
 class ModeButton : MiwuWidget<Int>() {

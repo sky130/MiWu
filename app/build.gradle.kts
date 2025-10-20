@@ -76,6 +76,8 @@ dependencies {
 
 
     implementation(libs.glide)
+    implementation(libs.androidx.tiles.tooling.preview)
+    debugImplementation(libs.androidx.tiles.tooling)
     ksp(libs.glide.compiler)
 
 
@@ -121,8 +123,8 @@ dependencies {
     implementation(libs.protolayout.material)
     implementation(libs.protolayout.expression)
     implementation(libs.jetbrains.kotlinx.coroutines.core)
-
-
+    debugImplementation(libs.androidx.tiles.tooling)
+    debugImplementation(libs.androidx.tiles.tooling.preview)
     implementation(libs.google.guava)
     implementation(libs.androidx.concurrent.futures)
     // implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.guava)

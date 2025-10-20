@@ -7,7 +7,7 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
-    <uses-sdk tools:overrideLibrary="androidx.wear.tiles.tooling.preview,androidx.wear.compose.material.core,androidx.wear,androidx.wear.watchface.complications,androidx.wear.protolayout.renderer,androidx.wear.compose.navigation , androidx.wear.protolayout,androidx.wear.protolayout.expression.pipeline,  androidx.wear.protolayout.material,androidx.wear.protolayout.expression,com.google.android.horologist.compose.tools,  androidx.wear.tiles,  androidx.wear.protolayout.materialcore,  androidx.wear.watchface.complications.data,  androidx.wear.compose.foundation,  androidx.wear.compose.material, com.google.android.horologist.tiles,  androidx.wear.watchface.complications.datasource, kndroidx.wear.tile" />
+    <uses-sdk tools:overrideLibrary="androidx.wear.tiles.tooling,androidx.wear.tiles.tooling.preview,androidx.wear.compose.material.core,androidx.wear,androidx.wear.watchface.complications,androidx.wear.protolayout.renderer,androidx.wear.compose.navigation , androidx.wear.protolayout,androidx.wear.protolayout.expression.pipeline,  androidx.wear.protolayout.material,androidx.wear.protolayout.expression,com.google.android.horologist.compose.tools,  androidx.wear.tiles,  androidx.wear.protolayout.materialcore,  androidx.wear.watchface.complications.data,  androidx.wear.compose.foundation,  androidx.wear.compose.material, com.google.android.horologist.tiles,  androidx.wear.watchface.complications.datasource, kndroidx.wear.tile" />
 
     <application
         android:name=".MainApplication"
@@ -29,10 +29,21 @@
             android:name=".ui.crash.CrashActivity"
             android:exported="false"
             android:taskAffinity="" />
-        <activity
-            android:name=".ui.smart.SmartActivity"
-            android:exported="false"
-            android:taskAffinity="" />
+        <service
+            android:name=".service.DeviceTileService"
+            android:label="@string/app_name"
+            android:description="@string/tile_description"
+            android:icon="@mipmap/ic_launcher"
+            android:exported="true"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/img_tile_quick" />
+        </service>
+
 
         <meta-data
             android:name="com.google.android.wearable.standalone"

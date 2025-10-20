@@ -5,9 +5,9 @@ import miwu.android.databinding.MiotWidgetTextBinding
 import miwu.android.wrapper.base.BaseMiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
-import miwu.widget.ValueText
+import miwu.widget.StatusText
 
-@Wrapper(ValueText::class)
+@Wrapper(StatusText::class)
 class ValueTextWrapper(context: Context, widget: MiwuWidget<Int>) :
     BaseMiwuWrapper<Int>(context, widget) {
 

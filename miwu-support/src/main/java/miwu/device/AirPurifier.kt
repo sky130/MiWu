@@ -5,5 +5,5 @@ import miwu.annotation.*
 import miwu.widget.*
 
 @Device("air-purifier")
-@Widgets(Text::class, ValueText::class, SwitchButton::class, ModeButton::class)
+@Widgets(Text::class, StatusText::class, SwitchButton::class, ModeButton::class)
 class AirPurifier : MiwuDevice()

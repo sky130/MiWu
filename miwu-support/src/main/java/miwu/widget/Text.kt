@@ -5,17 +5,9 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service(
-    "temperature-humidity-sensor",
-    "environment",
-    "environment",
-    "gas-sensor"
-)
-@Property(
-    "temperature",
-    "relative-humidity",
-    "pm2.5-density",
-    "gas-concentration"
-)
+@Bind<Property>("temperature-humidity-sensor", "temperature")
+@Bind<Property>("environment", "relative-humidity")
+@Bind<Property>("environment", "pm2.5-density")
+@Bind<Property>("gas-sensor", "gas-concentration")
 @Header
 class Text : MiwuWidget<String>()

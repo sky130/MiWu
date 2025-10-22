@@ -5,7 +5,6 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("air-conditioner")
-@Property("target-temperature")
+@Bind<Property>("air-conditioner", "target-temperature")
 @SubHeader
 class DoubleValueController: MiwuWidget<Int>()

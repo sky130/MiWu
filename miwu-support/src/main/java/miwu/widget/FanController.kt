@@ -7,8 +7,7 @@ import miwu.support.base.MiwuWidget
 import miwu.support.icon.Icon
 
 @Widget
-@Service("fan",)
-@Property("fan-level")
+@Bind<Property>("fan", "fan-level")
 @Header
 @ValueList(FanLevelController::class)
 class FanController : MiwuWidget<Int>(){

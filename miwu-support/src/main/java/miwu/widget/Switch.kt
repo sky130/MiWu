@@ -5,8 +5,8 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("light", "fan")
-@Property("on", "on")
+@Bind<Property>("light", "on")
+@Bind<Property>("fan", "on")
 @Header
 class Switch : MiwuWidget<Boolean>() {
     override val icon get() = Icons.Power

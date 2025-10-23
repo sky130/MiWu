@@ -7,6 +7,7 @@ import miwu.support.base.MiwuWidget
 @Widget
 @Bind<Property>("light", "on")
 @Bind<Property>("fan", "on")
+@Bind<Property>("camera", "on")
 @Header
 class Switch : MiwuWidget<Boolean>() {
     override val icon get() = Icons.Power

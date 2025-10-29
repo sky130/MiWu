@@ -2,98 +2,163 @@ package miwu.processor.icon
 
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
+import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ksp.writeTo
 import java.io.InputStream
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.KModifier
 
 class IconsProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : SymbolProcessor {
+
     private var isProcessingOver = false
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (isProcessingOver) return emptyList()
-        val txtStream: InputStream = this::class.java.classLoader.getResourceAsStream("icons.txt")
+        val iconNames = loadIconNames() ?: return emptyList()
+        val processedIcons = processIconNames(iconNames)
+        generateIconsInterface(processedIcons)
+        isProcessingOver = true
+        return emptyList()
+    }
+
+    private fun loadIconNames(): List<String>? {
+        val txtStream: InputStream = this::class.java.classLoader
+            .getResourceAsStream(ICONS_FILE_NAME)
             ?: run {
-                logger.error("icons.txt not found in resources!")
-                return emptyList()
+                logger.error("$ICONS_FILE_NAME not found in resources!")
+                return null
             }
-        val iconNames = txtStream.bufferedReader().readLines()
-            .map { it.trim() }
-            .map { it.replace(" ", "") }
-            .filter { it.isNotEmpty() }
-            .filter { !it.startsWith("//") }
-        val iconClass = ClassName("miwu.support.icon", "Icon")
-        val noneIconClass = ClassName("miwu.icon", "NoneIcon")
-        val splitSymbol = "->"
-        val mapToFun = FunSpec.builder("mapTo")
+        return txtStream.use { stream ->
+            stream.bufferedReader().readLines()
+                .asSequence()
+                .map { it.trim() }
+                .filter { it.isNotEmpty() && !it.startsWith(COMMENT_PREFIX) }
+                .map { it.replace(" ", "") }
+                .toList()
+        }
+    }
+
+    private fun processIconNames(iconNames: List<String>): ProcessedIcons {
+        val properties = mutableListOf<IconProperty>()
+        val mappings = mutableListOf<IconMapping>()
+
+        iconNames.forEach { line ->
+            if (line.startsWith(HASH_PREFIX)) return@forEach
+            if (SPLIT_SYMBOL in line) {
+                val (originalName, iconName) = line.split(SPLIT_SYMBOL, limit = 2)
+                mappings.add(createIconMapping(originalName.trim(), iconName.trim()))
+            } else {
+                properties.add(IconProperty(line))
+                mappings.add(createIconMapping(line, line))
+            }
+        }
+
+        return ProcessedIcons(properties, mappings)
+    }
+
+    private fun createIconMapping(name: String, iconName: String): IconMapping {
+        return IconMapping(
+            originalName = name,
+            snakeCaseName = name.toSnakeCase(),
+            kebabCaseName = name.toKebabCase(),
+            iconName = iconName
+        )
+    }
+
+    private fun generateIconsInterface(processedIcons: ProcessedIcons) {
+        val iconClass = ClassName(ICON_PACKAGE, "Icon")
+        val noneIconClass = ClassName(GENERATED_PACKAGE, "NoneIcon")
+
+        val mapToFunction = createMapToFunction(processedIcons.mappings, iconClass, noneIconClass)
+        val iconInterface = createIconInterface(processedIcons.properties, iconClass, mapToFunction)
+
+        FileSpec.builder(GENERATED_PACKAGE, INTERFACE_NAME)
+            .addType(iconInterface)
+            .build()
+            .writeTo(codeGenerator = codeGenerator, aggregating = false)
+    }
+
+    private fun createMapToFunction(
+        mappings: List<IconMapping>,
+        iconClass: ClassName,
+        noneIconClass: ClassName
+    ): FunSpec {
+        return FunSpec.builder("mapTo")
             .addModifiers(KModifier.PUBLIC)
             .returns(iconClass)
             .addParameter("name", String::class)
             .beginControlFlow("return when(name)")
             .apply {
-                iconNames.forEach { name ->
-                    if (name.startsWith("#")) return@forEach
-                    if (splitSymbol !in name) {
-                        addStatement(
-                            "%S, %S, %S -> %L",
-                            name,
-                            name.replace(Regex("([A-Z])"), "_$1").lowercase().trim('_'),
-                            name.replace(Regex("([a-z])([A-Z])"), "$1-$2").lowercase().trim('-'),
-                            name,
-                        )
-                    } else {
-                        val split = name.split(splitSymbol)
-                        val name = split[0]
-                        val iconName = split[1]
-                        addStatement(
-                            "%S, %S, %S -> %L",
-                            name,
-                            name.replace(Regex("([A-Z])"), "_$1").lowercase().trim('_'),
-                            name.replace(Regex("([a-z])([A-Z])"), "$1-$2").lowercase()
-                                .trim('-'),
-                            iconName,
-                        )
-                    }
+                mappings.forEach { mapping ->
+                    addStatement(
+                        "%S, %S, %S -> %L",
+                        mapping.originalName,
+                        mapping.snakeCaseName,
+                        mapping.kebabCaseName,
+                        mapping.iconName
+                    )
                 }
                 addStatement("else -> %T", noneIconClass)
             }
             .endControlFlow()
             .build()
+    }
 
-        val iconInterface = TypeSpec.interfaceBuilder("Icons")
+    private fun createIconInterface(
+        properties: List<IconProperty>,
+        iconClass: ClassName,
+        mapToFunction: FunSpec
+    ): TypeSpec {
+        return TypeSpec.interfaceBuilder(INTERFACE_NAME)
             .addModifiers(KModifier.PUBLIC)
             .apply {
-                iconNames.forEach { name ->
-                    if (splitSymbol in name) return@forEach
+                properties.forEach { property ->
                     addProperty(
-                        PropertySpec.builder(name, iconClass)
+                        PropertySpec.builder(property.name, iconClass)
                             .addModifiers(KModifier.ABSTRACT)
                             .build()
                     )
                 }
-                addFunction(mapToFun)
+                addFunction(mapToFunction)
             }
             .build()
+    }
 
-        val fileSpec = FileSpec.builder("miwu.icon", "Icons")
-            .addType(iconInterface)
-            .build()
+    private fun String.toSnakeCase(): String {
+        return replace(Regex("([A-Z])"), "_$1")
+            .lowercase()
+            .trim('_')
+    }
 
-        codeGenerator.createNewFile(
-            Dependencies(false),
-            "miwu.icon",
-            "Icons"
-        ).writer().use { writer ->
-            fileSpec.writeTo(writer)
-        }
-        isProcessingOver = true
-        return emptyList()
+    private fun String.toKebabCase(): String {
+        return replace(Regex("([a-z])([A-Z])"), "$1-$2")
+            .lowercase()
+            .trim('-')
+    }
+
+    private data class IconProperty(val name: String)
+
+    private data class IconMapping(
+        val originalName: String,
+        val snakeCaseName: String,
+        val kebabCaseName: String,
+        val iconName: String
+    )
+
+    private data class ProcessedIcons(
+        val properties: List<IconProperty>,
+        val mappings: List<IconMapping>
+    )
+
+    companion object {
+        private const val ICONS_FILE_NAME = "icons.txt"
+        private const val COMMENT_PREFIX = "//"
+        private const val HASH_PREFIX = "#"
+        private const val SPLIT_SYMBOL = "->"
+        private const val INTERFACE_NAME = "Icons"
+        private const val GENERATED_PACKAGE = "miwu.icon"
+        private const val ICON_PACKAGE = "miwu.support.icon"
     }
 }

@@ -48,7 +48,7 @@ class LoginViewModel(internal val manager : MiotManager, val appRepository: AppR
                 val qrcode = manager.Login.generateLoginQrCode().toQrCode()
                 val data = QrData.Url(qrcode.data)
                 _qrcode.emit(generator.generateQrCode(data, options))
-                manager.Login.loginByQrCode(qrcode.loginUrl)!!
+                manager.Login.loginByQrCode(qrcode.loginUrl).getOrThrow()
             }.onFailure { e ->
                 if (e is SocketTimeoutException || e is TimeoutException) return@launch qrcode()
                 withContext(Dispatchers.Main){

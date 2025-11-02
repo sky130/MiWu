@@ -4,6 +4,12 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import miwu.miot.exception.MiotAuthException
+import miwu.miot.exception.MiotBusinessException
+import miwu.miot.exception.MiotConnectionException
+import miwu.miot.exception.MiotHttpException
+import miwu.miot.exception.MiotNetworkException
+import miwu.miot.exception.MiotTimeoutException
 import miwu.miot.model.login.Login
 import miwu.miot.model.login.LoginQrCode
 import miwu.miot.model.login.Sid
@@ -35,27 +41,22 @@ class MiotLoginClientImpl : MiotLoginClient {
         readTimeout(5, TimeUnit.MINUTES)
     }
 
-    override suspend fun login(user: String, pwd: String): MiotUser? {
-        return try {
-            val sidDetails = getSid()
-            val pwdHash = pwd.md5()
-            val body = FormBody {
-                add("qs", sidDetails.qs)
-                add("sid", sidDetails.sid)
-                add("_sign", sidDetails.sign)
-                add("callback", sidDetails.callback)
-                add("user", user)
-                add("hash", pwdHash)
-                add("_json", "true")
-            }
-            return get<String>(Url.Login, body).to<Login>().login()
-        } catch (e: IOException) {
-            null
-        } catch (e: JsonSyntaxException) {
-            null
-        } catch (e: Exception) {
-            null
+    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatching {
+        val sidDetails = getSid()
+        val pwdHash = pwd.md5()
+        val body = FormBody {
+            add("qs", sidDetails.qs)
+            add("sid", sidDetails.sid)
+            add("_sign", sidDetails.sign)
+            add("callback", sidDetails.callback)
+            add("user", user)
+            add("hash", pwdHash)
+            add("_json", "true")
         }
+        get<String>(Url.Login, body)
+            .to<Login>()
+            .login()
+            .getOrThrow()
     }
 
     override suspend fun loginByQrCode(loginUrl: String) =
@@ -76,18 +77,12 @@ class MiotLoginClientImpl : MiotLoginClient {
     ): Unit = withContext(Dispatchers.IO) {
         try {
             get<String>(loginUrl).cut().to<Login>().apply {
-                getSid().let {
-                    location = it.location
-                    securityToken = it.securityToken
-                    login().let { user ->
-                        withContext(context) {
-                            if (user == null) {
-                                onFailure(null)
-                            } else {
-                                onSuccess(user)
-                            }
-                        }
-                    }
+                getSid().let { sid ->
+                    location = sid.location
+                    securityToken = sid.securityToken
+                    login()
+                        .onSuccess { user -> withContext(context) { onSuccess(user) } }
+                        .onFailure { onFailure(it) }
                 }
             }
         } catch (e: Exception) {
@@ -122,9 +117,9 @@ class MiotLoginClientImpl : MiotLoginClient {
     }
 
     private object Url {
-        val Sid = "https://account.xiaomi.com/pass/serviceLogin?sid=$MIOT_SID&_json=true"
-        val Login = "https://account.xiaomi.com/pass/serviceLoginAuth2"
-        val QrCode = "https://account.xiaomi.com/longPolling/loginUrl"
+        const val Sid = "https://account.xiaomi.com/pass/serviceLogin?sid=$MIOT_SID&_json=true"
+        const val Login = "https://account.xiaomi.com/pass/serviceLoginAuth2"
+        const val QrCode = "https://account.xiaomi.com/longPolling/loginUrl"
     }
 
     internal suspend inline fun <reified T> get(
@@ -133,14 +128,18 @@ class MiotLoginClientImpl : MiotLoginClient {
 
     private suspend fun getSid() = get<String>(Url.Sid).cut().to<Sid>()
 
-    private suspend fun Login.login(): MiotUser? {
-        if (code != 0) return null
+    private suspend fun Login.login(): Result<MiotUser> = runCatching {
+        if (code != 0) throw MiotBusinessException.loginFailed(code)
         val response = try {
             get<Response>(location)
+        } catch (e: TimeoutException) {
+            throw MiotTimeoutException("Login", e)
+        } catch (e: IOException) {
+            throw MiotConnectionException("Login", e)
         } catch (e: Exception) {
-            return null
+            throw MiotHttpException("Login", e)
         }
-        val cookiesHeader = response.headers["Set-Cookie"] ?: return null
+        val cookiesHeader = response.headers["Set-Cookie"]!!
         val serviceToken = cookiesHeader.split(", ").firstNotNullOfOrNull { cookieString ->
             val parts = cookieString.split("; ")[0].split("=", limit = 2)
             if (parts.size == 2 && parts[0] == "serviceToken") {
@@ -148,8 +147,8 @@ class MiotLoginClientImpl : MiotLoginClient {
             } else {
                 null
             }
-        }
-        return serviceToken?.let { MiotUser(userId, securityToken, it, getRandomDeviceId()) }
+        } ?: throw MiotAuthException.tokenMissing()
+        MiotUser(userId, securityToken, serviceToken, getRandomDeviceId())
     }
 
     class SimpleCookieJar : CookieJar {

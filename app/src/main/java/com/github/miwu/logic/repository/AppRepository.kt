@@ -3,6 +3,7 @@ package com.github.miwu.logic.repository
 import android.util.ArrayMap
 import com.github.miwu.logic.setting.AppSetting
 import fr.haan.resultat.Resultat
+import fr.haan.resultat.toResultat
 import kndroidx.KndroidX.scope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,9 +45,9 @@ class AppRepository : KoinComponent {
     fun loadHomes() {
         scope.launch {
             _home.emit(Resultat.Loading())
-            runCatching {
-                _home.emit(buildList<MiotHome> {
-                    val homes = miotClient.Home.getHomes().result
+            _home.emit(runCatching {
+                buildList {
+                    val homes = miotClient.Home.getHomes().getOrThrow().result
                     addAll(homes.homes)
                     homes.shareHomes?.let { addAll(it) }
                     forEach { home ->
@@ -65,56 +66,45 @@ class AppRepository : KoinComponent {
                             loadScenes()
                         }
                     }
-                }.let { Resultat.Success(it) })
-            }.onFailure {
-                _home.emit(Resultat.Failure(it))
-            }
+                }
+            }.toResultat())
         }
     }
 
     fun loadDevices() {
         scope.launch {
             device.emit(Resultat.Loading())
-            runCatching {
-                device.emit(
-                    buildList {
-                        val homeUid = AppSetting.homeUid.value.takeIf { it != 0L }
-                            ?: throw IllegalStateException()
-                        val homeId = AppSetting.homeId.value.takeIf { it != 0L }
-                            ?: throw IllegalStateException()
-                        val devices = miotClient.Home.getDevices(homeUid, homeId).result.deviceInfo
-                            ?: throw IllegalStateException()
-                        addAll(devices)
-                    }.let { Resultat.Success(it) }
-                )
-            }.onFailure {
-                device.emit(Resultat.Failure(it))
-            }
+            device.emit(
+                runCatching {
+                    val homeUid = AppSetting.homeUid.value
+                    val homeId = AppSetting.homeId.value
+                    if (homeUid == 0L || homeId == 0L)
+                        throw IllegalStateException("Invalid homeUid or homeId")
+                    miotClient.Home.getDevices(homeUid, homeId)
+                        .getOrThrow().result.deviceInfo ?: emptyList()
+                }.toResultat()
+            )
+
         }
     }
 
     fun loadScenes() {
         scope.launch {
             scene.emit(Resultat.Loading())
-            runCatching {
-                scene.emit(
-                    buildList {
-                        val homeId = AppSetting.homeId.value.takeIf { it != 0L }
-                            ?: throw IllegalStateException()
-                        val scenes = miotClient.Home.getScenes(homeId).result.scenes
-                            ?: throw IllegalStateException()
-                        addAll(scenes)
-                    }.let { Resultat.Success(it) }
-                )
-            }.onFailure {
-                scene.emit(Resultat.Failure(it))
-            }
+            scene.emit(
+                runCatching {
+                    val homeId = AppSetting.homeId.value
+                    if (homeId == 0L) throw IllegalStateException("Invalid homeId")
+                    miotClient.Home.getScenes(homeId).getOrThrow().result.scenes ?: emptyList()
+                }.toResultat()
+            )
+
         }
     }
 
     fun getRoomName(device: MiotDevice) = roomMap[device.did] ?: "未知位置"
 
-
+    @Suppress("FunctionName")
     private fun <T> MutableResultListStateFlow(value: Resultat<List<T>>) = MutableStateFlow(value)
 
 }

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miwu.miot.MiotManager
+import miwu.miot.exception.MiotDeviceException
 
 
 typealias MiotDevice = MiotDevices.Result.Device
@@ -58,30 +59,37 @@ data class MiotDevices(
                 @SerializedName("showGroupMember") val showGroupMember: Boolean?,
             )
 
-            suspend fun getSpecAtt(manager: MiotManager) =
-                specType?.let { manager.SpecAtt.getSpecAtt(it) }
+            suspend fun getSpecAtt(manager: MiotManager) = runCatching {
+                val specType = specType ?: throw MiotDeviceException.specNotFound(model)
+                manager.SpecAtt.getSpecAtt(specType).getOrThrow()
+            }
 
-            suspend fun getSpecAttLanguageMap(manager: MiotManager,languageCode: String = "zh_cn") =
-                specType?.let { manager.SpecAtt.getSpecMultiLanguage(it)?.let { language -> manager.SpecAtt.getSpecAttLanguageMap(language, languageCode) } }
 
-            data class Info(
-                @SerializedName("code") val code: Int,
-                @SerializedName("data") val data: Data
-            ) {
-                data class Data(@SerializedName("realIcon") val realIcon: String)
+            suspend fun getSpecAttLanguageMap(
+                manager: MiotManager,
+                languageCode: String = "zh_cn"
+            ) = runCatching {
+                val specType = specType ?: throw MiotDeviceException.specNotFound(model)
+                val language = manager.SpecAtt.getSpecMultiLanguage(specType).getOrThrow()
+                manager.SpecAtt.getSpecAttLanguageMap(language, languageCode).getOrThrow()
             }
         }
 
-        data class HomeInfo(
-            @SerializedName("dids") val dids: Any,
-            @SerializedName("id") val id: Long,
-            @SerializedName("roomlist") val room: List<Room>
+        data class Info(
+            @SerializedName("code") val code: Int,
+            @SerializedName("data") val data: Data
         ) {
-            data class Room(
-                @SerializedName("dids") val dids: List<String>, @SerializedName("id") val id: Long
-            )
+            data class Data(@SerializedName("realIcon") val realIcon: String)
         }
     }
 
-
+    data class HomeInfo(
+        @SerializedName("dids") val dids: Any,
+        @SerializedName("id") val id: Long,
+        @SerializedName("roomlist") val room: List<Room>
+    ) {
+        data class Room(
+            @SerializedName("dids") val dids: List<String>, @SerializedName("id") val id: Long
+        )
+    }
 }

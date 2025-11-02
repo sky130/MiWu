@@ -13,14 +13,14 @@ interface MiotLoginClient {
      * @param pwd 密码
      * @return 登录成功返回 MiotUser，否则返回 null
      */
-    suspend fun login(user: String, pwd: String): MiotUser?
+    suspend fun login(user: String, pwd: String): Result<MiotUser>
 
     /**
      * 扫码登录（简易版）
      * @param loginUrl 扫码登录url
      * @return 登录成功返回 MiotUser，否则返回 null
      */
-    suspend fun loginByQrCode(loginUrl: String): MiotUser?
+    suspend fun loginByQrCode(loginUrl: String): Result<MiotUser>
 
     /**
      * 扫码登录（带回调）

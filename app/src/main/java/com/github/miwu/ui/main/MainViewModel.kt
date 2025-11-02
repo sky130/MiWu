@@ -53,10 +53,11 @@ class MainViewModel(val appRepository: AppRepository, val deviceRepository: Devi
         }.asLiveData()
     val info = flow {
         runCatching {
-            appRepository.miotClient.getUserInfo()
+            appRepository.miotClient.getUserInfo().getOrThrow()
         }.onSuccess {
             emit(it.info)
         }.onFailure {
+            // TODO toast 提示用户
             emit(MiotUserInfo.UserInfo("null", "", "null"))
         }
     }.asLiveData()

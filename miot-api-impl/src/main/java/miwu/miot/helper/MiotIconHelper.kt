@@ -4,7 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miwu.miot.ktx.OkHttpClient
 import miwu.miot.ktx.get
-import miwu.miot.model.miot.MiotDevices.Result.Device.Info
+import miwu.miot.model.miot.MiotDevices.Result.Info
 
 object MiotIconHelper {
     private val iconClient by lazy {

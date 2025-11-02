@@ -94,7 +94,7 @@ class MiotDeviceManager(
     private suspend fun initWidgets() {
         val att = getAtt() ?: return
         val languageMap = getLanguageMap() ?: return
-
+        // TODO 需要警告用户出现什么问题
         cache.putSpecAtt(deviceUrn, att)
         cache.putSpecAtt(deviceUrn, att)
 
@@ -236,10 +236,11 @@ class MiotDeviceManager(
         }
     }
 
-    private suspend fun getAtt() = cache.getSpecAtt(deviceUrn) ?: device.getSpecAtt(manager)
+    private suspend fun getAtt() =
+        cache.getSpecAtt(deviceUrn) ?: device.getSpecAtt(manager).getOrNull()
 
     private suspend fun getLanguageMap() =
-        cache.getLanguageMap(deviceUrn) ?: device.getSpecAttLanguageMap(manager)
+        cache.getLanguageMap(deviceUrn) ?: device.getSpecAttLanguageMap(manager).getOrNull()
 
     private fun getPropertyWidgetClass(
         serviceType: String,
@@ -285,9 +286,7 @@ class MiotDeviceManager(
             attList.add(widget.siid to widget.piid)
         }
         if (attList.isEmpty()) return@withContext
-        runCatching {
-            miot.Device.get(device, attList.toTypedArray())
-        }.onSuccess {
+        miot.Device.get(device, attList.toTypedArray()).onSuccess {
             update(it.result ?: return@onSuccess)
         }
     }

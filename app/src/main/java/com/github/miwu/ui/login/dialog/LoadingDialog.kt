@@ -22,22 +22,21 @@ class LoadingDialog(private val user: String, private val pwd: String) :
 
     override fun init() {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.manager.Login.login(user, pwd).also {
+            viewModel.manager.Login.login(user, pwd).also { result ->
+                val user = result.getOrNull()
                 withContext(Dispatchers.Main) {
-                    if (it == null) {
+                    if (user == null) {
+                        // TODO 检查具体错误原因
                         R.string.toast_login_failure.toast()
                         dismiss()
                     } else {
                         AppSetting.apply {
-                            var userId by this.userId
-                            var securityToken by this.securityToken
-                            var serviceToken by this.serviceToken
-                            securityToken = it.securityToken
-                            userId = it.userId
-                            serviceToken = it.serviceToken
+                            userId.value = user.userId
+                            serviceToken.value = user.serviceToken
+                            securityToken.value = user.securityToken
                         }
                         viewModel.appRepository.miotUser =
-                            it.copy(deviceId = MainApplication.androidId)
+                            user.copy(deviceId = MainApplication.androidId)
                         R.string.toast_login_success.toast()
                         requireActivity().start<MainActivity>()
                         dismiss()

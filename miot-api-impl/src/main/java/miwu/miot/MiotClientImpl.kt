@@ -9,6 +9,9 @@ import miwu.miot.att.set.SetAtt
 import miwu.miot.att.set.piid
 import miwu.miot.att.set.siid
 import miwu.miot.att.set.value
+import miwu.miot.exception.MiotAuthException
+import miwu.miot.exception.MiotClientException
+import miwu.miot.exception.MiotDeviceException
 import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.miot.MiotDevices
 import miwu.miot.model.miot.MiotScenes
@@ -30,7 +33,7 @@ import miwu.miot.ktx.create
 import miwu.miot.ktx.get
 import miwu.miot.ktx.readToString
 import miwu.miot.model.MiotUser
-import miwu.miot.model.miot.MiotDevices.Result.Device.Info
+import miwu.miot.model.miot.MiotDevices.Result.Info
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotHomes
 import miwu.miot.utils.getNonce
@@ -68,15 +71,21 @@ class MiotClientImpl : MiotClient {
         miotRetrofit.create<MiotService>()
     }
     private val specAttClient by lazy { MiotSpecAttClientImpl() }
-    private lateinit var user: MiotUser
+    private var _user: MiotUser? = null
+        get() = field ?: throw MiotClientException.userNotSet()
+    private val user: MiotUser get() = _user!!
     override val Home = MiotClientHome()
     override val Device = MiotClientDevice()
 
     override fun setUser(user: MiotUser) {
-        this.user = user
+        _user = user
     }
 
-    override suspend fun getUserInfo() = miotService.getUserInfo(GetUserInfo(user.userId))
+    override suspend fun getUserInfo() = runCatching {
+        miotService.getUserInfo(GetUserInfo(user.userId))
+    }.recoverCatching {
+        throw MiotClientException.getUserInfoFailed(it)
+    }
 
     inner class MiotClientHome : MiotClient.IMiotClientHome {
         override suspend fun getHomes(
@@ -84,29 +93,47 @@ class MiotClientImpl : MiotClient {
             fetchShareDev: Boolean,
             appVer: Int,
             limit: Int,
-        ) = miotService.getHomes(
-            GetHome(
-                appVer, fetchShare, fetchShareDev, false, limit
+        ) = runCatching {
+            miotService.getHomes(
+                GetHome(
+                    appVer, fetchShare, fetchShareDev, false, limit
+                )
             )
-        )
+        }.recoverCatching {
+            throw MiotClientException.getHomesFailed(it)
+        }
 
         override suspend fun getDevices(
             home: MiotHome, limit: Int,
-        ) = getDevices(home.uid, home.id.toLong(), limit)
+        ) = runCatching {
+            getDevices(home.uid, home.id.toLong(), limit).getOrThrow()
+        }
 
         override suspend fun getScenes(
             home: MiotHomes.Result.Home,
-        ) = miotService.getScenes(GetScene(home.id.toLong()))
+        ) = runCatching {
+            miotService.getScenes(GetScene(home.id.toLong()))
+        }.recoverCatching {
+            throw MiotClientException.getScenesFailed(it)
+        }
 
         override suspend fun getScenes(
             homeId: Long
-        ) = miotService.getScenes(GetScene(homeId))
+        ) = runCatching {
+            miotService.getScenes(GetScene(homeId))
+        }.recoverCatching {
+            throw MiotClientException.getScenesFailed(it)
+        }
 
         override suspend fun getDevices(
             homeOwnerId: Long, homeId: Long, limit: Int,
-        ) = miotService.getDevices(
-            GetDevices(homeOwnerId, homeId, limit)
-        )
+        ) = runCatching {
+            miotService.getDevices(
+                GetDevices(homeOwnerId, homeId, limit)
+            )
+        }.recoverCatching {
+            throw MiotClientException.getDevicesFailed(it)
+        }
 
         /**
          * @return 目前不考虑返回结果
@@ -124,35 +151,44 @@ class MiotClientImpl : MiotClient {
         override suspend fun get(
             device: MiotDevices.Result.Device,
             att: Array<out GetAtt>
-        ): DeviceAtt {
+        ): Result<DeviceAtt> = runCatching {
             val list = Array(att.size) {
                 att[it].run {
                     GetParams.Att(device.did, siid, piid)
                 }
             }
-            return miotService.getDeviceAtt(GetParams(list))
+            miotService.getDeviceAtt(GetParams(list))
+        }.recoverCatching {
+            val specType = device.specType ?: throw it
+            throw MiotClientException.getSpecAttFailed(specType, it)
         }
 
-        override suspend fun set(device: MiotDevices.Result.Device, att: Array<out SetAtt>) {
-            val list = Array(att.size) {
-                att[it].run {
-                    SetParams.Att(device.did, siid, piid, value)
+        override suspend fun set(device: MiotDevices.Result.Device, att: Array<out SetAtt>) =
+            runCatching {
+                val list = Array(att.size) {
+                    att[it].run {
+                        SetParams.Att(device.did, siid, piid, value)
+                    }
                 }
+                miotService.setDeviceAtt(SetParams(list))
+                Unit
+            }.recoverCatching {
+                val specType =
+                    device.specType ?: throw MiotDeviceException.specNotFound(device.model)
+                throw MiotClientException.getSpecAttFailed(specType, it)
             }
-            miotService.setDeviceAtt(SetParams(list))
-        }
 
         override suspend fun action(
             device: MiotDevices.Result.Device, siid: Int, aiid: Int, vararg obj: Any
-        ) = miotService.doAction(
-            ActionBody(
-                ActionBody.Action(
-                    device.did, siid, aiid
-                ).apply {
-                    `in`.addAll(obj)
-                }
+        ) = runCatching {
+            miotService.doAction(
+                ActionBody(
+                    ActionBody.Action(device.did, siid, aiid).apply { `in`.addAll(obj) }
+                )
             )
-        )
+        }.recoverCatching {
+            throw MiotClientException.actionFailed(device.did, siid, aiid, *obj, it)
+        }
 
         override suspend fun getSpecAttWithLanguage(
             device: MiotDevices.Result.Device,
@@ -160,14 +196,11 @@ class MiotClientImpl : MiotClient {
         ) = specAttClient.getSpecAttWithLanguage(device.specType!!, languageCode)
 
         override suspend fun getIconUrl(model: String) = withContext(Dispatchers.IO) {
-            try {
+            runCatching {
                 val url = "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${model}"
                 val info = iconClient.get<Info>(url)
-                if (info.code != 0) return@withContext null
-                return@withContext info.data.realIcon
-            } catch (e: Exception) {
-                e
-                return@withContext null
+                if (info.code != 0) throw MiotClientException.getIconUrlFailed(model)
+                info.data.realIcon
             }
         }
     }

@@ -9,14 +9,14 @@ interface MiotSpecAttClient {
      * @param urn 设备类型唯一标识
      * @return 属性信息
      */
-    suspend fun getSpecAtt(urn: String): SpecAtt?
+    suspend fun getSpecAtt(urn: String): Result<SpecAtt>
 
     /**
      * 获取某个 URN 的多语言信息（JSON字符串）
      * @param urn 设备类型唯一标识
      * @return 多语言信息，JSON字符串
      */
-    suspend fun getSpecMultiLanguage(urn: String): String?
+    suspend fun getSpecMultiLanguage(urn: String): Result<String>
 
     /**
      * 获取带某种语言的属性信息
@@ -24,7 +24,7 @@ interface MiotSpecAttClient {
      * @param languageCode 语言代码（如"zh_CN","en"等）
      * @return 属性信息（已转换为该语言），失败返回 null
      */
-    suspend fun getSpecAttWithLanguage(urn: String, languageCode: String): SpecAtt?
+    suspend fun getSpecAttWithLanguage(urn: String, languageCode: String): Result<SpecAtt>
 
     /**
      * 获取语言映射表
@@ -32,6 +32,6 @@ interface MiotSpecAttClient {
      * @param languageCode 语言代码（如"zh_CN","en"等）
      * @return 语言映射表，失败返回 null
      */
-    fun getSpecAttLanguageMap(language: String, languageCode: String): Map<String, String>?
+    fun getSpecAttLanguageMap(language: String, languageCode: String): Result<Map<String, String>>
 
 }

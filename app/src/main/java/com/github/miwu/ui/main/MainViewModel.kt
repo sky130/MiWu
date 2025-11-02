@@ -9,8 +9,10 @@ import com.github.miwu.ui.main.FragmentState.*
 import fr.haan.resultat.onFailure
 import fr.haan.resultat.onLoading
 import fr.haan.resultat.onSuccess
+import kndroidx.extension.toast
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import miwu.miot.exception.MiotAuthException
 import miwu.miot.model.miot.MiotDevices
 import miwu.miot.model.miot.MiotUserInfo
 import kotlin.collections.sorted
@@ -57,13 +59,13 @@ class MainViewModel(val appRepository: AppRepository, val deviceRepository: Devi
         }.onSuccess {
             emit(it.info)
         }.onFailure {
-            // TODO toast 提示用户
+            it.message?.toast()
             emit(MiotUserInfo.UserInfo("null", "", "null"))
         }
     }.asLiveData()
 
     fun getRoomName(item: MiotDevices.Result.Device) =
-        appRepository.getRoomName(item as MiotDevices.Result.Device)
+        appRepository.getRoomName(item)
 
     fun init() {
         appRepository.loadAll()

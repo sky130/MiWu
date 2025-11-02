@@ -94,7 +94,7 @@ class MiotDeviceManager(
     private suspend fun initWidgets() {
         val att = getAtt() ?: return
         val languageMap = getLanguageMap() ?: return
-        // TODO 需要警告用户出现什么问题
+
         cache.putSpecAtt(deviceUrn, att)
         cache.putSpecAtt(deviceUrn, att)
 
@@ -205,7 +205,7 @@ class MiotDeviceManager(
 
     override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
         scope.launch {
-            val result = miot.Device.action(device, siid, aiid, *input)
+            val result = miot.Device.action(device, siid, aiid, *input).getOrNull()
             if (result == null) return@launch
             for (i in widgetHolders) {
                 val widget = i.widget

@@ -88,7 +88,7 @@ class MiotClientImpl : MiotClient {
                 return@runCatching false
             }
         }
-        false
+        true
     }
 
     override suspend fun getUserInfo() = runCatching {

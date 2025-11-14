@@ -40,6 +40,7 @@ import miwu.miot.utils.getNonce
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import retrofit2.HttpException
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.nio.charset.StandardCharsets
@@ -81,9 +82,25 @@ class MiotClientImpl : MiotClient {
         _user = user
     }
 
+    override suspend fun checkTokenValid() = runCatching {
+        getUserInfo().exceptionOrNull()?.let {
+            if (it is MiotAuthException) {
+                return@runCatching false
+            }
+        }
+        false
+    }
+
     override suspend fun getUserInfo() = runCatching {
         miotService.getUserInfo(GetUserInfo(user.userId))
     }.recoverCatching {
+        when (it) {
+            is HttpException -> {
+                if (it.code() == 401) {
+                    throw MiotAuthException.tokenExpired(it)
+                }
+            }
+        }
         throw MiotClientException.getUserInfoFailed(it)
     }
 

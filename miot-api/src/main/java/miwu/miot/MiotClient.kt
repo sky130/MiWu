@@ -19,6 +19,8 @@ interface MiotClient {
      */
     suspend fun getUserInfo(): Result<MiotUserInfo>
 
+    suspend fun checkTokenValid(): Result<Boolean>
+
     val Home: IMiotClientHome
     val Device: IMiotClientDevice
 

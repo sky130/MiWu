@@ -131,7 +131,7 @@ internal class WrapperProcessor(
             .indent()
             .apply {
                 wrapperMappings.entries.forEachIndexed { index, (wrapperClass, wrappedClass) ->
-                    add("%T::class.java to %T::class.java", wrapperClass, wrappedClass)
+                    add("%T::class.java to %T::class.java", wrappedClass, wrapperClass)
                     if (index < wrapperMappings.size - 1) {
                         add(",\n")
                     } else {

@@ -19,6 +19,9 @@ interface MiotClient {
      */
     suspend fun getUserInfo(): Result<MiotUserInfo>
 
+    /**
+     * 返回当前 `MiotUser` 的 `Token` 是否过期
+     */
     suspend fun checkTokenValid(): Result<Boolean>
 
     val Home: IMiotClientHome

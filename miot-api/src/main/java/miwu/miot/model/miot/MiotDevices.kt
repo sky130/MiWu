@@ -64,7 +64,6 @@ data class MiotDevices(
                 manager.SpecAtt.getSpecAtt(specType).getOrThrow()
             }
 
-
             suspend fun getSpecAttLanguageMap(
                 manager: MiotManager,
                 languageCode: String = "zh_cn"

@@ -74,6 +74,11 @@ class MiotDeviceManager(
         }
     }
 
+    fun stop(){
+        job.cancel()
+        layout.clear()
+        widgetHolders.clear()
+    }
 
     private fun initDevice() {
         val device = DeviceRegistry.registry[Urn.parseFrom(deviceUrn).name] ?: return

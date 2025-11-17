@@ -145,6 +145,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     }
 
     override fun onDestroy() {
+        manager.stop()
         super.onDestroy()
     }
 

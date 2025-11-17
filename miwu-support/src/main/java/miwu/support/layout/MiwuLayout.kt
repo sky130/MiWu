@@ -13,6 +13,14 @@ data class MiwuLayout(
     val footer: WidgetList = arrayListOf(),
     val unknown: WidgetList = arrayListOf(),
 ){
+    fun clear(){
+        header.clear()
+        subHeader.clear()
+        body.clear()
+        subFooter.clear()
+        footer.clear()
+        unknown.clear()
+    }
 
     fun Header(block: (MiwuWidget<*>) -> Unit){
         header.forEach { block(it) }

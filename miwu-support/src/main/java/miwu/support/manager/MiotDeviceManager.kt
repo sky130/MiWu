@@ -74,7 +74,7 @@ class MiotDeviceManager(
         }
     }
 
-    fun stop(){
+    fun stop() {
         job.cancel()
         layout.clear()
         widgetHolders.clear()
@@ -98,17 +98,15 @@ class MiotDeviceManager(
 
     private suspend fun initWidgets() {
         val att = getAtt() ?: return
-        val languageMap = getLanguageMap() ?: return
 
-        cache.putSpecAtt(deviceUrn, att)
+        callback?.onDeviceAttLoaded(att)
         cache.putSpecAtt(deviceUrn, att)
 
         att.initVariable()
-        att.convertLanguage(languageMap)
+        getLanguageMap()?.let { att.convertLanguage(it) }
 
         fun MiwuWidget<*>.setAttr() {
-            if (isMultiAttribute)
-                miotSpecAtt = att
+            if (isMultiAttribute) miotSpecAtt = att
         }
 
         val services = att.services

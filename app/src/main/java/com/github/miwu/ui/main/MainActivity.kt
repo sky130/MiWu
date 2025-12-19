@@ -28,25 +28,13 @@ class MainActivity : ViewActivityX<Binding>(Binding::inflate), OnPageChangeListe
 
     override fun onPageSelected(position: Int) {
         adapter.list[position].second.apply {
-            try {
+            runCatching {
                 when (this) {
-                    is DeviceFragment -> {
-                        binding.recycler.requestFocus()
-                    }
-
-                    is MiWuFragment -> {
-                        binding.recycler.requestFocus()
-                    }
-
-                    is SceneFragment -> {
-                        binding.recycler.requestFocus()
-                    }
-
-                    is UserFragment -> {
-                        binding.scroll.requestFocus()
-                    }
+                    is DeviceFragment -> binding.recycler.requestFocus()
+                    is SceneFragment -> binding.recycler.requestFocus()
+                    is MiWuFragment -> binding.recycler.requestFocus()
+                    is UserFragment -> binding.scroll.requestFocus()
                 }
-            } catch (_: Exception) {
             }
         }
         binding.title.setTitle(adapter.list[position].first)

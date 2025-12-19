@@ -54,6 +54,8 @@ roomCommonJvm = "2.7.2"
 recyclerview="1.4.0"
 tilesToolingPreview = "1.5.0"
 tilesTooling = "1.5.0"
+slf4jApi = "2.0.7"
+logbackAndroid = "3.0.0"
 
 [libraries]
 alexzhirkevich-custom-qr-generator = { module = "com.github.alexzhirkevich:custom-qr-generator", version.ref = "customQrGeneratorVersion" }
@@ -113,6 +115,8 @@ kndroidx-wear-recycler = { group = "com.github.sky130.kndroidx", name = "wear-sm
 kndroidx-databinding = { group = "com.github.sky130.kndroidx", name = "core-databinding", version.ref = "kndroidx" }
 kndroidx-recycler-databinding = { group = "com.github.sky130.kndroidx", name = "recycler-databinding", version.ref = "kndroidx" }
 kndroidx-wear-tile = { group = "com.github.sky130.kndroidx", name = "wear-tile", version.ref = "kndroidx" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
+logback-android = { module = "com.github.tony19:logback-android", version.ref = "logbackAndroid" }
 
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }

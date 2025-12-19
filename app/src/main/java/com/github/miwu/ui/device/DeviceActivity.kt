@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.github.miwu.MainApplication.Companion.gson
+import com.github.miwu.ktx.Logger
 import com.github.miwu.logic.repository.AppRepository
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
@@ -13,14 +14,12 @@ import miwu.android.R
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.android.wrapper.base.BaseMiwuWrapper
-import miwu.android.wrapper.base.MiwuWrapper
 import miwu.miot.MiotManager
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.utils.to
 import miwu.support.api.Cache
 import miwu.support.base.MiwuWidget
-import miwu.support.layout.on
 import miwu.support.manager.MiotDeviceManager
 import miwu.support.manager.callback.DeviceManagerCallback
 import miwu.widget.generated.wrapper.WrapperRegistry
@@ -32,6 +31,7 @@ import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCallback {
     override val viewModel: DeviceViewModel by viewModel()
     private val device by lazy { intent.getStringExtra("device")!!.to<MiotDevice>() }
+    private val logger = Logger()
     private val appRepository: AppRepository by inject()
     private val miotManager: MiotManager by inject()
     private val wrapperList = arrayListOf<BaseMiwuWrapper<*>>()
@@ -48,76 +48,60 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         )
     }
 
-
     private fun ViewGroup.addWrapper(wrapper: BaseMiwuWrapper<*>) {
         addView(wrapper.view.apply {
+            val bottom =
+                context.resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(
-                    0,
-                    0,
-                    0,
-                    context.resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom)
-                )
-            }
+            ).apply { setMargins(0, 0, 0, bottom) }
         })
     }
 
-    override fun onDeviceInitiated() {
-        on(manager.layout) {
-            Header { widget ->
-                binding.header.let { viewGroup ->
-                    viewGroup.visibility = View.VISIBLE
-                    createWrapper(widget)?.let {
-                        wrapperList.add(it)
-                        viewGroup.addWrapper(it)
-                    }
-                }
-            }
-            SubHeader { widget ->
-                binding.subHeader.let { viewGroup ->
-                    viewGroup.visibility = View.VISIBLE
-                    createWrapper(widget)?.let {
-                        wrapperList.add(it)
-                        viewGroup.addWrapper(it)
-                    }
-                }
-            }
-            Body { widget ->
-                binding.body.let { viewGroup ->
-                    viewGroup.visibility = View.VISIBLE
-                    createWrapper(widget)?.let {
-                        wrapperList.add(it)
-                        viewGroup.add(it.view)
-                    }
-                }
-            }
-            SubFooter { widget ->
-                binding.subFooter.let { viewGroup ->
-                    viewGroup.visibility = View.VISIBLE
-                    createWrapper(widget)?.let {
-                        wrapperList.add(it)
-                        viewGroup.addWrapper(it)
-                    }
-                }
-            }
-            Footer { widget ->
-                binding.footer.let { viewGroup ->
-                    viewGroup.visibility = View.VISIBLE
-                    createWrapper(widget)?.let {
-                        wrapperList.add(it)
-                        viewGroup.addWrapper(it)
-                    }
-                }
-            }
-            Unknown {
-
-            }
+    private inline fun <reified T : ViewGroup> T.addWidget(
+        widget: MiwuWidget<*>,
+        add: T.(BaseMiwuWrapper<*>) -> Unit = { addWrapper(it) }
+    ) {
+        logger.debug("Widget found: {}", widget)
+        createWrapper(widget)?.let {
+            visibility = View.VISIBLE
+            wrapperList.add(it)
+            add(it)
         }
-        wrapperList.forEach {
-            it.init()
+    }
+
+    override fun onDeviceInitiated() {
+        initDeviceLayout()
+        wrapperList.forEach { it.init() }
+    }
+
+    override fun onDeviceAttLoaded(specAtt: SpecAtt) {
+        logger.info("Device {}  spec att: {}", device.name, specAtt)
+    }
+
+    private fun initDeviceLayout() {
+        with(manager.layout) {
+            with(binding) {
+                Header {
+                    header.addWidget(it)
+                }
+                SubHeader {
+                    subHeader.addWidget(it)
+                }
+                Body {
+                    body.addWidget(it) { add(it.view) }
+                }
+                SubFooter {
+                    subFooter.addWidget(it)
+                }
+                Footer {
+                    footer.addWidget(it)
+                }
+                Unknown {
+                    unknown.addWidget(it)
+                }
+            }
         }
     }
 
@@ -129,18 +113,13 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         viewModel.addFavorite(device)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun createWrapper(miotWidget: MiwuWidget<*>): BaseMiwuWrapper<*>? {
-        val wrapperClass =
-            WrapperRegistry.registry[miotWidget::class.java] as? Class<out BaseMiwuWrapper<*>>
-                ?: return null
-        return wrapperClass.getDeclaredConstructor(
-            Context::class.java,
-            MiwuWidget::class.java,
-        ).newInstance(this, miotWidget)
-    }
-
     override fun init() {
+        with(device) {
+            logger.info(
+                "Current miot device info: model={}, mac={}, did={}, isOnline={},",
+                model, mac, did, isOnline,
+            )
+        }
         manager.init()
     }
 
@@ -155,6 +134,17 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                 putExtra("device", gson.toJson(device))
             }
         }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun createWrapper(miotWidget: MiwuWidget<*>): BaseMiwuWrapper<*>? {
+        val wrapperClass =
+            WrapperRegistry.registry[miotWidget::class.java] as? Class<out BaseMiwuWrapper<*>>
+                ?: return null
+        return wrapperClass.getDeclaredConstructor(
+            Context::class.java,
+            MiwuWidget::class.java,
+        ).newInstance(this, miotWidget)
     }
 
     inner class AndroidCache(val context: Context) : Cache {

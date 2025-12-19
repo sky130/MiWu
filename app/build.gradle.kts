@@ -154,6 +154,10 @@ dependencies {
     implementation(libs.koin.android.compat)
 
 
+    implementation(libs.logback.android)
+    implementation(libs.slf4j.api)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

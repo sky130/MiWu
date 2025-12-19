@@ -8,8 +8,11 @@ import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.repositoryModule
 import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.ui.viewModelModule
+import com.github.miwu.ktx.LazyLogger
+import com.github.miwu.ktx.mask
 import com.google.gson.Gson
 import kndroidx.KndroidX
+import kndroidx.extension.log
 import kndroidx.kndroidxConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -23,18 +26,20 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application() {
+    val logger by LazyLogger()
     val appRepository: AppRepository by inject()
     val manager: MiotManager by inject()
-    
+
     override fun onCreate() {
         super.onCreate()
-        configKoin() 
+        configKoin()
         configKndroidx()
-        configManager()
+        configMiotManager()
         configMiotUser()
     }
 
     fun configMiotUser() {
+        logger.info("Config miot user")
         if (AppSetting.userId.value.isNotEmpty()) {
             AppSetting.apply {
                 appRepository.miotUser =
@@ -43,18 +48,27 @@ class MainApplication : Application() {
                         securityToken.value,
                         serviceToken.value,
                         androidId
-                    )
+                    ).apply {
+                        logger.info(
+                            "Current MiotUser: userId={}, securityToken={}, serviceToken={}",
+                            userId,
+                            securityToken.mask(),
+                            serviceToken.mask(),
+                        )
+                    }
             }
         }
     }
 
     fun configKndroidx() {
+        logger.info("Config kndroidx")
         kndroidxConfig {
             context = applicationContext
         }
     }
 
     fun configKoin() {
+        logger.info("Config koin")
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
@@ -64,7 +78,8 @@ class MainApplication : Application() {
         }
     }
 
-    fun configManager() {
+    fun configMiotManager() {
+        logger.info("Config miot manager")
         manager.Base64.config(encode = {
             Base64.encodeToString(it, Base64.NO_WRAP)
         }, decode = {

@@ -10,7 +10,11 @@ import com.github.alexzhirkevich.customqrgenerator.QrCodeGenerator
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.QrErrorCorrectionLevel
 import com.github.alexzhirkevich.customqrgenerator.createQrOptions
+import com.github.miwu.R
+import com.github.miwu.ktx.Logger
 import com.github.miwu.logic.repository.AppRepository
+import kndroidx.extension.log
+import kndroidx.extension.string
 import kndroidx.extension.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,13 +30,14 @@ import miwu.miot.model.MiotUser
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
-class LoginViewModel(internal val manager : MiotManager, val appRepository: AppRepository) : ViewModel() {
+class LoginViewModel(internal val manager: MiotManager, val appRepository: AppRepository) :
+    ViewModel() {
     private val job = Job()
     private val scope = CoroutineScope(job)
     private val _qrcode = MutableSharedFlow<Bitmap>()
     private val generator = QrCodeGenerator()
     private val _miotUser = MutableSharedFlow<MiotUser>()
-
+    private val logger = Logger()
     val user = ObservableField("")
     val password = ObservableField("")
 
@@ -42,19 +47,23 @@ class LoginViewModel(internal val manager : MiotManager, val appRepository: AppR
 
     fun qrcode() {
         job.cancelChildren()
+        logger.info("Request for a login qrcode")
         scope.launch(Dispatchers.IO) {
             runCatching {
                 _qrcode.emit(createBitmap(1, 1))
                 val qrcode = manager.Login.generateLoginQrCode().toQrCode()
                 val data = QrData.Url(qrcode.data)
+                logger.info("qrcode data: {}, login url: {}", data, qrcode.loginUrl)
                 _qrcode.emit(generator.generateQrCode(data, options))
                 manager.Login.loginByQrCode(qrcode.loginUrl).getOrThrow()
             }.onFailure { e ->
                 if (e is SocketTimeoutException || e is TimeoutException) return@launch qrcode()
-                withContext(Dispatchers.Main){
-                    "登录失败,原因可能为${e.message ?: "unknown"}".toast()
+                withContext(Dispatchers.Main) {
+                    logger.warn("login failure, cause by {}", e.message ?: "unknown")
+                    R.string.login_failure_toast.string.format(e.message ?: "unknown").toast()
                 }
             }.onSuccess {
+                logger.info("login successfully")
                 _miotUser.emit(it)
             }
         }

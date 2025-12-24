@@ -19,7 +19,7 @@ android {
         minSdk = 21
         targetSdk = 35
         versionCode = getVersionInt(miwuVersion)
-        versionName = miwuVersion
+        versionName = latestGitTag
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -181,3 +181,13 @@ fun getVersionInt(ver: String): Int {
     }
     return version
 }
+
+val latestGitTag: String
+    get() = ProcessBuilder(
+        "git",
+        "describe",
+        "--tags",
+        "--abbrev=0"
+    ).start().inputStream.bufferedReader().use { bufferedReader ->
+        bufferedReader.readText().replace("v", "").trim().ifEmpty { "debug" }
+    }

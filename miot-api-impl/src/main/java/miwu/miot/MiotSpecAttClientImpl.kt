@@ -1,5 +1,6 @@
 package miwu.miot
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miwu.miot.exception.MiotDeviceException
@@ -10,7 +11,6 @@ import miwu.miot.ktx.create
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.service.SpecService
 import miwu.miot.utils.gson
-import org.json.JSONObject
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MiotSpecAttClientImpl : MiotSpecAttClient {
@@ -59,11 +59,13 @@ class MiotSpecAttClientImpl : MiotSpecAttClient {
     override fun getSpecAttLanguageMap(
         language: String, languageCode: String
     ): Result<Map<String, String>> = runCatching {
-        gson.fromJson(
-            JSONObject(language).getJSONObject("data").getJSONObject(languageCode).toString(),
-            HashMap::class.java
-        ) as Map<String, String>
+        gson.fromJson(language, LanguageMap::class.java).data[language] ?: emptyMap()
     }.recoverCatching {
         throw MiotParseException.jsonParse(it)
     }
+
+    private data class LanguageMap(
+        @SerializedName("data")
+        val data: Map<String, Map<String, String>>
+    )
 }

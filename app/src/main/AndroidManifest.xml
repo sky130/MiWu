@@ -29,19 +29,21 @@
             android:name=".ui.crash.CrashActivity"
             android:exported="false"
             android:taskAffinity="" />
+
         <service
             android:name=".service.DeviceTileService"
-            android:label="@string/app_name"
             android:description="@string/tile_description"
-            android:icon="@mipmap/ic_launcher"
             android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
             <intent-filter>
                 <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
             </intent-filter>
 
-            <meta-data android:name="androidx.wear.tiles.PREVIEW"
-                android:resource="@drawable/img_tile_quick" />
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@mipmap/img_tile_quick" />
         </service>
 
 
@@ -100,26 +102,26 @@
             </intent-filter>
         </activity>
 
-<!--        <service-->
-<!--            android:name=".service.QuickActionTileService"-->
-<!--            android:description="@string/tile_description"-->
-<!--            android:exported="true"-->
-<!--            android:icon="@mipmap/ic_launcher"-->
-<!--            android:label="@string/tile_description"-->
-<!--            android:networkSecurityConfig="@xml/network_config"-->
-<!--            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER"-->
-<!--            android:roundIcon="@mipmap/ic_launcher_round">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />-->
-<!--            </intent-filter>-->
+        <!--        <service-->
+        <!--            android:name=".service.QuickActionTileService"-->
+        <!--            android:description="@string/tile_description"-->
+        <!--            android:exported="true"-->
+        <!--            android:icon="@mipmap/ic_launcher"-->
+        <!--            android:label="@string/tile_description"-->
+        <!--            android:networkSecurityConfig="@xml/network_config"-->
+        <!--            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER"-->
+        <!--            android:roundIcon="@mipmap/ic_launcher_round">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />-->
+        <!--            </intent-filter>-->
 
-<!--            <meta-data-->
-<!--                android:name="androidx.wear.tiles.PREVIEW"-->
-<!--                android:resource="@drawable/img_tile_quick" />-->
+        <!--            <meta-data-->
+        <!--                android:name="androidx.wear.tiles.PREVIEW"-->
+        <!--                android:resource="@drawable/img_tile_quick" />-->
 
-<!--            <meta-data-->
-<!--                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"-->
-<!--                android:value="com.github.miwu.action.EditFavoriteActivity" />-->
-<!--        </service>-->
+        <!--            <meta-data-->
+        <!--                android:name="com.google.android.clockwork.tiles.PROVIDER_CONFIG_ACTION"-->
+        <!--                android:value="com.github.miwu.action.EditFavoriteActivity" />-->
+        <!--        </service>-->
     </application>
 </manifest>

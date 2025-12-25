@@ -80,3 +80,5 @@
 -dontwarn org.graalvm.nativeimage.ImageSingletons
 -dontwarn org.graalvm.nativeimage.hosted.Feature$BeforeAnalysisAccess
 -dontwarn org.graalvm.nativeimage.hosted.Feature
+
+-keep class miwu.** { *; }

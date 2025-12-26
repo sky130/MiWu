@@ -23,5 +23,8 @@
     <color name="orange">#FE733A</color>
     <color name="color_temperature_start">#FEBF23</color>
     <color name="color_temperature_end">#FFE9AE</color>
+    <color name="item_background_green">#387560</color>
+    <color name="item_background">#161616</color> // #b3202020 + #000000
+    <color name="item_background_gray">#262626</color>
 
 </resources>

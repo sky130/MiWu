@@ -6,13 +6,12 @@
             <corners android:radius="15dp" />
             <gradient
                 android:angle="-135"
-                android:endColor="#b3202020"
                 android:centerX="0.98"
                 android:centerY="0.02"
+                android:endColor="@color/item_background"
                 android:gradientRadius="25dp"
                 android:startColor="@color/mi_green"
                 android:type="radial" />
-            <!--            <solid android:color="#b3202020" />-->
         </shape>
     </item>
 </ripple>

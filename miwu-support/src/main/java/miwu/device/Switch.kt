@@ -4,9 +4,8 @@ import miwu.support.base.MiwuDevice
 import miwu.annotation.*
 import miwu.widget.*
 
-@Device("vacuum")
+@Device("switch")
 @Widgets(
-    VacuumButton::class,
-    StatusText::class
+    SwitchButton::class
 )
-class Vacuum : MiwuDevice()
+class Switch : MiwuDevice()

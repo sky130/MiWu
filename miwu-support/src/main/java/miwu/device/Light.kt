@@ -6,10 +6,10 @@ import miwu.widget.*
 
 @Device("light")
 @Widgets(
-    Switch::class,
     ColorTemperatureSeekbar::class,
     IntSeekbar::class,
     FanController::class,
-    FanLevelController::class
+    FanLevelController::class,
+    WidgetSwitch::class
 )
 class Light : MiwuDevice()

@@ -7,10 +7,9 @@ import miwu.support.base.MiwuWidget
 import miwu.support.icon.Icon
 
 @Widget
-@Bind<Property>("fan", "fan-level")
 @Header
+@Bind<Property>("fan", "fan-level")
 @ValueList(FanLevelController::class)
-class FanController : MiwuWidget<Int>(){
-    override val icon: Icon
-        get() = super.icon
+class FanController : MiwuWidget<Int>() {
+    override val icon: Icon get() = super.icon
 }

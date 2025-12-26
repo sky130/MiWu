@@ -6,7 +6,6 @@ import miwu.annotation.widget.SubHeader
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("*")
-@Property("*")
 @Header
+@Bind<Property>("*", "*")
 class FanLevelController : MiwuWidget<Int>()

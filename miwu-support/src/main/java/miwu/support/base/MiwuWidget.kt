@@ -4,6 +4,7 @@ package miwu.support.base
 
 import miwu.annotation.Property
 import miwu.annotation.Service
+import miwu.annotation.basic.Widget
 import miwu.support.api.Controller
 import miwu.support.icon.Icon
 import miwu.icon.Icons
@@ -16,7 +17,7 @@ import miwu.support.unit.Unit
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-abstract class MiwuWidget<T>() {
+abstract class MiwuWidget<T>() : Widget {
     val serviceList by lazy {
         val services = this::class.java.annotations.find {
             it is Service

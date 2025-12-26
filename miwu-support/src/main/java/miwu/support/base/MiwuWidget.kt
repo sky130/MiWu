@@ -18,19 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 
 abstract class MiwuWidget<T>() : Widget {
-    val serviceList by lazy {
-        val services = this::class.java.annotations.find {
-            it is Service
-        } as? Service ?: return@lazy arrayListOf()
-        return@lazy services.name.toList()
-    }
-    val propertyList by lazy {
-        val properties = this::class.java.annotations.find {
-            it is Property
-        } as? Property ?: return@lazy arrayListOf()
-        return@lazy properties.name.toList()
-    }
-
     open val icon: Icon = NoneIcon
     open val isMultiAttribute = false
     internal var controllers = CopyOnWriteArrayList<Controller>()

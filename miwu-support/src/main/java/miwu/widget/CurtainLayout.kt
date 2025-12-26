@@ -5,7 +5,6 @@ import miwu.annotation.widget.*
 import miwu.support.base.MiwuWidget
 
 @Widget
-@Service("curtain")
-@Property("motor-control")
 @SubHeader
+@Bind<Property>("curtain", "motor-control")
 class CurtainLayout : MiwuWidget<Unit>()

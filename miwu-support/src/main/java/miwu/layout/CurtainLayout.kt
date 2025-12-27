@@ -1,10 +1,10 @@
-package miwu.widget
+package miwu.layout
 
 import miwu.annotation.*
 import miwu.annotation.widget.*
-import miwu.support.base.MiwuWidget
+import miwu.support.base.MiwuLayout
 
 @Widget
 @SubHeader
 @Bind<Property>("curtain", "motor-control")
-class CurtainLayout : MiwuWidget<Unit>()
+class CurtainLayout : MiwuLayout<Int>()

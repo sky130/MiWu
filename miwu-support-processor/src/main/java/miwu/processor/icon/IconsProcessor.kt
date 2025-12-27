@@ -4,6 +4,7 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.writeTo
+import java.io.File
 import java.io.InputStream
 
 class IconsProcessor(
@@ -15,22 +16,23 @@ class IconsProcessor(
     private var isProcessingOver = false
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        if (options["miwu.icon.enabled"] == "false") return emptyList()
+        val filePath = options["miwu.icon.filePath"] ?: return emptyList()
         if (isProcessingOver) return emptyList()
-        val iconNames = loadIconNames() ?: return emptyList()
+        val iconNames = loadIconNames(filePath) ?: return emptyList()
         val processedIcons = processIconNames(iconNames)
         generateIconsInterface(processedIcons)
         isProcessingOver = true
         return emptyList()
     }
 
-    private fun loadIconNames(): List<String>? {
-        val txtStream: InputStream = this::class.java.classLoader
-            .getResourceAsStream(ICONS_FILE_NAME)
-            ?: run {
-                logger.error("$ICONS_FILE_NAME not found in resources!")
+    private fun loadIconNames(filePath: String): List<String>? {
+        return File(filePath).apply {
+            if (!this.isFile) {
+                logger.error("$filePath not found in resources!")
                 return null
             }
-        return txtStream.use { stream ->
+        }.inputStream().use { stream ->
             stream.bufferedReader().readLines()
                 .asSequence()
                 .map { it.trim() }
@@ -153,7 +155,7 @@ class IconsProcessor(
     )
 
     companion object {
-        private const val ICONS_FILE_NAME = "icons.txt"
+        // private const val ICONS_FILE_NAME = "icons.txt"
         private const val COMMENT_PREFIX = "//"
         private const val HASH_PREFIX = "#"
         private const val SPLIT_SYMBOL = "->"

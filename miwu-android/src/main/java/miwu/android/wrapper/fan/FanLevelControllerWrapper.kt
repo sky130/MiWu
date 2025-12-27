@@ -2,14 +2,14 @@ package miwu.android.wrapper.fan
 
 import android.content.Context
 import miwu.android.databinding.MiotWidgetFanLevelBinding
-import miwu.android.wrapper.base.BaseMiwuWrapper
+import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
 import miwu.widget.FanLevelController
 
 @Wrapper(FanLevelController::class)
 class FanLevelControllerWrapper(context: Context, widget: MiwuWidget<Int>) :
-    BaseMiwuWrapper<Int>(context, widget) {
+    ViewMiwuWrapper<Int>(context, widget) {
     private val binding by viewBinding(MiotWidgetFanLevelBinding::inflate)
     override val view get() = binding.root
     private var max: Int = 0

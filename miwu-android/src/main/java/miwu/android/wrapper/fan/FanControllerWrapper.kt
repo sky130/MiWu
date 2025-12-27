@@ -3,14 +3,14 @@ package miwu.android.wrapper.fan
 import android.content.Context
 import android.widget.SeekBar
 import miwu.android.databinding.MiotWidgetSeekbarBinding
-import miwu.android.wrapper.base.BaseMiwuWrapper
+import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
 import miwu.widget.FanController
 
 @Wrapper(FanController::class)
 class FanControllerWrapper(context: Context, widget: MiwuWidget<Int>) :
-    BaseMiwuWrapper<Int>(context, widget), SeekBar.OnSeekBarChangeListener {
+    ViewMiwuWrapper<Int>(context, widget), SeekBar.OnSeekBarChangeListener {
 
     private val binding by viewBinding(MiotWidgetSeekbarBinding::inflate)
     override val view get() = binding.root

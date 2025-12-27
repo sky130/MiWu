@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import miwu.android.R
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
-import miwu.android.wrapper.base.BaseMiwuWrapper
+import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.MiotManager
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
@@ -34,7 +34,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     private val logger = Logger()
     private val appRepository: AppRepository by inject()
     private val miotManager: MiotManager by inject()
-    private val wrapperList = arrayListOf<BaseMiwuWrapper<*>>()
+    private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
     private val manager by lazy {
         MiotDeviceManager(
             appRepository.miotClient,
@@ -48,7 +48,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         )
     }
 
-    private fun ViewGroup.addWrapper(wrapper: BaseMiwuWrapper<*>) {
+    private fun ViewGroup.addWrapper(wrapper: ViewMiwuWrapper<*>) {
         addView(wrapper.view.apply {
             val bottom =
                 context.resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom)
@@ -61,7 +61,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
 
     private inline fun <reified T : ViewGroup> T.addWidget(
         widget: MiwuWidget<*>,
-        add: T.(BaseMiwuWrapper<*>) -> Unit = { addWrapper(it) }
+        add: T.(ViewMiwuWrapper<*>) -> Unit = { addWrapper(it) }
     ) {
         logger.debug("Widget found: {}", widget)
         createWrapper(widget)?.let {
@@ -137,9 +137,9 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun createWrapper(miotWidget: MiwuWidget<*>): BaseMiwuWrapper<*>? {
+    private fun createWrapper(miotWidget: MiwuWidget<*>): ViewMiwuWrapper<*>? {
         val wrapperClass =
-            WrapperRegistry.registry[miotWidget::class.java] as? Class<out BaseMiwuWrapper<*>>
+            WrapperRegistry.registry[miotWidget::class.java] as? Class<out ViewMiwuWrapper<*>>
                 ?: return null
         return wrapperClass.getDeclaredConstructor(
             Context::class.java,

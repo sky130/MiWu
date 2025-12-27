@@ -1,24 +1,14 @@
-package miwu.android.wrapper.base
+package miwu.support.base
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.ImageView
-import androidx.viewbinding.ViewBinding
-import miwu.android.icon.AndroidIcon
-import miwu.support.api.Controller
-import miwu.support.base.MiwuWidget
-import miwu.icon.NoneIcon
 import miwu.miot.model.att.SpecAtt
-import miwu.support.icon.Icon
+import miwu.support.api.Controller
 
-abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T>) : Controller {
+abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : Controller {
 
     private var canUpdate = true
-    internal val propertyListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
-    internal val actionListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
+    val propertyListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
+    val actionListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
 
-    abstract val view: View
     val description get() = widget.description
     val descriptionTranslation get() = widget.descriptionTranslation
     val translateHelper get() = widget.translateHelper
@@ -39,7 +29,13 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
     val Pair<T, T>.from get() = first
     val Pair<T, T>.to get() = second
 
+    init {
+        widget.bind(this)
+    }
+
     abstract fun onUpdateValue(value: T)
+    abstract fun initWrapper()
+    open fun init() = initWrapper()
     open fun onActionCallback(value: Any) = Unit
 
     fun stopUpdate() {
@@ -62,28 +58,16 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
     override fun onUpdateValue(
         siid: Int, piid: Int, value: Any
     ) {
-        if (widget.isMultiAttribute)
-            propertyListenerList[siid to piid]?.invoke(value)
-        if (siid != this.siid || piid != this.piid) return
-        if (!canUpdate) return
+        if (widget.isMultiAttribute) propertyListenerList[siid to piid]?.invoke(value)
+        if (siid != this.siid || piid != this.piid || !canUpdate) return
         onUpdateValue(value as T)
     }
 
-    fun update(value: T) {
-        widget.update(value)
-    }
+    fun update(value: T) = widget.update(value)
 
-    fun action(vararg input: Any) {
-        widget.action(*input)
-    }
+    fun action(vararg input: Any) = widget.action(*input)
 
-    fun action(siid: Int, aiid: Int, vararg input: Any) {
-        widget.action(siid, aiid, *input)
-    }
-
-    init {
-        widget.bind(this)
-    }
+    fun action(siid: Int, aiid: Int, vararg input: Any) = widget.action(siid, aiid, *input)
 
     fun getService(serviceName: String): SpecAtt.Service? = widget.getService(serviceName)
 
@@ -101,46 +85,6 @@ abstract class BaseMiwuWrapper<T>(val context: Context, val widget: MiwuWidget<T
     }
 
     fun register(siid: Int, piid: Int) {
-        if (widget.isMultiAttribute)
-            widget.register(siid, piid)
+        if (widget.isMultiAttribute) widget.register(siid, piid)
     }
-
-    open fun init() {
-        initWrapper()
-    }
-
-    fun View.onClick(block: View.() -> Unit) {
-        setOnClickListener(block)
-    }
-
-    fun ImageView.setIcon(icon: Icon) {
-        when (icon) {
-            is AndroidIcon -> {
-                setImageResource(icon.resId)
-            }
-
-            is NoneIcon -> {
-                setImageDrawable(null)
-            }
-        }
-    }
-
-    abstract fun initWrapper()
-
-    protected inline fun <reified VB : ViewBinding> viewBinding(crossinline inflate: (LayoutInflater) -> VB) =
-        lazy { inflate(LayoutInflater.from(context)) }
-
-    @Suppress("UNCHECKED_CAST")
-    @Deprecated(
-        "avoid unchecked cast",
-        replaceWith = ReplaceWith("viewBinding(inflate: (LayoutInflater) -> VB)")
-    )
-    protected inline fun <reified VB : ViewBinding> viewBinding() =
-        lazy {
-            (VB::class.java.getDeclaredMethod(
-                "inflate",
-                LayoutInflater::class.java,
-            ).invoke(null, LayoutInflater.from(context)) as VB)
-        }
-
 }

@@ -48,12 +48,17 @@ android {
     }
 }
 
+ksp {
+    arg("miwu.icon.enabled", "false")
+    arg("miwu.icon.filePath", "$projectDir/icons.txt")
+}
+
 dependencies {
     implementation(project(":miot-api"))
     implementation(project(":miwu-support"))
     implementation(project(":miwu-support-annotation"))
 
-    ksp(project(":miwu-android-processor"))
+    ksp(project(":miwu-support-processor"))
     ksp(project(":miwu-icon-android-processor"))
 
 

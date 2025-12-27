@@ -20,6 +20,7 @@ class SpecProcessor(
     private var isProcessingOver = false
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        if (options["miwu.spec.enabled"] != "true") return emptyList()
         if (isProcessingOver) return emptyList()
         runBlocking {
             SPEC_TYPES.forEach { specType ->

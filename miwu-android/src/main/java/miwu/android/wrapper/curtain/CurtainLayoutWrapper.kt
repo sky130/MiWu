@@ -6,7 +6,7 @@ import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.wrapper.base.MiwuLayoutWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
-import miwu.widget.CurtainLayout
+import miwu.layout.CurtainLayout
 
 @Wrapper(CurtainLayout::class)
 class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
@@ -30,5 +30,4 @@ class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
             }
         }
     }
-
 }

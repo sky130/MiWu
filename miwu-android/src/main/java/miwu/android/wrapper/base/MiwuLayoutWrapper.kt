@@ -8,7 +8,7 @@ import miwu.android.databinding.MiotLayoutWrapperBinding
 import miwu.support.base.MiwuWidget
 
 abstract class MiwuLayoutWrapper<T>(context: Context, widget: MiwuWidget<T>) :
-    BaseMiwuWrapper<T>(context, widget) {
+    ViewMiwuWrapper<T>(context, widget) {
     private val binding by viewBinding(MiotLayoutWrapperBinding::inflate)
     private val onClickView: View get() = view
     override val view get() = binding.root

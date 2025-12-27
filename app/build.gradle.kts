@@ -23,9 +23,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
     buildTypes {
         buildTypes {
             release {
@@ -62,6 +59,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

@@ -35,6 +35,12 @@ kotlin {
     }
 }
 
+ksp {
+    arg("miwu.spec.enabled", "true")
+    arg("miwu.icon.enabled", "true")
+    arg("miwu.icon.filePath", "$projectDir\\icons.txt")
+}
+
 dependencies {
     ksp(project(":miwu-support-processor"))
     implementation(project(":miwu-support-annotation"))

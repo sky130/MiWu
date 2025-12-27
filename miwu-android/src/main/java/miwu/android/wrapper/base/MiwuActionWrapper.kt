@@ -4,7 +4,8 @@ import android.content.Context
 import android.view.View
 import miwu.support.base.MiwuWidget
 
-abstract class MiwuActionWrapper(context: Context, widget: MiwuWidget<Unit>) : BaseMiwuWrapper<Unit>(context, widget) {
+abstract class MiwuActionWrapper(context: Context, widget: MiwuWidget<Unit>) :
+    ViewMiwuWrapper<Unit>(context, widget) {
 
     open val onClickView: View get() = view
 

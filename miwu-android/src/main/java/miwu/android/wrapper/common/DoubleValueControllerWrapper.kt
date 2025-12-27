@@ -2,7 +2,7 @@ package miwu.android.wrapper.common
 
 import android.content.Context
 import miwu.android.databinding.MiotWidgetIntValueControllerBinding
-import miwu.android.wrapper.base.BaseMiwuWrapper
+import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
 import miwu.support.unit.Unit
@@ -10,7 +10,7 @@ import miwu.widget.DoubleValueController
 
 @Wrapper(DoubleValueController::class)
 class DoubleValueControllerWrapper(context: Context, widget: MiwuWidget<Double>) :
-    BaseMiwuWrapper<Double>(context, widget) {
+    ViewMiwuWrapper<Double>(context, widget) {
 
     private val binding by viewBinding(MiotWidgetIntValueControllerBinding::inflate)
     private var value = 0.0

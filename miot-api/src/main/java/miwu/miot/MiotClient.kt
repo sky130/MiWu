@@ -43,35 +43,33 @@ interface MiotClient {
         /**
          * 获取家庭下的设备列表
          */
-        suspend fun getDevices(
-            home: MiotHome, limit: Int = 200,
-        ): Result<MiotDevices>
+        suspend fun getDevices(home: MiotHome, limit: Int = 200): Result<MiotDevices>
 
         /**
          * 获取家庭下的场景列表
          */
-        suspend fun getScenes(
-            home: MiotHome,
-        ): Result<MiotScenes>
+        suspend fun getScenes(home: MiotHome): Result<MiotScenes>
 
         /**
          * 获取家庭下的场景列表（通过 homeId）
          */
-        suspend fun getScenes(
-            homeId: Long
-        ): Result<MiotScenes>
+        suspend fun getScenes(homeId: Long, ownerUid: Long): Result<MiotScenes>
 
         /**
          * 获取家庭下的设备列表（通过 homeOwnerId 和 homeId）
          */
         suspend fun getDevices(
-            homeOwnerId: Long, homeId: Long, limit: Int = 200,
+            homeOwnerId: Long,
+            homeId: Long,
+            limit: Int = 200
         ): Result<MiotDevices>
 
         /**
          * 运行场景
          */
-        suspend fun runScene(scene: MiotScene)
+        suspend fun runScene(home: MiotHome, scene: MiotScene)
+
+        suspend fun runScene(homeId: Long, ownerUid: Long, scene: MiotScene)
     }
 
     interface IMiotClientDevice {

@@ -36,6 +36,8 @@ import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevices.Result.Info
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotHomes
+import miwu.miot.model.miot.MiotScene
+import miwu.miot.service.body.RunNewScene
 import miwu.miot.utils.getNonce
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -43,6 +45,7 @@ import okhttp3.Response
 import retrofit2.HttpException
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.awt.datatransfer.ClipboardOwner
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.crypto.Mac
@@ -129,15 +132,20 @@ class MiotClientImpl : MiotClient {
         override suspend fun getScenes(
             home: MiotHomes.Result.Home,
         ) = runCatching {
-            miotService.getScenes(GetScene(home.id.toLong()))
+            miotService.getScenes(GetScene(homeId = home.id, ownerUid = home.uid.toString()))
         }.recoverCatching {
             throw MiotClientException.getScenesFailed(it)
         }
 
         override suspend fun getScenes(
-            homeId: Long
+            homeId: Long, ownerUid: Long
         ) = runCatching {
-            miotService.getScenes(GetScene(homeId))
+            miotService.getScenes(
+                GetScene(
+                    homeId = homeId.toString(),
+                    ownerUid = ownerUid.toString()
+                )
+            )
         }.recoverCatching {
             throw MiotClientException.getScenesFailed(it)
         }
@@ -155,12 +163,12 @@ class MiotClientImpl : MiotClient {
         /**
          * @return 目前不考虑返回结果
          */
-        override suspend fun runScene(scene: MiotScenes.Result.Scene) {
-            if (scene.icon.isEmpty()) {
-                miotService.runScene(RunScene(scene.sceneId.toLong()))
-            } else {
-                miotService.runScene(RunCommonScene(scene.sceneId.toLong()))
-            }
+        override suspend fun runScene(home: MiotHome, scene: MiotScene) {
+            miotService.runScene(RunNewScene(home.id, home.uid.toString(), scene.sceneId))
+        }
+
+        override suspend fun runScene(homeId: Long, ownerUid: Long, scene: MiotScene) {
+            miotService.runScene(RunNewScene(homeId.toString(), ownerUid.toString(), scene.sceneId))
         }
     }
 

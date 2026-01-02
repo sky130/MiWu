@@ -116,7 +116,7 @@ fun loadImg(imageView: ImageView, bitmap: Bitmap?) {
 
 @BindingAdapter(value = ["scene"])
 fun loadImg(imageView: ImageView, scene: MiotScenes.Result.Scene) {
-    if (scene.icon.isNotEmpty()) loadImageUrl(imageView, scene.icon)
+    if (scene.iconUrl.isNotEmpty()) loadImageUrl(imageView, scene.iconUrl)
     else {
         loadImageRes(imageView, R.drawable.ic_miot_scene)
     }

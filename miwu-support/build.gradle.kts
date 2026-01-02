@@ -38,7 +38,7 @@ kotlin {
 ksp {
     arg("miwu.spec.enabled", "true")
     arg("miwu.icon.enabled", "true")
-    arg("miwu.icon.filePath", "$projectDir\\icons.txt")
+    arg("miwu.icon.filePath", "$projectDir/icons.txt")
 }
 
 dependencies {

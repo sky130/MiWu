@@ -83,7 +83,7 @@
             android:duplicateParentState="true"
             android:includeFontPadding="false"
             android:maxLines="2"
-            android:text="@{item.sceneName}"
+            android:text="@{item.name}"
             android:textColor="@color/card_title"
             android:textSize="17sp"
             tools:text="回家" />

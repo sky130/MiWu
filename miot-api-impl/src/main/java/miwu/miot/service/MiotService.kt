@@ -13,6 +13,7 @@ import miwu.miot.service.body.GetParams
 import miwu.miot.service.body.GetScene
 import miwu.miot.service.body.GetUserInfo
 import miwu.miot.service.body.RunCommonScene
+import miwu.miot.service.body.RunNewScene
 import miwu.miot.service.body.RunScene
 import miwu.miot.service.body.SetParams
 import okhttp3.ResponseBody
@@ -27,18 +28,31 @@ interface MiotService {
     @POST("v2/home/home_device_list")
     suspend fun getDevices(@Body body: GetDevices): MiotDevices
 
-    @POST("appgateway/miot/appsceneservice/AppSceneService/GetCommonUsedSceneList")
+    /**
+     * @POST("appgateway/miot/appsceneservice/AppSceneService/GetCommonUsedSceneList")
+     * suspend fun getScenes(@Body body: GetScene): MiotScenes
+     *
+     * @POST("appgateway/miot/appsceneservice/AppSceneService/RunScene")
+     * suspend fun runScene(@Body body: RunCommonScene): ResponseBody
+     **/
+
+    @POST("appgateway/miot/appsceneservice/AppSceneService/GetSimpleSceneList")
     suspend fun getScenes(@Body body: GetScene): MiotScenes
+
+
+    @POST("appgateway/miot/appsceneservice/AppSceneService/NewRunScene")
+    suspend fun runScene(@Body body: RunNewScene): ResponseBody
 
     /**
      * 两个 runScene 方法使用根据获取他们的 icon 链接是否为空
      * icon 不为空使用 RunCommonScene
      * icon 为空使用 RunScene
      */
-
+    @Deprecated("api 接口残缺", replaceWith = ReplaceWith("runScene(RunNewScene)"))
     @POST("appgateway/miot/appsceneservice/AppSceneService/RunScene")
     suspend fun runScene(@Body body: RunCommonScene): ResponseBody
 
+    @Deprecated("api 接口残缺", replaceWith = ReplaceWith("runScene(RunNewScene)"))
     @POST("scene/start")
     suspend fun runScene(@Body body: RunScene): ResponseBody
 

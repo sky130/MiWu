@@ -1,6 +1,7 @@
 package com.github.miwu.logic.repository
 
 import android.util.ArrayMap
+import com.github.miwu.ktx.Logger
 import com.github.miwu.logic.setting.AppSetting
 import fr.haan.resultat.Resultat
 import fr.haan.resultat.toResultat
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miwu.miot.MiotClient
+import miwu.miot.exception.MiotClientException
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotHome
@@ -22,6 +24,7 @@ class AppRepository : KoinComponent {
 
     @get:Synchronized
     private val roomMap = ArrayMap<String, String>()
+    private val logger = Logger()
 
     private val _home = MutableResultListStateFlow<MiotHome>(Resultat.Loading())
     val homes = _home.asStateFlow()
@@ -94,11 +97,13 @@ class AppRepository : KoinComponent {
             scene.emit(
                 runCatching {
                     val homeId = AppSetting.homeId.value
-                    if (homeId == 0L) throw IllegalStateException("Invalid homeId")
-                    miotClient.Home.getScenes(homeId).getOrThrow().result.scenes ?: emptyList()
+                    val ownerId = AppSetting.homeUid.value
+                    miotClient.Home.getScenes(homeId, ownerId).getOrThrow().result.scenes
+                        ?: emptyList()
+                }.onFailure {
+                    logger.error("load scene failure, {}", it.cause?.message)
                 }.toResultat()
             )
-
         }
     }
 

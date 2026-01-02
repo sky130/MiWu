@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -22,16 +23,15 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.wear.widget.WearableLinearLayoutManager
 import java.util.ArrayList
 import kotlin.math.abs
-import kotlin.text.toFloat
 import androidx.wear.widget.WearableRecyclerView as RV
 
 class SmoothRecyclerView(context: Context, attr: AttributeSet) : RV(context, attr),
     SeslwBezelEventTimerListener {
-
+    private val isSamsungDevice by lazy { Build.MANUFACTURER.equals("samsung", ignoreCase = true) }
     private var mSeslwBezelEventTimer: SeslwBezelEventTimer? = null
     private var mIsFastMode = false
     private var mDirection = 0
-    private val f =resources.displayMetrics.heightPixels.toFloat()
+    private val f = resources.displayMetrics.heightPixels.toFloat()
     private var mSmoothScrollAnimator: SeslwBezelSmoothScrollAnimator? = null
     private val MIN_ROTARY_MOVEMENT = (0.08F * f).toInt()
     private val MAX_ROTARY_MOVEMENT = (f * 0.16F).toInt()
@@ -42,6 +42,7 @@ class SmoothRecyclerView(context: Context, attr: AttributeSet) : RV(context, att
 
     @SuppressLint("WrongConstant")
     override fun onGenericMotionEvent(var1: MotionEvent): Boolean {
+        if (!isSamsungDevice) return super.onGenericMotionEvent(var1)
         return if (getLayoutHook() == null) {
             false
         } else if (getLayoutSuppressedHook()) {

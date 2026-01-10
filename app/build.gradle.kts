@@ -12,11 +12,11 @@ val miwuVersion = libs.versions.miwu.get()
 
 android {
     namespace = "com.github.miwu"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.github.miwu"
-        minSdk = 21
+        minSdk = 23 //
         targetSdk = 35
         versionCode = getVersionInt(miwuVersion)
         versionName = latestGitTag

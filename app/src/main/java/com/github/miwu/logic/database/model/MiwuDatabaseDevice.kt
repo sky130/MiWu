@@ -12,7 +12,7 @@ import miwu.miot.model.miot.MiotDeviceExtra
 @Entity(tableName = "favorite_device")
 data class MiwuDatabaseDevice(
     val bssid: String,
-    val cnt: Int,
+    val cnt: Int?,
     val comFlag: Int,
     val did: String,
     @Embedded
@@ -20,7 +20,7 @@ data class MiwuDatabaseDevice(
     val freqFlag: Boolean,
     val hideMode: Int,
     val isOnline: Boolean,
-    val lastOnline: Long,
+    val lastOnline: Long?,
     val latitude: String,
     val localIp: String?,
     val longitude: String,
@@ -31,7 +31,7 @@ data class MiwuDatabaseDevice(
     val parentId: String?,
     val permitLevel: Int,
     val pid: Int,
-    val rssi: Int,
+    val rssi: Int?,
     val showMode: Int,
     val specType: String?,
     val ssid: String?,

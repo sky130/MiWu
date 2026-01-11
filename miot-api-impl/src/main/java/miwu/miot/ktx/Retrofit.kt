@@ -1,8 +1,11 @@
 package miwu.miot.ktx
 
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 
 fun Retrofit(
@@ -20,3 +23,11 @@ fun Retrofit(
         .build()
 
 inline fun <reified T> Retrofit.create(): T = this.create(T::class.java)
+
+val json = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+}
+
+fun SerializationJsonFactory() =
+    json.asConverterFactory("application/json; charset=utf-8".toMediaType())

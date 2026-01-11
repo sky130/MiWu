@@ -1,10 +1,12 @@
 package miwu.miot.service.body
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RunScene(
-    @SerializedName("us_id")
+    @SerialName("us_id")
     val usId: Long,
-    @SerializedName("key")
+    @SerialName("key")
     val key: String = "",
 )

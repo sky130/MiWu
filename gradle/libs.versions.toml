@@ -10,6 +10,7 @@ espressoCore = "3.7.0"
 appcompat = "1.7.1"
 kotlinpoet = "2.2.0"
 kotlinpoetKsp = "2.2.0"
+kotlinxSerializationJson = "1.10.0-RC"
 material = "1.13.0"
 activity = "1.12.2"
 constraintlayout = "2.2.1"
@@ -26,8 +27,7 @@ andratingbar = "1.0.6"
 flexbox = "3.0.0"
 concurrentFutures = "1.3.0"
 core = "3.5.4"
-converterScalars = "3.0.0"
-converterGson = "3.0.0"
+retrofit-converter = "3.0.0"
 koin-bom = "4.1.1"
 appcenter = "5.0.6"
 compiler = "5.0.5"
@@ -74,6 +74,7 @@ androidx-gridlayout = { module = "androidx.gridlayout:gridlayout", version.ref =
 androidx-protolayout = { module = "androidx.wear.protolayout:protolayout", version.ref = "protolayout" }
 androidx-tiles = { module = "androidx.wear.tiles:tiles", version.ref = "tiles" }
 brv = { module = "com.github.liangjingkanji:BRV", version.ref = "brv" }
+converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit-converter" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 core = { module = "com.google.zxing:core", version.ref = "core" }
 
@@ -85,13 +86,14 @@ koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-bom" }
 
 androidx-wear = { module = "androidx.wear:wear", version.ref = "wear" }
-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit-converter" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit-converter" }
 google-horologist-tiles = { module = "com.google.android.horologist:horologist-tiles", version.ref = "horologistTilesVersion" }
 google-guava = { module = "com.google.guava:guava", version.ref = "guavaVersion" }
 google-horologist-compose-tools = { module = "com.google.android.horologist:horologist-compose-tools", version.ref = "horologistComposeToolsVersion" }
 jetbrains-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
 json-json = { module = "org.json:json", version.ref = "jsonVersion" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 resultat = { module = "fr.haan.resultat:resultat", version.ref = "resultat" }
 square-kotlin-poet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 microsoft-appcenter-crashes = { module = "com.microsoft.appcenter:appcenter-crashes", version.ref = "appcenter" }
@@ -138,6 +140,10 @@ symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-ap
 androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 androidx-tiles-tooling-preview = { group = "androidx.wear.tiles", name = "tiles-tooling-preview", version.ref = "tilesToolingPreview" }
 androidx-tiles-tooling = { group = "androidx.wear.tiles", name = "tiles-tooling", version.ref = "tilesTooling" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "androidxCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -146,5 +152,8 @@ kapt = { id = "kotlin-kapt" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+android-lint = { id = "com.android.lint", version.ref = "agp" }
 
 

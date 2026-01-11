@@ -1,13 +1,17 @@
 package miwu.miot.service.body
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import miwu.miot.model.JsonAnySerializer
 
-data class SetParams(@SerializedName("params") val params: Array<Att>){
+@Serializable
+data class SetParams(@SerialName("params") val params: Array<Att>) {
+    @Serializable
     data class Att(
-        @SerializedName("did") val did: String,
-        @SerializedName("siid") val siid: Int,
-        @SerializedName("piid") val piid: Int,
-        @SerializedName("value") val value: Any
+        @SerialName("did") val did: String,
+        @SerialName("siid") val siid: Int,
+        @SerialName("piid") val piid: Int,
+        @SerialName("value") val value: @Serializable(with = JsonAnySerializer::class) Any
     )
 
     override fun equals(other: Any?): Boolean {
@@ -25,11 +29,13 @@ data class SetParams(@SerializedName("params") val params: Array<Att>){
 }
 
 
-data class GetParams(@SerializedName("params") val params: Array<Att>){
+@Serializable
+data class GetParams(@SerialName("params") val params: Array<Att>) {
+    @Serializable
     data class Att(
-        @SerializedName("did") val did: String,
-        @SerializedName("siid") val siid: Int,
-        @SerializedName("piid") val piid: Int,
+        @SerialName("did") val did: String,
+        @SerialName("siid") val siid: Int,
+        @SerialName("piid") val piid: Int,
     )
 
     override fun equals(other: Any?): Boolean {

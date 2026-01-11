@@ -1,22 +1,23 @@
 package miwu.miot
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
 import miwu.miot.ktx.OkHttpClient
 import miwu.miot.ktx.Retrofit
+import miwu.miot.ktx.SerializationJsonFactory
 import miwu.miot.ktx.create
+import miwu.miot.ktx.json
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.service.SpecService
-import miwu.miot.utils.gson
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MiotSpecAttClientImpl : MiotSpecAttClient {
     private val specRetrofit = Retrofit(
         url = SPEC_SERVER_URL, factories = arrayOf(
-            GsonConverterFactory.create(),
+            SerializationJsonFactory(),
         )
     )
     private val spec = specRetrofit.create<SpecService>()
@@ -26,14 +27,13 @@ class MiotSpecAttClientImpl : MiotSpecAttClient {
         runCatching {
             spec.getInstance(urn)
         }.recoverCatching {
-            throw MiotDeviceException.specNotFound(urn)
+            throw MiotDeviceException.specNotFound(urn, it)
         }
     }
 
     override suspend fun getSpecMultiLanguage(urn: String): Result<String> =
         withContext(Dispatchers.IO) {
-            val response = spec.getSpecMultiLanguage(urn).string()
-            when (response) {
+            when (val response = spec.getSpecMultiLanguage(urn).string()) {
                 "model not found" -> Result.failure(MiotDeviceException.modelNotFound(urn))
                 "urn is not iot namespace" -> Result.failure(MiotDeviceException.urnFormatError(urn))
                 else -> Result.success(response)
@@ -59,13 +59,14 @@ class MiotSpecAttClientImpl : MiotSpecAttClient {
     override fun getSpecAttLanguageMap(
         language: String, languageCode: String
     ): Result<Map<String, String>> = runCatching {
-        gson.fromJson(language, LanguageMap::class.java).data[language] ?: emptyMap()
+        json.decodeFromString<LanguageMap>(language).data[languageCode] ?: emptyMap()
     }.recoverCatching {
         throw MiotParseException.jsonParse(it)
     }
 
+    @Serializable
     private data class LanguageMap(
-        @SerializedName("data")
+        @SerialName("data")
         val data: Map<String, Map<String, String>>
     )
 }

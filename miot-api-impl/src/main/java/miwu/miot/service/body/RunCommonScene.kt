@@ -1,11 +1,13 @@
 package miwu.miot.service.body
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RunCommonScene(
-    @SerializedName("scene_id")
+    @SerialName("scene_id")
     val sceneId: Long,
-    @SerializedName("trigger_key")
+    @SerialName("trigger_key")
     val triggerKey: String = "user.click"
 )

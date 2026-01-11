@@ -1,16 +1,18 @@
 package miwu.miot.service.body
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RunNewScene(
-    @SerializedName("home_id")
+    @SerialName("home_id")
     val homeId: String,
-    @SerializedName("owner_uid")
+    @SerialName("owner_uid")
     val ownerUid: String,
-    @SerializedName("scene_id")
+    @SerialName("scene_id")
     val sceneId: String,
-    @SerializedName("phone_id")
+    @SerialName("phone_id")
     val phoneId: String = "null",
-    @SerializedName("scene_type")
+    @SerialName("scene_type")
     val sceneType: Int = 2
 )

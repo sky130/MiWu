@@ -45,6 +45,7 @@ dependencies {
     ksp(project(":miwu-support-processor"))
     implementation(project(":miwu-support-annotation"))
     implementation(project(":miot-api"))
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.json.json)
     implementation(libs.retrofit)
     implementation(libs.okhttp)

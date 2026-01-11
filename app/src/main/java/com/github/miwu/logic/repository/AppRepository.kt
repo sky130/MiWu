@@ -70,6 +70,8 @@ class AppRepository : KoinComponent {
                         }
                     }
                 }
+            }.onFailure {
+                logger.error("load home failure, {}", it.stackTraceToString())
             }.toResultat())
         }
     }
@@ -85,6 +87,8 @@ class AppRepository : KoinComponent {
                         throw IllegalStateException("Invalid homeUid or homeId")
                     miotClient.Home.getDevices(homeUid, homeId)
                         .getOrThrow().result.deviceInfo ?: emptyList()
+                }.onFailure {
+                    logger.error("load device failure, {}", it.stackTraceToString())
                 }.toResultat()
             )
 
@@ -101,7 +105,7 @@ class AppRepository : KoinComponent {
                     miotClient.Home.getScenes(homeId, ownerId).getOrThrow().result.scenes
                         ?: emptyList()
                 }.onFailure {
-                    logger.error("load scene failure, {}", it.cause?.message)
+                    logger.error("load scene failure, {}", it.stackTraceToString())
                 }.toResultat()
             )
         }

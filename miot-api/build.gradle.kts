@@ -1,35 +1,35 @@
 plugins {
-     id("java-library")
-//    alias(libs.plugins.kotlin.multiplatform)
-//    kotlin("plugin.serialization") version "2.3.0"
-     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
+    kotlin("plugin.serialization") version "2.3.0"
     `maven-publish`
 }
 
 group = "com.github.sky130"
 version = libs.versions.miwu.get()
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
+
+kotlin {
+    jvm()
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.jetbrains.kotlinx.coroutines.core)
+            }
         }
     }
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["kotlin"])
+        }
+    }
 }
 
 kotlin {
-    compilerOptions {
-        // jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-    }
-}
-dependencies {
-    implementation(libs.gson)
-    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    withSourcesJar()
+    jvmToolchain(21)
 }

@@ -81,8 +81,8 @@ dependencies {
 
 
     implementation(libs.glide)
-    implementation(libs.androidx.tiles.tooling.preview)
-    debugImplementation(libs.androidx.tiles.tooling)
+    implementation(libs.androidx.wear.tiles.tooling.preview)
+    debugImplementation(libs.androidx.wear.tiles.tooling)
     ksp(libs.glide.compiler)
 
 
@@ -115,21 +115,21 @@ dependencies {
     implementation(libs.alexzhirkevich.custom.qr.generator)
 
 
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.okhttp)
     // implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
-    implementation(libs.okio)
+    implementation(libs.squareup.retrofit.converter.scalars)
+    implementation(libs.squareup.okio)
 
 
     implementation(libs.androidx.wear)
-    implementation(libs.androidx.tiles)
-    implementation(libs.androidx.protolayout)
-    implementation(libs.protolayout.material)
-    implementation(libs.protolayout.expression)
-    implementation(libs.jetbrains.kotlinx.coroutines.core)
-    debugImplementation(libs.androidx.tiles.tooling)
-    debugImplementation(libs.androidx.tiles.tooling.preview)
+    implementation(libs.androidx.wear.tiles)
+    implementation(libs.androidx.wear.protolayout)
+    implementation(libs.androidx.wear.protolayout.material)
+    implementation(libs.androidx.wear.protolayout.expression)
+    implementation(libs.kotlinx.coroutines.core)
+    debugImplementation(libs.androidx.wear.tiles.tooling)
+    debugImplementation(libs.androidx.wear.tiles.tooling.preview)
     implementation(libs.google.guava)
     implementation(libs.androidx.concurrent.futures)
     // implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.guava)
@@ -139,17 +139,17 @@ dependencies {
 
 
     // implementation(libs.gson)
-    implementation(libs.material)
-    implementation(libs.core)
+    implementation(libs.google.material)
+    implementation(libs.google.zxing.core)
 
 
     implementation(libs.androidx.concurrent.futures)
-    implementation(libs.flexbox)
+    implementation(libs.google.flexbox)
 
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.google.material)
 
     implementation(libs.resultat)
 

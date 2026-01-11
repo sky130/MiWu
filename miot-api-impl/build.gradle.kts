@@ -31,15 +31,15 @@ kotlin {
 
 dependencies {
     implementation(project(":miot-api"))
-    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.squareup.retrofit.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.koin.core)
-    implementation(libs.json.json)
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
+    implementation(libs.json)
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.okhttp)
     // implementation(libs.converter.gson)
     // implementation(libs.gson)
     // implementation(libs.converter.scalars)
-    implementation(libs.okio)
-    implementation(libs.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.squareup.okio)
+    implementation(libs.kotlinx.coroutines.core)
 }

@@ -14,7 +14,7 @@ val miwuVersion = libs.versions.miwu.get()
 
 android {
     namespace = "miwu.android"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21

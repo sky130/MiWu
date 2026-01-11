@@ -31,13 +31,13 @@ kotlin {
 
 dependencies {
     implementation(project(":miwu-support-annotation"))
-    implementation(libs.square.kotlin.poet)
+    implementation(libs.squareup.kotlin.poet)
     implementation(libs.squareup.kotlinpoet.ksp)
-    implementation(libs.jetbrains.kotlinx.coroutines.core)
-    implementation(libs.gson)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.symbol.processing.api)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.google.gson)
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.retrofit.converter.gson)
+    implementation(libs.google.ksp.symbol.processing.api)
 }
 
 

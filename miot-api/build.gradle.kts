@@ -10,12 +10,14 @@ version = libs.versions.miwu.get()
 
 kotlin {
     jvm()
+    withSourcesJar()
+    jvmToolchain(21)
     sourceSets {
         commonMain {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlin.stdlib)
-                implementation(libs.jetbrains.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
     }
@@ -27,9 +29,4 @@ publishing {
             from(components["kotlin"])
         }
     }
-}
-
-kotlin {
-    withSourcesJar()
-    jvmToolchain(21)
 }

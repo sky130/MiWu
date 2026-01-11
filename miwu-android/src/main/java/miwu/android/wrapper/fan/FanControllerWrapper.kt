@@ -35,7 +35,7 @@ class FanControllerWrapper(context: Context, widget: MiwuWidget<Int>) :
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
-        update(binding.seekbar.getCurrentProgress())
+        update(binding.seekbar.progress)
         continueUpdate()
     }
 

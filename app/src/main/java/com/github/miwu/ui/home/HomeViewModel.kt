@@ -27,8 +27,6 @@ class HomeViewModel(val appRepository: AppRepository) : ViewModel() {
             R.string.home_desc.string.format(item.rooms.size, deviceSize)
         } else {
             R.string.home_desc_share.string
-        }.apply {
-            log.d()
         }
     }
 

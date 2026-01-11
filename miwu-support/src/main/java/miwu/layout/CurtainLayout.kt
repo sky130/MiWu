@@ -7,4 +7,6 @@ import miwu.support.base.MiwuLayout
 @Widget
 @SubHeader
 @Bind<Property>("curtain", "motor-control")
-class CurtainLayout : MiwuLayout<Int>()
+class CurtainLayout : MiwuLayout<Int>() {
+
+}

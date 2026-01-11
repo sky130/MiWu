@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="@{viewModel.info.uid}"
+                    android:text="@{String.valueOf(viewModel.info.uid)}"
                     android:textSize="15sp"
                     tools:text="114514" />
             </LinearLayout>

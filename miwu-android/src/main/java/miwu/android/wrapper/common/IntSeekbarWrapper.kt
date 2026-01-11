@@ -22,6 +22,8 @@ class IntSeekbarWrapper(context: Context, widget: MiwuWidget<Int>) :
     override fun initWrapper() {
         binding.icon.setIcon(icon)
         binding.seekbar.setOnSeekBarChangeListener(this)
+        binding.seekbar.max = valueRange.to
+        binding.seekbar.min = valueRange.from
     }
 
     override fun onProgressChanged(
@@ -35,7 +37,7 @@ class IntSeekbarWrapper(context: Context, widget: MiwuWidget<Int>) :
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
-        update(binding.seekbar.getCurrentProgress())
+        update(binding.seekbar.progress)
         continueUpdate()
     }
 

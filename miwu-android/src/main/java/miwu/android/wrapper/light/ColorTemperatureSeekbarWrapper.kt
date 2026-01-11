@@ -19,21 +19,21 @@ class ColorTemperatureSeekbarWrapper(context: Context, widget: MiwuWidget<Int>) 
         binding.seekbar.progress = value
     }
 
-    override fun initWrapper(){
+    override fun initWrapper() {
         binding.seekbar.setOnSeekBarChangeListener(this)
+        binding.seekbar.max = valueRange.to
+        binding.seekbar.min = valueRange.from
     }
 
     override fun onProgressChanged(
         seekBar: SeekBar,
         progress: Int,
         fromUser: Boolean
-    ) {
-        if (!fromUser) return
-        update(progress)
-    }
+    ) = Unit
 
     override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
 
-    override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
-
+    override fun onStopTrackingTouch(seekBar: SeekBar) {
+        update(binding.seekbar.progress)
+    }
 }

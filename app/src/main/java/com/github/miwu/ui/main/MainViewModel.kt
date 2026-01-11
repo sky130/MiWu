@@ -3,6 +3,7 @@ package com.github.miwu.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.github.miwu.ktx.Logger
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
 import com.github.miwu.ui.main.FragmentState.*
@@ -20,6 +21,7 @@ import kotlin.collections.sortedWith
 
 class MainViewModel(val appRepository: AppRepository, val deviceRepository: DeviceRepository) :
     ViewModel() {
+    private val logger = Logger()
     val scenes = appRepository.scenes
         .map { it.getOrNull() ?: emptyList() }
         .asLiveData()
@@ -60,7 +62,9 @@ class MainViewModel(val appRepository: AppRepository, val deviceRepository: Devi
             emit(it.info)
         }.onFailure {
             it.message?.toast()
-            emit(MiotUserInfo.UserInfo("null", "", "null"))
+            logger.error("get user info failed, {}", it.message)
+            it.printStackTrace()
+            emit(MiotUserInfo.UserInfo(0L, "", "null"))
         }
     }.asLiveData()
 

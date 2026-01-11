@@ -69,6 +69,13 @@ class SpecProcessor(
                         .addModifiers(KModifier.CONST)
                         .initializer("%S", name)
                         .build()
+                } else if ("_$propertyName".isValidIdentifier()) {
+                    PropertySpec.builder("_$propertyName", String::class)
+                        .addModifiers(KModifier.CONST)
+                        .initializer("%S", name)
+                        .build()
+                } else if ("$propertyName$DELIMITER".isValidIdentifier()) {
+                    null
                 } else {
                     logger.warn("Skipping invalid property name: $propertyName (from: $name)")
                     null

@@ -30,9 +30,9 @@ kotlin {
 
 dependencies {
     implementation(project(":miwu-support-annotation"))
-    implementation(libs.square.kotlin.poet)
+    implementation(libs.squareup.kotlin.poet)
     implementation(libs.squareup.kotlinpoet.ksp)
-    implementation(libs.symbol.processing.api)
+    implementation(libs.google.ksp.symbol.processing.api)
 }
 
 

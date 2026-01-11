@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "2.3.0"
     id("kotlin-kapt")
 }
 
@@ -76,6 +77,9 @@ dependencies {
     implementation(project(":miwu-android"))
 
 
+    implementation(libs.kotlinx.serialization.json)
+
+
     implementation(libs.glide)
     implementation(libs.androidx.tiles.tooling.preview)
     debugImplementation(libs.androidx.tiles.tooling)
@@ -113,7 +117,7 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.okhttp)
-    implementation(libs.converter.gson)
+    // implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
     implementation(libs.okio)
 
@@ -134,7 +138,7 @@ dependencies {
 
 
 
-    implementation(libs.gson)
+    // implementation(libs.gson)
     implementation(libs.material)
     implementation(libs.core)
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.github.miwu.MainApplication.Companion.gson
 import com.github.miwu.ktx.Logger
 import com.github.miwu.logic.repository.AppRepository
 import kndroidx.activity.ViewActivityX
@@ -15,6 +14,7 @@ import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.MiotManager
+import miwu.miot.ktx.json
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.utils.to
@@ -77,7 +77,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     }
 
     override fun onDeviceAttLoaded(specAtt: SpecAtt) {
-        logger.info("Device {}  spec att: {}", device.name, specAtt)
+        logger.info("Device {}, spec att: {}", device.name, specAtt)
     }
 
     private fun initDeviceLayout() {
@@ -116,9 +116,10 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     override fun init() {
         with(device) {
             logger.info(
-                "Current miot device info: model={}, mac={}, did={}, isOnline={},",
-                model, mac, did, isOnline,
+                "Current miot device info: model={}, mac={}, did={}, isOnline={}, specType={}",
+                model, mac, did, isOnline, specType,
             )
+            logger.debug("Current miot all device info: {}", this)
         }
         manager.init()
     }
@@ -131,7 +132,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     companion object {
         fun Context.startDeviceActivity(device: MiotDevice) {
             start<DeviceActivity> {
-                putExtra("device", gson.toJson(device))
+                putExtra("device", json.encodeToString(device))
             }
         }
     }
@@ -163,7 +164,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
 
         override suspend fun putSpecAtt(urn: String, specAtt: SpecAtt) {
             val file = File("${context.cacheDir.absolutePath}/${urn.hashCode()}.att")
-            file.writeText(gson.toJson(specAtt))
+            file.writeText(json.encodeToString(specAtt))
         }
 
         override suspend fun getLanguageMap(urn: String): Map<String, String>? {
@@ -183,7 +184,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
             urn: String, map: Map<String, String>
         ) {
             val file = File("${context.cacheDir.absolutePath}/${urn.hashCode()}.map")
-            file.writeText(gson.toJson(map))
+            file.writeText(json.encodeToString(map))
         }
     }
 

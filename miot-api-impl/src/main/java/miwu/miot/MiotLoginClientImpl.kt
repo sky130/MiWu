@@ -1,6 +1,5 @@
 package miwu.miot
 
-import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,16 +7,16 @@ import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotBusinessException
 import miwu.miot.exception.MiotConnectionException
 import miwu.miot.exception.MiotHttpException
-import miwu.miot.exception.MiotNetworkException
 import miwu.miot.exception.MiotTimeoutException
-import miwu.miot.model.login.Login
-import miwu.miot.model.login.LoginQrCode
-import miwu.miot.model.login.Sid
 import miwu.miot.ktx.FormBody
 import miwu.miot.ktx.OkHttpClient
 import miwu.miot.ktx.get
 import miwu.miot.ktx.userAgent
 import miwu.miot.model.MiotUser
+import miwu.miot.model.login.Login
+import miwu.miot.model.login.LoginQrCode
+import miwu.miot.model.login.QrCodeSid
+import miwu.miot.model.login.Sid
 import miwu.miot.utils.cut
 import miwu.miot.utils.getRandomDeviceId
 import miwu.miot.utils.md5
@@ -61,7 +60,7 @@ class MiotLoginClientImpl : MiotLoginClient {
 
     override suspend fun loginByQrCode(loginUrl: String) =
         get<String>(loginUrl).cut().to<Login>().run login@{
-            getSid().run {
+            getQrCodeSid().run {
                 this@login.location = location
                 this@login.securityToken = securityToken
                 login()
@@ -127,6 +126,7 @@ class MiotLoginClientImpl : MiotLoginClient {
     ): T = miotLoginClient.get<T>(url, body)
 
     private suspend fun getSid() = get<String>(Url.Sid).cut().to<Sid>()
+    private suspend fun getQrCodeSid() = get<String>(Url.Sid).cut().to<QrCodeSid>()
 
     private suspend fun Login.login(): Result<MiotUser> = runCatching {
         if (code != 0) throw MiotBusinessException.loginFailed(code)
@@ -148,7 +148,7 @@ class MiotLoginClientImpl : MiotLoginClient {
                 null
             }
         } ?: throw MiotAuthException.tokenMissing()
-        MiotUser(userId, securityToken, serviceToken, getRandomDeviceId())
+        MiotUser(userId.toString(), securityToken, serviceToken, getRandomDeviceId())
     }
 
     class SimpleCookieJar : CookieJar {

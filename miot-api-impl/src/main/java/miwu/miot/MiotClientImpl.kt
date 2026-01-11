@@ -2,6 +2,10 @@ package miwu.miot
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import miwu.miot.att.get.GetAtt
 import miwu.miot.att.get.piid
 import miwu.miot.att.get.siid
@@ -12,9 +16,22 @@ import miwu.miot.att.set.value
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
+import miwu.miot.ktx.FormBody
+import miwu.miot.ktx.OkHttpClient
+import miwu.miot.ktx.Retrofit
+import miwu.miot.ktx.SerializationJsonFactory
+import miwu.miot.ktx.addHeaders
+import miwu.miot.ktx.create
+import miwu.miot.ktx.get
+import miwu.miot.ktx.json
+import miwu.miot.ktx.readToString
+import miwu.miot.model.MiotUser
 import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.miot.MiotDevices
-import miwu.miot.model.miot.MiotScenes
+import miwu.miot.model.miot.MiotDevices.Result.Info
+import miwu.miot.model.miot.MiotHome
+import miwu.miot.model.miot.MiotHomes
+import miwu.miot.model.miot.MiotScene
 import miwu.miot.service.MiotService
 import miwu.miot.service.body.ActionBody
 import miwu.miot.service.body.GetDevices
@@ -22,30 +39,15 @@ import miwu.miot.service.body.GetHome
 import miwu.miot.service.body.GetParams
 import miwu.miot.service.body.GetScene
 import miwu.miot.service.body.GetUserInfo
-import miwu.miot.service.body.RunCommonScene
-import miwu.miot.service.body.RunScene
-import miwu.miot.service.body.SetParams
-import miwu.miot.ktx.FormBody
-import miwu.miot.ktx.OkHttpClient
-import miwu.miot.ktx.Retrofit
-import miwu.miot.ktx.addHeaders
-import miwu.miot.ktx.create
-import miwu.miot.ktx.get
-import miwu.miot.ktx.readToString
-import miwu.miot.model.MiotUser
-import miwu.miot.model.miot.MiotDevices.Result.Info
-import miwu.miot.model.miot.MiotHome
-import miwu.miot.model.miot.MiotHomes
-import miwu.miot.model.miot.MiotScene
 import miwu.miot.service.body.RunNewScene
+import miwu.miot.service.body.SetParams
 import miwu.miot.utils.getNonce
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.Response
 import retrofit2.HttpException
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.awt.datatransfer.ClipboardOwner
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.crypto.Mac
@@ -65,8 +67,9 @@ class MiotClientImpl : MiotClient {
         Retrofit(
             url = MIOT_SERVER_URL,
             factories = arrayOf(
-                GsonConverterFactory.create(),
-                ScalarsConverterFactory.create(),
+                SerializationJsonFactory()
+                // GsonConverterFactory.create(),
+                // ScalarsConverterFactory.create(),
             ),
             client = miotClient
         )
@@ -208,7 +211,8 @@ class MiotClientImpl : MiotClient {
         ) = runCatching {
             miotService.doAction(
                 ActionBody(
-                    ActionBody.Action(device.did, siid, aiid).apply { `in`.addAll(obj) }
+                    ActionBody.Action(device.did, siid, aiid)
+                        .apply { `in`.addAll(obj.map { Json.encodeToJsonElement(it) }) }
                 )
             )
         }.recoverCatching {
@@ -236,6 +240,7 @@ class MiotClientImpl : MiotClient {
             val originRequest = chain.request()
             val originRequestBody =
                 originRequest.body ?: throw IllegalStateException("body is empty")
+
             val latestRequest: Request
             user.apply {
                 if (serviceToken.isEmpty() || securityToken.isEmpty()) {

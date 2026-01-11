@@ -1,12 +1,18 @@
 package miwu.miot.service.body
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.google.gson.annotations.SerializedName
-
+@Serializable
 data class GetHome(
-    @SerializedName("app_ver") val appVer: Int = 7,
-    @SerializedName("fetch_share") val fetchShare: Boolean = true,
-    @SerializedName("fetch_share_dev") val fetchShareDev: Boolean = true,
-    @SerializedName("fg") val fg: Boolean = false,
-    @SerializedName("limit") val limit: Int = 300
+    @SerialName("app_ver")
+    var appVer: Int = 7,
+    @SerialName("fetch_share")
+    var fetchShare: Boolean = true,
+    @SerialName("fetch_share_dev")
+    var fetchShareDev: Boolean = true,
+    @SerialName("fg")
+    var fg: Boolean = false,
+    @SerialName("limit")
+    var limit: Int = 300
 )

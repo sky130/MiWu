@@ -1,59 +1,73 @@
 package miwu.miot.model.att
 
-
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+import miwu.miot.model.JsonAnySerializer
 import kotlin.collections.iterator
 
+@Serializable
 data class SpecAtt(
-    @SerializedName("description") val description: String,
-    @SerializedName("services") val services: List<Service>,
-    @SerializedName("type") val type: String
+    @SerialName("description") val description: String,
+    @SerialName("services") val services: List<Service>,
+    @SerialName("type") val type: String
 ) {
-    lateinit var descriptionTranslation: String
+    @Transient
+    var descriptionTranslation: String = ""
 
+    @Serializable
     data class Service(
-        @SerializedName("actions") val actions: List<Action>?,
-        @SerializedName("description") val description: String,
-        @SerializedName("iid") val iid: Int,
-        @SerializedName("properties") val properties: List<Property>?,
-        @SerializedName("type") val type: String
+        @SerialName("actions") val actions: List<Action>? = null,
+        @SerialName("description") val description: String,
+        @SerialName("iid") val iid: Int,
+        @SerialName("properties") val properties: List<Property>? = null,
+        @SerialName("type") val type: String
     ) {
-        lateinit var descriptionTranslation: String
+        @Transient
+        var descriptionTranslation: String = ""
 
+        @Serializable
         data class Action(
-            @SerializedName("description") val description: String,
-            @SerializedName("iid") val iid: Int,
-            @SerializedName("in") val `in`: List<Any>,
-            @SerializedName("out") val `out`: List<Any>,
-            @SerializedName("type") val type: String
+            @SerialName("description") val description: String,
+            @SerialName("iid") val iid: Int,
+            @SerialName("in") val `in`: List<@Serializable(with = JsonAnySerializer::class) Any>,
+            @SerialName("out") val `out`: List<@Serializable(with = JsonAnySerializer::class) Any>,
+            @SerialName("type") val type: String
         ) {
-            lateinit var descriptionTranslation: String
+            @Transient
+            var descriptionTranslation: String = ""
         }
 
+        @Serializable
         data class Property(
-            @SerializedName("access") val access: List<String>,
-            @SerializedName("description") val description: String,
-            @SerializedName("format") val format: String,
-            @SerializedName("gatt-access") val gattAccess: List<Any>?,
-            @SerializedName("iid") val iid: Int,
-            @SerializedName("source") val source: Int,
-            @SerializedName("type") val type: String,
-            @SerializedName("unit") val unit: String?,
-            @SerializedName("value-list") val valueList: List<Value>?,
-            @SerializedName("value-range") val valueRange: List<Number>?
+            @SerialName("access") val access: List<String>,
+            @SerialName("description") val description: String,
+            @SerialName("format") val format: String,
+            @SerialName("gatt-access") val gattAccess: List<@Serializable(with = JsonAnySerializer::class) Any>? = null,
+            @SerialName("iid") val iid: Int,
+            @SerialName("source") val source: Int? = null,
+            @SerialName("type") val type: String,
+            @SerialName("unit") val unit: String? = null,
+            @SerialName("value-list") val valueList: List<Value>? = null,
+            @SerialName("value-range") val valueRange: List<@Serializable(with = JsonAnySerializer::class) Any>? = null
         ) {
-            lateinit var descriptionTranslation: String
+            @Transient
+            var descriptionTranslation: String = ""
 
+            @Serializable
             data class Value(
-                @SerializedName("description") val description: String,
-                @SerializedName("value") val value: Int
+                @SerialName("description") val description: String,
+                @SerialName("value") val value: Int
             ) {
-                lateinit var descriptionTranslation: String
+                @Transient
+                var descriptionTranslation: String = ""
             }
         }
     }
 
-    fun initVariable(){
+    fun initVariable() {
         // 这一段用于处理 Kotlin 中变量无法正常赋值的问题. 重新手动赋值才不会 null
         descriptionTranslation = description
         services.forEach { service ->

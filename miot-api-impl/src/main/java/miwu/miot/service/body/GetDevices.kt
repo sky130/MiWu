@@ -1,13 +1,14 @@
 package miwu.miot.service.body
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.google.gson.annotations.SerializedName
-
+@Serializable
 data class GetDevices(
-    @SerializedName("home_owner")
+    @SerialName("home_owner")
     val homeOwner: Long,
-    @SerializedName("home_id")
+    @SerialName("home_id")
     val homeId: Long,
-    @SerializedName("limit")
+    @SerialName("limit")
     val limit: Int = 200
 )

@@ -16,13 +16,14 @@ import androidx.appcompat.widget.AppCompatSeekBar
 class AppSeekBar(
     context: Context,
     attr: AttributeSet,
-) : AppCompatSeekBar(context, attr) {
-    private var minProgress: Int = 0
-    private var maxProgress: Int = 100
+) : BasicSeekbar(context, attr) {
     private val onSeekBarChangeListener by lazy {
-        this::class.java.superclass.superclass.getDeclaredField("mOnSeekBarChangeListener").apply {
-            isAccessible = true
-        }.get(this) as SeekBar.OnSeekBarChangeListener
+        this::class.java
+            .superclass
+            .superclass
+            .superclass
+            .getDeclaredField("mOnSeekBarChangeListener")
+            .apply { isAccessible = true }.get(this) as OnSeekBarChangeListener
     }
     var listener: ((Int) -> Unit)? = null
 
@@ -59,7 +60,7 @@ class AppSeekBar(
                 val progressPerPixel = max.toFloat() / availableWidth
                 val deltaProgress = (dx * progressPerPixel).toInt()
                 progress = lastProgress + deltaProgress
-                onSeekBarChangeListener.onProgressChanged(this, getCurrentProgress(), true)
+                onSeekBarChangeListener.onProgressChanged(this, progress, true)
                 return true
             }
 
@@ -71,7 +72,6 @@ class AppSeekBar(
         }
         return super.onTouchEvent(event)
     }
-
 
 
     @SuppressLint("Recycle")
@@ -93,33 +93,4 @@ class AppSeekBar(
         animatorSet.play(objectAnimator1).with(objectAnimator2)
         animatorSet.start()
     }
-
-    fun getCurrentProgress(): Int {
-        return getCurrentProgress(progress)
-    }
-
-    fun setCurrentProgress(progress: Int) {
-        this.progress = getRelativeProgress(progress)
-    }
-
-    private fun getCurrentProgress(progress: Int): Int {
-        val currentProgress =
-            (progress.toFloat() / 100f) * (maxProgress - minProgress) + minProgress
-        return currentProgress.toInt()
-    }
-
-    private fun getRelativeProgress(progress: Int): Int {
-        val currentProgress =
-            (progress.toFloat() - minProgress) / (maxProgress - minProgress) * 100f
-        return currentProgress.toInt()
-    }
-
-    fun setMaxProgress(max: Int) {
-        this.maxProgress = max
-    }
-
-    fun setMinProgress(min: Int) {
-        this.minProgress = min
-    }
-
 }

@@ -3,16 +3,14 @@ package com.github.miwu
 import android.app.Application
 import android.provider.Settings
 import android.util.Base64
+import com.github.miwu.ktx.LazyLogger
+import com.github.miwu.ktx.mask
 import com.github.miwu.logic.database.databaseModule
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.repositoryModule
 import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.ui.viewModelModule
-import com.github.miwu.ktx.LazyLogger
-import com.github.miwu.ktx.mask
-import com.google.gson.Gson
 import kndroidx.KndroidX
-import kndroidx.extension.log
 import kndroidx.kndroidxConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -96,6 +94,5 @@ class MainApplication : Application() {
         }
         val appJob = Job()
         val appScope = CoroutineScope(appJob)
-        val gson = Gson()
     }
 }

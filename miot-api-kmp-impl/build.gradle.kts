@@ -22,6 +22,8 @@ kotlin {
     js {
         browser()
     }
+    withSourcesJar()
+    jvmToolchain(21)
     sourceSets {
         commonMain {
             dependencies {
@@ -53,6 +55,10 @@ kotlin {
 
 ktorfit {
     compilerPluginVersion = "2.3.3"
+}
+
+tasks.named<Jar>("sourcesJar") {
+    mustRunAfter(tasks.named("kspCommonMainKotlinMetadata"))
 }
 
 project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin> {

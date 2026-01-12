@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -13,26 +14,33 @@ pluginManagement {
             setUrl("https://jitpack.io/")
             isAllowInsecureProtocol = true
         }
+        maven {
+            url = uri("https://nodejs.org/dist/")
+            name = "Node.js Distributions"
+        }
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+        mavenLocal()
         mavenCentral()
+        google()
         maven {
             setUrl("https://jitpack.io/")
             isAllowInsecureProtocol = true
         }
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 
 rootProject.name = "MiWu"
 include(":app")
 include(":miot-api-impl")
+include(":miot-api-kmp-impl")
 include(":miwu-support")
 include(":miwu-support-processor")
 include(":miwu-icon-android-processor")
 include(":miwu-support-annotation")
 include(":miot-api")
 include(":miwu-android")
+include(":miwu-kmp")

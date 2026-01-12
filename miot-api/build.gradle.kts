@@ -10,8 +10,10 @@ version = libs.versions.miwu.get()
 
 kotlin {
     jvm()
-    withSourcesJar()
-    jvmToolchain(21)
+    js {
+        browser()
+        binaries.executable()
+    }
     sourceSets {
         commonMain {
             dependencies {

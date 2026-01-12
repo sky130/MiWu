@@ -16,9 +16,10 @@ constraintlayout = "2.2.1"
 horologistTilesVersion = "0.7.15"
 guavaVersion = "33.5.0-android"
 horologistComposeToolsVersion = "0.7.15"
-ksp = "2.3.4"
+ksp = "2.3.3"
 androidx-activity-ktx = "1.12.2"
 custom-qr-generator = "1.6.2"
+ktor = "3.3.3"
 org-json = "20251224"
 kotlinx-coroutines-core = "1.10.2"
 markwon-core = "4.6.2"
@@ -59,9 +60,9 @@ kotlin-test = "2.2.0"
 androidx-test-runner = "1.5.2"
 androidx-core = "1.7.0"
 ktorfit = "2.7.2"
+kotlincrypto-hash = "0.8.0"
 
 [libraries]
-
 # third-party libraries
 alexzhirkevich-custom-qr-generator = { module = "com.github.alexzhirkevich:custom-qr-generator", version.ref = "custom-qr-generator" }
 andRatingBar = { module = "com.github.wdsqjq:AndRatingBar", version.ref = "andratingbar" }
@@ -69,6 +70,9 @@ brv = { module = "com.github.liangjingkanji:BRV", version.ref = "brv" }
 markwon-core = { module = "io.noties.markwon:core", version.ref = "markwon-core" }
 json = { module = "org.json:json", version.ref = "org-json" }
 resultat = { module = "fr.haan.resultat:resultat", version.ref = "resultat" }
+kotlincrypto-hash-bom = { module = "org.kotlincrypto.hash:bom", version.ref = "kotlincrypto-hash" }
+kotlincrypto-hash-md = { module = "org.kotlincrypto.hash:md" }
+
 
 
 # koin libraries
@@ -172,6 +176,9 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 
 
 ktorfit = { group = "de.jensklingenberg.ktorfit", name = "ktorfit-lib", version.ref = "ktorfit" }
+ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 
 [plugins]

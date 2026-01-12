@@ -57,7 +57,7 @@ ktorfit {
     compilerPluginVersion = "2.3.3"
 }
 
-tasks.named<Jar>("sourcesJar") {
+tasks.named("sourcesJar") {
     mustRunAfter(tasks.named("kspCommonMainKotlinMetadata"))
 }
 

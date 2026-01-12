@@ -21,7 +21,6 @@ kotlin {
     jvm()
     js {
         browser()
-        binaries.executable()
     }
     withSourcesJar()
     jvmToolchain(21)

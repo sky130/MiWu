@@ -14,10 +14,6 @@ pluginManagement {
             setUrl("https://jitpack.io/")
             isAllowInsecureProtocol = true
         }
-        maven {
-            url = uri("https://nodejs.org/dist/")
-            name = "Node.js Distributions"
-        }
     }
 }
 dependencyResolutionManagement {

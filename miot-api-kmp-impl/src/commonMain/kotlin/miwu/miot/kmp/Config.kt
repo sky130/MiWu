@@ -1,4 +1,4 @@
-package miwu.miot
+package miwu.miot.kmp
 
 val RANDOM_TEMP_CHARS = "0123456789ABCDEF".toCharArray()
 val LONG_TEMP_CHARS = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()

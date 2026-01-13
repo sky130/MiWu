@@ -1,22 +1,33 @@
-package miwu.miot
+package miwu.miot.kmp
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
-import io.ktor.client.plugins.api.createClientPlugin
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
-import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.Cookie
+import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
+import io.ktor.http.parseUrlEncodedParameters
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import miwu.miot.MiotLoginClient
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotBusinessException
 import miwu.miot.exception.MiotHttpException
-import miwu.miot.ktx.IO
+import miwu.miot.kmp.plugin.SupportInvalidExpiresHttpCookies
+import miwu.miot.kmp.plugin.parseServerSetCookieHeader
+import miwu.miot.kmp.plugin.splitSetCookieHeader
+import miwu.miot.kmp.ktx.IO
+import miwu.miot.ktx.json
 import miwu.miot.model.MiotUser
 import miwu.miot.model.login.Login
 import miwu.miot.model.login.LoginQrCode
@@ -26,20 +37,24 @@ import miwu.miot.utils.cut
 import miwu.miot.utils.getRandomDeviceId
 import miwu.miot.utils.md5
 import miwu.miot.utils.to
-import miwu.miot.utils.urlEncode
 import kotlin.coroutines.CoroutineContext
-import kotlin.time.TimeSource
+import kotlin.onFailure
+import kotlin.onSuccess
+import kotlin.time.Clock
 
 class MiotLoginClientImpl : MiotLoginClient {
     private val httpClient = HttpClient {
-        createClientPlugin("UserAgent") {
-            onRequest { request, _ ->
-                request.headers.remove("User-Agent")
-                request.headers.append("User-Agent", MI_HOME_USER_AGENT)
-            }
-        }
-        install(HttpCookies) {
+        install(SupportInvalidExpiresHttpCookies) {
             storage = SimpleCookiesStorage()
+        }
+        install(ContentNegotiation) {
+            json(json)
+        }
+        install(DefaultRequest) {
+            contentType(ContentType.Application.Json)
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = 20 * 1000L
         }
         expectSuccess = true
     }
@@ -110,8 +125,8 @@ class MiotLoginClientImpl : MiotLoginClient {
                 sid=${MIOT_SID}
                 serviceParam=
                 _locale=zh_CN
-                _dc=${TimeSource.Monotonic.markNow()}
-            """.trimIndent().urlEncode()
+                _dc=${Clock.System.now().toEpochMilliseconds()}
+            """.trimIndent().parseUrlEncodedParameters()
         }
         """.trimIndent()
         return@withContext get<String>(generateQrCode)
@@ -141,15 +156,12 @@ class MiotLoginClientImpl : MiotLoginClient {
         } catch (e: Exception) {
             throw MiotHttpException("Login", e)
         }
-        val cookiesHeader = response.headers["Set-Cookie"]!!
-        val serviceToken = cookiesHeader.split(", ").firstNotNullOfOrNull { cookieString ->
-            val parts = cookieString.split("; ")[0].split("=", limit = 2)
-            if (parts.size == 2 && parts[0] == "serviceToken") {
-                parts[1]
-            } else {
-                null
-            }
-        } ?: throw MiotAuthException.tokenMissing()
+        val serviceToken = response.headers.getAll(HttpHeaders.SetCookie)
+            ?.flatMap { it.splitSetCookieHeader() }
+            ?.map { parseServerSetCookieHeader(it) }
+            ?.first { it.name == "serviceToken" }
+            ?.value
+            ?: throw MiotAuthException.tokenMissing()
         MiotUser(userId.toString(), securityToken, serviceToken, getRandomDeviceId())
     }
 

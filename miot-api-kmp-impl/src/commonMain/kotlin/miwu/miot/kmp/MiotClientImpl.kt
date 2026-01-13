@@ -1,19 +1,45 @@
-package miwu.miot
+package miwu.miot.kmp
 
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.api.Send
+import io.ktor.client.plugins.api.SendingRequest
+import io.ktor.client.plugins.api.SetupRequest
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.contentnegotiation.exclude
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
+import io.ktor.client.request.headers
+import io.ktor.client.request.parameter
+import io.ktor.client.request.request
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.encodeURLPath
+import io.ktor.http.encodeURLPathPart
+import io.ktor.http.encodeURLQueryComponent
+import io.ktor.http.formUrlEncode
+import io.ktor.http.headers
+import io.ktor.http.parameters
+import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.appendAll
+import io.ktor.util.reflect.serializer
+import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.serializer
+import miwu.miot.MiotClient
 import miwu.miot.att.get.GetAtt
 import miwu.miot.att.get.piid
 import miwu.miot.att.get.siid
@@ -24,8 +50,21 @@ import miwu.miot.att.set.value
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
-import miwu.miot.ktx.IO
+import miwu.miot.kmp.ktx.IO
+import miwu.miot.kmp.plugin.ForceJsonSerializer
+import miwu.miot.kmp.plugin.MiotAuth
 import miwu.miot.ktx.json
+import miwu.miot.kmp.service.MiotService
+import miwu.miot.kmp.service.body.ActionBody
+import miwu.miot.kmp.service.body.GetDevices
+import miwu.miot.kmp.service.body.GetHome
+import miwu.miot.kmp.service.body.GetParams
+import miwu.miot.kmp.service.body.GetScene
+import miwu.miot.kmp.service.body.GetUserInfo
+import miwu.miot.kmp.service.body.RunNewScene
+import miwu.miot.kmp.service.body.SetParams
+import miwu.miot.kmp.service.createMiotService
+import miwu.miot.utils.getNonce
 import miwu.miot.model.MiotUser
 import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.miot.MiotDevices
@@ -33,73 +72,81 @@ import miwu.miot.model.miot.MiotDevices.Result.Info
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotHomes
 import miwu.miot.model.miot.MiotScene
-import miwu.miot.service.MiotService
-import miwu.miot.service.body.ActionBody
-import miwu.miot.service.body.GetDevices
-import miwu.miot.service.body.GetHome
-import miwu.miot.service.body.GetParams
-import miwu.miot.service.body.GetScene
-import miwu.miot.service.body.GetUserInfo
-import miwu.miot.service.body.RunNewScene
-import miwu.miot.service.body.SetParams
-import miwu.miot.utils.getNonce
-import miwu.miot.service.createMiotService
 import okio.Buffer
 import okio.ByteString
+import okio.ByteString.Companion.encodeUtf8
 import okio.ByteString.Companion.toByteString
 import okio.use
 
 
 class MiotClientImpl : MiotClient {
-    private val httpClient by lazy {
-        HttpClient {
-            createClientPlugin("MiotAuth") {
-                onRequest { request, _ ->
-                    val originBody = request.body
-                    val (userId, securityToken, serviceToken, deviceId) = user
+    @OptIn(InternalSerializationApi::class, InternalAPI::class)
+    @Suppress("UNCHECKED_CAST")
+    private val miotAuth = createClientPlugin("MiotAuth") {
+        transformRequestBody { request, content, typeInfo ->
+            val originBody = request.body
 
-                    if (serviceToken.isEmpty() || securityToken.isEmpty())
-                        throw IllegalArgumentException("serviceToken or securityToken not found.")
+            val (userId, securityToken, serviceToken, deviceId) = user
 
-                    val data = originBody.toString()
-                    val nonce = getNonce()
-                    val signedNonce = generateSignedNonce(securityToken, nonce)
-                    val signature = generateSignature(
-                        request.url.toString().replace(MIOT_SERVER_URL, "/"),
-                        signedNonce,
-                        nonce,
-                        data
-                    )
-                    request.headers.remove("User-Agent")
-                    request.headers.appendAll(
-                        "User-Agent" to MI_HOME_USER_AGENT,
-                        "x-xiaomi-protocal-flag-cli" to "PROTOCAL-HTTP2",
-                        "Cookie" to "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken"
-                    )
+            if (serviceToken.isEmpty() || securityToken.isEmpty())
+                throw IllegalArgumentException("serviceToken or securityToken not found.")
 
-                    request.setBody(formData {
-                        append("_nonce", nonce)
-                        append("data", data)
-                        append("signature", signature)
-                    })
-                }
-            }
-            install(ContentNegotiation) {
-                json(json)
-            }
-            expectSuccess = true
+            val data = json.encodeToString(
+                originBody::class.serializer() as KSerializer<Any>,
+                originBody
+            )
+
+            val nonce = getNonce()
+            val signedNonce = generateSignedNonce(securityToken, nonce)
+            val signature = generateSignature(
+                request.url.toString().replace(MIOT_SERVER_URL, "/"),
+                signedNonce,
+                nonce,
+                data
+            )
+
+            request.contentType(ContentType.Application.FormUrlEncoded)
+
+            FormDataContent(parameters {
+                append("_nonce", nonce)
+                append("data", data)
+                append("signature", signature)
+            })
+        }
+        transformResponseBody { response, content, typeInfo ->
+            runCatching {
+                json.decodeFromString(typeInfo.serializer(), response.bodyAsText())
+            }.getOrNull()
         }
     }
-    private val miotKtorfit by lazy {
-        Ktorfit.Builder()
-            .baseUrl(MIOT_SERVER_URL)
-            .httpClient(httpClient)
-            .build()
+    private val httpClient = HttpClient {
+        install(ContentNegotiation) {
+            json(json)
+        }
+        install(DefaultRequest) {
+            val (userId, securityToken, serviceToken, deviceId) = user
+            contentType(ContentType.Application.Json)
+            userAgent(MI_HOME_USER_AGENT)
+            headers["x-xiaomi-protocal-flag-cli"] = "PROTOCAL-HTTP2"
+            headers["Cookie"] =
+                "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken"
+        }
+        install(MiotAuth) {
+            user {
+                user
+            }
+        }
+        install(ForceJsonSerializer) {
+            json(json)
+        }
+        expectSuccess = true
     }
-    private val miotService: MiotService by lazy {
-        miotKtorfit.createMiotService()
-    }
-    private val specAttClient by lazy { MiotSpecAttClientImpl() }
+    private val miotKtorfit = Ktorfit.Builder()
+        .baseUrl(MIOT_SERVER_URL)
+        .httpClient(httpClient)
+        .build()
+    private val miotService: MiotService = miotKtorfit.createMiotService()
+    private val specAttClient = MiotSpecAttClientImpl()
     private var _user: MiotUser? = null
         get() = field ?: throw MiotClientException.userNotSet()
     private val user: MiotUser get() = _user!!
@@ -122,13 +169,13 @@ class MiotClientImpl : MiotClient {
     override suspend fun getUserInfo() = runCatching {
         miotService.getUserInfo(GetUserInfo(user.userId))
     }.recoverCatching {
-//        when (it) {
-//            is  -> {
-//                if (it.code() == 401) {
-//                    throw MiotAuthException.tokenExpired(it)
-//                }
-//            }
-//        }
+        when (it) {
+            is ClientRequestException -> {
+                if (it.response.status.value == 401) {
+                    throw MiotAuthException.tokenExpired(it)
+                }
+            }
+        }
         // TODO check token expired
         it.printStackTrace()
         throw MiotClientException.getUserInfoFailed(it)
@@ -257,27 +304,27 @@ class MiotClientImpl : MiotClient {
             }
         }
     }
+}
 
-    fun generateSignedNonce(secret: String, nonce: String): String {
-        val secretBytes = MiotBase64Impl.decode(secret)
-        val nonceBytes = MiotBase64Impl.decode(nonce)
-        val hash = Buffer().use { buffer ->
-            buffer.write(secretBytes)
-            buffer.write(nonceBytes)
-            buffer.sha256()
-        }
-        return MiotBase64Impl.encode(hash.toByteArray())
+fun generateSignedNonce(secret: String, nonce: String): String {
+    val secretBytes = MiotBase64Impl.decode(secret)
+    val nonceBytes = MiotBase64Impl.decode(nonce)
+    val hash = Buffer().use { buffer ->
+        buffer.write(secretBytes)
+        buffer.write(nonceBytes)
+        buffer.sha256()
     }
+    return MiotBase64Impl.encode(hash.toByteArray())
+}
 
-    fun generateSignature(
-        uri: String,
-        signedNonce: String,
-        nonce: String,
-        data: String
-    ): String {
-        val data = "$uri&$signedNonce&$nonce&data=$data".encodeToByteArray()
-        val key = ByteString.of(*MiotBase64Impl.decode(signedNonce))
-        val digest = data.toByteString().hmacSha256(key)
-        return MiotBase64Impl.encode(digest.toByteArray())
-    }
+fun generateSignature(
+    uri: String,
+    signedNonce: String,
+    nonce: String,
+    data: String
+): String {
+    val data = "$uri&$signedNonce&$nonce&data=$data".encodeToByteArray()
+    val key = ByteString.of(*MiotBase64Impl.decode(signedNonce))
+    val digest = data.toByteString().hmacSha256(key)
+    return MiotBase64Impl.encode(digest.toByteArray())
 }

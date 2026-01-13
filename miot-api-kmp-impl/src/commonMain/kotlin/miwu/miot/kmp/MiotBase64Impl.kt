@@ -1,5 +1,6 @@
-package miwu.miot
+package miwu.miot.kmp
 
+import miwu.miot.MiotBase64
 import kotlin.io.encoding.Base64
 
 @Suppress("NewApi")

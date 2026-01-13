@@ -1,27 +1,34 @@
-package miwu.miot
+package miwu.miot.kmp
 
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import miwu.miot.MiotSpecAttClient
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
-import miwu.miot.ktx.IO
+import miwu.miot.kmp.ktx.IO
 import miwu.miot.ktx.json
 import miwu.miot.model.att.SpecAtt
-import miwu.miot.service.createSpecService
+import miwu.miot.kmp.service.createSpecService
 
 class MiotSpecAttClientImpl : MiotSpecAttClient {
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(json)
         }
+        install(DefaultRequest) {
+            contentType(ContentType.Application.Json)
+        }
     }
-    private val ktorfit = Ktorfit.Builder().baseUrl(SPEC_SERVER_URL).build()
+    private val ktorfit = Ktorfit.Builder().httpClient(httpClient).baseUrl(SPEC_SERVER_URL).build()
     private val spec = ktorfit.createSpecService()
 
     override suspend fun getSpecAtt(urn: String): Result<SpecAtt> = withContext(Dispatchers.IO) {

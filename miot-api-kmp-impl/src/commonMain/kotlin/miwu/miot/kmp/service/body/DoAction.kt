@@ -1,4 +1,4 @@
-package miwu.miot.service.body
+package miwu.miot.kmp.service.body
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,4 +1,6 @@
-package miwu.miot
+package miwu.miot.kmp
+
+import miwu.miot.MiotManager
 
 class MiotManagerImpl : MiotManager {
     override val Login = MiotLoginClientImpl()

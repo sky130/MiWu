@@ -1,16 +1,8 @@
 package miwu.miot.utils
 
-import io.ktor.http.encodeURLQueryComponent
-import kotlinx.io.buffered
-import kotlinx.io.files.SystemFileSystem
-import miwu.miot.LONG_TEMP_CHARS
-import miwu.miot.RANDOM_TEMP_CHARS
+import miwu.miot.kmp.LONG_TEMP_CHARS
+import miwu.miot.kmp.RANDOM_TEMP_CHARS
 import miwu.miot.ktx.json
-import okio.HashingSink
-import okio.Path
-import okio.blackholeSink
-import okio.use
-import okio.ByteString
 import okio.ByteString.Companion.encodeUtf8
 
 inline fun <reified T> String.to(): T = json.decodeFromString<T>(this)
@@ -26,6 +18,5 @@ fun getRandomDeviceId(): String =
 
 fun getNonce() = (1..16).map { _ -> LONG_TEMP_CHARS.random() }.joinToString("")
 
-fun String.urlEncode(): String = this.encodeURLQueryComponent()
 
 fun String.cut() = substring(11)

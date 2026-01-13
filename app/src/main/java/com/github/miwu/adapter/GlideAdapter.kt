@@ -13,7 +13,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.github.miwu.R
 import com.github.miwu.logic.database.model.MiwuDatabaseDevice
-import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.ui.main.fragment.DeviceFragment
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.dp

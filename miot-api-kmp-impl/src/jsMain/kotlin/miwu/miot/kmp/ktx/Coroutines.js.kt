@@ -1,4 +1,4 @@
-package miwu.miot.ktx
+package miwu.miot.kmp.ktx
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

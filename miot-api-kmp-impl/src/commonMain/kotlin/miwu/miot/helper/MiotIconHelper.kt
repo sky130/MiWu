@@ -7,9 +7,9 @@ import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import miwu.miot.ktx.IO
-import miwu.miot.model.miot.MiotDevices.Result.Info
+import miwu.miot.kmp.ktx.IO
 import miwu.miot.ktx.json
+import miwu.miot.model.miot.MiotDevices.Result.Info
 
 object MiotIconHelper {
     private val httpClient = HttpClient {

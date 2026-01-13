@@ -8,15 +8,18 @@ data class LoginQrCode(
     @SerialName("code") val code: Int,
     @SerialName("desc") val desc: String,
     @SerialName("description") val description: String,
-    @SerialName("loginUrl") val loginUrl: String,
-    @SerialName("lp") val lp: String,
-    @SerialName("qr") val qr: String,
+    @SerialName("loginUrl") val loginUrl: String? = null,
+    @SerialName("lp") val lp: String? = null,
+    @SerialName("qr") val qr: String? = null,
     @SerialName("result") val result: String,
-    @SerialName("sl") val sl: String,
-    @SerialName("timeInterval") val timeInterval: Int,
-    @SerialName("timeout") val timeout: Int
+    @SerialName("sl") val sl: String? = null,
+    @SerialName("timeInterval") val timeInterval: Int? = null,
+    @SerialName("timeout") val timeout: Int? = null
 ) {
-    fun toQrCode() = QrCode(loginUrl, lp)
+    fun toQrCode(): QrCode? {
+        if (loginUrl == null || lp == null) return null
+        return QrCode(loginUrl, lp)
+    }
 
     @Serializable
     data class QrCode(

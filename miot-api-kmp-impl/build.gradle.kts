@@ -27,6 +27,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(kotlin("reflect"))
+
+
                 implementation(project(":miot-api"))
                 implementation(project.dependencies.platform(libs.kotlincrypto.hash.bom))
 

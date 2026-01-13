@@ -269,8 +269,8 @@ class MiotClientImpl : MiotClient {
                             add("signature", signature)
                         })
                 }.build()
+                return chain.proceed(latestRequest)
             }
-            return chain.proceed(latestRequest)
         }
 
         fun generateSignedNonce(secret: String, nonce: String): String {

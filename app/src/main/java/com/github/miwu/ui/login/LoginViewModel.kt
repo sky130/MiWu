@@ -13,7 +13,6 @@ import com.github.alexzhirkevich.customqrgenerator.createQrOptions
 import com.github.miwu.R
 import com.github.miwu.ktx.Logger
 import com.github.miwu.logic.repository.AppRepository
-import kndroidx.extension.log
 import kndroidx.extension.string
 import kndroidx.extension.toast
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +24,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miwu.miot.MiotManager
-import miwu.miot.MiotManagerImpl
 import miwu.miot.model.MiotUser
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
@@ -51,15 +49,17 @@ class LoginViewModel(internal val manager: MiotManager, val appRepository: AppRe
         scope.launch(Dispatchers.IO) {
             runCatching {
                 _qrcode.emit(createBitmap(1, 1))
-                val qrcode = manager.Login.generateLoginQrCode().toQrCode()
+                val response = manager.Login.generateLoginQrCode()
+                val qrcode = response.toQrCode()
+                    ?: return@launch logger.warn("generate login qrcode failure, data={}", response)
                 val data = QrData.Url(qrcode.data)
                 logger.info("qrcode data: {}, login url: {}", data, qrcode.loginUrl)
                 _qrcode.emit(generator.generateQrCode(data, options))
                 manager.Login.loginByQrCode(qrcode.loginUrl).getOrThrow()
             }.onFailure { e ->
+                logger.warn("login failure, cause by {}", e.stackTraceToString())
                 if (e is SocketTimeoutException || e is TimeoutException) return@launch qrcode()
                 withContext(Dispatchers.Main) {
-                    logger.warn("login failure, cause by {}", e.message ?: "unknown")
                     R.string.login_failure_toast.string.format(e.message ?: "unknown").toast()
                 }
             }.onSuccess {

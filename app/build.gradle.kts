@@ -72,7 +72,8 @@ dependencies {
     implementation(project(":miwu-support-annotation"))
 
     implementation(project(":miot-api"))
-    implementation(project(":miot-api-impl"))
+    // implementation(project(":miot-api-impl"))
+    implementation(project(":miot-api-kmp-impl"))
 
     implementation(project(":miwu-android"))
 
@@ -127,7 +128,6 @@ dependencies {
     implementation(libs.androidx.wear.protolayout)
     implementation(libs.androidx.wear.protolayout.material)
     implementation(libs.androidx.wear.protolayout.expression)
-    implementation(libs.kotlinx.coroutines.core)
     debugImplementation(libs.androidx.wear.tiles.tooling)
     debugImplementation(libs.androidx.wear.tiles.tooling.preview)
     implementation(libs.google.guava)
@@ -136,6 +136,7 @@ dependencies {
     implementation(libs.google.horologist.compose.tools)
     implementation(libs.google.horologist.tiles)
 
+    implementation(libs.kotlinx.coroutines.core)
 
 
     // implementation(libs.gson)

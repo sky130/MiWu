@@ -22,7 +22,7 @@ class LoadingDialog(private val user: String, private val pwd: String) :
 
     override fun init() {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.manager.Login.login(user, pwd).also { result ->
+            viewModel.loginProvider.login(user, pwd).also { result ->
                 val user = result.getOrNull()
                 withContext(Dispatchers.Main) {
                     if (user == null) {

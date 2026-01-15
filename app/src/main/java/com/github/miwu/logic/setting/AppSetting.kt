@@ -1,7 +1,7 @@
 package com.github.miwu.logic.setting
 
 import kndroidx.setting.Setting
-import miwu.miot.utils.getRandomDeviceId
+import miwu.miot.common.getRandomDeviceId
 
 object AppSetting : Setting("app") {
 

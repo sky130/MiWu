@@ -3,14 +3,13 @@ package com.github.miwu.ui.device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.miwu.logic.database.AppDatabase
-import com.github.miwu.logic.database.model.MiwuDatabaseDevice.Companion.toMiwu
+import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiwu
+import com.github.miwu.logic.repository.LocalRepository
 import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotDevice
 
-class DeviceViewModel(val database: AppDatabase) : ViewModel() {
+class DeviceViewModel(val localRepository: LocalRepository) : ViewModel() {
     fun addFavorite(device: MiotDevice) {
-        viewModelScope.launch {
-            database.device().insert(device.toMiwu())
-        }
+        localRepository.addDevice(device)
     }
 }

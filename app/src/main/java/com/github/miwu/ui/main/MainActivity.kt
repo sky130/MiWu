@@ -17,26 +17,14 @@ class MainActivity : ViewActivityX<Binding>(Binding::inflate), OnPageChangeListe
     private val adapter = MainViewPagerAdapter(this)
 
     override fun init() {
-        binding.viewPager.apply {
-            adapter = this@MainActivity.adapter
-            addOnPageChangeListener(this@MainActivity)
-        }
+        binding.viewPager.adapter = adapter
+        binding.viewPager.addOnPageChangeListener(this)
         viewModel.init()
     }
 
     override fun onPageScrolled(position: Int, offset: Float, offsetPixle: Int) = Unit
 
     override fun onPageSelected(position: Int) {
-        adapter.list[position].second.apply {
-            runCatching {
-                when (this) {
-                    is DeviceFragment -> binding.recycler.requestFocus()
-                    is SceneFragment -> binding.recycler.requestFocus()
-                    is MiWuFragment -> binding.recycler.requestFocus()
-                    is UserFragment -> binding.scroll.requestFocus()
-                }
-            }
-        }
         binding.title.setTitle(adapter.list[position].first)
     }
 

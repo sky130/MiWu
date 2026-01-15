@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.github.miwu.ui.license.LicenseViewModel" />
+            type="com.github.miwu.ui.about.license.LicenseViewModel" />
 
         <variable
             name="activity"
-            type="com.github.miwu.ui.license.LicenseActivity" />
+            type="com.github.miwu.ui.about.license.LicenseActivity" />
     </data>
 
     <FrameLayout
@@ -21,12 +21,12 @@
 
 
         <ScrollView
-            style="@style/WearScrollLayout">
+            style="@style/Wear.Scroll">
 
             <requestFocus />
 
             <LinearLayout
-               style="@style/WearLayout">
+               style="@style/Wear.Linear">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -38,7 +38,7 @@
         </ScrollView>
 
         <com.github.miwu.view.AppTitleBar
-            style="@style/WearTitleBar"
+            style="@style/Wear.TitleBar"
             app:back="true"
             app:title="@string/license_for_use" />
     </FrameLayout>

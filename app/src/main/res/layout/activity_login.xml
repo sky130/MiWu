@@ -16,14 +16,14 @@
         <import type="android.view.View" />
     </data>
 
-    <FrameLayout style="@style/WearBox">
+    <FrameLayout style="@style/Wear.Frame">
 
 
         <ScrollView
             android:id="@+id/scroll"
-            style="@style/WearScrollLayout">
+            style="@style/Wear.Scroll">
 
-            <LinearLayout style="@style/WearLayout">
+            <LinearLayout style="@style/Wear.Linear">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -53,12 +53,12 @@
                     tools:visibility="gone">
 
                     <EditText
-                        style="@style/MiwuEditView"
+                        style="@style/Miwu.EditView"
                         android:hint="@string/login_edit_user"
                         android:text="@={viewModel.user}" />
 
                     <EditText
-                        style="@style/MiwuEditView"
+                        style="@style/Miwu.EditView"
                         android:layout_marginTop="10dp"
                         android:hint="@string/login_edit_pwd"
                         android:text="@={viewModel.password}" />
@@ -153,7 +153,7 @@
         </ScrollView>
 
         <com.github.miwu.view.AppTitleBar
-            style="@style/WearTitleBar"
+            style="@style/Wear.TitleBar"
             app:back="false"
             app:title="@string/login_bar" />
     </FrameLayout>

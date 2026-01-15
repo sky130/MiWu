@@ -2,9 +2,6 @@ package miwu.miot.kmp.plugin
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpClientPlugin
-import io.ktor.client.plugins.api.TransformResponseBodyContext
-import io.ktor.client.plugins.api.createClientPlugin
-import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpResponseContainer
 import io.ktor.client.statement.HttpResponsePipeline
@@ -17,9 +14,6 @@ import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.InternalAPI
 import io.ktor.utils.io.KtorDsl
 import kotlinx.serialization.json.Json
-import miwu.miot.kmp.plugin.MiotAuth.Config
-import miwu.miot.ktx.json
-import miwu.miot.model.MiotUser
 
 
 @OptIn(InternalAPI::class)
@@ -35,7 +29,7 @@ class ForceJsonSerializer internal constructor(internal val json: Json) {
 
     @KtorDsl
     class Config {
-        private var json = miwu.miot.ktx.json
+        private var json = miwu.miot.kmp.utils.json
 
         fun json(json: Json) {
             this.json = json
@@ -45,7 +39,7 @@ class ForceJsonSerializer internal constructor(internal val json: Json) {
     }
 
     companion object : HttpClientPlugin<Config, ForceJsonSerializer> {
-        override fun prepare(block: ForceJsonSerializer.Config.() -> Unit): ForceJsonSerializer =
+        override fun prepare(block: Config.() -> Unit): ForceJsonSerializer =
             Config().apply(block).build()
 
         override val key: AttributeKey<ForceJsonSerializer> = AttributeKey("ForceJsonSerializer")

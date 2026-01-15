@@ -6,19 +6,19 @@
 
         <variable
             name="viewModel"
-            type="com.github.miwu.ui.help.HelpViewModel" />
+            type="com.github.miwu.ui.about.help.HelpViewModel" />
 
         <variable
             name="activity"
-            type="com.github.miwu.ui.help.HelpActivity" />
+            type="com.github.miwu.ui.about.help.HelpActivity" />
     </data>
 
     <FrameLayout
-        style="@style/WearBox">
+        style="@style/Wear.Frame">
 
         <com.github.miwu.view.SmoothRecyclerView
             android:id="@+id/recycler"
-            style="@style/WearRecycler"
+            style="@style/Wear.Recycler"
             app:item="@{viewModel.list}"
             app:itemLayout="@{@layout/item_help}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
@@ -27,7 +27,7 @@
         </com.github.miwu.view.SmoothRecyclerView>
 
         <com.github.miwu.view.AppTitleBar
-            style="@style/WearTitleBar"
+            style="@style/Wear.TitleBar"
             app:back="true"
             app:title="@string/help_title" />
     </FrameLayout>

@@ -75,29 +75,29 @@
                     tools:text="2.0.0" />
 
                 <Button
-                    style="@style/WearButton"
+                    style="@style/Wear.Button"
                     android:onClick="@{()->activity.startLicenseActivity()}"
                     android:text="@string/license_for_use" />
 
                 <Button
-                    style="@style/WearButton"
+                    style="@style/Wear.Button"
 
                     android:onClick="@{()->activity.startCrashActivity()}"
                     android:text="@string/crash_log"/>
 
 
                 <Button
-                    style="@style/WearButton"
+                    style="@style/Wear.Button"
                     android:onClick="@{()->activity.startHelpActivity()}"
                     android:text="@string/help_title" />
 
                 <TextView
-                    style="@style/WearDescText"
+                    style="@style/Wear.DescText"
                     android:layout_marginTop="10dp"
                     android:text="@string/app_url_text"/>
 
                 <TextView
-                    style="@style/WearDescSubText"
+                    style="@style/Wear.DescSubText"
                     android:text="@string/github_url"
                     android:textSize="12sp" />
 
@@ -107,7 +107,7 @@
         </ScrollView>
 
         <com.github.miwu.view.AppTitleBar
-            style="@style/WearTitleBar"
+            style="@style/Wear.TitleBar"
             app:back="true"
             app:title="@string/about" />
     </FrameLayout>

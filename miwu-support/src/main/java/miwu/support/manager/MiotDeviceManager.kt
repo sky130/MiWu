@@ -24,11 +24,11 @@ import miwu.support.layout.MiwuLayout
 import miwu.support.manager.callback.DeviceManagerCallback
 import miwu.widget.generated.device.DeviceRegistry
 import miwu.widget.generated.widget.PropertyRegistry
-import miwu.miot.MiotClient
-import miwu.miot.MiotManager
 import miwu.miot.att.get.GetAtt
+import miwu.miot.client.MiotDeviceClient
 import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.miot.MiotDevice
+import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.translate.TranslateHelper
 import miwu.support.urn.Urn
 import miwu.widget.generated.widget.ActionRegistry
@@ -45,8 +45,8 @@ import kotlin.reflect.KClass
  * @param callback 用于回调设备初始化状态
  * */
 class MiotDeviceManager(
-    val miot: MiotClient,
-    val manager: MiotManager,
+    val miot: MiotDeviceClient,
+    val specAttrProvider: MiotSpecAttrProvider,
     val device: MiotDevice,
     val icons: Icons,
     val cache: Cache,
@@ -202,13 +202,13 @@ class MiotDeviceManager(
                 if (widget.siid == siid && widget.piid == piid) widget.updateValue(value)
                 if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
             }
-            miot.Device.set(device, arrayOf(siid to piid to value))
+            miot.set(device, arrayOf(siid to piid to value))
         }
     }
 
     override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
         scope.launch {
-            val result = miot.Device.action(device, siid, aiid, *input).getOrNull()
+            val result = miot.action(device, siid, aiid, *input).getOrNull()
             if (result == null) return@launch
             for (i in widgetHolders) {
                 val widget = i.widget
@@ -240,10 +240,11 @@ class MiotDeviceManager(
     }
 
     private suspend fun getAtt() =
-        cache.getSpecAtt(deviceUrn) ?: device.getSpecAtt(manager).getOrNull()
+        cache.getSpecAtt(deviceUrn) ?: device.getSpecAtt(specAttrProvider).getOrNull()
 
     private suspend fun getLanguageMap() =
-        cache.getLanguageMap(deviceUrn) ?: device.getSpecAttLanguageMap(manager).getOrNull()
+        cache.getLanguageMap(deviceUrn) ?: device.getSpecAttLanguageMap(specAttrProvider)
+            .getOrNull()
 
     private fun getPropertyWidgetClass(
         serviceType: String,
@@ -289,7 +290,7 @@ class MiotDeviceManager(
             attList.add(widget.siid to widget.piid)
         }
         if (attList.isEmpty()) return@withContext
-        miot.Device.get(device, attList.toTypedArray()).onSuccess {
+        miot.get(device, attList.toTypedArray()).onSuccess {
             update(it.result ?: return@onSuccess)
         }
     }

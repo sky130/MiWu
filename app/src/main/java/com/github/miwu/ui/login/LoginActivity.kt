@@ -8,8 +8,8 @@ import com.github.miwu.R
 import com.github.miwu.databinding.ActivityLoginBinding as Binding
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.setting.AppSetting
-import com.github.miwu.ui.help.HelpActivity
-import com.github.miwu.ui.license.LicenseActivity
+import com.github.miwu.ui.about.help.HelpActivity
+import com.github.miwu.ui.about.license.LicenseActivity
 import com.github.miwu.ui.login.dialog.LoadingDialog
 import com.github.miwu.ui.main.MainActivity
 import kndroidx.activity.ViewActivityX
@@ -36,9 +36,9 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
         viewModel.qrcode()
         viewModel.miotUser.onEach {
             AppSetting.apply {
-                this.userId.value = it.userId
-                this.securityToken.value = it.securityToken
-                this.serviceToken.value = it.serviceToken
+                userId.value = it.userId
+                securityToken.value = it.securityToken
+                serviceToken.value = it.serviceToken
             }
             appRepository.miotUser = it.copy(deviceId = MainApplication.androidId)
             R.string.toast_login_success.toast()

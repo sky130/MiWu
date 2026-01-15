@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetDevices(
     @SerialName("home_owner")
-    val homeOwner: Long,
+    val ownerId: Long,
     @SerialName("home_id")
     val homeId: Long,
     @SerialName("limit")

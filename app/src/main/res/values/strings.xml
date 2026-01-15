@@ -73,6 +73,7 @@
     <string name="auto_feed_plan">自动喂食计划</string>
     <string name="Normal">正常</string>
     <string name="miwu_tips">请一直左滑探索应用</string>
+    <string name="miwu_tips_edit">请在应用中收藏设备</string>
     <string name="miwu_no_device">暂无收藏设备</string>
     <string name="must_to_read">登录后默认已同意</string>
     <string name="plz_user_mi_app_scan_qrcode">请使用米家等\n小米旗下应用扫码登录</string>
@@ -90,5 +91,5 @@
     <string name="dev_desc">有可能损坏米屋的应用结构\n如不清楚如何使用请退出</string>
     <string name="dev_mode">开发者模式</string>
     <string name="login_failure_toast">登录失败,原因可能为%s</string>
-
+    <style name="device_offline">设备离线</style>
 </resources>

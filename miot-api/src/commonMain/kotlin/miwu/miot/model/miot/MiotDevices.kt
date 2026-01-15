@@ -3,10 +3,8 @@ package miwu.miot.model.miot
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import miwu.miot.MiotManager
 import miwu.miot.exception.MiotDeviceException
+import miwu.miot.provider.MiotSpecAttrProvider
 
 
 typealias MiotDevice = MiotDevices.Result.Device
@@ -64,27 +62,43 @@ data class MiotDevices(
                 @SerialName("showGroupMember") val showGroupMember: Boolean? = null,
             )
 
-            suspend fun getSpecAtt(manager: MiotManager) = runCatching {
+            suspend fun getSpecAtt(specAttrProvider: MiotSpecAttrProvider) = runCatching {
                 val specType = specType ?: throw MiotDeviceException.specNotFound(model)
-                manager.SpecAtt.getSpecAtt(specType).getOrThrow()
+                specAttrProvider.getSpecAtt(specType).getOrThrow()
             }.onFailure {
                 it.printStackTrace()
             }
 
             suspend fun getSpecAttLanguageMap(
-                manager: MiotManager,
-                languageCode: String = "zh_cn"
+                specAttrProvider: MiotSpecAttrProvider, languageCode: String = "zh_cn"
             ): kotlin.Result<Map<String, String>> = runCatching {
                 val specType = specType ?: throw MiotDeviceException.specNotFound(model)
-                val language = manager.SpecAtt.getSpecMultiLanguage(specType).getOrThrow()
-                manager.SpecAtt.getSpecAttLanguageMap(language, languageCode).getOrThrow()
+                val language = specAttrProvider.getSpecMultiLanguage(specType).getOrThrow()
+                specAttrProvider.getSpecAttLanguageMap(language, languageCode).getOrThrow()
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (other !is Device) return false
+
+                return did == other.did
+                        && uid == other.uid
+                        && model == other.model
+                        && isOnline == other.isOnline
+            }
+
+            override fun hashCode(): Int {
+                var result = isOnline.hashCode()
+                result = 31 * result + uid.hashCode()
+                result = 31 * result + did.hashCode()
+                result = 31 * result + model.hashCode()
+                return result
             }
         }
 
         @Serializable
         data class Info(
-            @SerialName("code") val code: Int,
-            @SerialName("data") val data: Data
+            @SerialName("code") val code: Int, @SerialName("data") val data: Data
         ) {
             @Serializable
             data class Data(@SerialName("realIcon") val realIcon: String)
@@ -94,8 +108,7 @@ data class MiotDevices(
     @Serializable
     data class HomeInfo(
         // @SerialName("dids") val dids: Any,
-        @SerialName("id") val id: Long,
-        @SerialName("roomlist") val room: List<Room>
+        @SerialName("id") val id: Long, @SerialName("roomlist") val room: List<Room>
     ) {
         @Serializable
         data class Room(

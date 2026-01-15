@@ -41,7 +41,11 @@
         <item name="android:paddingRight">35dp</item>
     </style>
 
-    <style name="TextStyle" parent="android:Widget.TextView">
+    <style name="Wear" />
+
+    <style name="Miwu" />
+
+    <style name="Wear.TitleBar.Text" parent="android:Widget.TextView">
         <item name="android:text">标题栏</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">17sp</item>
@@ -49,7 +53,7 @@
         <item name="android:paddingBottom">0.5dp</item>
     </style>
 
-    <style name="ClockStyle">
+    <style name="Wear.TitleBar.Clock">
         <item name="android:paddingEnd">10dp</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#CCFFFFFF</item>
@@ -58,27 +62,19 @@
         <item name="android:format24Hour">HH:mm</item>
     </style>
 
-    <style name="WearBox">
+    <style name="Wear.Frame">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="WearScrollLayout">
+    <style name="Wear.Scroll">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
     </style>
 
-    <style name="MiotLayout">
-        <item name="android:overScrollMode">never</item>
-        <item name="android:scrollbars">none</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="WearRecycler">
+    <style name="Wear.Recycler">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:focusable">true</item>
@@ -92,7 +88,7 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
-    <style name="WearLayout">
+    <style name="Wear.Linear">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:focusable">true</item>
@@ -104,7 +100,7 @@
         <item name="android:paddingBottom">50dp</item>
     </style>
 
-    <style name="WearButton">
+    <style name="Wear.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -117,7 +113,7 @@
         <item name="android:textSize">17sp</item>
     </style>
 
-    <style name="WearAppButton">
+    <style name="Wear.AppButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -130,7 +126,7 @@
         <item name="android:paddingRight">20dp</item>
     </style>
 
-    <style name="WearDescText">
+    <style name="Wear.DescText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
@@ -140,7 +136,7 @@
         <item name="android:layout_marginRight">15dp</item>
     </style>
 
-    <style name="WearDescSubText">
+    <style name="Wear.DescSubText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
@@ -150,12 +146,20 @@
         <item name="android:layout_marginRight">15dp</item>
     </style>
 
-    <style name="WearTitleBar">
+    <style name="Wear.TitleBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="MiwuEditView">
+    <style name="MiotLayout">
+        <item name="android:overScrollMode">never</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Miwu.EditView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/bg_item</item>
@@ -164,6 +168,82 @@
         <item name="android:textSize">16sp</item>
         <item name="android:useLocalePreferredLineHeightForMinimum" tools:targetApi="35">false
         </item>
+    </style>
+
+    <style name="FragmentEmptyPage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="FragmentEmptyPage.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="FragmentEmptyPage.SubTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="FragmentEmptyPage.Icon">
+        <item name="android:src">@drawable/empty_list_icon</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">65dp</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
+    <style name="DeviceCard" />
+
+    <style name="DeviceCard.Background">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginVertical">3dp</item>
+        <item name="android:background">@drawable/bg_list_item</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="DeviceCard.Icon">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+    </style>
+
+    <style name="DeviceCard.Title">
+        <item name="android:textColor">@drawable/list_title</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@drawable/list_title</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="DeviceCard.Room">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="DeviceCard.Offline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:alpha">0.7</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:text">@string/device_offline</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>

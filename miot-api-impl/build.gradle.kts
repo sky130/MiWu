@@ -31,6 +31,7 @@ kotlin {
 
 dependencies {
     implementation(project(":miot-api"))
+    implementation(project(":miot-api-common"))
     implementation(libs.squareup.retrofit.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.koin.core)

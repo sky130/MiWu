@@ -1,0 +1,305 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "d861c1c5d556fa07005fe1623a2ef76c",
+    "entities": [
+      {
+        "tableName": "favorite_device",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`bssid` TEXT NOT NULL, `cnt` INTEGER, `comFlag` INTEGER NOT NULL, `did` TEXT NOT NULL, `freqFlag` INTEGER NOT NULL, `hideMode` INTEGER NOT NULL, `isOnline` INTEGER NOT NULL, `lastOnline` INTEGER, `latitude` TEXT NOT NULL, `localIp` TEXT, `longitude` TEXT NOT NULL, `mac` TEXT NOT NULL, `model` TEXT NOT NULL, `name` TEXT NOT NULL, `orderTime` INTEGER NOT NULL, `parentId` TEXT, `permitLevel` INTEGER NOT NULL, `pid` INTEGER NOT NULL, `rssi` INTEGER, `showMode` INTEGER NOT NULL, `specType` TEXT, `ssid` TEXT, `token` TEXT NOT NULL, `uid` INTEGER NOT NULL, `fwVersion` TEXT, `isSetPinCode` INTEGER, `isSubGroup` INTEGER, `mcuVersion` TEXT, `pinCodeType` INTEGER, `platform` TEXT, `showGroupMember` INTEGER, PRIMARY KEY(`uid`, `did`))",
+        "fields": [
+          {
+            "fieldPath": "bssid",
+            "columnName": "bssid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cnt",
+            "columnName": "cnt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "comFlag",
+            "columnName": "comFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "did",
+            "columnName": "did",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "freqFlag",
+            "columnName": "freqFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hideMode",
+            "columnName": "hideMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isOnline",
+            "columnName": "isOnline",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastOnline",
+            "columnName": "lastOnline",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localIp",
+            "columnName": "localIp",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mac",
+            "columnName": "mac",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "model",
+            "columnName": "model",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderTime",
+            "columnName": "orderTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentId",
+            "columnName": "parentId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "permitLevel",
+            "columnName": "permitLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pid",
+            "columnName": "pid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rssi",
+            "columnName": "rssi",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "showMode",
+            "columnName": "showMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "specType",
+            "columnName": "specType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "ssid",
+            "columnName": "ssid",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "token",
+            "columnName": "token",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "extra.fwVersion",
+            "columnName": "fwVersion",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "extra.isSetPinCode",
+            "columnName": "isSetPinCode",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "extra.isSubGroup",
+            "columnName": "isSubGroup",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "extra.mcuVersion",
+            "columnName": "mcuVersion",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "extra.pinCodeType",
+            "columnName": "pinCodeType",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "extra.platform",
+            "columnName": "platform",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "extra.showGroupMember",
+            "columnName": "showGroupMember",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "uid",
+            "did"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_favorite_device_uid_did",
+            "unique": false,
+            "columnNames": [
+              "uid",
+              "did"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorite_device_uid_did` ON `${TABLE_NAME}` (`uid`, `did`)"
+          }
+        ]
+      },
+      {
+        "tableName": "favorite_device_metadata",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER NOT NULL, `did` TEXT NOT NULL, `sort_index` INTEGER NOT NULL DEFAULT 2147483647, PRIMARY KEY(`uid`, `did`), FOREIGN KEY(`uid`, `did`) REFERENCES `favorite_device`(`uid`, `did`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "did",
+            "columnName": "did",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortIndex",
+            "columnName": "sort_index",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "2147483647"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "uid",
+            "did"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_favorite_device_metadata_uid_did",
+            "unique": false,
+            "columnNames": [
+              "uid",
+              "did"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorite_device_metadata_uid_did` ON `${TABLE_NAME}` (`uid`, `did`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "favorite_device",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "uid",
+              "did"
+            ],
+            "referencedColumns": [
+              "uid",
+              "did"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "crash_item",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`errorMessage` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `path` TEXT NOT NULL, `index` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "errorMessage",
+            "columnName": "errorMessage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "index",
+            "columnName": "index",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "index"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd861c1c5d556fa07005fe1623a2ef76c')"
+    ]
+  }
+}

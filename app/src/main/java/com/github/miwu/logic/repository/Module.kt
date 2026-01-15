@@ -7,6 +7,9 @@ val repositoryModule = module {
         AppRepository()
     }
     single {
+        LocalRepository()
+    }
+    single {
         DeviceRepository()
     }
 }

@@ -5,24 +5,55 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.github.miwu.logic.database.model.MiwuDatabaseDevice
+import androidx.room.RawQuery
+import androidx.room.Transaction
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.github.miwu.logic.database.entity.FavoriteDevice
+import com.github.miwu.logic.database.entity.FavoriteDeviceMetadata
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteDeviceDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: MiwuDatabaseDevice)
+    suspend fun insert(item: FavoriteDevice): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(items: List<MiwuDatabaseDevice>)
+    suspend fun insert(items: List<FavoriteDevice>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMeta(items: FavoriteDeviceMetadata)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMeta(items: List<FavoriteDeviceMetadata>)
 
     @Delete
-    suspend fun delete(item: MiwuDatabaseDevice)
-
-    @Query("select * from favorite_device ORDER BY `position` ASC")
-    fun getListFlow(): Flow<List<MiwuDatabaseDevice>>
+    suspend fun delete(item: FavoriteDevice)
 
     @Query("delete from favorite_device")
     suspend fun deleteAll()
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateSortIndices(refs: List<FavoriteDeviceMetadata>)
+
+    @Transaction
+    @Query(
+        """
+        SELECT m.* FROM favorite_device m
+        INNER JOIN favorite_device_metadata pmc ON m.did = pmc.did and m.uid = pmc.uid
+        ORDER BY pmc.sort_index ASC
+    """
+    )
+    suspend fun getList(): List<FavoriteDevice>
+
+    @Transaction
+    @Query(
+        """
+        SELECT m.* FROM favorite_device m
+        INNER JOIN favorite_device_metadata pmc ON m.did = pmc.did and m.uid = pmc.uid
+        ORDER BY pmc.sort_index ASC
+    """
+    )
+    fun observeList(): Flow<List<FavoriteDevice>>
 }

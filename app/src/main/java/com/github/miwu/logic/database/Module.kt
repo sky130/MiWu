@@ -6,7 +6,7 @@ import org.koin.dsl.module
 val databaseModule = module {
     single {
         Room.databaseBuilder(
-            get(), AppDatabase::class.java, "app_latest_database"
+            get(), AppDatabase::class.java, "app_database_v3"
         ).fallbackToDestructiveMigration(true).build()
     }
 }

@@ -7,11 +7,11 @@
 
         <variable
             name="handler"
-            type="com.github.miwu.ui.crash.CrashActivity" />
+            type="com.github.miwu.ui.about.crash.CrashActivity" />
 
         <variable
             name="item"
-            type="com.github.miwu.ui.crash.model.CrashItem" />
+            type="com.github.miwu.ui.about.crash.model.CrashItem" />
     </data>
 
     <LinearLayout

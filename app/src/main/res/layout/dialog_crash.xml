@@ -7,11 +7,11 @@
 
         <variable
             name="viewModel"
-            type="com.github.miwu.ui.crash.CrashViewModel" />
+            type="com.github.miwu.ui.about.crash.CrashViewModel" />
 
         <variable
             name="dialog"
-            type="com.github.miwu.ui.crash.CrashDialog" />
+            type="com.github.miwu.ui.about.crash.CrashDialog" />
     </data>
 
     <FrameLayout

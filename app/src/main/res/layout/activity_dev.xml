@@ -14,39 +14,39 @@
             type="com.github.miwu.ui.about.AboutActivity" />
     </data>
 
-    <FrameLayout style="@style/WearBox">
+    <FrameLayout style="@style/Wear.Frame">
 
         <ScrollView
             android:id="@+id/scroll"
-            style="@style/WearScrollLayout">
+            style="@style/Wear.Scroll">
 
             <requestFocus />
 
-            <LinearLayout style="@style/WearLayout">
+            <LinearLayout style="@style/Wear.Linear">
 
                 <Button
                     android:id="@+id/gotoLicense"
-                    style="@style/WearButton"
+                    style="@style/Wear.Button"
                     android:onClick="@{()->activity.startLicenseActivity()}"
                     android:text="@string/license_for_use" />
 
                 <Button
-                    style="@style/WearButton"
+                    style="@style/Wear.Button"
                     android:onClick="@{()->activity.startCrashActivity()}"
                     android:text="@string/crash_log" />
 
 
                 <Button
-                    style="@style/WearButton"
+                    style="@style/Wear.Button"
                     android:onClick="@{()->activity.startHelpActivity()}"
                     android:text="@string/help_title" />
 
                 <TextView
-                    style="@style/WearDescText"
+                    style="@style/Wear.DescText"
                     android:text="@string/dev_mode" />
 
                 <TextView
-                    style="@style/WearDescSubText"
+                    style="@style/Wear.DescSubText"
                     android:text="@string/dev_desc" />
 
             </LinearLayout>
@@ -55,7 +55,7 @@
         </ScrollView>
 
         <com.github.miwu.view.AppTitleBar
-            style="@style/WearTitleBar"
+            style="@style/Wear.TitleBar"
             app:back="true"
             app:title="@string/dev_mode" />
     </FrameLayout>

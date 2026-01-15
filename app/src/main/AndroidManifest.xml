@@ -26,7 +26,7 @@
             android:exported="false"
             android:taskAffinity="" />
         <activity
-            android:name=".ui.crash.CrashActivity"
+            android:name=".ui.about.crash.CrashActivity"
             android:exported="false"
             android:taskAffinity="" />
 
@@ -52,7 +52,7 @@
             android:value="true" />
 
         <activity
-            android:name=".ui.help.HelpActivity"
+            android:name=".ui.about.help.HelpActivity"
             android:exported="false"
             android:taskAffinity="" />
         <activity
@@ -60,7 +60,7 @@
             android:exported="false"
             android:taskAffinity="" />
         <activity
-            android:name=".ui.favorite.EditFavoriteActivity"
+            android:name=".ui.edit.EditFavoriteActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:noHistory="true"
@@ -86,7 +86,7 @@
             android:exported="false"
             android:taskAffinity="" />
         <activity
-            android:name=".ui.license.LicenseActivity"
+            android:name=".ui.about.license.LicenseActivity"
             android:exported="false"
             android:taskAffinity="" />
         <activity

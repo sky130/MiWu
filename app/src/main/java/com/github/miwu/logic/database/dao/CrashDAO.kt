@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.github.miwu.logic.database.model.CrashItem
+import com.github.miwu.logic.database.entity.CrashItem
 import kotlinx.coroutines.flow.Flow
 
 @Dao

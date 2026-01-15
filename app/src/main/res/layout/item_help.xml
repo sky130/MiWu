@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.github.miwu.ui.help.HelpViewModel.Help.Item" />
+            type="com.github.miwu.ui.about.help.HelpViewModel.Help.Item" />
 
     </data>
 
@@ -31,8 +31,8 @@
             android:id="@+id/device_item_room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
             android:layout_marginTop="5dp"
+            android:scrollbars="none"
             android:text="@{item.content}"
             android:textSize="15sp"
             tools:text="因为部分米家账号因未知原因导致无法登录\n解决办法: 注册一个新的米家账号,然后在你需要登录的账号共享家庭至新账号,再在米屋内登录新账号即可解决" />

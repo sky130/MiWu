@@ -19,8 +19,9 @@ publishing {
 
 kotlin {
     jvm()
-    js {
+    js(IR) {
         browser()
+        binaries.executable()
     }
     withSourcesJar()
     jvmToolchain(21)
@@ -31,7 +32,7 @@ kotlin {
 
 
                 implementation(project(":miot-api"))
-                implementation(project.dependencies.platform(libs.kotlincrypto.hash.bom))
+                implementation(project(":miot-api-common"))
 
 
                 implementation(libs.squareup.okio)

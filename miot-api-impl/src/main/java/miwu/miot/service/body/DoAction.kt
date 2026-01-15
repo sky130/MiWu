@@ -15,5 +15,7 @@ data class ActionBody(
         @SerialName("siid") val siid: Int,
         @SerialName("aiid") val aiid: Int,
         @SerialName("in") val `in`: ArrayList<@Serializable(with = JsonAnySerializer::class) Any> = arrayListOf()
-    )
+    ) {
+        fun body() = ActionBody(this)
+    }
 }

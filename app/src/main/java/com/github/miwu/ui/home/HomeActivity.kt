@@ -1,6 +1,5 @@
 package com.github.miwu.ui.home
 
-import com.github.miwu.logic.setting.AppSetting
 import kndroidx.activity.ViewActivityX
 import miwu.miot.model.miot.MiotHomes
 import org.koin.androidx.viewmodel.ext.android.viewModel

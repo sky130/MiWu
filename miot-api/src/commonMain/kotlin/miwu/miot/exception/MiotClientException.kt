@@ -51,5 +51,6 @@ class MiotClientException(message: String, cause: Throwable? = null) :
 
         fun getIconUrlFailed(model: String, cause: Throwable? = null) =
             MiotClientException("Failed to get icon URL for model: $model", cause)
+
     }
 }

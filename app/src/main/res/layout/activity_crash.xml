@@ -6,22 +6,22 @@
 
         <variable
             name="viewModel"
-            type="com.github.miwu.ui.crash.CrashViewModel" />
+            type="com.github.miwu.ui.about.crash.CrashViewModel" />
 
         <variable
             name="activity"
-            type="com.github.miwu.ui.crash.CrashActivity" />
+            type="com.github.miwu.ui.about.crash.CrashActivity" />
     </data>
 
     <FrameLayout
-        style="@style/WearBox">
+        style="@style/Wear.Frame">
 
         <ScrollView
             android:id="@+id/recycler"
-            style="@style/WearScrollLayout">
+            style="@style/Wear.Scroll">
 
             <LinearLayout
-                style="@style/WearLayout">
+                style="@style/Wear.Linear">
 
                 <TextView
                     android:layout_width="match_parent"

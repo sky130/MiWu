@@ -1,5 +1,8 @@
 package miwu.miot.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class MiotUser(
     val userId: String,
     val securityToken: String,

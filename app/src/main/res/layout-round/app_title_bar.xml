@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/TextStyle"
+        style="@style/Wear.TitleBar.Text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_title_round"

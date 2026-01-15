@@ -14,22 +14,25 @@ import io.ktor.utils.io.KtorDsl
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
-import miwu.miot.kmp.MIOT_SERVER_URL
-import miwu.miot.kmp.generateSignature
-import miwu.miot.kmp.generateSignedNonce
-import miwu.miot.ktx.json
+import miwu.miot.kmp.utils.json
+import miwu.miot.common.MIOT_SERVER_URL
+import miwu.miot.common.getNonce
 import miwu.miot.model.MiotUser
-import miwu.miot.utils.getNonce
+import okio.Buffer
+import okio.ByteString
+import okio.ByteString.Companion.toByteString
+import okio.use
+import kotlin.io.encoding.Base64
 
 
 @OptIn(InternalSerializationApi::class)
-class MiotAuth internal constructor(internal val user: (() -> MiotUser)?) {
+class MiotAuth internal constructor(internal val user: MiotUser?) {
 
     @Suppress("UNCHECKED_CAST")
     fun transformRequestBody(request: HttpRequestBuilder, content: Any, bodyType: TypeInfo?): Any {
         val originBody = request.body
 
-        val (userId, securityToken, serviceToken, deviceId) = user?.invoke()
+        val (userId, securityToken, serviceToken, deviceId) = user
             ?: throw IllegalArgumentException("user not found.")
 
         if (serviceToken.isEmpty() || securityToken.isEmpty())
@@ -60,9 +63,9 @@ class MiotAuth internal constructor(internal val user: (() -> MiotUser)?) {
 
     @KtorDsl
     class Config {
-        private var user: (() -> MiotUser)? = null
+        private var user: MiotUser? = null
 
-        fun user(miotUser: () -> MiotUser) {
+        fun user(miotUser: MiotUser) {
             this.user = miotUser
         }
 
@@ -88,5 +91,28 @@ class MiotAuth internal constructor(internal val user: (() -> MiotUser)?) {
                 )
             }
         }
+    }
+
+    fun generateSignedNonce(secret: String, nonce: String): String {
+        val secretBytes = Base64.decode(secret)
+        val nonceBytes = Base64.decode(nonce)
+        val hash = Buffer().use { buffer ->
+            buffer.write(secretBytes)
+            buffer.write(nonceBytes)
+            buffer.sha256()
+        }
+        return Base64.encode(hash.toByteArray())
+    }
+
+    fun generateSignature(
+        uri: String,
+        signedNonce: String,
+        nonce: String,
+        data: String
+    ): String {
+        val data = "$uri&$signedNonce&$nonce&data=$data".encodeToByteArray()
+        val key = ByteString.of(*Base64.decode(signedNonce))
+        val digest = data.toByteString().hmacSha256(key)
+        return Base64.encode(digest.toByteArray())
     }
 }

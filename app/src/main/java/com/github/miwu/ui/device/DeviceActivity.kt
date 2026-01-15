@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.github.miwu.ktx.Logger
-import com.github.miwu.logic.repository.AppRepository
+import com.github.miwu.utils.Logger
+import com.github.miwu.utils.MiotDeviceClient
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import kotlinx.coroutines.Dispatchers
@@ -13,11 +13,12 @@ import miwu.android.R
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.android.wrapper.base.ViewMiwuWrapper
-import miwu.miot.MiotManager
-import miwu.miot.ktx.json
+import miwu.miot.kmp.utils.json
+import miwu.miot.kmp.utils.to
+import miwu.miot.model.MiotUser
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.utils.to
+import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.api.Cache
 import miwu.support.base.MiwuWidget
 import miwu.support.manager.MiotDeviceManager
@@ -31,14 +32,15 @@ import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCallback {
     override val viewModel: DeviceViewModel by viewModel()
     private val device by lazy { intent.getStringExtra("device")!!.to<MiotDevice>() }
+    private val user by lazy { intent.getStringExtra("user")!!.to<MiotUser>() }
     private val logger = Logger()
-    private val appRepository: AppRepository by inject()
-    private val miotManager: MiotManager by inject()
+    private val miotDeviceClient by lazy { MiotDeviceClient(user) }
+    private val specAttrProvider: MiotSpecAttrProvider by inject()
     private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
     private val manager by lazy {
         MiotDeviceManager(
-            appRepository.miotClient,
-            miotManager,
+            miotDeviceClient,
+            specAttrProvider,
             device,
             AndroidIcons,
             AndroidCache(this),
@@ -129,14 +131,6 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         super.onDestroy()
     }
 
-    companion object {
-        fun Context.startDeviceActivity(device: MiotDevice) {
-            start<DeviceActivity> {
-                putExtra("device", json.encodeToString(device))
-            }
-        }
-    }
-
     @Suppress("UNCHECKED_CAST")
     private fun createWrapper(miotWidget: MiwuWidget<*>): ViewMiwuWrapper<*>? {
         val wrapperClass =
@@ -188,4 +182,12 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
         }
     }
 
+    companion object {
+        fun Context.startDeviceActivity(device: MiotDevice, user: MiotUser) {
+            start<DeviceActivity> {
+                putExtra("device", json.encodeToString(device))
+                putExtra("user", json.encodeToString(user))
+            }
+        }
+    }
 }

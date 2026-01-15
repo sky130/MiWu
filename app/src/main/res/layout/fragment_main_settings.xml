@@ -47,7 +47,6 @@
                     android:text="@{viewModel.info.nickname}"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-
                     tools:text="Sky233" />
 
                 <TextView
@@ -61,23 +60,23 @@
 
             <Button
                 android:id="@+id/switchHome"
-                style="@style/WearButton"
+                style="@style/Wear.Button"
                 android:onClick="@{()->fragment.startHomeActivity()}"
                 android:text="@string/switch_home" />
 
             <Button
                 android:id="@+id/exitAccount"
-                style="@style/WearButton"
+                style="@style/Wear.Button"
                 android:onClick="@{()->fragment.logout()}"
                 android:text="@string/exit_account" />
 
             <Button
-                style="@style/WearButton"
+                style="@style/Wear.Button"
                 android:onClick="@{()->fragment.startSmartActivity()}"
                 android:text="全屋环境" />
 
             <Button
-                style="@style/WearButton"
+                style="@style/Wear.Button"
                 android:onClick="@{()->fragment.startAboutActivity()}"
                 android:text="@string/goto_license" />
 

@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="fragment"
             type="com.github.miwu.ui.main.fragment.SceneFragment" />
@@ -15,56 +17,39 @@
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        app:onRefresh="@{() -> viewModel.loadScene()}"
-        app:isRefreshing="@{viewModel.appRepository.scenes}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:isRefreshing="@{viewModel.sceneState}"
+        app:onRefresh="@{() -> viewModel.loadScene()}">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <FrameLayout style="@style/Wear.Frame">
 
             <LinearLayout
-                android:id="@+id/empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                tools:visibility="visible"
+                style="@style/FragmentEmptyPage"
+                app:reverse="@{false}"
                 app:state="@{viewModel.sceneState}"
-                app:reverse="@{false}">
+                tools:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/deviceImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="65dp"
-                    android:src="@drawable/empty_list_icon"
-                    android:importantForAccessibility="no" />
+                <ImageView style="@style/FragmentEmptyPage.Icon"/>
 
                 <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/scene_tip"
-                    android:textSize="17sp" />
+                    style="@style/FragmentEmptyPage.Title"
+                    android:text="@string/scene_tip" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/scene_small_tip"
-                    android:textSize="14sp" />
+                    style="@style/FragmentEmptyPage.SubTitle"
+                    android:text="@string/scene_small_tip" />
             </LinearLayout>
 
             <com.github.miwu.view.SmoothRecyclerView
                 android:id="@+id/recycler"
+                style="@style/Wear.Recycler"
                 android:visibility="@{viewModel.sceneState.toVisibility(true)}"
-                style="@style/WearRecycler"
                 app:item="@{viewModel.scenes}"
                 app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
                 app:itemEventHandler="@{fragment}"
-                app:itemLayout="@{@layout/item_mi_scene}"
+                app:itemLayout="@{@layout/item_miot_scene}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </FrameLayout>

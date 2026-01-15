@@ -3,9 +3,9 @@ package com.github.miwu.ui.splash
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.github.miwu.ktx.Logger
+import com.github.miwu.utils.Logger
 import com.github.miwu.logic.setting.AppSetting
-import com.github.miwu.ui.crash.CrashActivity
+import com.github.miwu.ui.about.crash.CrashActivity
 import com.github.miwu.ui.login.LoginActivity
 import com.github.miwu.ui.main.MainActivity
 import kndroidx.extension.start

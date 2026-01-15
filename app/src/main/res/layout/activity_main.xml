@@ -30,7 +30,7 @@
 
         <com.github.miwu.view.AppTitleBar
             android:id="@+id/title"
-            style="@style/WearTitleBar"
+            style="@style/Wear.TitleBar"
             app:title="@string/app_name" />
     </FrameLayout>
 </layout>

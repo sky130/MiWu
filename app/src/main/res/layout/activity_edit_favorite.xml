@@ -6,66 +6,50 @@
 
         <variable
             name="activity"
-            type="com.github.miwu.ui.favorite.EditFavoriteActivity" />
+            type="com.github.miwu.ui.edit.EditFavoriteActivity" />
 
         <variable
             name="viewModel"
-            type="com.github.miwu.ui.favorite.EditFavoriteViewModel" />
+            type="com.github.miwu.ui.edit.EditFavoriteViewModel" />
     </data>
 
 
-    <FrameLayout style="@style/WearBox">
+    <FrameLayout style="@style/Wear.Frame">
 
         <LinearLayout
-            android:id="@+id/empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone">
+            style="@style/FragmentEmptyPage"
+            app:state="@{viewModel.deviceState}">
 
-            <ImageView
-                android:id="@+id/deviceImage"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/empty_list_icon" />
+            <ImageView style="@style/FragmentEmptyPage.Icon" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_below="@id/deviceImage"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="@string/device_tip" />
-
+                style="@style/FragmentEmptyPage.Title"
+                android:text="@string/miwu_no_device" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="@string/device_small_tip"
-                android:textSize="10sp" />
+                style="@style/FragmentEmptyPage.SubTitle"
+                android:text="@string/miwu_no_device" />
         </LinearLayout>
 
         <com.github.miwu.view.SmoothRecyclerView
             android:id="@+id/recycler"
-            style="@style/WearRecycler"
-            app:adapter="@{activity.adapter}"
+            style="@style/Wear.Recycler"
+            app:item="@{viewModel.devices}"
+            app:itemEventHandler="@{viewModel.metadataHandler}"
+            app:itemLayout="@{@layout/item_miwu_device}"
             app:itemTouchHelper="@{activity.itemTouchHelper}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:reverse="@{true}"
+            app:state="@{viewModel.deviceState}"
+            app:viewModel="@{viewModel}">
 
             <requestFocus />
         </com.github.miwu.view.SmoothRecyclerView>
 
         <com.github.miwu.view.AppTitleBar
-            style="@style/WearTitleBar"
-            app:back="true"
+            android:id="@+id/title"
+            style="@style/Wear.TitleBar"
             app:title="@string/edit_favorite" />
     </FrameLayout>
-
 
 </layout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="com.github.miwu.logic.handler.DeviceMetadataHandler" />
+
+        <variable
+            name="item"
+            type="miwu.miot.model.miot.MiotDevices.Result.Device" />
+    </data>
+
+    <LinearLayout
+        style="@style/DeviceCard.Background"
+        android:alpha="@{item.isOnline ? 1.0f : 0.7f}"
+        android:background="@{item.isOnline ? @drawable/bg_list_item : @drawable/bg_list_item_online}"
+        tools:background="@drawable/bg_list_item">
+
+        <ImageView
+            style="@style/DeviceCard.Icon"
+            android:src="@drawable/ic_miwu_placeholder"
+            app:deviceMetadataHandler="@{handler}"
+            app:deviceModel="@{item.model}" />
+
+        <LinearLayout
+            style="@style/Wear.Frame"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/DeviceCard.Title"
+                android:text="@{item.name}"
+                tools:text="Xiaomi 智能家庭屏 Pro 8" />
+
+            <LinearLayout style="@style/Wear.Frame">
+
+                <TextView
+                    style="@style/DeviceCard.Room"
+                    android:text="@{handler.getRoom(item.did)}"
+                    tools:text="卧室" />
+
+                <TextView
+                    style="@style/DeviceCard.Offline"
+                    app:isVisible="@{!item.isOnline}"
+                    tools:text="设备离线" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

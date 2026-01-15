@@ -17,7 +17,7 @@
 
         <requestFocus />
 
-        <LinearLayout style="@style/WearLayout">
+        <LinearLayout style="@style/Wear.Linear">
 
             <LinearLayout
                 android:id="@+id/miot_widget_layout"
@@ -57,12 +57,12 @@
             </LinearLayout>
 
             <com.github.miwu.view.AppButton
-                style="@style/WearAppButton"
+                style="@style/Wear.AppButton"
                 android:onClick="@{()->activity.onAddButtonClick()}"
                 android:text="添加到卡片" />
 
             <com.github.miwu.view.AppButton
-                style="@style/WearAppButton"
+                style="@style/Wear.AppButton"
                 android:onClick="@{()->activity.onStarButtonClick()}"
                 android:text="收藏设备" />
         </LinearLayout>

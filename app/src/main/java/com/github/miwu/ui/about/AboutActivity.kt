@@ -1,9 +1,9 @@
 package com.github.miwu.ui.about
 
 import com.github.miwu.databinding.ActivityAboutBinding as Binding
-import com.github.miwu.ui.crash.CrashActivity
-import com.github.miwu.ui.help.HelpActivity
-import com.github.miwu.ui.license.LicenseActivity
+import com.github.miwu.ui.about.crash.CrashActivity
+import com.github.miwu.ui.about.help.HelpActivity
+import com.github.miwu.ui.about.license.LicenseActivity
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import org.koin.androidx.viewmodel.ext.android.viewModel

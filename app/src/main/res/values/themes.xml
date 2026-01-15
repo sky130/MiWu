@@ -204,7 +204,8 @@
     <style name="DeviceCard.Background">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginVertical">3dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
         <item name="android:background">@drawable/bg_list_item</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:gravity">center_vertical</item>
@@ -223,7 +224,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:duplicateParentState">true</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColor">@drawable/list_title</item>
         <item name="android:textSize">17sp</item>
     </style>
 

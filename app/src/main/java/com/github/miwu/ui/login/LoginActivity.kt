@@ -35,11 +35,7 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
     override fun init() {
         viewModel.qrcode()
         viewModel.miotUser.onEach {
-            AppSetting.apply {
-                userId.value = it.userId
-                securityToken.value = it.securityToken
-                serviceToken.value = it.serviceToken
-            }
+            AppSetting.update(it)
             appRepository.miotUser = it.copy(deviceId = MainApplication.androidId)
             R.string.toast_login_success.toast()
             start<MainActivity>()

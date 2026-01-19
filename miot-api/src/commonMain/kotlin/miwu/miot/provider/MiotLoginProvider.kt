@@ -44,4 +44,6 @@ interface MiotLoginProvider {
      * @return 登录二维码相关信息
      */
     suspend fun generateLoginQrCode(): Result<LoginQrCode>
+
+    suspend fun refreshServiceToken(miotUser: MiotUser): Result<MiotUser>
 }

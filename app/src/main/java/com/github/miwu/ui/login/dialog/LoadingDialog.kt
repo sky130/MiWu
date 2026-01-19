@@ -30,11 +30,7 @@ class LoadingDialog(private val user: String, private val pwd: String) :
                         R.string.toast_login_failure.toast()
                         dismiss()
                     } else {
-                        AppSetting.apply {
-                            userId.value = user.userId
-                            serviceToken.value = user.serviceToken
-                            securityToken.value = user.securityToken
-                        }
+                        AppSetting.update(user)
                         viewModel.appRepository.miotUser =
                             user.copy(deviceId = MainApplication.androidId)
                         R.string.toast_login_success.toast()

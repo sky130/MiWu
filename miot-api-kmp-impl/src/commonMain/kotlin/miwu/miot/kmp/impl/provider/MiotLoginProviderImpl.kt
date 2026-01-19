@@ -41,14 +41,15 @@ import miwu.miot.provider.MiotLoginProvider
 import kotlin.coroutines.CoroutineContext
 import miwu.miot.common.getRandomDeviceId
 import miwu.miot.common.removePrefix
-import miwu.miot.model.login.QrCodeSid
-import miwu.miot.model.login.Sid
+import miwu.miot.model.login.ServiceData
+import miwu.miot.model.login.Location
 import kotlin.time.Clock
 
 class MiotLoginProviderImpl : MiotLoginProvider {
+    private val cookiesStorage = SimpleCookiesStorage()
     private val httpClient = HttpClient {
         install(SupportInvalidExpiresHttpCookies) {
-            storage = SimpleCookiesStorage()
+            storage = cookiesStorage
         }
         install(ContentNegotiation) {
             json(json)
@@ -66,7 +67,8 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         user: String,
         pwd: String
     ) = runCatching {
-        val sidDetails = requestServiceId()
+        cookiesStorage.close()
+        val sidDetails = getLocation()
         val pwdHash = pwd.md5()
         val body = formData {
             append("qs", sidDetails.qs)
@@ -83,16 +85,19 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             .getOrThrow()
     }
 
-    override suspend fun loginByQrCode(loginUrl: String) =
+    override suspend fun loginByQrCode(loginUrl: String) = runCatching {
+        cookiesStorage.close()
         get<String>(loginUrl)
             .removePrefix()
             .to<Login>()
             .also {
-                val (location, securityToken) = requestServiceIdByQrCode()
+                val (location, securityToken) = getServiceData()
                 it.location = location
-                it.securityToken = securityToken
+                it.ssecurity = securityToken
             }
             .execute()
+            .getOrThrow()
+    }
 
     override suspend fun loginByQrCode(
         loginUrl: String,
@@ -101,14 +106,15 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         onFailure: suspend CoroutineScope.(Throwable?) -> Unit,
         context: CoroutineContext
     ): Unit = withContext(Dispatchers.IO) {
+        cookiesStorage.close()
         try {
             get<String>(loginUrl)
                 .removePrefix()
                 .to<Login>()
                 .also {
-                    val (location, securityToken) = requestServiceIdByQrCode()
+                    val (location, securityToken) = getServiceData()
                     it.location = location
-                    it.securityToken = securityToken
+                    it.ssecurity = securityToken
                 }
                 .execute()
                 .onSuccess { user -> withContext(context) { onSuccess(user) } }
@@ -123,7 +129,6 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             }
         }
     }
-
 
     override suspend fun generateLoginQrCode() = withContext(Dispatchers.IO) {
         val generateQrCode = """
@@ -147,31 +152,65 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         }
     }
 
+    override suspend fun refreshServiceToken(miotUser: MiotUser) = runCatching {
+        cookiesStorage.close()
+        with(miotUser) {
+            listOf(
+                Cookie("userId", userId),
+                Cookie("cUserId", cUserId),
+                Cookie("nonce", nonce),
+                Cookie("ssecurity", ssecurity),
+                Cookie("psecurity", passToken),
+                Cookie("passToken", passToken),
+            )
+        }.forEach { cookiesStorage.addCookie(Url(""), it) }
+        val data = getLocation()
+        val location = data.location
+        val serviceToken = getServiceToken(location).getOrThrow()
+        miotUser.copy(
+            ssecurity = data.ssecurity,
+            serviceToken = serviceToken
+        )
+    }
+
     private suspend fun Login.execute(): Result<MiotUser> = runCatching {
         if (code != 0) throw MiotBusinessException.loginFailed(code)
+        val serviceToken = getServiceToken(location).getOrThrow()
+        MiotUser(
+            userId.toString(),
+            cUserId,
+            nonce,
+            ssecurity,
+            psecurity,
+            passToken,
+            serviceToken,
+            getRandomDeviceId()
+        )
+    }
+
+    private suspend fun getServiceToken(location: String) = runCatching {
         val response = try {
             httpClient.get(location)
         } catch (e: Exception) {
             throw MiotHttpException("Login", e)
         }
-        val serviceToken = response.headers.getAll(HttpHeaders.SetCookie)
+        response.headers.getAll(HttpHeaders.SetCookie)
             ?.flatMap { it.splitSetCookieHeader() }
             ?.map { parseServerSetCookieHeader(it) }
             ?.first { it.name == "serviceToken" }
             ?.value
             ?: throw MiotAuthException.tokenMissing()
-        MiotUser(userId.toString(), securityToken, serviceToken, getRandomDeviceId())
     }
 
-    private suspend fun requestServiceId() =
+    private suspend fun getLocation() =
         get<String>(SERVICE_LOGIN_URL)
             .removePrefix()
-            .to<Sid>()
+            .to<Location>()
 
-    private suspend fun requestServiceIdByQrCode() =
+    private suspend fun getServiceData() =
         get<String>(SERVICE_LOGIN_URL)
             .removePrefix()
-            .to<QrCodeSid>()
+            .to<ServiceData>()
 
     private suspend inline fun <reified T> get(
         url: String, body: Any? = null

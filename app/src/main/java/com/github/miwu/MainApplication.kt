@@ -37,17 +37,33 @@ class MainApplication : Application() {
     fun configMiotUser() {
         logger.info("Config miot user")
         AppSetting.apply {
-            if (AppSetting.userId.value.isEmpty()) {
+            if (listOf(
+                    userId,
+                    cUserId,
+                    nonce,
+                    ssecurity,
+                    psecurity,
+                    passToken,
+                    serviceToken
+                ).any { it.value.isEmpty() }
+            ) {
                 return logger.info("user is not login")
             }
-            MiotUser(userId.value, securityToken.value, serviceToken.value, androidId)
-                .apply {
-                    logger.info(
-                        "Current MiotUser: userId={}, securityToken={}, serviceToken={}",
-                        userId, securityToken.mask(), serviceToken.mask(),
-                    )
-                }
-                .also { appRepository.miotUser = it }
+            MiotUser(
+                userId.value,
+                cUserId.value,
+                nonce.value,
+                ssecurity.value,
+                psecurity.value,
+                passToken.value,
+                serviceToken.value,
+                androidId
+            ).apply {
+                logger.info(
+                    "Current MiotUser: userId={}, securityToken={}, serviceToken={}",
+                    userId, ssecurity.mask(), serviceToken.mask(),
+                )
+            }.also { appRepository.miotUser = it }
         }
     }
 

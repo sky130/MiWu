@@ -25,12 +25,12 @@ class MiotAuthInterceptor(private val user: MiotUser) : Interceptor {
 
         val latestRequest: Request
         user.apply {
-            if (serviceToken.isEmpty() || securityToken.isEmpty()) {
+            if (serviceToken.isEmpty() || ssecurity.isEmpty()) {
                 throw IllegalArgumentException("serviceToken or securityToken not found.")
             }
             val data = originRequestBody.readToString()
             val nonce = getNonce()
-            val signedNonce = generateSignedNonce(securityToken, nonce)
+            val signedNonce = generateSignedNonce(ssecurity, nonce)
             val signature = generateSignature(
                 originRequest.url.toString().replace(MIOT_SERVER_URL, "/"),
                 signedNonce,

@@ -168,6 +168,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             )
         }.forEach { cookiesStorage.addCookie(Url(""), it) }
         val data = getLocation()
+        data.toException()?.let { throw it }
         val location = data.location
         val serviceToken = getServiceToken(location).getOrThrow()
         miotUser.copy(

@@ -10,5 +10,8 @@ class MiotAuthException(message: String, cause: Throwable? = null) : MiotExcepti
 
         fun invalidCredentials(cause: Throwable? = null) =
             MiotAuthException("Invalid username or password", cause)
+
+        fun needVerification(cause: Throwable? = null) =
+            MiotAuthException("Need verification", cause)
     }
 }

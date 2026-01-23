@@ -11,17 +11,19 @@ import org.koin.dsl.module
 typealias MiotUserDataStore = DataStore<MiotUser>
 
 suspend fun MiotUserDataStore.isLogin(): Boolean = runCatching {
-    data.first().run {
-        listOf(
-            userId,
-            cUserId,
-            ssecurity,
-            psecurity,
-            passToken,
-            serviceToken
-        ).all(String::isNotEmpty) && nonce != -1L
-    }
+    data.first().isLogin()
 }.getOrNull() ?: false
+
+fun MiotUser.isLogin(): Boolean = run {
+    listOf(
+        userId,
+        cUserId,
+        ssecurity,
+        psecurity,
+        passToken,
+        serviceToken
+    ).all(String::isNotEmpty) && nonce != -1L
+}
 
 private val Context.miotUserStore: MiotUserDataStore by dataStore(
     fileName = "miot_user.json",

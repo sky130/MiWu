@@ -45,5 +45,11 @@ interface MiotLoginProvider {
      */
     suspend fun generateLoginQrCode(): Result<LoginQrCode>
 
+    /**
+     * 刷新serviceToken
+     * @param miotUser 用户信息
+     * @return 刷新成功返回 [MiotUser]，否则携带错误
+     * @see miwu.miot.exception.MiotAuthException
+     */
     suspend fun refreshServiceToken(miotUser: MiotUser): Result<MiotUser>
 }

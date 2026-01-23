@@ -1,5 +1,6 @@
 package com.github.miwu.logic.repository
 
+import com.github.miwu.logic.state.LoginState
 import fr.haan.resultat.Resultat
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,8 @@ interface AppRepository {
     val devices: StateFlow<Resultat<List<MiotDevice>>>
 
     val scenes: StateFlow<Resultat<List<MiotScene>>>
+
+    val loginStatus: StateFlow<LoginState>
 
     fun refreshAll()
 

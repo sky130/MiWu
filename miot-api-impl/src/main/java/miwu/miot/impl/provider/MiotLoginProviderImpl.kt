@@ -153,6 +153,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             )
         }.let { cookieJar.saveFromResponse(url, it) }
         val data = getLocation()
+        data.toException()?.let { throw it }
         val location = data.location
         val serviceToken = getServiceToken(location).getOrThrow()
         miotUser.copy(
@@ -202,7 +203,6 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             }
         } ?: throw MiotAuthException.tokenMissing()
     }
-
 
     private suspend fun getLocation() =
         get<String>(SERVICE_LOGIN_URL)

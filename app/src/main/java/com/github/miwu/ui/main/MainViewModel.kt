@@ -2,6 +2,7 @@ package com.github.miwu.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.github.miwu.logic.datastore.MiotUserDataStore
 import com.github.miwu.utils.Logger
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
@@ -23,6 +24,7 @@ class MainViewModel(
     val appRepository: AppRepository,
     val localRepository: LocalRepository,
     val deviceRepository: DeviceRepository,
+    val dataStore: MiotUserDataStore
 ) : ViewModel() {
     private val logger = Logger()
     val metadataHandler = deviceRepository.deviceMetadataHandler
@@ -77,10 +79,6 @@ class MainViewModel(
             emit(MiotUserInfo.UserInfo(0L, "", "null"))
         }
     }.asLiveData()
-
-    fun init() {
-        appRepository.refreshAll()
-    }
 
     fun loadScene() {
         appRepository.refreshScenes()

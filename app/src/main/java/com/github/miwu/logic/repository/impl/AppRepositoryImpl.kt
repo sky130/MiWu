@@ -7,29 +7,34 @@ import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotHomeClient
 import com.github.miwu.utils.MiotUserClient
 import com.github.miwu.logic.setting.AppSetting
+import com.github.miwu.logic.state.LoginState
 import fr.haan.resultat.Resultat
 import fr.haan.resultat.toResultat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import miwu.miot.client.MiotHomeClient
 import miwu.miot.client.MiotUserClient
+import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotClientException
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
 import miwu.miot.model.miot.MiotUserInfo
+import miwu.miot.provider.MiotLoginProvider
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class AppRepositoryImpl : KoinComponent, AppRepository {
+    private val logger = Logger()
     private val scope: CoroutineScope by inject()
     private val deviceRepository: DeviceRepository by inject()
     private val dataStore: MiotUserDataStore by inject()
-    private val logger = Logger()
+    private val loginProvider: MiotLoginProvider by inject()
     private var miotUserClient: MiotUserClient? = null
     private var miotHomeClient: MiotHomeClient? = null
     private var currentHomeId
@@ -52,11 +57,31 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
     override val homes = MutableResultListStateFlow<MiotHome>(Resultat.Loading())
     override val devices = MutableResultListStateFlow<MiotDevice>(Resultat.Loading())
     override val scenes = MutableResultListStateFlow<MiotScene>(Resultat.Loading())
+    override val loginStatus = MutableStateFlow<LoginState>(LoginState.Loading)
 
     init {
         dataStore.data.onEach {
             currentUser = it
-            refreshAll()
+            loginStatus.emit(LoginState.Loading)
+            val isTokenExpired = miotUserClient
+                ?.checkTokenExpired()
+                ?.getOrNull() ?: true
+            if (isTokenExpired) {
+                loginProvider.refreshServiceToken(it)
+                    .onSuccess { user ->
+                        dataStore.updateData { user }
+                    }.onFailure { e ->
+                        if (e is MiotAuthException) {
+                            // 这里登录信息彻底过期, 需要退出应用再登录
+                            loginStatus.emit(LoginState.Failure(e.message ?: "unknown", e))
+                        } else {
+                            loginStatus.emit(LoginState.NetworkError(e.message ?: "unknown"))
+                        }
+                    }
+            } else {
+                loginStatus.emit(LoginState.Success)
+                refreshAll()
+            }
         }.launchIn(scope)
     }
 

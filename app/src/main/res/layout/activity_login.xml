@@ -12,12 +12,9 @@
         <variable
             name="activity"
             type="com.github.miwu.ui.login.LoginActivity" />
-
-        <import type="android.view.View" />
     </data>
 
     <FrameLayout style="@style/Wear.Frame">
-
 
         <ScrollView
             android:id="@+id/scroll"
@@ -35,11 +32,8 @@
                     android:src="@drawable/ic_miwu_round" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/Wear.Text"
                     android:layout_marginTop="10dp"
-                    android:gravity="center"
                     android:text="@string/login_by_mi" />
 
                 <LinearLayout
@@ -48,31 +42,28 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical"
-                    android:visibility="@{ viewModel.isQrCode ? View.GONE : View.VISIBLE}"
-
+                    app:isVisible="@{!activity.showQrCode}"
                     tools:visibility="gone">
 
                     <EditText
                         style="@style/Miwu.EditView"
                         android:hint="@string/login_edit_user"
+                        android:inputType="text"
                         android:text="@={viewModel.user}" />
 
                     <EditText
                         style="@style/Miwu.EditView"
                         android:layout_marginTop="10dp"
                         android:hint="@string/login_edit_pwd"
-                        android:text="@={viewModel.password}" />
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.password}"
+                        tools:ignore="WearPasswordInput" />
 
                     <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        style="@style/Wear.NormalButton"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_list_item"
-                        android:gravity="center"
-                        android:onClick="@{()->activity.login()}"
-                        android:text="@string/user_btn_login"
-                        android:textColor="#FFFFFFFF"
-                        android:textSize="17sp" />
+                        android:onClick="@{() -> viewModel.requestClassicLogin()}"
+                        android:text="@string/user_btn_login" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -80,39 +71,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical"
-
-                    android:visibility="@{ viewModel.isQrCode ? View.VISIBLE : View.GONE}">
+                    app:isVisible="@{activity.showQrCode}"
+                    tools:ignore="UseCompoundDrawables">
 
                     <ImageView
+                        android:id="@+id/qrcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="15dp"
+                        android:layout_marginHorizontal="10dp"
                         android:adjustViewBounds="true"
-                        android:onClick="@{()->viewModel.qrcode()}"
-                        app:bitmap="@{viewModel.qrcode}"
+                        android:contentDescription="@string/login_qr_code"
+                        android:onClick="@{() -> viewModel.requestQRCodeLogin()}"
                         tools:src="@drawable/qr_code_stub" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        style="@style/Wear.Text"
                         android:layout_marginTop="10dp"
-                        android:gravity="center"
                         android:lineSpacingExtra="-4dp"
                         android:text="@string/plz_user_mi_app_scan_qrcode" />
 
                 </LinearLayout>
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    style="@style/Wear.NormalButton"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_list_item"
-                    android:gravity="center"
-                    android:onClick="@{()->viewModel.change()}"
-                    android:text="@{!viewModel.isQrCode ? @string/qrcode_btn_login : @string/pw_btn_login}"
-                    android:textColor="#FFFFFFFF"
-                    android:textSize="17sp"
+                    android:onClick="@{() -> activity.changeDisplayMode()}"
+                    android:text="@{!activity.showQrCode ? @string/qrcode_btn_login : @string/pw_btn_login}"
                     tools:text="@string/pw_btn_login" />
 
                 <com.google.android.flexbox.FlexboxLayout
@@ -123,29 +107,20 @@
                     android:gravity="center">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center_horizontal"
+                        style="@style/Wear.Text"
                         android:text="@string/must_to_read" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center_horizontal"
-                        android:onClick="@{()->activity.startLicenseActivity()}"
+                        style="@style/Wear.Text"
+                        android:onClick="@{() -> activity.startLicenseActivity()}"
                         android:text="@string/license_for_use"
                         android:textColor="@color/mi_green" />
                 </com.google.android.flexbox.FlexboxLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/Wear.Text"
                     android:layout_marginTop="10dp"
-                    android:gravity="center_horizontal"
-                    android:onClick="@{()->activity.startHelpActivity()}"
+                    android:onClick="@{() -> activity.startHelpActivity()}"
                     android:text="@string/qa_login"
                     android:textColor="@color/mi_green" />
 

@@ -7,6 +7,8 @@ import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.timeout
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.setBody
@@ -15,15 +17,13 @@ import io.ktor.http.Cookie
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.contentType
+import io.ktor.http.parseServerSetCookieHeader
 import io.ktor.http.parseUrlEncodedParameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miwu.miot.kmp.utils.IO
-import miwu.miot.kmp.plugin.SupportInvalidExpiresHttpCookies
-import miwu.miot.kmp.plugin.parseServerSetCookieHeader
-import miwu.miot.kmp.plugin.splitSetCookieHeader
 import miwu.miot.kmp.utils.json
 import miwu.miot.kmp.utils.md5
 import miwu.miot.kmp.utils.to
@@ -48,7 +48,7 @@ import kotlin.time.Clock
 class MiotLoginProviderImpl : MiotLoginProvider {
     private val cookiesStorage = SimpleCookiesStorage()
     private val httpClient = HttpClient {
-        install(SupportInvalidExpiresHttpCookies) {
+        install(HttpCookies) {
             storage = cookiesStorage
         }
         install(ContentNegotiation) {
@@ -58,7 +58,10 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             contentType(ContentType.Application.Json)
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 20 * 1000L
+            val millis = 30 * 1000L
+            socketTimeoutMillis = millis
+            requestTimeoutMillis = millis
+            connectTimeoutMillis = millis
         }
         expectSuccess = true
     }
@@ -158,7 +161,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             listOf(
                 Cookie("userId", userId),
                 Cookie("cUserId", cUserId),
-                Cookie("nonce", nonce),
+                Cookie("nonce", nonce.toString()),
                 Cookie("ssecurity", ssecurity),
                 Cookie("psecurity", passToken),
                 Cookie("passToken", passToken),
@@ -233,4 +236,56 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             storage.clear()
         }
     }
+
+    fun String.splitSetCookieHeader(): List<String> {
+        var comma = indexOf(',')
+
+        if (comma == -1) {
+            return listOf(this)
+        }
+
+        val result = mutableListOf<String>()
+        var current = 0
+
+        var equals = indexOf('=', comma)
+        var semicolon = indexOf(';', comma)
+        while (current < length && comma > 0) {
+            if (equals < comma) {
+                equals = indexOf('=', comma)
+            }
+
+            var nextComma = indexOf(',', comma + 1)
+            while (nextComma in 0..<equals) {
+                comma = nextComma
+                nextComma = indexOf(',', nextComma + 1)
+            }
+
+            if (semicolon < comma) {
+                semicolon = indexOf(';', comma)
+            }
+
+            // No more keys remaining.
+            if (equals < 0) {
+                result += substring(current)
+                return result
+            }
+
+            // No ';' between ',' and '=' => We're on a header border.
+            if (semicolon == -1 || semicolon > equals) {
+                result += substring(current, comma)
+                current = comma + 1
+                // Update comma index at the end of loop.
+            }
+
+            // ',' in value, skip it and find next.
+            comma = nextComma
+        }
+
+        if (current < length) {
+            result += substring(current)
+        }
+
+        return result
+    }
+
 }

@@ -25,14 +25,14 @@ interface MiotUserClient {
     /**
      * 获取用户信息
      *
-     * @return 包含 [MiotUserInfo] 的 [Result] 对象。成功时，封装了用户信息；失败时，则封装了异常。
+     * @return 包含 [MiotUserInfo] 的 [Result] 对象
      */
     suspend fun getUserInfo(): Result<MiotUserInfo>
 
     /**
      * 检查当前用户的 `serviceToken` 是否已过期。
      *
-     * @return 包含布尔值的 [Result] 对象。
+     * @return 包含布尔值的 [Result] 对象
      */
     suspend fun checkTokenExpired(): Result<Boolean>
 

@@ -31,8 +31,6 @@ class HomeViewModel(val appRepository: AppRepository) : ViewModel() {
     }
 
     fun setHome(item: MiotHome){
-        AppSetting.homeUid.value = item.uid
-        AppSetting.homeId.value = item.id.toLong()
-        appRepository.loadDevices()
+        appRepository.setActiveHome(item)
     }
 }

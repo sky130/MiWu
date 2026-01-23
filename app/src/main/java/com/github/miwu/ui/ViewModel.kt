@@ -18,7 +18,7 @@ val viewModelModule = module {
         MainViewModel(get(), get(), get())
     }
     viewModel {
-        LoginViewModel(get(), get())
+        LoginViewModel(get(), get(), get())
     }
     viewModel {
         LicenseViewModel()

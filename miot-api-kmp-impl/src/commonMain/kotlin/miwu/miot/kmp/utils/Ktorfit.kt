@@ -21,7 +21,9 @@ fun MiotAuthHttpClient(user: MiotUser) = HttpClient {
         json(json)
     }
     install(DefaultRequest) {
-        val (userId, securityToken, serviceToken, deviceId) = user
+        val deviceId = user.deviceId
+        val userId = user.userId
+        val serviceToken = user.serviceToken
         contentType(ContentType.Application.Json)
         userAgent(MI_HOME_USER_AGENT)
         headers["x-xiaomi-protocal-flag-cli"] = "PROTOCAL-HTTP2"

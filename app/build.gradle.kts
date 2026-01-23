@@ -112,6 +112,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.gridlayout)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore)
 
 
     implementation(libs.alexzhirkevich.custom.qr.generator)

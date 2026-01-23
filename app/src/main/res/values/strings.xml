@@ -91,5 +91,7 @@
     <string name="dev_desc">有可能损坏米屋的应用结构\n如不清楚如何使用请退出</string>
     <string name="dev_mode">开发者模式</string>
     <string name="login_failure_toast">登录失败,原因可能为%s</string>
+    <string name="login_qr_code">登录二维码</string>
+
     <style name="device_offline">设备离线</style>
 </resources>

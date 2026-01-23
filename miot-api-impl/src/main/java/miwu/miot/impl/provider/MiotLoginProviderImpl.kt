@@ -146,7 +146,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             listOf(
                 Cookie("userId", userId),
                 Cookie("cUserId", cUserId),
-                Cookie("nonce", nonce),
+                Cookie("nonce", nonce.toString()),
                 Cookie("ssecurity", ssecurity),
                 Cookie("psecurity", passToken),
                 Cookie("passToken", passToken),

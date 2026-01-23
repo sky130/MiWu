@@ -32,10 +32,12 @@ class MiotAuth internal constructor(internal val user: MiotUser?) {
     fun transformRequestBody(request: HttpRequestBuilder, content: Any, bodyType: TypeInfo?): Any {
         val originBody = request.body
 
-        val (userId, securityToken, serviceToken, deviceId) = user
-            ?: throw IllegalArgumentException("user not found.")
+        user ?: throw IllegalArgumentException("user not found.")
 
-        if (serviceToken.isEmpty() || securityToken.isEmpty())
+        val ssecurity = user.ssecurity
+        val serviceToken = user.serviceToken
+
+        if (serviceToken.isEmpty() || ssecurity.isEmpty())
             throw IllegalArgumentException("serviceToken or securityToken not found.")
 
         val data = json.encodeToString(
@@ -44,7 +46,7 @@ class MiotAuth internal constructor(internal val user: MiotUser?) {
         )
 
         val nonce = getNonce()
-        val signedNonce = generateSignedNonce(securityToken, nonce)
+        val signedNonce = generateSignedNonce(ssecurity, nonce)
         val signature = generateSignature(
             request.url.toString().replace(MIOT_SERVER_URL, "/"),
             signedNonce,

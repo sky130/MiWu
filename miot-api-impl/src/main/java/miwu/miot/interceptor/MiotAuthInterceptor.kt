@@ -20,39 +20,41 @@ class MiotAuthInterceptor(private val user: MiotUser) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originRequest = chain.request()
-        val originRequestBody =
-            originRequest.body ?: throw IllegalStateException("body is empty")
+        val originRequestBody = originRequest.body
+            ?: throw IllegalStateException("body is empty")
 
-        val latestRequest: Request
-        user.apply {
-            if (serviceToken.isEmpty() || ssecurity.isEmpty()) {
-                throw IllegalArgumentException("serviceToken or securityToken not found.")
-            }
-            val data = originRequestBody.readToString()
-            val nonce = getNonce()
-            val signedNonce = generateSignedNonce(ssecurity, nonce)
-            val signature = generateSignature(
-                originRequest.url.toString().replace(MIOT_SERVER_URL, "/"),
-                signedNonce,
-                nonce,
-                data
-            )
-            latestRequest = originRequest.newBuilder().apply {
-                removeHeader("User-Agent")
-                addHeaders(
-                    "User-Agent" to MI_HOME_USER_AGENT,
-                    "x-xiaomi-protocal-flag-cli" to "PROTOCAL-HTTP2",
-                    "Cookie" to "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken"
-                )
-                post(
-                    FormBody {
-                        add("_nonce", nonce)
-                        add("data", data)
-                        add("signature", signature)
-                    })
-            }.build()
-            return chain.proceed(latestRequest)
+        val serviceToken = user.serviceToken
+        val ssecurity = user.ssecurity
+        val userId = user.userId
+        val deviceId = user.deviceId
+
+        if (serviceToken.isEmpty() || ssecurity.isEmpty()) {
+            throw IllegalArgumentException("serviceToken or securityToken not found.")
         }
+        val data = originRequestBody.readToString()
+        val nonce = getNonce()
+        val signedNonce = generateSignedNonce(ssecurity, nonce)
+        val signature = generateSignature(
+            originRequest.url.toString().replace(MIOT_SERVER_URL, "/"),
+            signedNonce,
+            nonce,
+            data
+        )
+        return originRequest.newBuilder().apply {
+            removeHeader("User-Agent")
+            addHeaders(
+                "User-Agent" to MI_HOME_USER_AGENT,
+                "x-xiaomi-protocal-flag-cli" to "PROTOCAL-HTTP2",
+                "Cookie" to "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken"
+            )
+            post(
+                FormBody {
+                    add("_nonce", nonce)
+                    add("data", data)
+                    add("signature", signature)
+                }
+            )
+        }.build().let(chain::proceed)
     }
 
     fun generateSignedNonce(secret: String, nonce: String): String {

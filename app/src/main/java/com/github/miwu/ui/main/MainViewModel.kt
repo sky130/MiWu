@@ -79,15 +79,15 @@ class MainViewModel(
     }.asLiveData()
 
     fun init() {
-        appRepository.loadAll()
+        appRepository.refreshAll()
     }
 
     fun loadScene() {
-        appRepository.loadScenes()
+        appRepository.refreshScenes()
     }
 
     fun loadDevice() {
-        appRepository.loadDevices()
+        appRepository.refreshDevices()
     }
 
 }

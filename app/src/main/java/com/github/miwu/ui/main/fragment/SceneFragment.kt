@@ -13,7 +13,7 @@ import kotlin.getValue
 class SceneFragment : ViewFragmentX<Binding>(Binding::inflate) {
     override val viewModel: MainViewModel by viewModel()
     val homeId get() = AppSetting.homeId.value
-    val ownerUid get() = AppSetting.homeUid.value
+    val ownerUid get() = AppSetting.ownerId.value
 
     fun onItemClick(item: Any?) {
         item as MiotScenes.Result.Scene

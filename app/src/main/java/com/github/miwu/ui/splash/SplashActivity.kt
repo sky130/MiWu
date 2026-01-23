@@ -3,16 +3,23 @@ package com.github.miwu.ui.splash
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.github.miwu.logic.datastore.MiotUserDataStore
+import com.github.miwu.logic.datastore.isLogin
 import com.github.miwu.utils.Logger
 import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.ui.about.crash.CrashActivity
 import com.github.miwu.ui.login.LoginActivity
 import com.github.miwu.ui.main.MainActivity
 import kndroidx.extension.start
+import kotlinx.coroutines.launch
+import miwu.miot.model.MiotUser
+import org.koin.android.ext.android.inject
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     val logger = Logger()
+    val dataStore: MiotUserDataStore by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,14 +27,15 @@ class SplashActivity : AppCompatActivity() {
             start<CrashActivity>()
             return finish()
         }
-        if (AppSetting.userId.value.isEmpty()) {
-            logger.info("user is not login")
-            start<LoginActivity>()
-        } else {
-
-            start<MainActivity>()
+        lifecycleScope.launch {
+            if (dataStore.isLogin()) {
+                start<MainActivity>()
+            } else {
+                logger.info("user is not login")
+                start<LoginActivity>()
+            }
+            finish()
         }
-        finish()
     }
 
 }

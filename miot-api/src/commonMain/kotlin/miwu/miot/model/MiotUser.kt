@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class MiotUser(
     val userId: String,
     val cUserId: String,
-    val nonce: String,
+    val nonce: Long,
     val ssecurity: String,
     val psecurity: String,
     val passToken: String,

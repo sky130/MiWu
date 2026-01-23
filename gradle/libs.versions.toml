@@ -19,7 +19,7 @@ horologistComposeToolsVersion = "0.7.15"
 ksp = "2.3.3"
 androidx-activity-ktx = "1.12.2"
 custom-qr-generator = "1.6.2"
-ktor = "3.3.3"
+ktor = "3.4.0"
 org-json = "20251224"
 kotlinx-coroutines-core = "1.10.2"
 markwon-core = "4.6.2"
@@ -61,6 +61,7 @@ androidx-test-runner = "1.5.2"
 androidx-core = "1.7.0"
 ktorfit = "2.7.2"
 kotlincrypto-hash = "0.8.0"
+datastore = "1.2.0"
 
 [libraries]
 # third-party libraries
@@ -104,7 +105,6 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "androidx-cardview" }
-androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "androidx-room-common-jvm" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-core" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
@@ -116,12 +116,15 @@ androidx-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-commo
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "androidx-room-common-jvm" }
 androidx-concurrent-futures = { module = "androidx.concurrent:concurrent-futures", version.ref = "concurrentFutures" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity-ktx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-gridlayout = { module = "androidx.gridlayout:gridlayout", version.ref = "gridlayout" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-wear = { module = "androidx.wear:wear", version.ref = "wear" }
 androidx-wear-protolayout = { module = "androidx.wear.protolayout:protolayout", version.ref = "androidx-wear-protolayout" }
 androidx-wear-tiles = { module = "androidx.wear.tiles:tiles", version.ref = "androidx-wear-tiles" }

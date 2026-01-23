@@ -1,85 +1,126 @@
 package com.github.miwu.ui.login
 
-import android.graphics.Bitmap
-import androidx.core.graphics.createBitmap
-import androidx.databinding.ObservableField
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import com.github.alexzhirkevich.customqrgenerator.QrCodeGenerator
-import com.github.alexzhirkevich.customqrgenerator.QrData
-import com.github.alexzhirkevich.customqrgenerator.QrErrorCorrectionLevel
-import com.github.alexzhirkevich.customqrgenerator.createQrOptions
+import androidx.lifecycle.viewModelScope
+import com.github.miwu.MainApplication
 import com.github.miwu.R
+import com.github.miwu.logic.datastore.MiotUserDataStore
 import com.github.miwu.utils.Logger
 import com.github.miwu.logic.repository.AppRepository
-import kndroidx.extension.string
+import com.github.miwu.logic.setting.AppSetting
+import com.github.miwu.ui.main.MainActivity
+import kndroidx.extension.start
 import kndroidx.extension.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miwu.miot.model.MiotUser
 import miwu.miot.provider.MiotLoginProvider
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class LoginViewModel(
     val loginProvider: MiotLoginProvider,
-    val appRepository: AppRepository
-) :
-    ViewModel() {
-    private val job = Job()
-    private val scope = CoroutineScope(job)
-    private val _qrcode = MutableSharedFlow<Bitmap>()
-    private val generator = QrCodeGenerator()
-    private val _miotUser = MutableSharedFlow<MiotUser>()
+    val appRepository: AppRepository,
+    val miotUserDataStore: MiotUserDataStore
+) : ViewModel() {
     private val logger = Logger()
-    val user = ObservableField("")
-    val password = ObservableField("")
+    private val loginJob = Job()
+    private val scope = CoroutineScope(loginJob)
+    private val _qrcode = MutableStateFlow("")
+    private val _event = MutableSharedFlow<Event>()
 
-    val isQrCode = MutableLiveData(true)
-    val qrcode = _qrcode.asLiveData()
-    val miotUser = _miotUser.asSharedFlow()
+    val user = MutableStateFlow("")
+    val password = MutableStateFlow("")
 
-    fun qrcode() {
-        job.cancelChildren()
-        logger.info("Request for a login qrcode")
-        scope.launch(Dispatchers.IO) {
+    val qrcode = _qrcode.asStateFlow()
+    val event = _event.asSharedFlow()
+
+    fun requestClassicLogin() {
+        val user = user.value
+        val pwd = password.value
+        viewModelScope.launch(Dispatchers.IO) {
+            event(Event.ShowLoading(true))
             runCatching {
-                // TODO 重构这里
-                _qrcode.emit(createBitmap(1, 1))
-                val response = loginProvider.generateLoginQrCode().getOrNull()
-                    ?: return@launch
-                logger.info("generate login qrcode successfully, data={}", response)
-                val qrcode = response.toQrCode()
-                    ?: return@launch logger.warn("generate login qrcode failure, data={}", response)
-                val data = QrData.Url(qrcode.data)
-                logger.info("qrcode data: {}, login url: {}", data, qrcode.loginUrl)
-                _qrcode.emit(generator.generateQrCode(data, options))
-                loginProvider.loginByQrCode(qrcode.loginUrl).getOrThrow()
+                loginProvider.login(user, pwd).getOrThrow()
             }.onFailure { e ->
-                logger.warn("login failure, cause by {}", e.stackTraceToString())
-                if (e is SocketTimeoutException || e is TimeoutException) return@launch qrcode()
-                withContext(Dispatchers.Main) {
-                    R.string.login_failure_toast.string.format(e.message ?: "unknown").toast()
-                }
-            }.onSuccess {
-                logger.info("login successfully")
-                _miotUser.emit(it)
+                loginFailure(e)
+            }.onSuccess { user ->
+                loginSuccess(user)
+                event(Event.ShowLoading(false))
             }
         }
     }
 
-    fun change() {
-        isQrCode.value = !isQrCode.value!!
+    fun requestQRCodeLogin() {
+        logger.info("Request for a login qrcode")
+        loginJob.cancelChildren()
+        scope.launch(Dispatchers.IO) {
+            runCatching {
+                _qrcode.emit("")
+                val response = loginProvider
+                    .generateLoginQrCode()
+                    .getOrThrow()
+                val qrcode = response.toQrCode()
+                    ?: error("generate login qrcode failure, response=${response}")
+                logger.info(
+                    "generate login qrcode successfully, qrcode data: {}, login url: {}",
+                    qrcode.data,
+                    qrcode.loginUrl
+                )
+                _qrcode.emit(qrcode.data)
+                loginProvider
+                    .loginByQrCode(qrcode.loginUrl)
+                    .getOrThrow()
+            }.onFailure { e ->
+                if (e is SocketTimeoutException || e is TimeoutException) {
+                    requestQRCodeLogin()
+                } else {
+                    loginFailure(e)
+                }
+            }.onSuccess { user ->
+                loginSuccess(user)
+            }
+        }
     }
 
-    private val options = createQrOptions(512, 512, 0.1f) {
-        errorCorrectionLevel = QrErrorCorrectionLevel.Low
+    private suspend fun loginSuccess(user: MiotUser) {
+        logger.info("login successfully")
+        val user = user.copy(deviceId = MainApplication.androidId)
+        miotUserDataStore.updateData { user }
+        event(Event.LoginSuccess(user))
+    }
+
+    suspend fun loginFailure(e: Throwable) {
+        logger.warn("login failure, cause by {}", e.stackTraceToString())
+        event(Event.LoginFailure(e))
+    }
+
+    fun cancelLogin() {
+        loginJob.cancelChildren()
+        _qrcode.value = ""
+    }
+
+    override fun onCleared() {
+        loginJob.cancelChildren()
+        super.onCleared()
+    }
+
+    private suspend fun event(event: Event) = _event.emit(event)
+
+    sealed interface Event {
+        data class LoginSuccess(val user: MiotUser) : Event
+        data class LoginFailure(val e: Throwable) : Event
+        data class ShowLoading(val show: Boolean) : Event
     }
 }

@@ -36,7 +36,7 @@ data class Login(
     @SerialName("captchaUrl") val captchaUrl: String? = null,
     @SerialName("child") val child: Int,
     @SerialName("miDemo") val miDemo: Int,
-    @SerialName("nonce") val nonce: String,
+    @SerialName("nonce") val nonce: Long,
     @SerialName("description") val description: String,
     @SerialName("notificationUrl") val notificationUrl: String,
     @SerialName("passToken") val passToken: String,

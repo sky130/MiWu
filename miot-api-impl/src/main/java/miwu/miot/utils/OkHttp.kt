@@ -29,23 +29,24 @@ internal suspend inline fun <reified T> OkHttpClient.get(
     body: RequestBody? = null
 ): T = withContext(Dispatchers.IO) {
     run {
-        val response = newCall(
+        newCall(
             Request.Builder().url(url).apply {
                 if (body != null) post(body)
             }.build()
-        ).execute()
-        when (T::class) {
-            String::class -> response.body.string() as T
-            Response::class -> response as T
-            else ->
-                try {
-                    response.body.string().to<T>()
-                } catch (e: Exception) {
-                    throw IllegalArgumentException(
-                        "Unsupported type: ${T::class.simpleName}",
-                        e
-                    )
-                }
+        ).execute().use { response ->
+            when (T::class) {
+                String::class -> response.body.string() as T
+                Response::class -> response as T
+                else ->
+                    try {
+                        response.body.string().to<T>()
+                    } catch (e: Exception) {
+                        throw IllegalArgumentException(
+                            "Unsupported type: ${T::class.simpleName}",
+                            e
+                        )
+                    }
+            }
         }
     }
 }

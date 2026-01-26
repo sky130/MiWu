@@ -56,7 +56,7 @@ class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
         val list = Array(att.size) {
             att[it].run { SetParams.Att(device.did, siid, piid, value) }
         }
-        miotService.setDeviceAtt(SetParams(list))
+        miotService.setDeviceAtt(SetParams(list)).use { it.string() }
         Unit
     }.recoverCatching {
         val specType = device.specType ?: throw MiotDeviceException.specNotFound(device.model)

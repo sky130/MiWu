@@ -39,10 +39,14 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     }
 
     override suspend fun getSpecMultiLanguage(urn: String) = withContext(Dispatchers.IO) {
-        when (val response = specService.getSpecMultiLanguage(urn).string()) {
-            "model not found" -> Result.failure(MiotDeviceException.modelNotFound(urn))
-            "urn is not iot namespace" -> Result.failure(MiotDeviceException.urnFormatError(urn))
-            else -> Result.success(response)
+        specService.getSpecMultiLanguage(urn).use { response ->
+            runCatching {
+                when (val string = response.string()) {
+                    "model not found" -> throw MiotDeviceException.modelNotFound(urn)
+                    "urn is not iot namespace" -> throw MiotDeviceException.urnFormatError(urn)
+                    else -> string
+                }
+            }
         }
     }
 

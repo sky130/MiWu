@@ -77,7 +77,9 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
         home: MiotHome,
         scene: MiotScene
     ): Result<Unit> = runCatching {
-        homeService.runScene(RunNewScene(home.id, home.uid.toString(), scene.sceneId))
+        homeService.runScene(RunNewScene(home.id, home.uid.toString(), scene.sceneId)).use {
+            it.string()
+        }
     }
 
     override suspend fun runScene(

@@ -63,14 +63,14 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
         dataStore.data.onEach {
             currentUser = it
             loginStatus.emit(LoginState.Loading)
-            val isTokenExpired = miotUserClient
-                ?.checkTokenExpired()
-                ?.getOrNull() ?: true
-            if (isTokenExpired) {
+            val isTokenValid = miotUserClient
+                ?.getIsServiceTokenValid()
+                ?.getOrDefault(false)
+                ?: false
+            if (!isTokenValid) {
                 loginProvider.refreshServiceToken(it)
-                    .onSuccess { user ->
-                        dataStore.updateData { user }
-                    }.onFailure { e ->
+                    .onSuccess { newUser -> dataStore.updateData { newUser } }
+                    .onFailure { e ->
                         if (e is MiotAuthException) {
                             // 这里登录信息彻底过期, 需要退出应用再登录
                             loginStatus.emit(LoginState.Failure(e.message ?: "unknown", e))

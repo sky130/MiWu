@@ -1,18 +1,18 @@
 package miwu.miot.impl.client
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import miwu.miot.client.MiotUserClient
+import miwu.miot.common.MIOT_SERVER_URL
+import miwu.miot.interceptor.MiotAuthInterceptor
+import miwu.miot.model.MiotUser
+import miwu.miot.model.miot.MiotUserInfo
+import miwu.miot.service.UserService
+import miwu.miot.service.body.GetUserInfo
 import miwu.miot.utils.JsonConverterFactory
 import miwu.miot.utils.OkHttpClient
 import miwu.miot.utils.Retrofit
 import miwu.miot.utils.create
-import miwu.miot.service.body.GetUserInfo
-import miwu.miot.client.MiotUserClient
-import miwu.miot.common.MIOT_SERVER_URL
-import miwu.miot.exception.MiotAuthException
-import miwu.miot.exception.MiotClientException
-import miwu.miot.interceptor.MiotAuthInterceptor
-import miwu.miot.model.MiotUser
-import miwu.miot.service.UserService
-import retrofit2.HttpException
 
 class MiotUserClientImpl(private val user: MiotUser) : MiotUserClient {
     private val client = OkHttpClient {
@@ -27,22 +27,17 @@ class MiotUserClientImpl(private val user: MiotUser) : MiotUserClient {
     )
     private val userService = retrofit.create<UserService>()
 
-    override suspend fun getUserInfo() = runCatching {
-        userService.getUserInfo(GetUserInfo(user.userId))
-    }.recoverCatching {
-        when (it) {
-            is HttpException -> {
-                if (it.code() == 401) throw MiotAuthException.tokenExpired(it)
-            }
+    override suspend fun getUserInfo(): Result<MiotUserInfo> = withContext(Dispatchers.IO) {
+        runCatching {
+            val getUserInfo = GetUserInfo(user.userId)
+            return@runCatching userService.getUserInfo(getUserInfo)
         }
-        throw MiotClientException.getUserInfoFailed(it)
     }
 
-    override suspend fun checkTokenExpired() = runCatching {
-        when (getUserInfo().exceptionOrNull()) {
-            null -> false
-            is MiotAuthException -> true
-            else -> false
+    override suspend fun getIsServiceTokenValid(): Result<Boolean> = withContext(Dispatchers.IO) {
+        runCatching {
+            val userInfo = getUserInfo().getOrThrow()
+            return@runCatching userInfo.code == 0
         }
     }
 }

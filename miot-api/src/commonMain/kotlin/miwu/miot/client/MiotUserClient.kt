@@ -30,10 +30,10 @@ interface MiotUserClient {
     suspend fun getUserInfo(): Result<MiotUserInfo>
 
     /**
-     * 检查当前用户的 `serviceToken` 是否已过期。
+     * 检查当前用户的 `serviceToken` 是否有效，
+     * 能成功获取用户信息为有效，否则为无效。
      *
-     * @return 包含布尔值的 [Result] 对象
+     * @return `true` 表示有效，否则为 `false`
      */
-    suspend fun checkTokenExpired(): Result<Boolean>
-
+    suspend fun getIsServiceTokenValid(): Result<Boolean>
 }

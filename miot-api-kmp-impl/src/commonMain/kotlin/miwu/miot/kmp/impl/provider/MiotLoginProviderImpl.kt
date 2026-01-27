@@ -8,7 +8,6 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
-import io.ktor.client.plugins.timeout
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.get
 import io.ktor.client.request.setBody
@@ -23,26 +22,26 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import miwu.miot.kmp.utils.IO
-import miwu.miot.kmp.utils.json
-import miwu.miot.kmp.utils.md5
-import miwu.miot.kmp.utils.to
 import miwu.miot.common.MIOT_SID
 import miwu.miot.common.QRCODE_GENERATE_URL
 import miwu.miot.common.SERVICE_LOGIN_AUTH_URL
 import miwu.miot.common.SERVICE_LOGIN_URL
+import miwu.miot.common.getRandomDeviceId
+import miwu.miot.common.removePrefix
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotBusinessException
 import miwu.miot.exception.MiotHttpException
+import miwu.miot.kmp.utils.IO
+import miwu.miot.kmp.utils.json
+import miwu.miot.kmp.utils.md5
+import miwu.miot.kmp.utils.to
 import miwu.miot.model.MiotUser
+import miwu.miot.model.login.Location
 import miwu.miot.model.login.Login
 import miwu.miot.model.login.LoginQrCode
+import miwu.miot.model.login.ServiceData
 import miwu.miot.provider.MiotLoginProvider
 import kotlin.coroutines.CoroutineContext
-import miwu.miot.common.getRandomDeviceId
-import miwu.miot.common.removePrefix
-import miwu.miot.model.login.ServiceData
-import miwu.miot.model.login.Location
 import kotlin.time.Clock
 
 class MiotLoginProviderImpl : MiotLoginProvider {
@@ -66,12 +65,9 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         expectSuccess = true
     }
 
-    override suspend fun login(
-        user: String,
-        pwd: String
-    ) = runCatching {
-        cookiesStorage.close()
-        val sidDetails = getLocation()
+    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatching {
+        cookiesStorage.clear()
+        val sidDetails = getLocation().getOrThrow()
         val pwdHash = pwd.md5()
         val body = formData {
             append("qs", sidDetails.qs)
@@ -83,18 +79,22 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             append("_json", "true")
         }
         get<String>(SERVICE_LOGIN_AUTH_URL, body)
+            .getOrThrow()
             .to<Login>()
+            .getOrThrow()
             .execute()
             .getOrThrow()
     }
 
-    override suspend fun loginByQrCode(loginUrl: String) = runCatching {
-        cookiesStorage.close()
+    override suspend fun loginByQrCode(loginUrl: String): Result<MiotUser> = runCatching {
+        cookiesStorage.clear()
         get<String>(loginUrl)
+            .getOrThrow()
             .removePrefix()
             .to<Login>()
+            .getOrThrow()
             .also {
-                val (location, securityToken) = getServiceData()
+                val (location, securityToken) = getServiceData().getOrThrow()
                 it.location = location
                 it.ssecurity = securityToken
             }
@@ -109,13 +109,15 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         onFailure: suspend CoroutineScope.(Throwable?) -> Unit,
         context: CoroutineContext
     ): Unit = withContext(Dispatchers.IO) {
-        cookiesStorage.close()
+        cookiesStorage.clear()
         try {
             get<String>(loginUrl)
+                .getOrThrow()
                 .removePrefix()
                 .to<Login>()
+                .getOrThrow()
                 .also {
-                    val (location, securityToken) = getServiceData()
+                    val (location, securityToken) = getServiceData().getOrThrow()
                     it.location = location
                     it.ssecurity = securityToken
                 }
@@ -133,7 +135,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         }
     }
 
-    override suspend fun generateLoginQrCode() = withContext(Dispatchers.IO) {
+    override suspend fun generateLoginQrCode() = runCatching {
         val generateQrCode = """
             ${QRCODE_GENERATE_URL}?
             ${
@@ -148,16 +150,16 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             """.trimIndent().parseUrlEncodedParameters()
         }
         """.trimIndent()
-        runCatching {
-            get<String>(generateQrCode)
-                .removePrefix()
-                .to<LoginQrCode>()
-        }
+        get<String>(generateQrCode)
+            .getOrThrow()
+            .removePrefix()
+            .to<LoginQrCode>()
+            .getOrThrow()
     }
 
     override suspend fun refreshServiceToken(miotUser: MiotUser) = runCatching {
-        cookiesStorage.close()
-        with(miotUser) {
+        cookiesStorage.clear()
+        val cookies = with(miotUser) {
             listOf(
                 Cookie("userId", userId),
                 Cookie("cUserId", cUserId),
@@ -166,14 +168,14 @@ class MiotLoginProviderImpl : MiotLoginProvider {
                 Cookie("psecurity", passToken),
                 Cookie("passToken", passToken),
             )
-        }.forEach { cookiesStorage.addCookie(Url(""), it) }
-        val data = getLocation()
-        data.toException()?.let { throw it }
+        }
+        cookiesStorage.addAll(cookies)
+        val data = getLocation().getOrThrow()
         val location = data.location
         val serviceToken = getServiceToken(location).getOrThrow()
         miotUser.copy(
             ssecurity = data.ssecurity,
-            serviceToken = serviceToken
+            serviceToken = serviceToken,
         )
     }
 
@@ -206,21 +208,29 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             ?: throw MiotAuthException.tokenMissing()
     }
 
-    private suspend fun getLocation() =
+    private suspend fun getLocation(): Result<Location> = runCatching {
         get<String>(SERVICE_LOGIN_URL)
+            .getOrThrow()
             .removePrefix()
             .to<Location>()
+            .getOrThrow()
+            .getOrThrowAuthException()
+    }
 
-    private suspend fun getServiceData() =
+    private suspend fun getServiceData(): Result<ServiceData> = runCatching {
         get<String>(SERVICE_LOGIN_URL)
+            .getOrThrow()
             .removePrefix()
             .to<ServiceData>()
+            .getOrThrow()
+    }
 
     private suspend inline fun <reified T> get(
-        url: String, body: Any? = null
-    ): T = httpClient.get(url) {
-        setBody(body)
-    }.body()
+        url: String,
+        body: Any? = null,
+    ): Result<T> = runCatching {
+        httpClient.get(url) { setBody(body) }.body()
+    }
 
     private class SimpleCookiesStorage : CookiesStorage {
         private val storage = mutableListOf<Cookie>()
@@ -236,6 +246,11 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         override fun close() {
             storage.clear()
         }
+
+        // 添加和Url无关的手动修改Cookie的方法
+        fun addAll(cookies: List<Cookie>) = storage.addAll(cookies)
+
+        fun clear() = storage.clear()
     }
 
     fun String.splitSetCookieHeader(): List<String> {

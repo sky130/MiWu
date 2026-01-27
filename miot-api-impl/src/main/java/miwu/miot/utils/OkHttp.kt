@@ -11,7 +11,7 @@ import okio.Buffer
 import java.nio.charset.Charset
 
 
-fun OkHttpClient.Builder.userAgent(ua: String) = addInterceptor { chain ->
+fun OkHttpClient.Builder.userAgent(ua: String): OkHttpClient.Builder = addInterceptor { chain ->
     chain.proceed(
         chain.request()
             .newBuilder()
@@ -21,37 +21,29 @@ fun OkHttpClient.Builder.userAgent(ua: String) = addInterceptor { chain ->
     )
 }
 
-fun OkHttpClient(block: OkHttpClient.Builder.() -> Unit = {}) =
+fun OkHttpClient(block: OkHttpClient.Builder.() -> Unit = {}): OkHttpClient =
     OkHttpClient.Builder().apply(block).build()
 
 internal suspend inline fun <reified T> OkHttpClient.get(
     url: String,
-    body: RequestBody? = null
-): T = withContext(Dispatchers.IO) {
-    run {
-        newCall(
-            Request.Builder().url(url).apply {
-                if (body != null) post(body)
-            }.build()
-        ).execute().use { response ->
-            when (T::class) {
-                String::class -> response.body.string() as T
+    body: RequestBody? = null,
+): Result<T> = withContext(Dispatchers.IO) {
+    runCatching {
+        val request = Request.Builder()
+            .url(url)
+            .apply { if (body != null) post(body) }
+            .build()
+        newCall(request).execute().use { response ->
+            return@runCatching when (T::class) {
                 Response::class -> response as T
-                else ->
-                    try {
-                        response.body.string().to<T>()
-                    } catch (e: Exception) {
-                        throw IllegalArgumentException(
-                            "Unsupported type: ${T::class.simpleName}",
-                            e
-                        )
-                    }
+                String::class -> response.body.string() as T
+                else -> response.body.string().to<T>().getOrThrow()
             }
         }
     }
 }
 
-fun FormBody(block: FormBody.Builder.() -> Unit) = FormBody.Builder().apply(block).build()
+fun FormBody(block: FormBody.Builder.() -> Unit): FormBody = FormBody.Builder().apply(block).build()
 
 fun RequestBody.readToString(): String {
     Buffer().apply {
@@ -68,6 +60,9 @@ fun RequestBody.readToString(): String {
     throw RuntimeException("data of requestBody is empty")
 }
 
-
-fun Request.Builder.addHeaders(vararg headers: Pair<String, String>) =
-    this.also { builder -> headers.forEach { addHeader(it.first, it.second) } }
+fun Request.Builder.addHeaders(vararg headers: Pair<String, String>): Request.Builder {
+    for ((k, v) in headers) {
+        addHeader(k, v)
+    }
+    return this
+}

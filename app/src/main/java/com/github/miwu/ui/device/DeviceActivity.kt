@@ -31,8 +31,10 @@ import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 
 class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCallback {
     override val viewModel: DeviceViewModel by viewModel()
-    private val device by lazy { intent.getStringExtra("device")!!.to<MiotDevice>() }
-    private val user by lazy { intent.getStringExtra("user")!!.to<MiotUser>() }
+
+    // 如果确认接收的Extra是符合预期的这里可以直接Unwrap
+    private val device by lazy { intent.getStringExtra("device")!!.to<MiotDevice>().getOrThrow() }
+    private val user by lazy { intent.getStringExtra("user")!!.to<MiotUser>().getOrThrow() }
     private val logger = Logger()
     private val miotDeviceClient by lazy { MiotDeviceClient(user) }
     private val specAttrProvider: MiotSpecAttrProvider by inject()
@@ -149,7 +151,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                 return if (!file.isFile) {
                     return null
                 } else {
-                    file.readText().to<SpecAtt>()
+                    file.readText().to<SpecAtt>().getOrThrow()
                 }
             } catch (e: Exception) {
                 return null
@@ -167,7 +169,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
                 return if (!file.isFile) {
                     return null
                 } else {
-                    file.readText().to<Map<String, String>>()
+                    file.readText().to<Map<String, String>>().getOrThrow()
                 }
             } catch (e: Exception) {
                 return null

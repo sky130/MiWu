@@ -79,7 +79,7 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     override suspend fun getIconUrl(model: String) = withContext(Dispatchers.IO) {
         runCatching {
             val url = "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${model}"
-            val info = client.get<Info>(url)
+            val info = client.get<Info>(url).getOrThrow()
             if (info.code != 0) throw MiotClientException.getIconUrlFailed(model)
             info.data.realIcon
         }

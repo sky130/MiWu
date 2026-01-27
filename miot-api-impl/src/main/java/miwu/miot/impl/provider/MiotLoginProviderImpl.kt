@@ -47,12 +47,9 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         readTimeout(5, TimeUnit.MINUTES)
     }
 
-    override suspend fun login(
-        user: String,
-        pwd: String
-    ) = runCatching {
+    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatching {
         cookieJar.clear()
-        val sidDetails = getLocation()
+        val sidDetails = getLocation().getOrThrow()
         val pwdHash = pwd.md5()
         val body = FormBody {
             add("qs", sidDetails.qs)
@@ -64,25 +61,28 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             add("_json", "true")
         }
         get<String>(SERVICE_LOGIN_AUTH_URL, body)
+            .getOrThrow()
             .to<Login>()
+            .getOrThrow()
             .execute()
             .getOrThrow()
     }
 
-    override suspend fun loginByQrCode(loginUrl: String) = runCatching {
+    override suspend fun loginByQrCode(loginUrl: String): Result<MiotUser> = runCatching {
         cookieJar.clear()
         get<String>(loginUrl)
+            .getOrThrow()
             .removePrefix()
             .to<Login>()
+            .getOrThrow()
             .also {
-                val (location, securityToken) = getServiceData()
+                val (location, securityToken) = getServiceData().getOrThrow()
                 it.location = location
                 it.ssecurity = securityToken
             }
             .execute()
             .getOrThrow()
     }
-
 
     override suspend fun loginByQrCode(
         loginUrl: String,
@@ -94,10 +94,12 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         cookieJar.clear()
         try {
             get<String>(loginUrl)
+                .getOrThrow()
                 .removePrefix()
                 .to<Login>()
+                .getOrThrow()
                 .also {
-                    val (location, securityToken) = getServiceData()
+                    val (location, securityToken) = getServiceData().getOrThrow()
                     it.location = location
                     it.ssecurity = securityToken
                 }
@@ -115,7 +117,8 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         }
     }
 
-    override suspend fun generateLoginQrCode(): Result<LoginQrCode> = withContext(Dispatchers.IO) {
+    // 为啥这里要在IO上下文执行？
+    override suspend fun generateLoginQrCode(): Result<LoginQrCode> = runCatching {
         val generateQrCode = """
             ${QRCODE_GENERATE_URL}?
             ${
@@ -130,19 +133,18 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             """.trimIndent().urlEncode()
         }
         """.trimIndent()
-        runCatching {
-            get<String>(generateQrCode)
-                .removePrefix()
-                .to<LoginQrCode>()
-        }
+        get<String>(generateQrCode)
+            .getOrThrow()
+            .removePrefix()
+            .to<LoginQrCode>()
+            .getOrThrow()
     }
 
-    override suspend fun refreshServiceToken(miotUser: MiotUser) = runCatching {
+    override suspend fun refreshServiceToken(miotUser: MiotUser): Result<MiotUser> = runCatching {
         cookieJar.clear()
-        val url = HttpUrl.Builder()
-            .host("https://account.xiaomi.com")
-            .build()
-        with(miotUser) {
+        // 因为SimpleCookieJar的Store和Url无关，如果是手动添加Cookie是否不需要添加Url了呢
+        // 所以添加一个手动实现addAll函数表示是手动添加Cookie
+        val cookies = with(miotUser) {
             listOf(
                 Cookie("userId", userId),
                 Cookie("cUserId", cUserId),
@@ -151,14 +153,14 @@ class MiotLoginProviderImpl : MiotLoginProvider {
                 Cookie("psecurity", passToken),
                 Cookie("passToken", passToken),
             )
-        }.let { cookieJar.saveFromResponse(url, it) }
-        val data = getLocation()
-        data.toException()?.let { throw it }
+        }
+        cookieJar.addAll(cookies)
+        val data = getLocation().getOrThrow()
         val location = data.location
         val serviceToken = getServiceToken(location).getOrThrow()
         miotUser.copy(
             ssecurity = data.ssecurity,
-            serviceToken = serviceToken
+            serviceToken = serviceToken,
         )
     }
 
@@ -183,15 +185,13 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         )
     }
 
-    private suspend fun getServiceToken(location: String) = runCatching {
-        val response = try {
-            get<Response>(location)
-        } catch (e: TimeoutException) {
-            throw MiotTimeoutException("Login", e)
-        } catch (e: IOException) {
-            throw MiotConnectionException("Login", e)
-        } catch (e: Exception) {
-            throw MiotHttpException("Login", e)
+    private suspend fun getServiceToken(location: String): Result<String> = runCatching {
+        val response = get<Response>(location).getOrElse { e ->
+            when (e) {
+                is TimeoutException -> throw MiotTimeoutException("Login", e)
+                is IOException -> throw MiotConnectionException("Login", e)
+                else -> throw MiotHttpException("Login", e)
+            }
         }
         val cookiesHeader = response.headers["Set-Cookie"]!!
         cookiesHeader.split(", ").firstNotNullOfOrNull { cookieString ->
@@ -204,19 +204,26 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         } ?: throw MiotAuthException.tokenMissing()
     }
 
-    private suspend fun getLocation() =
+    private suspend fun getLocation(): Result<Location> = runCatching {
+        // 如果Location的code不是预期的是否可以在这里就把结果包装成异常
         get<String>(SERVICE_LOGIN_URL)
+            .getOrThrow()
             .removePrefix()
             .to<Location>()
+            .getOrThrow()
+            .getOrThrowAuthException()
+    }
 
-    private suspend fun getServiceData() =
+    private suspend fun getServiceData(): Result<ServiceData> = runCatching {
         get<String>(SERVICE_LOGIN_URL)
+            .getOrThrow()
             .removePrefix()
             .to<ServiceData>()
+            .getOrThrow()
+    }
 
-    private suspend inline fun <reified T> get(
-        url: String, body: RequestBody? = null
-    ): T = miotLoginClient.get<T>(url, body)
+    private suspend inline fun <reified T> get(url: String, body: RequestBody? = null): Result<T> =
+        miotLoginClient.get<T>(url, body)
 
     class SimpleCookieJar : CookieJar {
         private val storage = arrayListOf<Cookie>()
@@ -225,7 +232,9 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             storage.addAll(cookies)
         }
 
-        override fun loadForRequest(url: HttpUrl) = storage
+        override fun loadForRequest(url: HttpUrl): List<Cookie> = storage
+
+        fun addAll(cookies: List<Cookie>) = storage.addAll(cookies)
 
         fun clear() = storage.clear()
     }

@@ -15,14 +15,14 @@ data class Location(
     @SerialName("ssecurity") val ssecurity: String
 ) {
     fun getOrThrowAuthException(): Location {
-        return when (code) {
-            20003 -> throw MiotAuthException("Invalid UserName")
-            22009 -> throw MiotAuthException("Package Name Denied Exception")
-            70002 -> throw MiotAuthException.invalidCredentials()
-            70016 -> throw MiotAuthException.invalidCredentials()
-            81003 -> throw MiotAuthException.needVerification()
-            87001 -> throw MiotAuthException.needVerification()
-            else -> this
-        }
+        throw when (code) {
+            20003 -> MiotAuthException("Invalid UserName")
+            22009 -> MiotAuthException("Package Name Denied Exception")
+            70002 -> MiotAuthException.invalidCredentials()
+            70016 -> MiotAuthException.invalidCredentials()
+            81003 -> MiotAuthException.needVerification()
+            87001 -> MiotAuthException.needVerification()
+            else -> null
+        } ?: return this
     }
 }

@@ -146,11 +146,9 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         // 所以添加一个手动实现addAll函数表示是手动添加Cookie
         val cookies = with(miotUser) {
             listOf(
+                Cookie("deviceId", deviceId),
                 Cookie("userId", userId),
                 Cookie("cUserId", cUserId),
-                Cookie("nonce", nonce.toString()),
-                Cookie("ssecurity", ssecurity),
-                Cookie("psecurity", passToken),
                 Cookie("passToken", passToken),
             )
         }

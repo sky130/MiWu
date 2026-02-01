@@ -1,20 +1,10 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
-    `maven-publish`
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
+    id("java-library")
+    id("miwu-publish")
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
@@ -23,4 +13,13 @@ kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
     }
+}
+
+miwuPublishing {
+    name = "MiWu Support Annotation"
+    group = "io.github.sky130.miwu"
+    artifactId = "miwu-support-annotation"
+    version = autoVersion()
+    description = "Annotations for MiWu widget and device definitions"
+    inceptionYear = "2026"
 }

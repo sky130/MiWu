@@ -25,7 +25,7 @@ sealed class FragmentState {
 }
 
 @BindingAdapter(value = ["state", "reverse"], requireAll = false)
-fun View.convertFragmentStateToVisibility(state: FragmentState?, reverse: Boolean?) {
+fun View.convertFragmentStateToVisibility(state: FragmentState?, reverse: Boolean? = false) {
     state?.toVisibility(reverse ?: false)?.let {
         this.visibility = it
     }

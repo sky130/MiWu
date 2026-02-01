@@ -1,23 +1,10 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
-    `maven-publish`
-}
-
-group = "com.github.sky130"
-version = libs.versions.miwu.get()
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
+    id("java-library")
+    id("miwu-publish")
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
@@ -35,7 +22,11 @@ dependencies {
     implementation(libs.google.ksp.symbol.processing.api)
 }
 
-
-//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-//    kotlinOptions.freeCompilerArgs += "-Xopt-in=com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview"
-//}
+miwuPublishing {
+    name = "MiWu Icon Android Processor"
+    group = "io.github.sky130.miwu"
+    artifactId = "miwu-icon-android-processor"
+    version = autoVersion()
+    description = "KSP processor for Android icon generation in MiWu"
+    inceptionYear = "2026"
+}

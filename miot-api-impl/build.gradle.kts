@@ -1,23 +1,10 @@
 plugins {
     kotlin("jvm")
+    id("miwu-publish")
     kotlin("plugin.serialization") version "2.3.0"
-    `maven-publish`
-}
-
-group = "com.github.sky130"
-version = libs.versions.miwu.get()
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
@@ -38,9 +25,15 @@ dependencies {
     implementation(libs.json)
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.okhttp)
-    // implementation(libs.converter.gson)
-    // implementation(libs.gson)
-    // implementation(libs.converter.scalars)
     implementation(libs.squareup.okio)
     implementation(libs.kotlinx.coroutines.core)
+}
+
+miwuPublishing {
+    name = "Miot API Implementation"
+    group = "io.github.sky130.miwu"
+    artifactId = "miot-api-impl"
+    version = autoVersion()
+    description = "Retrofit-based implementation for Miot API"
+    inceptionYear = "2026"
 }

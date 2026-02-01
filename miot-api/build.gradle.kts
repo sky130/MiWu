@@ -1,12 +1,8 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     kotlin("plugin.serialization") version "2.3.0"
-    `maven-publish`
+    id("miwu-publish")
 }
-
-group = "com.github.sky130"
-version = libs.versions.miwu.get()
-
 
 kotlin {
     jvm()
@@ -20,14 +16,6 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.coroutines.core)
             }
-        }
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
         }
     }
 }

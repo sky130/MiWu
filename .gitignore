@@ -17,3 +17,5 @@
 local.properties
 kls_database.db
 /kls_database.db
+/buildSrc/build/
+/buildSrc/.kotlin/

@@ -1,26 +1,21 @@
 @file:Suppress("UNCHECKED_CAST")
-
 package miwu.support.base
 
-import miwu.annotation.Property
-import miwu.annotation.Service
 import miwu.annotation.basic.Widget
-import miwu.support.api.Controller
-import miwu.support.icon.Icon
 import miwu.icon.Icons
 import miwu.icon.NoneIcon
 import miwu.miot.model.att.SpecAtt
-import miwu.support.manager.MiotDeviceManager.MiotDeviceManagerController
 import miwu.miot.model.att.SpecAtt.Service.Property.Value
+import miwu.support.api.Controller
+import miwu.support.icon.Icon
+import miwu.support.manager.MiotDeviceManager.MiotDeviceManagerController
 import miwu.support.translate.TranslateHelper
 import miwu.support.unit.Unit
-import java.util.concurrent.CopyOnWriteArrayList
-
 
 abstract class MiwuWidget<T>() : Widget {
     open val icon: Icon = NoneIcon
     open val isMultiAttribute = false
-    internal var controllers = CopyOnWriteArrayList<Controller>()
+    internal var controllers = ArrayList<Controller>()
     internal var _siid = -1
     internal var _piid = -1
     internal var _aiid = -1

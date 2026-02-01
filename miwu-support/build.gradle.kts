@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.ksp)
     kotlin("jvm")
+    alias(libs.plugins.ksp)
     id("miwu-publish")
 }
 
@@ -17,9 +17,6 @@ kotlin {
     sourceSets.main {
         kotlin.srcDir("build/generated/ksp/main/kotlin/")
     }
-    sourceSets.test {
-        // kotlin.srcDir("build/generated/ksp/main/kotlin/")
-    }
 }
 
 ksp {
@@ -30,15 +27,10 @@ ksp {
 
 dependencies {
     ksp(project(":miwu-support-processor"))
+    api(project(":miot-api-common"))
     implementation(project(":miwu-support-annotation"))
     implementation(project(":miot-api"))
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.json)
-    implementation(libs.squareup.retrofit)
-    implementation(libs.squareup.okhttp)
-    implementation(libs.squareup.retrofit.converter.gson)
-    implementation(libs.google.gson)
-    implementation(libs.squareup.retrofit.converter.scalars)
     implementation(libs.squareup.okio)
     implementation(libs.kotlinx.coroutines.core)
 }

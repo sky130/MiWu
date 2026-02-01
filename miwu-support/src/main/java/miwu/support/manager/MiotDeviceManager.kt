@@ -26,11 +26,11 @@ import miwu.widget.generated.device.DeviceRegistry
 import miwu.widget.generated.widget.PropertyRegistry
 import miwu.miot.att.get.GetAtt
 import miwu.miot.client.MiotDeviceClient
+import miwu.support.urn.Urn
+import miwu.support.translate.TranslateHelper
 import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
-import miwu.support.translate.TranslateHelper
-import miwu.support.urn.Urn
 import miwu.widget.generated.widget.ActionRegistry
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.reflect.KClass
@@ -38,7 +38,7 @@ import kotlin.reflect.KClass
 /**
  * @author Sky233
  * @param miot 用于调用 MiotClient 接口
- * @param manager 用于调用 MiotManager 接口
+ * @param specAttrProvider 用于调用 MiotManager 接口
  * @param device 设备详情
  * @param cache 用于缓存设备属性
  * @param dispatcher 用于更新 UI 数据的线程

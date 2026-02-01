@@ -1,7 +1,3 @@
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
-import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.SourcesJar
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -51,6 +47,7 @@ dependencies {
     implementation(project(":miot-api"))
     implementation(project(":miwu-support"))
     implementation(project(":miwu-support-annotation"))
+
 
     ksp(project(":miwu-support-processor"))
     ksp(project(":miwu-icon-android-processor"))

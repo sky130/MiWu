@@ -155,7 +155,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
 
+
     implementation(libs.resultat)
+
 
     implementation(libs.koin.core)
     implementation(platform(libs.koin.bom))

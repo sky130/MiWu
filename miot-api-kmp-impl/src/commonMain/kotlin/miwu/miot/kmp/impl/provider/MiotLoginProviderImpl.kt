@@ -161,11 +161,9 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         cookiesStorage.clear()
         val cookies = with(miotUser) {
             listOf(
+                Cookie("deviceId", deviceId),
                 Cookie("userId", userId),
                 Cookie("cUserId", cUserId),
-                Cookie("nonce", nonce.toString()),
-                Cookie("ssecurity", ssecurity),
-                Cookie("psecurity", passToken),
                 Cookie("passToken", passToken),
             )
         }

@@ -3,18 +3,16 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
     kotlin("plugin.serialization") version "2.3.0"
-    `maven-publish`
+    id("miwu-publish")
 }
 
-group = "com.github.sky130"
-version = libs.versions.miwu.get()
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
-        }
-    }
+miwuPublishing {
+    name = "Miot API KMP Implementation"
+    group = "io.github.sky130.miwu"
+    artifactId = "miot-api-kmp-impl"
+    version = autoVersion()
+    description = "Ktorfit-based multiplatform implementation for Miot API"
+    inceptionYear = "2026"
 }
 
 kotlin {
@@ -23,7 +21,6 @@ kotlin {
         browser()
         binaries.executable()
     }
-    withSourcesJar()
     jvmToolchain(21)
     sourceSets {
         commonMain {
@@ -61,10 +58,8 @@ ktorfit {
     compilerPluginVersion = "2.3.3"
 }
 
-tasks.named("sourcesJar") {
-    mustRunAfter(tasks.named("kspCommonMainKotlinMetadata"))
-}
-
-project.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin> {
-    project.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>().download = false
+afterEvaluate {
+    tasks.named("sourcesJar") {
+        dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
+    }
 }

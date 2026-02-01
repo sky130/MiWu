@@ -1,23 +1,10 @@
 plugins {
-    kotlin("jvm")
     alias(libs.plugins.ksp)
-    `maven-publish`
-}
-
-group = "com.github.sky130"
-version = libs.versions.miwu.get()
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
+    kotlin("jvm")
+    id("miwu-publish")
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
@@ -54,4 +41,13 @@ dependencies {
     implementation(libs.squareup.retrofit.converter.scalars)
     implementation(libs.squareup.okio)
     implementation(libs.kotlinx.coroutines.core)
+}
+
+miwuPublishing {
+    name = "MiWu Support"
+    group = "io.github.sky130.miwu"
+    artifactId = "miwu-support"
+    version = autoVersion()
+    description = "Core widget system and device management for MiWu"
+    inceptionYear = "2026"
 }

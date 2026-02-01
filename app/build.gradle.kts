@@ -1,15 +1,15 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import kotlin.math.pow
+import miwu.latestGitTag
+import miwu.getVersionInt
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+    kotlin("kapt")
     kotlin("plugin.serialization") version "2.3.0"
-    id("kotlin-kapt")
 }
 
-val miwuVersion = libs.versions.miwu.get()
+val tag = latestGitTag
 
 android {
     namespace = "com.github.miwu"
@@ -17,10 +17,10 @@ android {
 
     defaultConfig {
         applicationId = "com.github.miwu"
-        minSdk = 23 //
+        minSdk = 23
         targetSdk = 35
-        versionCode = getVersionInt(miwuVersion)
-        versionName = latestGitTag
+        versionName = tag
+        versionCode = getVersionInt(tag)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,13 +34,13 @@ android {
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
                 )
-                applicationVariants.all {
-                    outputs.all {
-                        if (name.contains("release"))
-                            (this as BaseVariantOutputImpl).outputFileName =
-                                "$name-$versionName-$versionCode.apk"
-                    }
-                }
+//                applicationVariants.all {
+//                    outputs.all {
+//                        if (name.contains("release"))
+//                            (this as BaseVariantOutputImpl).outputFileName =
+//                                "$name-$versionName-$versionCode.apk"
+//                    }
+//                }
             }
             debug {
                 isMinifyEnabled = false
@@ -180,23 +180,3 @@ afterEvaluate {
         dependsOn("dataBindingGenBaseClassesRelease")
     }
 }
-
-fun getVersionInt(ver: String): Int {
-    var version = 0
-    var times = 1
-    ver.split(".").forEach {
-        version += it.toInt() * 100f.pow(3 - times).toInt()
-        times++
-    }
-    return version
-}
-
-val latestGitTag: String
-    get() = ProcessBuilder(
-        "git",
-        "describe",
-        "--tags",
-        "--abbrev=0"
-    ).start().inputStream.bufferedReader().use { bufferedReader ->
-        bufferedReader.readText().replace("v", "").trim().ifEmpty { "debug" }
-    }

@@ -1,27 +1,13 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
-    `maven-publish`
-}
-
-group = "com.github.sky130"
-version = libs.versions.miwu.get()
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
+    id("java-library")
+    id("miwu-publish")
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
-
 
 kotlin {
     compilerOptions {
@@ -40,7 +26,11 @@ dependencies {
     implementation(libs.google.ksp.symbol.processing.api)
 }
 
-
-//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-//    kotlinOptions.freeCompilerArgs += "-Xopt-in=com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview"
-//}
+miwuPublishing {
+    name = "MiWu Support Processor"
+    group = "io.github.sky130.miwu"
+    artifactId = "miwu-support-processor"
+    version = autoVersion()
+    description = "KSP processors for MiWu widget and device code generation"
+    inceptionYear = "2026"
+}

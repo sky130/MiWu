@@ -1,16 +1,18 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
-    `maven-publish`
+    id("miwu-publish")
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
-
-val miwuVersion = libs.versions.miwu.get()
 
 android {
     namespace = "miwu.android"
@@ -21,14 +23,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-    }
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
-            group = "com.github.sky130"
-            version = libs.versions.miwu.get()
-        }
     }
     buildTypes {
         release {
@@ -73,4 +67,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+miwuPublishing {
+    name = "MiWu Android Support"
+    group = "io.github.sky130.miwu"
+    artifactId = "miwu-android"
+    version = autoVersion()
+    description = "Android UI wrappers and view bindings for MiWu widget system"
+    inceptionYear = "2026"
 }

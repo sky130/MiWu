@@ -6,15 +6,6 @@ plugins {
     id("miwu-publish")
 }
 
-miwuPublishing {
-    name = "Miot API KMP Implementation"
-    group = "io.github.sky130.miwu"
-    artifactId = "miot-api-kmp-impl"
-    version = autoVersion()
-    description = "Ktorfit-based multiplatform implementation for Miot API"
-    inceptionYear = "2026"
-}
-
 kotlin {
     jvm()
     js(IR) {
@@ -53,6 +44,16 @@ kotlin {
         }
     }
 }
+
+miwuPublishing {
+    name = "Miot API KMP Implementation"
+    group = "io.github.sky130.miwu"
+    artifactId = "miot-api-kmp-impl"
+    version = autoVersion()
+    description = "Ktorfit-based multiplatform implementation for Miot API"
+    inceptionYear = "2026"
+}
+
 
 ktorfit {
     compilerPluginVersion = "2.3.3"

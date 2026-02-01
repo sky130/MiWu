@@ -1,6 +1,7 @@
 package miwu.miot.provider
 
 import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.att.SpecType
 
 interface MiotSpecAttrProvider {
 
@@ -40,4 +41,28 @@ interface MiotSpecAttrProvider {
      * @return 图标 Url, 失败返回 null
      */
     suspend fun getIconUrl(model: String): Result<String>
+
+    /**
+     * 读取所有的 DevicesType
+     * @return [SpecType]
+     */
+    suspend fun getDevices(): Result<SpecType>
+
+    /**
+     * 读取所有的 ServicesType
+     * @return [SpecType]
+     */
+    suspend fun getServices(): Result<SpecType>
+
+    /**
+     * 读取所有的 ActionsType
+     * @return [SpecType]
+     */
+    suspend fun getActions(): Result<SpecType>
+
+    /**
+     * 读取所有的 PropertiesType
+     * @return [SpecType]
+     */
+    suspend fun getProperties(): Result<SpecType>
 }

@@ -3,20 +3,25 @@ package miwu.processor.spec
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.processing.SymbolProcessor as Processor
 import com.google.devtools.ksp.symbol.KSAnnotated
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import kotlinx.coroutines.runBlocking
-import miwu.processor.spec.logic.SpecProvider
+import miwu.support.urn.Urn
+import miwu.miot.kmp.impl.provider.MiotSpecAttrProviderImpl
+import miwu.miot.provider.MiotSpecAttrProvider
 import java.util.Locale
+import com.google.devtools.ksp.processing.SymbolProcessor as Processor
 
 class SpecProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : Processor {
-
+    private val provider: MiotSpecAttrProvider = MiotSpecAttrProviderImpl()
     private var isProcessingOver = false
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -49,11 +54,11 @@ class SpecProcessor(
     private suspend fun fetchSpecItems(specType: SpecType): List<String> {
         return try {
             when (specType) {
-                SpecType.DEVICE -> SpecProvider.service.getDevices()
-                SpecType.SERVICE -> SpecProvider.service.getServices()
-                SpecType.ACTION -> SpecProvider.service.getActions()
-                SpecType.PROPERTY -> SpecProvider.service.getProperties()
-            }.toNameList()
+                SpecType.DEVICE -> provider.getDevices()
+                SpecType.SERVICE -> provider.getServices()
+                SpecType.ACTION -> provider.getActions()
+                SpecType.PROPERTY -> provider.getProperties()
+            }.getOrThrow().toNameList()
         } catch (e: Exception) {
             logger.error("Failed to fetch ${specType.typeName} items from SpecProvider")
             emptyList()
@@ -138,6 +143,9 @@ class SpecProcessor(
         ACTION("Action"),
         PROPERTY("Property");
     }
+
+    private fun miwu.miot.model.att.SpecType.toNameList(): List<String> =
+        types.map { Urn.parseFrom(it).name }
 
     companion object {
         private val SPEC_TYPES = SpecType.entries

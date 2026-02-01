@@ -1,17 +1,16 @@
 plugins {
-    alias(libs.plugins.jetbrains.kotlin.jvm)
-    id("java-library")
+    alias(libs.plugins.kotlin.multiplatform)
     id("miwu-publish")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
 kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+    jvm()
+    js {
+        browser()
+    }
+    sourceSets {
+        commonMain {
+        }
     }
 }
 

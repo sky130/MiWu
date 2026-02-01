@@ -15,6 +15,7 @@ import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
 import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.att.SpecType
 import miwu.miot.model.miot.MiotDevices.Result.Info
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.miot.utils.get
@@ -82,6 +83,30 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
             val info = client.get<Info>(url).getOrThrow()
             if (info.code != 0) throw MiotClientException.getIconUrlFailed(model)
             info.data.realIcon
+        }
+    }
+
+    override suspend fun getDevices(): Result<SpecType> = withContext(Dispatchers.IO) {
+        runCatching {
+            specService.getDevices()
+        }
+    }
+
+    override suspend fun getServices(): Result<SpecType> = withContext(Dispatchers.IO) {
+        runCatching {
+            specService.getServices()
+        }
+    }
+
+    override suspend fun getActions(): Result<SpecType> = withContext(Dispatchers.IO) {
+        runCatching {
+            specService.getActions()
+        }
+    }
+
+    override suspend fun getProperties(): Result<SpecType> = withContext(Dispatchers.IO) {
+        runCatching {
+            specService.getProperties()
         }
     }
 

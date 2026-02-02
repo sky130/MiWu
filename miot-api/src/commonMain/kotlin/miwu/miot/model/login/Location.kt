@@ -7,10 +7,10 @@ import miwu.miot.exception.MiotAuthException
 @Serializable
 data class Location(
     @SerialName("code") val code: Int,
-    @SerialName("qs") val qs: String,
-    @SerialName("sid") val sid: String,
-    @SerialName("_sign") val sign: String,
-    @SerialName("callback") val callback: String,
+    @SerialName("qs") val qs: String? = "",
+    @SerialName("sid") val sid: String? = "",
+    @SerialName("_sign") val sign: String? = "",
+    @SerialName("callback") val callback: String? = "",
     @SerialName("location") val location: String,
     @SerialName("ssecurity") val ssecurity: String
 ) {

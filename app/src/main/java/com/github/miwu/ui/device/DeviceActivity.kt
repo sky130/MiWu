@@ -22,14 +22,13 @@ import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.api.Cache
 import miwu.support.base.MiwuWidget
 import miwu.support.manager.MiotDeviceManager
-import miwu.support.manager.callback.DeviceManagerCallback
 import miwu.widget.generated.wrapper.WrapperRegistry
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 
-class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCallback {
+class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), MiotDeviceManager.Callback {
     override val viewModel: DeviceViewModel by viewModel()
 
     // 如果确认接收的Extra是符合预期的这里可以直接Unwrap
@@ -40,7 +39,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), DeviceManagerCa
     private val specAttrProvider: MiotSpecAttrProvider by inject()
     private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
     private val manager by lazy {
-        MiotDeviceManager(
+        MiotDeviceManager.build(
             miotDeviceClient,
             specAttrProvider,
             device,

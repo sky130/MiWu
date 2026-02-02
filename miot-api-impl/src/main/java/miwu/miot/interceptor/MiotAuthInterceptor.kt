@@ -59,9 +59,9 @@ class MiotAuthInterceptor(private val user: MiotUser) : Interceptor {
 
     fun generateSignedNonce(secret: String, nonce: String): String {
         val sha = MessageDigest.getInstance("SHA-256")
-        sha.update(Base64.Default.decode(secret))
-        sha.update(Base64.Default.decode(nonce))
-        return Base64.Default.encode(sha.digest())
+        sha.update(Base64.decode(secret))
+        sha.update(Base64.decode(nonce))
+        return Base64.encode(sha.digest())
     }
 
     fun generateSignature(
@@ -72,9 +72,9 @@ class MiotAuthInterceptor(private val user: MiotUser) : Interceptor {
     ): String {
         val sign = "$uri&$signedNonce&$nonce&data=$data".toByteArray(StandardCharsets.UTF_8)
         val mac = Mac.getInstance("HmacSHA256")
-        mac.init(SecretKeySpec(Base64.Default.decode(signedNonce), "HmacSHA256"))
+        mac.init(SecretKeySpec(Base64.decode(signedNonce), "HmacSHA256"))
         val digest = mac.doFinal(sign)
-        return Base64.Default.encode(digest)
+        return Base64.encode(digest)
     }
 
 }

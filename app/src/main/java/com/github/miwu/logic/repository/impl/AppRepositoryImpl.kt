@@ -3,16 +3,15 @@ package com.github.miwu.logic.repository.impl
 import com.github.miwu.logic.datastore.MiotUserDataStore
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
+import com.github.miwu.logic.setting.AppSetting
+import com.github.miwu.logic.state.LoginState
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotHomeClient
 import com.github.miwu.utils.MiotUserClient
-import com.github.miwu.logic.setting.AppSetting
-import com.github.miwu.logic.state.LoginState
 import fr.haan.resultat.Resultat
 import fr.haan.resultat.toResultat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -24,7 +23,6 @@ import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
-import miwu.miot.model.miot.MiotUserInfo
 import miwu.miot.provider.MiotLoginProvider
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -119,6 +117,7 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
         devices.emit(Resultat.Loading())
         runCatching {
             val (homeId, ownerId) = getHomeDetails().getOrThrow()
+            miotUser?.let { loginProvider.refreshServiceToken(it) }
             miotHomeClient
                 ?.getDevices(homeId, ownerId)
                 ?.getOrThrow()

@@ -1,3 +1,3 @@
 package miwu.support.icon
 
-abstract interface Icon
+interface Icon

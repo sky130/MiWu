@@ -18,11 +18,8 @@ fun MiotUser.isLogin(): Boolean = run {
     listOf(
         userId,
         cUserId,
-        ssecurity,
-        psecurity,
         passToken,
-        serviceToken
-    ).all(String::isNotEmpty) && nonce != -1L
+    ).all(String::isNotEmpty)
 }
 
 private val Context.miotUserStore: MiotUserDataStore by dataStore(

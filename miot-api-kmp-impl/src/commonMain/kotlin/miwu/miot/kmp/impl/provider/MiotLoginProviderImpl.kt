@@ -13,6 +13,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.Cookie
+import io.ktor.http.CookieEncoding
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.contentType
@@ -70,10 +71,10 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         val sidDetails = getLocation().getOrThrow()
         val pwdHash = pwd.md5()
         val body = formData {
-            append("qs", sidDetails.qs)
-            append("sid", sidDetails.sid)
-            append("_sign", sidDetails.sign)
-            append("callback", sidDetails.callback)
+            append("qs", sidDetails.qs ?: "")
+            append("sid", sidDetails.sid ?: "")
+            append("_sign", sidDetails.sign ?: "")
+            append("callback", sidDetails.callback ?: "")
             append("user", user)
             append("hash", pwdHash)
             append("_json", "true")
@@ -161,10 +162,10 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         cookiesStorage.clear()
         val cookies = with(miotUser) {
             listOf(
-                Cookie("deviceId", deviceId),
-                Cookie("userId", userId),
-                Cookie("cUserId", cUserId),
-                Cookie("passToken", passToken),
+                Cookie("deviceId", deviceId, encoding = CookieEncoding.RAW),
+                Cookie("userId", userId, encoding = CookieEncoding.RAW),
+                Cookie("cUserId", cUserId, encoding = CookieEncoding.RAW),
+                Cookie("passToken", passToken, encoding = CookieEncoding.RAW),
             )
         }
         cookiesStorage.addAll(cookies)

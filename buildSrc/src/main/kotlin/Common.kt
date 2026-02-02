@@ -10,7 +10,7 @@ val latestGitTag = ProcessBuilder("git", "describe", "--tags", "--abbrev=0")
     .use(BufferedReader::readText)
     .replace("v", "")
     .trim()
-    .ifEmpty { "0.0.1" }
+    .ifEmpty { "3.0.0" }
 
 fun getVersionInt(ver: String): Int = ver
     .split("-")

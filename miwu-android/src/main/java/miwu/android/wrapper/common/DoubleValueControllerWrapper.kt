@@ -14,7 +14,6 @@ class DoubleValueControllerWrapper(context: Context, widget: MiwuWidget<Double>)
 
     private val binding by viewBinding(MiotWidgetIntValueControllerBinding::inflate)
     private var value = 0.0
-        get() = field
         set(value) {
             binding.num.text =
                 if (value.toString().endsWith(".0")) {

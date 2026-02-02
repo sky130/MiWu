@@ -67,7 +67,7 @@ class RecyclerGridLayout(context: Context, attr: AttributeSet) : RecyclerView(co
         )
     }
 
-    inner class GridViewHolder(val container: FrameLayout) : ViewHolder(container)
+    class GridViewHolder(val container: FrameLayout) : ViewHolder(container)
 
     inner class GridAdapter : Adapter<GridViewHolder>() {
         override fun onCreateViewHolder(
@@ -118,20 +118,20 @@ class RecyclerGridLayout(context: Context, attr: AttributeSet) : RecyclerView(co
         private val spanCount: Int = 2,
         private val includeEdge: Boolean = false,
         private val orientation: Int = GridLayoutManager.VERTICAL
-    ) : RecyclerView.ItemDecoration() {
+    ) : ItemDecoration() {
 
         override fun getItemOffsets(
             outRect: Rect,
             view: View,
             parent: RecyclerView,
-            state: RecyclerView.State
+            state: State
         ) {
             super.getItemOffsets(outRect, view, parent, state)
 
             val spacingPx = dpToPx(spacing, parent.context)
             val position = parent.getChildAdapterPosition(view)
 
-            if (position == RecyclerView.NO_POSITION) return
+            if (position == NO_POSITION) return
 
             val column = position % spanCount
             val row = position / spanCount

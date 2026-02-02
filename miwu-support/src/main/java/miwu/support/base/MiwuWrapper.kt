@@ -1,9 +1,9 @@
 package miwu.support.base
 
 import miwu.miot.model.att.SpecAtt
-import miwu.support.api.Controller
+import miwu.support.api.Observer
 
-abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : Controller {
+abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : Observer<T> {
 
     private var canUpdate = true
     val propertyListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
@@ -33,8 +33,8 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : Controller {
         widget.bind(this)
     }
 
-    abstract fun onUpdateValue(value: T)
     abstract fun initWrapper()
+    abstract override fun onUpdateValue(value: T)
     open fun init() = initWrapper()
     open fun onActionCallback(value: Any) = Unit
 
@@ -46,12 +46,12 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : Controller {
         canUpdate = true
     }
 
-    override fun onActionCallback(siid: Int, aiid: Int, output: Any) {
+    override fun onActionCallback(siid: Int, aiid: Int, output: Any?) {
         if (widget.isMultiAttribute)
-            actionListenerList[siid to piid]?.invoke(output)
+            actionListenerList[siid to piid]?.invoke(output ?: Unit)
         if (siid != this.siid || aiid != this.aiid) return
         if (!canUpdate) return
-        onActionCallback(output)
+        onActionCallback(output ?: Unit)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -64,6 +64,8 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : Controller {
     }
 
     fun update(value: T) = widget.update(value)
+
+    fun update(siid: Int, piid: Int, value: Any) = widget.update(siid, piid, value)
 
     fun action(vararg input: Any) = widget.action(*input)
 

@@ -1,24 +1,24 @@
 package com.github.miwu.ui.main
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.github.miwu.logic.datastore.MiotUserDataStore
-import com.github.miwu.utils.Logger
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
 import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.ui.main.state.FragmentState.*
+import com.github.miwu.utils.Logger
 import fr.haan.resultat.fold
-import fr.haan.resultat.onFailure
-import fr.haan.resultat.onSuccess
 import kndroidx.extension.toast
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import miwu.miot.client.MiotHomeClient
 import miwu.miot.model.miot.MiotUserInfo
-import kotlin.collections.sortedWith
+import java.util.TreeMap
+import java.util.function.Function
+import kotlin.math.min
+
 
 class MainViewModel(
     val appRepository: AppRepository,

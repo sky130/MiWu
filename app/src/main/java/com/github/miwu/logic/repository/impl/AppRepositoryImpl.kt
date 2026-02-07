@@ -1,5 +1,6 @@
 package com.github.miwu.logic.repository.impl
 
+import androidx.lifecycle.asLiveData
 import com.github.miwu.logic.datastore.MiotUserDataStore
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
@@ -10,8 +11,11 @@ import com.github.miwu.utils.MiotHomeClient
 import com.github.miwu.utils.MiotUserClient
 import fr.haan.resultat.Resultat
 import fr.haan.resultat.toResultat
+import kndroidx.extension.toast
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,6 +27,8 @@ import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
+import miwu.miot.model.miot.MiotUserInfo
+import miwu.miot.model.miot.MiotUserInfo.UserInfo
 import miwu.miot.provider.MiotLoginProvider
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -56,7 +62,20 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
     override val devices = MutableResultListStateFlow<MiotDevice>(Resultat.Loading())
     override val scenes = MutableResultListStateFlow<MiotScene>(Resultat.Loading())
     override val loginStatus = MutableStateFlow<LoginState>(LoginState.Loading)
+    override val userInfo = MutableStateFlow(UserInfo(0L, "", "null"))
 
+    //    val info = flow {
+//        runCatching {
+//            appRepository.getUserInfo().getOrThrow()
+//        }.onSuccess {
+//            emit(it.info)
+//        }.onFailure {
+//            it.message?.toast()
+//            logger.error("get user info failed, {}", it.message)
+//            it.printStackTrace()
+//            emit(MiotUserInfo.UserInfo(0L, "", "null"))
+//        }
+//    }.asLiveData()
     init {
         dataStore.data.onEach {
             currentUser = it
@@ -87,6 +106,17 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
         refreshHomes()
         refreshDevices()
         refreshScenes()
+    }
+
+    override fun refreshUserInfo() = scope.launch {
+        runCatching {
+            getUserInfo().getOrThrow()
+        }.onSuccess {
+            userInfo.emit(it.info)
+        }.onFailure {
+            logger.error("get user info failed, {}", it.message)
+            userInfo.emit(UserInfo(0L, "", "null"))
+        }
     }
 
     override fun refreshHomes() = scope.launch {

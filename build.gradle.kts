@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.android.lint) apply false
     alias(libs.plugins.vanniktech.maven.publish) apply false
+    alias(libs.plugins.koin.compiler) apply false
     id("miwu-publish") apply false
     kotlin("kapt")
 }

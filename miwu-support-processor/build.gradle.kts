@@ -35,9 +35,3 @@ miwuPublishing {
     description = "KSP processors for MiWu widget and device code generation"
     inceptionYear = "2026"
 }
-
-afterEvaluate {
-    tasks.named("sourcesJar") {
-        dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
-    }
-}

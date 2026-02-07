@@ -1,23 +1,19 @@
 package com.github.miwu.ui.main
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.github.miwu.logic.datastore.MiotUserDataStore
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.DeviceRepository
 import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.ui.main.state.FragmentState.*
+import com.github.miwu.ui.main.state.FragmentState.Empty
+import com.github.miwu.ui.main.state.FragmentState.Error
+import com.github.miwu.ui.main.state.FragmentState.Loading
+import com.github.miwu.ui.main.state.FragmentState.Normal
 import com.github.miwu.utils.Logger
 import fr.haan.resultat.fold
-import kndroidx.extension.toast
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import miwu.miot.model.miot.MiotUserInfo
-import java.util.TreeMap
-import java.util.function.Function
-import kotlin.math.min
+import org.koin.core.annotation.KoinViewModel
 
 
 class MainViewModel(
@@ -67,18 +63,7 @@ class MainViewModel(
             )
         }
         .asLiveData()
-    val info = flow {
-        runCatching {
-            appRepository.getUserInfo().getOrThrow()
-        }.onSuccess {
-            emit(it.info)
-        }.onFailure {
-            it.message?.toast()
-            logger.error("get user info failed, {}", it.message)
-            it.printStackTrace()
-            emit(MiotUserInfo.UserInfo(0L, "", "null"))
-        }
-    }.asLiveData()
+    val info = appRepository.userInfo
 
     fun loadScene() {
         appRepository.refreshScenes()

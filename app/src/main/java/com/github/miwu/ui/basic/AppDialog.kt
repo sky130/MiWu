@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.github.miwu.R
 import java.lang.reflect.ParameterizedType
+import androidx.core.graphics.drawable.toDrawable
 
 abstract class AppDialog<VB : ViewBinding, VM : ViewModel> : DialogFragment() {
     val viewModel: VM by lazy(mode = LazyThreadSafetyMode.NONE) {
@@ -37,7 +38,7 @@ abstract class AppDialog<VB : ViewBinding, VM : ViewModel> : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext(), themeRes)
         dialog.window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            setBackgroundDrawable(Color.BLACK.toDrawable())
             setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
         return dialog

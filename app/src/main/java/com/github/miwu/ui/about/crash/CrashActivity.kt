@@ -12,5 +12,4 @@ class CrashActivity : ViewActivityX<Binding>(Binding::inflate) {
         AppSetting.isCrash.value = false
         super.onDestroy()
     }
-
 }

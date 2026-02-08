@@ -23,8 +23,8 @@ class MiIndicators(
         paint.isFilterBitmap = true
     }
 
-    private val dotSize: Int // 点数量
-    private var dotIndex = 0 // 点索引
+    private val dotSize: Int
+    private var dotIndex = 0
 
     init {
         context.obtainStyledAttributes(attr, R.styleable.MiIndicators).apply {
@@ -46,7 +46,6 @@ class MiIndicators(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        // 先计算屏幕正中心位置
         val centerHeight = (height / 2).toFloat()
         val centerWidth = (width / 2).toFloat()
         paint.strokeWidth = dotWidth.toFloat()

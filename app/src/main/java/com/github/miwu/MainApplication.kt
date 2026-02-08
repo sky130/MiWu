@@ -50,23 +50,9 @@ class MainApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(
-                repositoryModule,
-                viewModelModule,
-                databaseModule,
-                dataStoreModule,
-                module {
-                    single<Job> { Job() }
-                    single { CoroutineScope(get<Job>()) }
-                }
-            )
-            modules(
-                MiotApiKoinModule.KMP.Client,
-                MiotApiKoinModule.KMP.Provider
-            )
+            modules(appModule)
         }
     }
-
 
     companion object {
         @Suppress("HardwareIds")

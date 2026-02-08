@@ -27,5 +27,4 @@ class AboutActivity : ViewActivityX<Binding>(Binding::inflate) {
     fun startHelpActivity() {
         start<HelpActivity>()
     }
-
 }

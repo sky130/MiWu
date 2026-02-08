@@ -8,7 +8,6 @@ sealed class FragmentState {
     data object Empty : FragmentState()
     data object Error : FragmentState()
     data object Normal : FragmentState()
-
     data object Loading : FragmentState()
 
     fun toVisibility(reverse: Boolean = false) = if (!reverse) when (this) {

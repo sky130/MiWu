@@ -5,16 +5,16 @@ fun String.mask(
     keepEnd: Int = 4,
     maskChar: Char = '*'
 ): String {
-    if (this.isEmpty()) return this
-    if (this.length <= keepStart + keepEnd) {
+    if (isEmpty()) return this
+    if (length <= keepStart + keepEnd) {
         return when {
-            this.length <= 2 -> maskChar.toString().repeat(this.length)
-            this.length <= keepStart -> this.take(1) + maskChar.toString().repeat(this.length - 1)
-            else -> this.take(keepStart) + maskChar.toString().repeat(this.length - keepStart)
+            length <= 2 -> maskChar.toString().repeat(length)
+            length <= keepStart -> take(1) + maskChar.toString().repeat(length - 1)
+            else -> take(keepStart) + maskChar.toString().repeat(length - keepStart)
         }
     }
-    val start = this.take(keepStart)
-    val end = this.takeLast(keepEnd)
-    val maskLength = this.length - keepStart - keepEnd
+    val start = take(keepStart)
+    val end = takeLast(keepEnd)
+    val maskLength = length - keepStart - keepEnd
     return "$start${maskChar.toString().repeat(maskLength)}$end"
 }

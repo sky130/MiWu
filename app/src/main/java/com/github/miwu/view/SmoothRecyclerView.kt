@@ -708,8 +708,7 @@ class SmoothRecyclerView(context: Context, attr: AttributeSet) : RV(context, att
 
 }
 
-private fun Boolean.toInt() = if (this) 1
-else 0
+private fun Boolean.toInt() = if (this) 1 else 0
 
 interface SeslwBezelEventTimerListener {
     fun onBezelEventTimerFinished()
@@ -719,5 +718,3 @@ interface SeslwBezelEventTimerListener {
 interface SeslwBezelSmoothScrollListener {
     fun onAnimationEnd()
 }
-
-

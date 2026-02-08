@@ -5,6 +5,7 @@ import miwu.android.R
 import miwu.support.translate.TranslateHelper
 
 object AndroidTranslateHelper : TranslateHelper {
+
     override fun translate(origin: String) = when (origin) {
         "Auto" -> R.string.Auto
         "Cool" -> R.string.Cool
@@ -27,4 +28,5 @@ object AndroidTranslateHelper : TranslateHelper {
             else -> throw IllegalArgumentException("Unknown type: $it")
         }
     }
+
 }

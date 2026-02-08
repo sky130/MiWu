@@ -41,5 +41,4 @@ val viewModelModule = module {
     viewModel {
         AboutViewModel()
     }
-
 }

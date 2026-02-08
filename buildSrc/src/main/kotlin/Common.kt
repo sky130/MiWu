@@ -8,7 +8,7 @@ val latestGitTag = ProcessBuilder("git", "describe", "--tags", "--abbrev=0")
     .inputStream
     .bufferedReader()
     .use(BufferedReader::readText)
-    .replace("v", "")
+    .removePrefix("v")
     .trim()
     .ifEmpty { "3.0.0" }
 

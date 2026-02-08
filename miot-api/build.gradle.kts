@@ -19,3 +19,12 @@ kotlin {
         }
     }
 }
+
+miwuPublishing {
+    name = "Miot API"
+    group = "io.github.sky130.miwu"
+    artifactId = "miot-api"
+    version = autoVersion()
+    description = "Platform‑agnostic API definitions for MIoT"
+    inceptionYear = "2026"
+}

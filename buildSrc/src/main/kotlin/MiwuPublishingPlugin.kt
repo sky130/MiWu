@@ -3,11 +3,13 @@ package miwu
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.MavenPublishPlugin
 import com.vanniktech.maven.publish.SourcesJar
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.withType
 
 open class MiwuPublishingExtension {
     var name: String? = null
@@ -26,12 +28,9 @@ class MiwuPublishingPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = project.extensions.create<MiwuPublishingExtension>("miwuPublishing")
         project.pluginManager.apply("com.vanniktech.maven.publish")
-        configurePublishing(project, extension)
-    }
 
-    private fun configurePublishing(project: Project, ext: MiwuPublishingExtension) {
-        project.extensions.configure<MavenPublishBaseExtension> {
-            project.plugins.withId("com.android.library") {
+        project.plugins.withId("com.android.library") {
+            project.extensions.configure<MavenPublishBaseExtension> {
                 configure(
                     AndroidSingleVariantLibrary(
                         javadocJar = JavadocJar.Javadoc(),
@@ -40,8 +39,21 @@ class MiwuPublishingPlugin : Plugin<Project> {
                     )
                 )
             }
+        }
+        project.afterEvaluate {
+            configurePublishing(project, extension)
+        }
+    }
+
+    private fun configurePublishing(project: Project, ext: MiwuPublishingExtension) {
+        project.extensions.configure<MavenPublishBaseExtension> {
             publishToMavenCentral()
             signAllPublications()
+
+            println("GroupId ${ext.group}")
+            println("ArtifactId ${ext.artifactId ?: project.name}")
+            println("Version ${ext.version}")
+
             coordinates(ext.group, ext.artifactId ?: project.name, ext.version)
             pom {
                 name.set(ext.name)

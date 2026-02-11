@@ -8,6 +8,9 @@
         <variable
             name="activity"
             type="com.github.miwu.ui.device.DeviceActivity" />
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.device.DeviceViewModel" />
     </data>
 
     <ScrollView
@@ -18,6 +21,28 @@
         <requestFocus />
 
         <LinearLayout style="@style/Wear.Linear">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:maxHeight="50dp"
+                    android:src="@drawable/ic_miwu_placeholder" />
+
+                <TextView
+                    style="@style/Wear.DescText"
+                    android:layout_marginTop="10dp"
+                    android:text="当前设备暂未适配" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/miot_widget_layout"
@@ -56,17 +81,17 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <com.github.miwu.view.AppButton
-                style="@style/Wear.AppButton"
-                android:onClick="@{() -> activity.onAddButtonClick()}"
-                android:text="添加到卡片"
-                app:isVisible="@{!activity.isFromTile}" />
+<!--            <com.github.miwu.view.AppButton-->
+<!--                style="@style/Wear.AppButton"-->
+<!--                android:onClick="@{() -> activity.onAddButtonClick()}"-->
+<!--                android:text="@string/add_to_tile"-->
+<!--                app:isVisible="@{!activity.isFromTile}" />-->
 
             <com.github.miwu.view.AppButton
                 style="@style/Wear.AppButton"
                 android:onClick="@{() -> activity.onStarButtonClick()}"
-                android:text="收藏设备"
-                app:isVisible="@{!activity.isFromTile}" />
+                android:text="@string/favorite_device"
+                app:isVisible="@{!viewModel.isFromTile}" />
         </LinearLayout>
     </ScrollView>
 </layout>

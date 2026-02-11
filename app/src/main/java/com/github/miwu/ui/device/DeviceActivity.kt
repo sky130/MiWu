@@ -4,11 +4,17 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import com.github.miwu.ui.device.DeviceViewModel.Event.DeviceInitiated
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotDeviceClient
+import fr.haan.resultat.Resultat
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import miwu.android.R
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
@@ -27,37 +33,33 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 
-class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), MiotDeviceManager.Callback {
+class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     override val viewModel: DeviceViewModel by viewModel()
     private val logger = Logger()
-    private val device by lazy { intent.getStringExtra("device")!!.to<MiotDevice>().getOrThrow() }
-    private val user by lazy { intent.getStringExtra("user")!!.to<MiotUser>().getOrThrow() }
-    private val miotDeviceClient by lazy { MiotDeviceClient(user) }
-    private val specAttrProvider: MiotSpecAttrProvider by inject()
     private val marginBottom by lazy { resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom) }
     private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
-    private val manager by lazy {
-        MiotDeviceManager.build(
-            miotDeviceClient,
-            specAttrProvider,
-            device,
-            AndroidIcons,
-            AndroidCache(this),
-            AndroidTranslateHelper,
-            Dispatchers.Main,
-            this
-        )
-    }
-    val isFromTile by lazy { intent.getBooleanExtra("isFromTile", false) }
 
     override fun init() {
-        printDeviceInfo()
-        manager.init()
+        with(viewModel) {
+            event.onEach(::onEvent)
+                .launchIn(lifecycleScope)
+            printDeviceInfo()
+            manager.init()
+        }
     }
 
     override fun onDestroy() {
-        manager.stop()
+        viewModel.manager.stop()
         super.onDestroy()
+    }
+
+    fun onEvent(event: DeviceViewModel.Event) {
+        when(event) {
+            DeviceInitiated -> {
+                initDeviceLayout()
+                wrapperList.forEach(MiwuWrapper<*>::init)
+            }
+        }
     }
 
     fun onAddButtonClick() {
@@ -65,21 +67,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), MiotDeviceManag
     }
 
     fun onStarButtonClick() {
-        viewModel.addFavorite(device)
-    }
-
-    private fun printDeviceInfo() {
-        with(device) {
-            logger.info(
-                "Current miot device info: model={}, mac={}, did={}, isOnline={}, specType={}",
-                model,
-                mac,
-                did,
-                isOnline,
-                specType,
-            )
-            logger.debug("Current miot all device info: {}", this)
-        }
+        viewModel.addFavorite()
     }
 
     private inline fun <reified T : ViewGroup> T.addWidget(
@@ -104,17 +92,8 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), MiotDeviceManag
             setMargins(0, 0, 0, marginBottom)
         }
 
-    override fun onDeviceInitiated() {
-        initDeviceLayout()
-        wrapperList.forEach(MiwuWrapper<*>::init)
-    }
-
-    override fun onDeviceAttLoaded(specAtt: SpecAtt) {
-        logger.info("Device {}, spec att: {}", device.name, specAtt)
-    }
-
     private fun initDeviceLayout() {
-        with(manager.layout) {
+        with(viewModel.manager.layout) {
             with(binding) {
                 Header {
                     header.addWidget(it)

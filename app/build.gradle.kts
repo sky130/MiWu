@@ -82,8 +82,6 @@ dependencies {
 
 
     implementation(libs.glide)
-    implementation(libs.androidx.wear.tiles.tooling.preview)
-    debugImplementation(libs.androidx.wear.tiles.tooling)
     ksp(libs.glide.compiler)
 
 
@@ -121,10 +119,10 @@ dependencies {
     implementation(libs.androidx.wear.protolayout)
     implementation(libs.androidx.wear.protolayout.material)
     implementation(libs.androidx.wear.protolayout.expression)
-    debugImplementation(libs.androidx.wear.tiles.tooling)
-    debugImplementation(libs.androidx.wear.tiles.tooling.preview)
     implementation(libs.androidx.concurrent.futures)
-
+    implementation(libs.androidx.wear.tiles.tooling.preview)
+    implementation(libs.androidx.wear.tooling.preview)
+    debugImplementation(libs.androidx.wear.tiles.tooling)
 
     implementation(libs.google.guava)
     implementation(libs.google.horologist.compose.tools)
@@ -149,6 +147,9 @@ dependencies {
     implementation(libs.alexzhirkevich.custom.qr.generator)
     implementation(libs.squareup.okio)
     implementation(libs.resultat)
+
+
+    implementation(libs.ktor.client.core)
 
 
     testImplementation(libs.junit)

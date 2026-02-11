@@ -13,7 +13,6 @@ import com.github.miwu.ui.main.state.FragmentState.Normal
 import com.github.miwu.utils.Logger
 import fr.haan.resultat.fold
 import kotlinx.coroutines.flow.map
-import org.koin.core.annotation.KoinViewModel
 
 
 class MainViewModel(
@@ -25,9 +24,9 @@ class MainViewModel(
     private val logger = Logger()
     val metadataHandler = deviceRepository.deviceMetadataHandler
         .asLiveData()
-    val localDevices = localRepository.deviceList
+    val localDevices = localRepository.deviceListFlow
         .asLiveData()
-    val localDeviceState = localRepository.deviceList
+    val localDeviceState = localRepository.deviceListFlow
         .map { if (it.isEmpty()) Empty else Normal }
         .asLiveData()
     val scenes = appRepository.scenes

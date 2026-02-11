@@ -6,6 +6,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotDeviceExtra
 import kotlin.hashCode
@@ -18,6 +19,7 @@ import kotlin.hashCode
         Index(value = ["uid", "did"]),
     ],
 )
+@Serializable
 data class FavoriteDevice(
     val bssid: String,
     val cnt: Int?,
@@ -26,7 +28,7 @@ data class FavoriteDevice(
     @Embedded
     val extra: Extra,
     val freqFlag: Boolean,
-    val hideMode: Int,
+    val hideMode: Int? = 0,
     val isOnline: Boolean,
     val lastOnline: Long?,
     val latitude: String,
@@ -40,7 +42,7 @@ data class FavoriteDevice(
     val permitLevel: Int,
     val pid: Int,
     val rssi: Int?,
-    val showMode: Int,
+    val showMode: Int? = 0,
     val specType: String?,
     val ssid: String?,
     val token: String,
@@ -139,6 +141,7 @@ data class FavoriteDevice(
         return result
     }
 
+    @Serializable
     data class Extra(
         val fwVersion: String?,
         val isSetPinCode: Int?,

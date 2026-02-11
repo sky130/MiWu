@@ -14,7 +14,6 @@ import com.github.miwu.appModule
 import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiot
 import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.utils.Logger
 import kndroidx.KndroidConfig
 import kndroidx.KndroidX
@@ -28,7 +27,6 @@ import kndroidx.wear.tile.boolean
 import kndroidx.wear.tile.clickable
 import kndroidx.wear.tile.color
 import kndroidx.wear.tile.dp
-import kndroidx.wear.tile.entity.ByteImage
 import kndroidx.wear.tile.fillMaxSize
 import kndroidx.wear.tile.fillMaxWidth
 import kndroidx.wear.tile.height
@@ -52,7 +50,6 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import java.io.File
 
 class DeviceTileService : LayoutTileService() {
     private val logger = Logger()

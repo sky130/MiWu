@@ -34,7 +34,10 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder
         ): Int {
-            return makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
+            return makeMovementFlags(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.START
+            )
         }
 
         override fun onMove(
@@ -73,6 +76,13 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
                 start()
             }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.absoluteAdapterPosition
+            if (direction == ItemTouchHelper.START) {
+                list?.get(position)?.let(viewModel::remove)
+                (list as? MutableList)?.removeAt(position)
+                adapter?.notifyItemRemoved(position)
+            }
+        }
     }
 }

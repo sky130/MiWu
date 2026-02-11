@@ -58,13 +58,15 @@
 
             <com.github.miwu.view.AppButton
                 style="@style/Wear.AppButton"
-                android:onClick="@{()->activity.onAddButtonClick()}"
-                android:text="添加到卡片" />
+                android:onClick="@{() -> activity.onAddButtonClick()}"
+                android:text="添加到卡片"
+                app:isVisible="@{!activity.isFromTile}" />
 
             <com.github.miwu.view.AppButton
                 style="@style/Wear.AppButton"
-                android:onClick="@{()->activity.onStarButtonClick()}"
-                android:text="收藏设备" />
+                android:onClick="@{() -> activity.onStarButtonClick()}"
+                android:text="收藏设备"
+                app:isVisible="@{!activity.isFromTile}" />
         </LinearLayout>
     </ScrollView>
 </layout>

@@ -48,6 +48,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate), MiotDeviceManag
             this
         )
     }
+    val isFromTile by lazy { intent.getBooleanExtra("isFromTile", false) }
 
     override fun init() {
         printDeviceInfo()

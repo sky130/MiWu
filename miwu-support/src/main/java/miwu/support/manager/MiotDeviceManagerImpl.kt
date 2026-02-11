@@ -58,7 +58,7 @@ class MiotDeviceManagerImpl internal constructor(
     private val updatingInterval = 500L
     private val widgetHolders = CopyOnWriteArrayList<WidgetHolder>()
     private val supportWidget = mutableSetOf<MiwuWidgetClass>()
-    private val deviceUrn = device.specType!!
+    private val deviceUrn = device.specType ?: ""
     private var isOutdated = false
     private val job = Job()
     private val scope = CoroutineScope(job)

@@ -78,7 +78,9 @@ class DeviceViewModel(
     }
 
     override fun onDeviceInitiated() {
-        _event.tryEmit(Event.DeviceInitiated)
+        viewModelScope.launch {
+            _event.emit(Event.DeviceInitiated)
+        }
     }
 
     override fun onDeviceAttLoaded(specAtt: SpecAtt) {

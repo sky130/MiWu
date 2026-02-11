@@ -1,5 +1,7 @@
 package com.github.miwu.logic.repository.impl
 
+import android.app.Application
+import com.bumptech.glide.Glide
 import com.github.miwu.logic.database.AppDatabase
 import com.github.miwu.logic.database.entity.FavoriteDevice
 import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiot
@@ -14,16 +16,20 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsBytes
 import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import miwu.miot.model.miot.MiotDevice
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.nio.ByteBuffer
 import java.util.concurrent.CopyOnWriteArrayList
 
 class LocalRepositoryImpl : KoinComponent, LocalRepository {
+    private val application: Application by inject()
     private val scope: CoroutineScope by inject()
     private val database: AppDatabase by inject()
     private val dao get() = database.deviceDAO()
@@ -73,18 +79,25 @@ class LocalRepositoryImpl : KoinComponent, LocalRepository {
         }
     }
 
-    private suspend fun refreshIcon() {
+    private suspend fun refreshIcon() = withContext(Dispatchers.IO) {
         val handler = deviceMetadataHandler.value
         logger.info("refreshIcon")
         deviceList.take(4).forEach { device ->
             val model = device.model
             logger.info("model: {}", model)
             if (iconMap[model] == null) {
-                handler.getIcon(model)
-                    ?.let { httpClient.get(it) }
-                    ?.bodyAsBytes()
-                    ?.also { iconMap[model] = it }
-                    ?: logger.info("model: {}, load icon failure", model)
+                val url = handler.getIcon(model) ?: return@forEach
+                runCatching {
+                    Glide.with(application)
+                        .asFile()
+                        .load(url)
+                        .submit(96, 96)
+                        .get()
+                        .readBytes()
+                        .also { iconMap[model] = it }
+                }.onFailure {
+                    logger.info("model: {}, load icon failure", model)
+                }
             }
         }
     }

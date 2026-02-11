@@ -18,7 +18,7 @@ typealias WidgetList = ArrayList<MiwuWidget<*>>
  * 示例用法：
  * ```
  * val layout = MiwuLayout()
- * 
+ *
  * with(layout) {
  *     header.add(...) // widget here
  * }
@@ -39,6 +39,17 @@ data class MiwuLayout(
     val footer: WidgetList = arrayListOf(),
     val unknown: WidgetList = arrayListOf(),
 ) {
+
+    val isEmpty
+        get() = listOf(
+            header,
+            subHeader,
+            body,
+            subFooter,
+            footer,
+            unknown
+        ).all { it.isEmpty() }
+
     /**
      * 清空所有区域的组件列表。
      *

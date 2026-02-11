@@ -4,40 +4,42 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import com.github.miwu.R
 import com.github.miwu.ui.device.DeviceViewModel.Event.DeviceInitiated
 import com.github.miwu.utils.Logger
-import com.github.miwu.utils.MiotDeviceClient
 import fr.haan.resultat.Resultat
+import fr.haan.resultat.fold
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import miwu.android.R
-import miwu.android.icon.generated.icon.AndroidIcons
-import miwu.android.translate.AndroidTranslateHelper
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.kmp.utils.json
-import miwu.miot.kmp.utils.to
 import miwu.miot.model.MiotUser
-import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.base.MiwuWidget
 import miwu.support.base.MiwuWrapper
-import miwu.support.manager.MiotDeviceManager
 import miwu.widget.generated.wrapper.WrapperRegistry
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 
 class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     override val viewModel: DeviceViewModel by viewModel()
     private val logger = Logger()
-    private val marginBottom by lazy { resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom) }
+    private val marginBottom by lazy { resources.getDimensionPixelSize(miwu.android.R.dimen.device_miwu_layout_margin_bottom) }
     private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
+    val loadingStateFlow = MutableStateFlow<Resultat<Unit>>(Resultat.loading())
+    val label = loadingStateFlow.map {
+        it.fold(
+            onSuccess = { R.string.toast_login_success },
+            onFailure = { R.string.current_device_not_support_yet },
+            onLoading = { R.string.loading }
+        )
+    }.asLiveData()
 
     override fun init() {
         with(viewModel) {
@@ -54,7 +56,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     }
 
     fun onEvent(event: DeviceViewModel.Event) {
-        when(event) {
+        when (event) {
             DeviceInitiated -> {
                 initDeviceLayout()
                 wrapperList.forEach(MiwuWrapper<*>::init)
@@ -68,6 +70,36 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     fun onStarButtonClick() {
         viewModel.addFavorite()
+    }
+
+    private fun initDeviceLayout() {
+        with(viewModel.manager.layout) {
+            if (isEmpty) {
+                loadingStateFlow.value = Resultat.failure(Exception(""))
+                return
+            }
+            with(binding) {
+                Header {
+                    header.addWidget(it)
+                }
+                SubHeader {
+                    subHeader.addWidget(it)
+                }
+                Body {
+                    body.addWidget(it) { add(it.view) }
+                }
+                SubFooter {
+                    subFooter.addWidget(it)
+                }
+                Footer {
+                    footer.addWidget(it)
+                }
+                Unknown {
+                    unknown.addWidget(it)
+                }
+            }
+            loadingStateFlow.value = Resultat.success(Unit)
+        }
     }
 
     private inline fun <reified T : ViewGroup> T.addWidget(
@@ -91,31 +123,6 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
         ).apply {
             setMargins(0, 0, 0, marginBottom)
         }
-
-    private fun initDeviceLayout() {
-        with(viewModel.manager.layout) {
-            with(binding) {
-                Header {
-                    header.addWidget(it)
-                }
-                SubHeader {
-                    subHeader.addWidget(it)
-                }
-                Body {
-                    body.addWidget(it) { add(it.view) }
-                }
-                SubFooter {
-                    subFooter.addWidget(it)
-                }
-                Footer {
-                    footer.addWidget(it)
-                }
-                Unknown {
-                    unknown.addWidget(it)
-                }
-            }
-        }
-    }
 
     @Suppress("UNCHECKED_CAST")
     private fun createWrapper(miotWidget: MiwuWidget<*>): ViewMiwuWrapper<*>? =

@@ -96,6 +96,5 @@
     <string name="auth_expired_plz_login_again">登录过期, 请重新登录</string>
     <string name="add_to_tile">添加到卡片</string>
     <string name="favorite_device">收藏设备</string>
-
-    <style name="device_offline">设备离线</style>
+    <string name="current_device_not_support_yet">当前设备暂未适配</string>
 </resources>

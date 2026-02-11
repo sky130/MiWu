@@ -64,18 +64,6 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
     override val loginStatus = MutableStateFlow<LoginState>(LoginState.Loading)
     override val userInfo = MutableStateFlow(UserInfo(0L, "", "null"))
 
-    //    val info = flow {
-//        runCatching {
-//            appRepository.getUserInfo().getOrThrow()
-//        }.onSuccess {
-//            emit(it.info)
-//        }.onFailure {
-//            it.message?.toast()
-//            logger.error("get user info failed, {}", it.message)
-//            it.printStackTrace()
-//            emit(MiotUserInfo.UserInfo(0L, "", "null"))
-//        }
-//    }.asLiveData()
     init {
         dataStore.data.onEach {
             currentUser = it
@@ -96,6 +84,7 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
                         }
                     }
             } else {
+                refreshUserInfo()
                 loginStatus.emit(LoginState.Success)
                 refreshAll()
             }

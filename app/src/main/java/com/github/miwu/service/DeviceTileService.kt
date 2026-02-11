@@ -3,6 +3,7 @@
 package com.github.miwu.service
 
 import android.content.Context
+import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.material.Typography.TYPOGRAPHY_BUTTON
 import androidx.wear.tiles.EventBuilders
 import androidx.wear.tiles.tooling.preview.Preview
@@ -50,6 +51,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import java.io.File
 
 class DeviceTileService : LayoutTileService() {
     private val logger = Logger()
@@ -70,10 +72,17 @@ class DeviceTileService : LayoutTileService() {
     }
 
     override fun onResourcesRequest() {
-        ResImage("scene", R.drawable.ic_miwu_scene_tile)
-        for ((model, icon) in localRepository.iconMap) {
-            logger.info("res version {}", version)
-            ByteImage(model, icon)
+        runCatching {
+            ResImage("scene", R.drawable.ic_miwu_scene_tile)
+            for ((model, icon) in localRepository.iconMap) {
+                ByteImage(
+                    model,
+                    icon,
+                    widthPx = 128,
+                    heightPx = 128,
+                    format = ResourceBuilders.IMAGE_FORMAT_UNDEFINED
+                )
+            }
         }
     }
 

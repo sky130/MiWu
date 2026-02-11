@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:orientation="vertical"
+                app:isVisible="@{!activity.loadingStateFlow.success}"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
@@ -40,12 +41,14 @@
                 <TextView
                     style="@style/Wear.DescText"
                     android:layout_marginTop="10dp"
-                    android:text="当前设备暂未适配" />
+                    android:text="@{activity.label}"
+                    tools:text="@string/current_device_not_support_yet" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/miot_widget_layout"
+                app:isVisible="@{activity.loadingStateFlow.success}"
                 style="@style/MiotLayout">
 
                 <LinearLayout

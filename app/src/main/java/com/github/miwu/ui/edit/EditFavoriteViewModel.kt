@@ -10,7 +10,6 @@ import com.github.miwu.ui.main.state.FragmentState.Empty
 import com.github.miwu.ui.main.state.FragmentState.Normal
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
-import miwu.miot.model.miot.MiotDevice
 
 class EditFavoriteViewModel(
     val appRepository: AppRepository,
@@ -19,14 +18,18 @@ class EditFavoriteViewModel(
 ) : ViewModel() {
     val metadataHandler = deviceRepository.deviceMetadataHandler
         .asLiveData()
-    val devices = localRepository.deviceList
+    val devices = localRepository.deviceListFlow
         .take(1)
         .asLiveData()
-    val deviceState = localRepository.deviceList
+    val deviceState = localRepository.deviceListFlow
         .map { if (it.isEmpty()) Empty else Normal }
         .asLiveData()
 
     fun updateSortIndices(list: List<FavoriteDevice>) {
         localRepository.updateSortIndices(list)
+    }
+
+    fun remove(item: FavoriteDevice) {
+        localRepository.removeDevice(item)
     }
 }

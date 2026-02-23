@@ -54,6 +54,20 @@ abstract class MiotDeviceManager {
     abstract fun doAction(siid: Int, aiid: Int, vararg input: Any)
 
     companion object {
+        /**
+         * 构建 [MiotDeviceManager]
+         *
+         * @param miot 用于调用 MiotClient 接口
+         * @param specAttrProvider 用于调用 MiotManager 接口
+         * @param device 设备详情
+         * @param icons 图标库
+         * @param cache 用于缓存设备属性
+         * @param translateHelper 用于翻译
+         * @param dispatcher 用于更新 UI 数据的线程
+         * @param callback 用于回调设备初始化状态
+         *
+         * @return [MiotDeviceManager]
+         */
         fun build(
             miot: MiotDeviceClient,
             specAttrProvider: MiotSpecAttrProvider,

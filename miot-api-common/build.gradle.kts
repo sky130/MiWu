@@ -10,7 +10,9 @@ kotlin {
     }
     sourceSets {
         commonMain {
-            
+            dependencies {
+                implementation(libs.kotlin.stdlib)
+            }
         }
     }
 }

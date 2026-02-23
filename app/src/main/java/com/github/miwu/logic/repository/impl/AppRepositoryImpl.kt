@@ -15,9 +15,13 @@ import kndroidx.extension.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import miwu.miot.client.MiotHomeClient
 import miwu.miot.client.MiotUserClient
@@ -155,8 +159,12 @@ class AppRepositoryImpl : KoinComponent, AppRepository {
                 ?.deviceInfo
                 ?: emptyList()
                 ?: throw MiotClientException("MiotHomeClient is null")
-        }.onSuccess {
-            deviceRepository.addIcon(it.map(MiotDevice::model))
+        }.onSuccess { devices ->
+            homes.takeWhile { it.isSuccess }
+                .let { it.mapNotNull { it }
+
+                }
+            deviceRepository.addIcon(devices.map(MiotDevice::model))
         }.onFailure {
             logger.error("load device failure, {}", it.stackTraceToString())
         }.let { devices.emit(it.toResultat()) }

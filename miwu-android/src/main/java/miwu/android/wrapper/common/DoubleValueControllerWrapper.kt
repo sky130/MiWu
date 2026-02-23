@@ -5,7 +5,7 @@ import miwu.android.databinding.MiotWidgetIntValueControllerBinding
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
 import miwu.support.base.MiwuWidget
-import miwu.support.unit.Unit
+import miwu.support.unit.ValueUnit
 import miwu.widget.DoubleValueController
 
 @Wrapper(DoubleValueController::class)
@@ -42,7 +42,7 @@ class DoubleValueControllerWrapper(context: Context, widget: MiwuWidget<Double>)
             }
             unit.text =
                 when (valueOriginUnit) {
-                    Unit.Celsius -> "°"
+                    ValueUnit.Celsius -> "°"
                     else -> valueUnit
                 }
         }

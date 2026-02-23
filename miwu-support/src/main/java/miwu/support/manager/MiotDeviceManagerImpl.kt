@@ -119,7 +119,7 @@ class MiotDeviceManagerImpl internal constructor(
                 for (property in properties) {
                     val widgetClass =
                         getPropertyWidgetClass(service.type, property.type) ?: continue
-
+                    service.description
                     if (widgetClass !in supportWidget) continue
 
                     fun MiwuWidget<*>.config() = this.apply {
@@ -130,6 +130,8 @@ class MiotDeviceManagerImpl internal constructor(
                             serviceName = Urn.parseFrom(service.type).name
                             desc = property.description
                             valueOriginUnit = property.unit ?: ""
+                            serviceDesc = service.description
+                            serviceDescTranslation = service.descriptionTranslation
                             descTranslation = property.descriptionTranslation
                             allowWrite = "write" in property.access
                             allowRead = "read" in property.access
@@ -148,6 +150,8 @@ class MiotDeviceManagerImpl internal constructor(
                                         with(widget.field) {
                                             desc = it.description
                                             descTranslation = it.descriptionTranslation
+                                            serviceDesc = service.description
+                                            serviceDescTranslation = service.descriptionTranslation
                                             setDefaultValue(it.value)
                                         }
                                         addWidget(widget, widgetClass)
@@ -185,6 +189,8 @@ class MiotDeviceManagerImpl internal constructor(
                             aiid = action.iid
                             actionName = Urn.parseFrom(action.type).name
                             serviceName = Urn.parseFrom(service.type).name
+                            serviceDesc = service.description
+                            serviceDescTranslation = service.descriptionTranslation
                             desc = action.description
                             descTranslation = action.descriptionTranslation
                         }

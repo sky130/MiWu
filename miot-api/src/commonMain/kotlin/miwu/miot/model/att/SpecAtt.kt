@@ -71,7 +71,6 @@ data class SpecAtt(
         // 这一段用于处理 Kotlin 中变量无法正常赋值的问题. 重新手动赋值才不会 null
         descriptionTranslation = description
         services.forEach { service ->
-
             service.properties?.forEach { property ->
                 property.valueList?.forEach { value ->
                     value.descriptionTranslation = value.description
@@ -88,7 +87,6 @@ data class SpecAtt(
     }
 
     fun convertLanguage(language: Map<String, String>): SpecAtt {
-
         for ((id, desc) in language) {
             val splitId = id.split(":")
             when (splitId.size / 2) {

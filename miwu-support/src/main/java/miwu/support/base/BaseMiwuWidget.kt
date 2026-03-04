@@ -114,6 +114,17 @@ abstract class BaseMiwuWidget<T>() : Widget {
     abstract val defaultValue: T
 
     /**
+     * SpecialValue
+     *
+     * 该属性只在以下情况存在
+     *
+     * 由 [MiwuPanel] 定义
+     *
+     * @see [SpecAtt.Service.Property.Value]
+     */
+    abstract val specialValue: T
+
+    /**
      * 范围
      *
      * 该属性只在以下情况存在
@@ -256,6 +267,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
         var serviceDesc: String = "",
         var serviceDescTranslation: String = "",
         var defaultValue: T? = null,
+        var specialValue: T? = null,
         var valueRange: Pair<T, T>? = null,
         var valueStep: T? = null,
         var valueOriginUnit: String = "",
@@ -269,8 +281,9 @@ abstract class BaseMiwuWidget<T>() : Widget {
 
         val isSpecAttInitialized get() = ::miotSpecAtt.isInitialized
 
-        internal fun setDefaultValue(value: Any) {
-            defaultValue = value as T
+        internal fun setDefaultValue(value: Any, special: Any? = null) {
+            defaultValue = value as? T
+            specialValue = special as? T
         }
 
         internal fun setValueRange(from: Any, to: Any, step: Any) {

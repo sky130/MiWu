@@ -26,6 +26,7 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
     override val description get() = field.desc
     override val serviceDescription get() = field.serviceDescTranslation
     override val defaultValue get() = field.defaultValue!!
+    override val specialValue get() = field.specialValue!!
     override val valueRange get() = field.valueRange!!
     override val valueStep get() = field.valueStep!!
     override val valueOriginUnit get() = field.valueOriginUnit

@@ -93,6 +93,8 @@ abstract class MiotDeviceManager {
         fun onDeviceInitiated()
 
         fun onDeviceAttLoaded(specAtt: SpecAtt) = Unit
+
+        fun onDeviceInitiatedFailure(e: Throwable) = Unit
     }
 }
 

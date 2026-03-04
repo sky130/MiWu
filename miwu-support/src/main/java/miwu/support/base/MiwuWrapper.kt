@@ -145,6 +145,17 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      */
     val defaultValue get() = widget.defaultValue
 
+    /**
+     * Special Value
+     *
+     * 该属性只在以下情况存在
+     *
+     * - 在 `property` 有 `value-list` 的情况
+     *
+     * @see [SpecAtt.Service.Property.Value]
+     */
+    val specialValue get() = widget.specialValue
+
     val Pair<T, T>.from get() = first
     val Pair<T, T>.to get() = second
 

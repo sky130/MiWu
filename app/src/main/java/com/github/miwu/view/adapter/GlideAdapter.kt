@@ -11,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.github.miwu.R
 import com.github.miwu.logic.handler.DeviceMetadataHandler
 import kndroidx.extension.dp
-import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotScenes
 
 

@@ -10,6 +10,7 @@ import com.github.miwu.ui.about.license.LicenseViewModel
 import com.github.miwu.ui.edit.EditFavoriteViewModel
 import com.github.miwu.ui.login.LoginViewModel
 import com.github.miwu.ui.main.MainViewModel
+import com.github.miwu.ui.room.RoomViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -40,5 +41,8 @@ val viewModelModule = module {
     }
     viewModel {
         AboutViewModel()
+    }
+    viewModel { params ->
+        RoomViewModel(get(), get(), params[0])
     }
 }

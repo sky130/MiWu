@@ -155,6 +155,7 @@ class MiotRepositoryImpl() : MiotRepository, KoinComponent {
             devices.associateBy(MiotDevice::did) { device ->
                 home.rooms.firstOrNull { device.did in it.dids }?.name ?: "未知"
             }.let { cacheRepository.addRoom(it) }
+
             MiotHomeData(
                 home = home,
                 rooms = home.rooms.associateBy(Room::name) {
@@ -173,6 +174,7 @@ class MiotRepositoryImpl() : MiotRepository, KoinComponent {
                         }
                     },
                 devices = devices,
+                roomMap = home.rooms.associateBy(Room::name)
             )
         }
 

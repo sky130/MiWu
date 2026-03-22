@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.github.miwu.R
 import com.github.miwu.ui.main.fragment.DeviceFragment
 import com.github.miwu.ui.main.fragment.MiWuFragment
+import com.github.miwu.ui.main.fragment.RoomFragment
 import com.github.miwu.ui.main.fragment.SceneFragment
 import com.github.miwu.ui.main.fragment.UserFragment
 import kndroidx.extension.string
@@ -17,6 +18,7 @@ class MainViewPagerAdapter(activity: AppCompatActivity) :
         R.string.app_name.string to MiWuFragment(),
         R.string.device.string to DeviceFragment(),
         R.string.scene.string to SceneFragment(),
+        R.string.room.string to RoomFragment(),
         R.string.more.string to UserFragment(),
     )
 

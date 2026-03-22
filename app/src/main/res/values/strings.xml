@@ -6,11 +6,8 @@
     <string name="user_btn_login">登录</string>
     <string name="qrcode_btn_login">扫码登录</string>
     <string name="pw_btn_login">账号密码登录</string>
-
-
     <string name="tile_description">快捷操作</string>
     <string name="edit_favorite">修改收藏</string>
-
     <string name="toast_user_pwd_not_null">账号密码不能为空</string>
     <string name="toast_login_failure">登录失败,请检查账号密码是否正确</string>
     <string name="toast_login_success">登录成功</string>
@@ -96,6 +93,8 @@
     <string name="auth_expired_plz_login_again">登录过期, 请重新登录</string>
     <string name="add_to_tile">添加到卡片</string>
     <string name="favorite_device">收藏设备</string>
-
-    <style name="device_offline">设备离线</style>
+    <string name="no_room">暂无房间</string>
+    <string name="room_tip">打开手机端添加房间</string>
+    <string name="current_room_no_devices">当前房间无设备</string>
+    <string name="room">房间</string>
 </resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.github.miwu.utils.MiotRoomKt" />
+
+        <variable
+            name="item"
+            type="miwu.miot.model.miot.MiotHomes.Result.Home.Room" />
+    </data>
+
+    <LinearLayout
+        style="@style/DeviceCard.Background"
+        android:orientation="vertical"
+        tools:background="@drawable/bg_list_item">
+
+
+        <TextView
+            style="@style/DeviceCard.Title"
+            android:text="@{item.name}"
+            tools:text="卧室" />
+
+        <TextView
+            style="@style/DeviceCard.Room"
+            android:text="@{String.valueOf(MiotRoomKt.size(item)) + ` 个设备`}"
+            tools:text="10 个设备" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fragment"
+            type="com.github.miwu.ui.main.fragment.DeviceFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.main.MainViewModel" />
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:isRefreshing="@{viewModel.roomState}"
+        app:onRefresh="@{() -> viewModel.loadRoom()}">
+
+        <FrameLayout style="@style/Wear.Frame">
+
+            <LinearLayout
+                style="@style/FragmentEmptyPage"
+                app:state="@{viewModel.deviceState}">
+
+                <ImageView style="@style/FragmentEmptyPage.Icon" />
+
+                <TextView
+                    style="@style/FragmentEmptyPage.Title"
+                    android:text="@string/no_room" />
+
+                <TextView
+                    style="@style/FragmentEmptyPage.SubTitle"
+                    android:text="@string/room_tip" />
+            </LinearLayout>
+
+            <com.github.miwu.view.SmoothRecyclerView
+                style="@style/Wear.Recycler"
+                app:item="@{viewModel.rooms}"
+                app:itemClick="@{(i, v) -> fragment.onItemClick(i)}"
+                app:itemLayout="@{@layout/item_miot_room}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:reverse="@{true}"
+                app:state="@{viewModel.deviceState}"
+                app:viewModel="@{viewModel}">
+
+                <requestFocus />
+            </com.github.miwu.view.SmoothRecyclerView>
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

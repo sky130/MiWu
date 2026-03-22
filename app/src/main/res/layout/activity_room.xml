@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.github.miwu.ui.room.RoomViewModel" />
+
+        <variable
+            name="activity"
+            type="com.github.miwu.ui.room.RoomActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isRefreshing="@{viewModel.deviceState}"
+            app:onRefresh="@{() -> viewModel.loadDevice()}">
+
+            <FrameLayout style="@style/Wear.Frame">
+
+                <LinearLayout
+                    style="@style/FragmentEmptyPage"
+                    app:state="@{viewModel.deviceState}">
+
+                    <ImageView style="@style/FragmentEmptyPage.Icon" />
+
+                    <TextView
+                        style="@style/FragmentEmptyPage.Title"
+                        android:text="@string/current_room_no_devices" />
+
+                    <TextView
+                        style="@style/FragmentEmptyPage.SubTitle"
+                        android:text="@string/device_small_tip" />
+                </LinearLayout>
+
+                <com.github.miwu.view.SmoothRecyclerView
+                    style="@style/Wear.Recycler"
+                    app:item="@{viewModel.devices}"
+                    app:itemClick="@{(i, v) -> activity.onItemClick(i)}"
+                    app:itemEventHandler="@{viewModel.metadataHandler}"
+                    app:itemLayout="@{@layout/item_miot_device}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:reverse="@{true}"
+                    app:state="@{viewModel.deviceState}"
+                    app:viewModel="@{viewModel}">
+
+                    <requestFocus />
+                </com.github.miwu.view.SmoothRecyclerView>
+            </FrameLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+        <com.github.miwu.view.AppTitleBar
+            android:id="@+id/title"
+            style="@style/Wear.TitleBar"
+            app:title="@{activity.room}" />
+    </FrameLayout>
+</layout>

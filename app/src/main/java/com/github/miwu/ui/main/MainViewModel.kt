@@ -23,7 +23,7 @@ class MainViewModel(
 ) : ViewModel() {
     private val logger = Logger()
 
-    val info get() = miotRepository.user
+    val info = miotRepository.userInfo
     val home = miotRepository.currentHome
     val scenes = home.map { it.getOrNull()?.scenes.orEmpty() }.asLiveData()
     val devices = home.map { it.getOrNull()?.devices.orEmpty() }
@@ -37,11 +37,23 @@ class MainViewModel(
             )
         }.asLiveData()
     val metadataHandler = cacheRepository.deviceMetadataHandler
-    val rooms = home.map { it.getOrNull()?.rooms.orEmpty() }.asLiveData()
+    val rooms = home.map {
+        it.getOrNull()?.roomMap
+            .orEmpty().values
+            .sortedBy { it.name }
+            .toList()
+    }.asLiveData()
     val icons = cacheRepository.icons
     val localDeviceState = localRepository.deviceListFlow
         .map { if (it.isEmpty()) Empty else Normal }
         .asLiveData()
+    val roomState = home.map { resultat ->
+        resultat.fold(
+            onSuccess = { if (it.rooms.isEmpty()) Empty else Normal },
+            onFailure = { Error },
+            onLoading = { Loading }
+        )
+    }.asLiveData()
     val deviceState = home.map { resultat ->
         resultat.fold(
             onSuccess = { if (it.devices.isEmpty()) Empty else Normal },
@@ -102,6 +114,10 @@ class MainViewModel(
     }
 
     fun loadDevice() {
+        miotRepository.refreshCurrentHome()
+    }
+
+    fun loadRoom() {
         miotRepository.refreshCurrentHome()
     }
 

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
+import miwu.miot.model.miot.MiotUserInfo
 
 typealias ResultatState<T> = StateFlow<Resultat<T>>
 typealias MutableResultatState<T> = MutableStateFlow<Resultat<T>>
@@ -15,6 +16,7 @@ typealias MutableResultatState<T> = MutableStateFlow<Resultat<T>>
 interface MiotRepository {
 
     val user: MiotUser?
+    val userInfo: StateFlow<MiotUserInfo.UserInfo>
     val loginStatus: StateFlow<LoginState>
 
     val homes: ResultatState<List<MiotHome>>

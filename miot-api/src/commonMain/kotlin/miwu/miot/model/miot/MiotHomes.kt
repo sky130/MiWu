@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonElement
 import miwu.miot.model.JsonAnySerializer
 
 typealias MiotHome = MiotHomes.Result.Home
+typealias MiotRoom = MiotHomes.Result.Home.Room
 
 @Serializable
 data class MiotHomes(

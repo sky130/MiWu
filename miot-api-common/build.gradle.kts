@@ -10,9 +10,7 @@ kotlin {
     }
     sourceSets {
         commonMain {
-            dependencies {
 
-            }
         }
     }
 }

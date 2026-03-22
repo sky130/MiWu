@@ -260,4 +260,11 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="Indicator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_marginBottom">3dp</item>
+    </style>
+
 </resources>

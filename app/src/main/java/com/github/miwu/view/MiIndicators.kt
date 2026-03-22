@@ -23,20 +23,24 @@ class MiIndicators(
         paint.isFilterBitmap = true
     }
 
-    private val dotSize: Int
-    private var dotIndex = 0
+    var dotSize: Int = 0
+        set(value) {
+            field = value
+            requestLayout()
+            invalidate()
+        }
+    var index = 0
+        set(value) {
+            field = value
+            requestLayout()
+            invalidate()
+        }
 
     init {
         context.obtainStyledAttributes(attr, R.styleable.MiIndicators).apply {
             dotSize = getInt(R.styleable.MiIndicators_dotSize, 0)
             recycle()
         }
-    }
-
-    fun setIndex(index: Int) {
-        dotIndex = index
-        requestLayout()
-        invalidate()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -54,7 +58,7 @@ class MiIndicators(
             centerWidth - ((dotSize - 1) / 2 * dotWidth + (dotSize - 1) / 2 * dotMargin)// 开始的坐标位
         var drawX = startX
         for (i in 0 until dotSize) {
-            if (i == dotIndex) {
+            if (i == index) {
                 paint.color = ContextCompat.getColor(context, R.color.white)
             } else {
                 paint.color = ContextCompat.getColor(context, R.color.lrc_disable)

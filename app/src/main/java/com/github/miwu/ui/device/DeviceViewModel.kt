@@ -3,17 +3,12 @@ package com.github.miwu.ui.device
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.github.miwu.logic.database.AppDatabase
-import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiwu
 import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotDeviceClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.miot.kmp.utils.to
@@ -22,10 +17,7 @@ import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.manager.MiotDeviceManager
-import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import kotlin.getValue
 
 class DeviceViewModel(
     private val application: Application,

@@ -2,7 +2,6 @@ package com.github.miwu.ui.basic
 
 import android.app.Dialog
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import androidx.annotation.StyleRes
+import androidx.core.graphics.drawable.toDrawable
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.github.miwu.R
 import java.lang.reflect.ParameterizedType
-import androidx.core.graphics.drawable.toDrawable
 
 abstract class AppDialog<VB : ViewBinding, VM : ViewModel> : DialogFragment() {
     val viewModel: VM by lazy(mode = LazyThreadSafetyMode.NONE) {

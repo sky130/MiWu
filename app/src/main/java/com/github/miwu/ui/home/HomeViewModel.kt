@@ -3,16 +3,16 @@ package com.github.miwu.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.github.miwu.R
-import com.github.miwu.logic.repository.AppRepository
+import com.github.miwu.logic.repository.MiotRepository
 import com.github.miwu.logic.setting.AppSetting
 import kndroidx.extension.log
 import kndroidx.extension.string
 import kotlinx.coroutines.flow.map
 import miwu.miot.model.miot.MiotHome
 
-class HomeViewModel(val appRepository: AppRepository) : ViewModel() {
+class HomeViewModel(val miotRepository: MiotRepository) : ViewModel() {
 
-    val homeList get() = appRepository.homes
+    val homeList get() = miotRepository.homes
         .map { it.getOrNull() ?: emptyList() }
         .asLiveData()
 
@@ -31,6 +31,6 @@ class HomeViewModel(val appRepository: AppRepository) : ViewModel() {
     }
 
     fun setHome(item: MiotHome){
-        appRepository.setActiveHome(item)
+        miotRepository.setActiveHome(item)
     }
 }

@@ -16,7 +16,6 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorColor
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorFrameShape
 import com.github.miwu.R
 import com.github.miwu.databinding.ActivityLoginBinding as Binding
-import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.ui.about.help.HelpActivity
 import com.github.miwu.ui.about.license.LicenseActivity
 import com.github.miwu.ui.login.LoginViewModel.Event.LoginFailure

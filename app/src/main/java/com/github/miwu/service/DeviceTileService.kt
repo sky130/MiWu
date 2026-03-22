@@ -12,8 +12,8 @@ import androidx.wear.tooling.preview.devices.WearDevices
 import com.github.miwu.R
 import com.github.miwu.appModule
 import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiot
-import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.LocalRepository
+import com.github.miwu.logic.repository.MiotRepository
 import com.github.miwu.utils.Logger
 import kndroidx.KndroidConfig
 import kndroidx.KndroidX
@@ -54,7 +54,7 @@ import org.koin.core.context.startKoin
 class DeviceTileService : LayoutTileService() {
     private val logger = Logger()
     val localRepository: LocalRepository by inject()
-    val appRepository: AppRepository by inject()
+    val miotRepository: MiotRepository by inject()
 
     override val version get() = (localRepository.iconMap.hashCode() + resVersion).toString()
     private val resVersion = 1
@@ -83,7 +83,7 @@ class DeviceTileService : LayoutTileService() {
             horizontalAlignment = HorizontalAlignment.Center,
             verticalAlignment = VerticalAlignment.Center
         ) {
-            if (localRepository.deviceList.isEmpty() || appRepository.miotUser == null) {
+            if (localRepository.deviceList.isEmpty() || miotRepository.user == null) {
                 Text(text = "hello tile")
             } else {
                 Page(localRepository.deviceList.map { it.toMiot() })
@@ -126,7 +126,7 @@ class DeviceTileService : LayoutTileService() {
                         ) {
                             boolean("isFromTile", true)
                             string("device", json.encodeToString(device))
-                            string("user", json.encodeToString(appRepository.miotUser))
+                            string("user", json.encodeToString(miotRepository.user))
                         }
                     )
             ) {

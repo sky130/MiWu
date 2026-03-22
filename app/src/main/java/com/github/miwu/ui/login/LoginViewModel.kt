@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.github.miwu.MainApplication
 import com.github.miwu.R
 import com.github.miwu.logic.datastore.MiotUserDataStore
+import com.github.miwu.logic.repository.MiotRepository
 import com.github.miwu.utils.Logger
-import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.ui.main.MainActivity
 import kndroidx.extension.start
@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class LoginViewModel(
     val loginProvider: MiotLoginProvider,
-    val appRepository: AppRepository,
+    val miotRepository: MiotRepository,
     val miotUserDataStore: MiotUserDataStore
 ) : ViewModel() {
     private val logger = Logger()

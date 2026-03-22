@@ -1,25 +1,17 @@
 package com.github.miwu.ui.main.fragment
 
-import androidx.lifecycle.lifecycleScope
-import com.github.miwu.databinding.FragmentMainSceneBinding as Binding
-import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.ui.main.MainViewModel
 import kndroidx.fragment.ViewFragmentX
-import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotScenes
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.getValue
+import com.github.miwu.databinding.FragmentMainSceneBinding as Binding
 
 class SceneFragment : ViewFragmentX<Binding>(Binding::inflate) {
     override val viewModel: MainViewModel by viewModel()
-    val homeId get() = AppSetting.homeId.value
-    val ownerUid get() = AppSetting.ownerId.value
 
     fun onItemClick(item: Any?) {
         item as MiotScenes.Result.Scene
-        lifecycleScope.launch {
-            viewModel.appRepository.runScene(homeId, ownerUid, item)
-        }
+        viewModel.miotRepository.runScene(item)
     }
 
     fun onItemLongClick(item: Any?): Boolean {

@@ -10,7 +10,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.github.miwu.R
 import com.github.miwu.logic.handler.DeviceMetadataHandler
-import com.github.miwu.logic.repository.DeviceRepository
 import kndroidx.extension.dp
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotScenes

@@ -28,6 +28,11 @@
             android:focusedByDefault="false"
             android:overScrollMode="never" />
 
+        <com.github.miwu.view.MiIndicators
+            android:id="@+id/indicator"
+            style="@style/Indicator"
+            app:dotSize="5"/>
+
         <com.github.miwu.view.AppTitleBar
             android:id="@+id/title"
             style="@style/Wear.TitleBar"

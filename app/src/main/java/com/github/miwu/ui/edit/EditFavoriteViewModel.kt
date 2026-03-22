@@ -3,21 +3,20 @@ package com.github.miwu.ui.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.github.miwu.logic.database.entity.FavoriteDevice
-import com.github.miwu.logic.repository.AppRepository
-import com.github.miwu.logic.repository.DeviceRepository
+import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.LocalRepository
+import com.github.miwu.logic.repository.MiotRepository
 import com.github.miwu.ui.main.state.FragmentState.Empty
 import com.github.miwu.ui.main.state.FragmentState.Normal
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 
 class EditFavoriteViewModel(
-    val appRepository: AppRepository,
+    val miotRepository: MiotRepository,
     val localRepository: LocalRepository,
-    val deviceRepository: DeviceRepository,
+    val cacheRepository: CacheRepository
 ) : ViewModel() {
-    val metadataHandler = deviceRepository.deviceMetadataHandler
-        .asLiveData()
+    val metadataHandler = cacheRepository.deviceMetadataHandler
     val devices = localRepository.deviceListFlow
         .take(1)
         .asLiveData()

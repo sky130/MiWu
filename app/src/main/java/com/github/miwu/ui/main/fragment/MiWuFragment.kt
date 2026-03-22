@@ -14,9 +14,8 @@ import com.github.miwu.databinding.FragmentMainMiwuBinding as Binding
 
 class MiWuFragment : ViewFragmentX<Binding>(Binding::inflate) {
     override val viewModel: MainViewModel by viewModel()
-    val appRepository get() = viewModel.appRepository
     val logger = Logger()
-    val user get() = appRepository.miotUser.also(::checkMiotUser)
+    val user get() = viewModel.miotRepository.user.also(::checkMiotUser)
 
     fun onItemClick(item: Any?) {
         if (item !is MiotDevice || !item.isOnline) return

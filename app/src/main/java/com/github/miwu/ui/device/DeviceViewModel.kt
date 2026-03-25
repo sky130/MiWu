@@ -7,6 +7,8 @@ import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotDeviceClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import miwu.android.icon.generated.icon.AndroidIcons
@@ -35,8 +37,8 @@ class DeviceViewModel(
         ?.getOrThrow()
         ?: error("MiotUser is not found")
     private val miotDeviceClient = MiotDeviceClient(user)
-    private val _event = MutableSharedFlow<Event>()
-    val event = _event.asSharedFlow()
+    private val _event = Channel<Event>()
+    val event: ReceiveChannel<Event> = _event
     val isFromTile = savedStateHandle.get<Boolean>("isFromTile") ?: false
     val manager by lazy {
         MiotDeviceManager.build(
@@ -70,11 +72,11 @@ class DeviceViewModel(
     }
 
     override fun onDeviceInitiated() {
-        _event.tryEmit(Event.DeviceInitiated)
+        _event.trySend(Event.DeviceInitiated)
     }
 
     override fun onDeviceAttLoaded(specAtt: SpecAtt) {
-        logger.info("Device {}, spec att: {}", device.name, specAtt)
+        logger.info("onDeviceAttLoaded, device {}, spec att: {}", device.name, specAtt)
     }
 
     sealed interface Event {

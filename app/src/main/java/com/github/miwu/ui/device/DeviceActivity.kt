@@ -11,6 +11,7 @@ import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import miwu.android.R
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.kmp.utils.json
@@ -30,7 +31,8 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     override fun init() {
         with(viewModel) {
-            event.onEach(::onEvent)
+            event.receiveAsFlow()
+                .onEach(::onEvent)
                 .launchIn(lifecycleScope)
             printDeviceInfo()
             manager.init()
@@ -43,9 +45,12 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     }
 
     fun onEvent(event: DeviceViewModel.Event) {
-        when(event) {
+        when (event) {
             DeviceInitiated -> {
                 initDeviceLayout()
+                if (wrapperList.isNotEmpty()) {
+                    binding.placeholder.isVisible = false
+                }
                 wrapperList.forEach(MiwuWrapper<*>::init)
             }
         }

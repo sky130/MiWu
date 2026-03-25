@@ -97,4 +97,5 @@
     <string name="room_tip">打开手机端添加房间</string>
     <string name="current_room_no_devices">当前房间无设备</string>
     <string name="room">房间</string>
+    <string name="current_not_support">当前设备暂未适配</string>
 </resources>

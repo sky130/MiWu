@@ -23,6 +23,7 @@
         <LinearLayout style="@style/Wear.Linear">
 
             <LinearLayout
+                android:id="@+id/placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -40,7 +41,7 @@
                 <TextView
                     style="@style/Wear.DescText"
                     android:layout_marginTop="10dp"
-                    android:text="当前设备暂未适配" />
+                    android:text="@string/current_not_support" />
 
             </LinearLayout>
 

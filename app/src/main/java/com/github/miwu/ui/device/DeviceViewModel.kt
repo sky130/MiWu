@@ -3,17 +3,14 @@ package com.github.miwu.ui.device
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.github.miwu.logic.database.AppDatabase
-import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiwu
 import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotDeviceClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.miot.kmp.utils.to
@@ -22,10 +19,7 @@ import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.manager.MiotDeviceManager
-import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import kotlin.getValue
 
 class DeviceViewModel(
     private val application: Application,
@@ -43,8 +37,8 @@ class DeviceViewModel(
         ?.getOrThrow()
         ?: error("MiotUser is not found")
     private val miotDeviceClient = MiotDeviceClient(user)
-    private val _event = MutableSharedFlow<Event>()
-    val event = _event.asSharedFlow()
+    private val _event = Channel<Event>()
+    val event: ReceiveChannel<Event> = _event
     val isFromTile = savedStateHandle.get<Boolean>("isFromTile") ?: false
     val manager by lazy {
         MiotDeviceManager.build(
@@ -78,11 +72,11 @@ class DeviceViewModel(
     }
 
     override fun onDeviceInitiated() {
-        _event.tryEmit(Event.DeviceInitiated)
+        _event.trySend(Event.DeviceInitiated)
     }
 
     override fun onDeviceAttLoaded(specAtt: SpecAtt) {
-        logger.info("Device {}, spec att: {}", device.name, specAtt)
+        logger.info("onDeviceAttLoaded, device {}, spec att: {}", device.name, specAtt)
     }
 
     sealed interface Event {

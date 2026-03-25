@@ -5,7 +5,6 @@ import android.provider.Settings
 import com.github.miwu.utils.LazyLogger
 import com.github.miwu.logic.database.databaseModule
 import com.github.miwu.logic.datastore.dataStoreModule
-import com.github.miwu.logic.repository.AppRepository
 import com.github.miwu.logic.repository.repositoryModule
 import com.github.miwu.ui.viewModelModule
 import kndroidx.KndroidX

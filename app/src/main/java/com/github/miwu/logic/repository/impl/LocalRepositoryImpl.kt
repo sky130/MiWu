@@ -5,14 +5,13 @@ import com.github.miwu.logic.database.entity.FavoriteDevice
 import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiot
 import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiwu
 import com.github.miwu.logic.database.entity.FavoriteDeviceMetadata
-import com.github.miwu.logic.repository.DeviceRepository
+import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.service.DeviceTileService
 import com.github.miwu.utils.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsBytes
-import kndroidx.extension.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
@@ -27,8 +26,8 @@ class LocalRepositoryImpl : KoinComponent, LocalRepository {
     private val scope: CoroutineScope by inject()
     private val database: AppDatabase by inject()
     private val dao get() = database.deviceDAO()
-    private val deviceRepository: DeviceRepository by inject()
-    private val deviceMetadataHandler = deviceRepository.deviceMetadataHandler
+    private val cacheRepository: CacheRepository by inject()
+    private val deviceMetadataHandler = cacheRepository.deviceMetadataHandler
     private val httpClient = HttpClient()
     private val logger = Logger()
 
@@ -41,7 +40,7 @@ class LocalRepositoryImpl : KoinComponent, LocalRepository {
     override val deviceList = CopyOnWriteArrayList<FavoriteDevice>()
     override val iconMap = mutableMapOf<String, ByteArray>()
     override val deviceListFlow: Flow<List<FavoriteDevice>> = dao.observeList()
-        .onEach { deviceRepository.addIcon(it.map(FavoriteDevice::model)) }
+        .onEach { cacheRepository.addIcon(it.map(FavoriteDevice::model)) }
         .onEach {
             deviceList.clear()
             deviceList.addAll(it)

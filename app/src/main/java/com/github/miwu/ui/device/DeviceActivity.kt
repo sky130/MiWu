@@ -7,29 +7,19 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.github.miwu.ui.device.DeviceViewModel.Event.DeviceInitiated
 import com.github.miwu.utils.Logger
-import com.github.miwu.utils.MiotDeviceClient
-import fr.haan.resultat.Resultat
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import miwu.android.R
-import miwu.android.icon.generated.icon.AndroidIcons
-import miwu.android.translate.AndroidTranslateHelper
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.kmp.utils.json
-import miwu.miot.kmp.utils.to
 import miwu.miot.model.MiotUser
-import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.base.MiwuWidget
 import miwu.support.base.MiwuWrapper
-import miwu.support.manager.MiotDeviceManager
 import miwu.widget.generated.wrapper.WrapperRegistry
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 
@@ -41,7 +31,8 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     override fun init() {
         with(viewModel) {
-            event.onEach(::onEvent)
+            event.receiveAsFlow()
+                .onEach(::onEvent)
                 .launchIn(lifecycleScope)
             printDeviceInfo()
             manager.init()
@@ -54,9 +45,12 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     }
 
     fun onEvent(event: DeviceViewModel.Event) {
-        when(event) {
+        when (event) {
             DeviceInitiated -> {
                 initDeviceLayout()
+                if (wrapperList.isNotEmpty()) {
+                    binding.placeholder.isVisible = false
+                }
                 wrapperList.forEach(MiwuWrapper<*>::init)
             }
         }

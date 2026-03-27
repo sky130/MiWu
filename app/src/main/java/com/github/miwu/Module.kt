@@ -6,6 +6,8 @@ import com.github.miwu.logic.repository.repositoryModule
 import com.github.miwu.ui.viewModelModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import miwu.miot.Client
+import miwu.miot.Provider
 import miwu.miot.common.MiotApiKoinModule
 import miwu.miot.kmp.Client
 import miwu.miot.kmp.Provider
@@ -19,8 +21,8 @@ val appModule = module {
         dataStoreModule,
     )
     includes(
-        MiotApiKoinModule.KMP.Client,
-        MiotApiKoinModule.KMP.Provider,
+        MiotApiKoinModule.JVM.Client,
+        MiotApiKoinModule.JVM.Provider,
     )
     single<Job> { Job() }
     single { CoroutineScope(get<Job>()) }

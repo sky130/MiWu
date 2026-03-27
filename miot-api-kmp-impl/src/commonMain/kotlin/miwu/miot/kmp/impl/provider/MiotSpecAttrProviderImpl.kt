@@ -1,7 +1,6 @@
 package miwu.miot.kmp.impl.provider
 
 import de.jensklingenberg.ktorfit.Ktorfit
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -13,20 +12,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import miwu.miot.kmp.utils.IO
-import miwu.miot.kmp.utils.json
 import miwu.miot.common.SPEC_SERVER_URL
 import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
 import miwu.miot.kmp.service.createSpecService
+import miwu.miot.kmp.utils.IO
+import miwu.miot.kmp.utils.MiotHttpClient
+import miwu.miot.kmp.utils.json
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.att.SpecType
 import miwu.miot.model.miot.MiotDevices.Result.Info
 import miwu.miot.provider.MiotSpecAttrProvider
 
 class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
-    private val httpClient = HttpClient {
+    private val httpClient = MiotHttpClient {
         install(ContentNegotiation) {
             json(json)
         }

@@ -42,6 +42,18 @@ kotlin {
                 implementation(libs.ktor.client.content.negotiation)
             }
         }
+
+        jvmMain {
+            dependencies {
+                implementation(libs.ktor.client.okhttp)
+            }
+        }
+
+        jsMain {
+            dependencies {
+                implementation(libs.ktor.client.cio)
+            }
+        }
     }
 }
 

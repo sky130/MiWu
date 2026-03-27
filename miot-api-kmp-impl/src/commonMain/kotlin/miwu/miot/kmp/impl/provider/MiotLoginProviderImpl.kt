@@ -1,6 +1,5 @@
 package miwu.miot.kmp.impl.provider
 
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.DefaultRequest
@@ -33,6 +32,7 @@ import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotBusinessException
 import miwu.miot.exception.MiotHttpException
 import miwu.miot.kmp.utils.IO
+import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json
 import miwu.miot.kmp.utils.md5
 import miwu.miot.kmp.utils.to
@@ -47,7 +47,7 @@ import kotlin.time.Clock
 
 class MiotLoginProviderImpl : MiotLoginProvider {
     private val cookiesStorage = SimpleCookiesStorage()
-    private val httpClient = HttpClient {
+    private val httpClient = MiotHttpClient {
         install(HttpCookies) {
             storage = cookiesStorage
         }

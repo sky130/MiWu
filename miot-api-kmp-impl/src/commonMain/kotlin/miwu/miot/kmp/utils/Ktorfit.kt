@@ -16,7 +16,7 @@ import miwu.miot.common.MI_HOME_USER_AGENT
 import miwu.miot.model.MiotUser
 
 @Suppress("FunctionName")
-fun MiotAuthHttpClient(user: MiotUser) = HttpClient {
+fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
     install(ContentNegotiation) {
         json(json)
     }

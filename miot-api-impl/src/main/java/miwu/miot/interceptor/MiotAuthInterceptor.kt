@@ -31,6 +31,7 @@ class MiotAuthInterceptor(private val user: MiotUser) : Interceptor {
         if (serviceToken.isEmpty() || ssecurity.isEmpty()) {
             throw IllegalArgumentException("serviceToken or securityToken not found.")
         }
+
         val data = originRequestBody.readToString()
         val nonce = getNonce()
         val signedNonce = generateSignedNonce(ssecurity, nonce)

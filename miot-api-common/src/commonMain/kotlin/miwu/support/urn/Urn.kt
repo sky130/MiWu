@@ -65,7 +65,7 @@ data class Urn(
          * ```
          */
         fun parseFrom(str: String) = str.split(":").let { parts ->
-            if (parts.size < 5 || parts[0] != "urn") error("Invalid URN string")
+            if (parts.size < 5 || parts[0] != "urn") error("Invalid URN string: $str")
             val namespace = parts[1]
             val type = parts[2]
             if (type !in validType) error("Invalid type of urn")

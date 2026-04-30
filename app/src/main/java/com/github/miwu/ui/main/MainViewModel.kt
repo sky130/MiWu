@@ -13,6 +13,7 @@ import com.github.miwu.ui.main.state.FragmentState.Normal
 import com.github.miwu.utils.Logger
 import fr.haan.resultat.fold
 import kotlinx.coroutines.flow.map
+import miwu.mock.MockMiotDevice
 
 
 class MainViewModel(
@@ -27,6 +28,18 @@ class MainViewModel(
     val home = miotRepository.currentHome
     val scenes = home.map { it.getOrNull()?.scenes.orEmpty() }.asLiveData()
     val devices = home.map { it.getOrNull()?.devices.orEmpty() }
+        .map {
+            it.toMutableList().apply {
+                add(
+                    MockMiotDevice(
+                        name = "Mock 窗帘",
+                        did = "abcdef123456",
+                        model = "cmjd.curtain.cmx82",
+                        specType = "urn:miot-spec-v2:device:curtain:0000A00C:cmjd-cmx82:1:0000D031"
+                    )
+                )
+            }
+        }
         .map { device ->
             device.sortedWith(
                 compareBy(

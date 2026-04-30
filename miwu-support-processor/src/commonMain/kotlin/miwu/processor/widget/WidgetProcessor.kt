@@ -12,20 +12,17 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import miwu.annotation.Widget
+import miwu.processor.MiwuProcessor
 
 internal class WidgetProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
-) : Processor {
+) : MiwuProcessor() {
 
-    private var isProcessingOver = false
-
-    override fun process(resolver: Resolver): List<KSAnnotated> {
-        if (isProcessingOver) return emptyList()
+    override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         val widgetMappings = collectWidgetMappings(resolver)
         generateRegistries(widgetMappings)
-        isProcessingOver = true
         return emptyList()
     }
 
@@ -38,7 +35,10 @@ internal class WidgetProcessor(
                 try {
                     processWidgetDeclaration(declaration, propertyMappings, actionMappings)
                 } catch (e: Exception) {
-                    logger.error("Failed to process widget: ${declaration.qualifiedName?.asString()}", declaration)
+                    logger.error(
+                        "Failed to process widget: ${declaration.qualifiedName?.asString()}",
+                        declaration
+                    )
                 }
             }
         return WidgetMappings(propertyMappings, actionMappings)
@@ -59,7 +59,15 @@ internal class WidgetProcessor(
         }
         val className = declaration.toClassName()
         processBindings(bindings, className, propertyMappings, actionMappings)
-        processLegacyAnnotations(services, properties, actions, className, propertyMappings, actionMappings, declaration)
+        processLegacyAnnotations(
+            services,
+            properties,
+            actions,
+            className,
+            propertyMappings,
+            actionMappings,
+            declaration
+        )
     }
 
     private fun processBindings(
@@ -133,7 +141,12 @@ internal class WidgetProcessor(
             .indent()
             .apply {
                 classMap.forEach { (serviceItem, className) ->
-                    add("(%S to %S) to %T::class.java,\n", serviceItem.service, serviceItem.item, className)
+                    add(
+                        "(%S to %S) to %T::class.java,\n",
+                        serviceItem.service,
+                        serviceItem.item,
+                        className
+                    )
                 }
             }
             .unindent()
@@ -167,8 +180,10 @@ internal class WidgetProcessor(
         return filter { it.shortName.asString() == annotationName }
             .mapNotNull { annotation ->
                 try {
-                    val service = annotation.getArgumentValue("service") as? String ?: return@mapNotNull null
-                    val item = annotation.getArgumentValue("item") as? String ?: return@mapNotNull null
+                    val service =
+                        annotation.getArgumentValue("service") as? String ?: return@mapNotNull null
+                    val item =
+                        annotation.getArgumentValue("item") as? String ?: return@mapNotNull null
                     val typeName = annotation.annotationType.resolve().arguments
                         .firstOrNull()?.type?.resolve()?.declaration?.qualifiedName?.asString()
                         ?: return@mapNotNull null
@@ -198,11 +213,13 @@ internal class WidgetProcessor(
         val propertyMappings: Map<ServiceItem, ClassName>,
         val actionMappings: Map<ServiceItem, ClassName>
     )
+
     private enum class BindingType {
         PROPERTY, ACTION, UNKNOWN
     }
+
     companion object {
-        private const val PACKAGE_NAME = "miwu.widget.generated.widget"
+        private const val PACKAGE_NAME = "miwu.support.generated.widget"
         private const val PROPERTY_REGISTRY_NAME = "PropertyRegistry"
         private const val ACTION_REGISTRY_NAME = "ActionRegistry"
 

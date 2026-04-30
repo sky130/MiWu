@@ -4,6 +4,7 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ksp.writeTo
+import miwu.processor.MiwuProcessor
 import java.io.File
 import java.io.InputStream
 
@@ -11,18 +12,14 @@ class IconsProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
-) : SymbolProcessor {
+) : MiwuProcessor() {
 
-    private var isProcessingOver = false
-
-    override fun process(resolver: Resolver): List<KSAnnotated> {
+    override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         if (options["miwu.icon.enabled"] == "false") return emptyList()
         val filePath = options["miwu.icon.filePath"] ?: return emptyList()
-        if (isProcessingOver) return emptyList()
         val iconNames = loadIconNames(filePath) ?: return emptyList()
         val processedIcons = processIconNames(iconNames)
         generateIconsInterface(processedIcons)
-        isProcessingOver = true
         return emptyList()
     }
 

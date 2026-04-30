@@ -13,6 +13,7 @@ import kotlinx.coroutines.runBlocking
 import miwu.support.urn.Urn
 import miwu.miot.kmp.impl.provider.MiotSpecAttrProviderImpl
 import miwu.miot.provider.MiotSpecAttrProvider
+import miwu.processor.MiwuProcessor
 import java.util.Locale
 import com.google.devtools.ksp.processing.SymbolProcessor as Processor
 
@@ -20,13 +21,11 @@ class SpecProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
-) : Processor {
+) : MiwuProcessor() {
     private val provider: MiotSpecAttrProvider = MiotSpecAttrProviderImpl()
-    private var isProcessingOver = false
 
-    override fun process(resolver: Resolver): List<KSAnnotated> {
+    override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         if (options["miwu.spec.enabled"] != "true") return emptyList()
-        if (isProcessingOver) return emptyList()
         runBlocking {
             SPEC_TYPES.forEach { specType ->
                 try {
@@ -36,7 +35,6 @@ class SpecProcessor(
                 }
             }
         }
-        isProcessingOver = true
         return emptyList()
     }
 

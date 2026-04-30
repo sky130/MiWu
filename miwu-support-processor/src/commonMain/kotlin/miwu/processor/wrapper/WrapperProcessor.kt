@@ -13,26 +13,21 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import miwu.annotation.Wrapper
+import miwu.processor.MiwuProcessor
 
 internal class WrapperProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
-) : Processor {
+) : MiwuProcessor() {
 
-    private var isProcessingOver = false
-
-    override fun process(resolver: Resolver): List<KSAnnotated> {
-        if (isProcessingOver) return emptyList()
-
+    override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         try {
             val wrapperMappings = collectWrapperMappings(resolver)
             generateWrapperRegistry(wrapperMappings)
         } catch (e: Exception) {
             logger.error("Failed to process wrapper annotations")
         }
-
-        isProcessingOver = true
         return emptyList()
     }
 
@@ -166,7 +161,7 @@ internal class WrapperProcessor(
     }
 
     companion object {
-        private const val PACKAGE_NAME = "miwu.widget.generated.wrapper"
+        private const val PACKAGE_NAME = "miwu.support.generated.wrapper"
         private const val OBJECT_NAME = "WrapperRegistry"
         private const val WRAPPER_ANNOTATION_NAME = "Wrapper"
         private const val WIDGET_ARGUMENT_NAME = "widget"

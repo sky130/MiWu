@@ -3,6 +3,7 @@ package miwu.mock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import miwu.annotation.basic.MockClient
 import miwu.miot.att.get.GetAtt
 import miwu.miot.att.set.SetAtt
 import miwu.miot.att.set.piid
@@ -53,7 +54,7 @@ abstract class MockMiotDeviceClient(
     val mockScope: CoroutineScope,
     val specAtt: SpecAtt,
     device: MiotDevice,
-) : BaseMockMiotDeviceClient(device) {
+) : BaseMockMiotDeviceClient(device), MockClient {
     private val mockStore: MockStore =
         specAtt.services.associate { service ->
             service.properties

@@ -3,4 +3,4 @@ miwu.processor.widget.WidgetProcessorProvider
 miwu.processor.device.DeviceProcessorProvider
 miwu.processor.icon.IconsProcessorProvider
 miwu.processor.wrapper.WrapperProcessorProvider
-
+miwu.processor.mock.MockProcessorProvider

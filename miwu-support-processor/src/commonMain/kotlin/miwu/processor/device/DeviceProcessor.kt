@@ -11,22 +11,20 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import miwu.annotation.Device
+import miwu.processor.MiwuProcessor
 
 internal class DeviceProcessor(
     private val options: Map<String, String>,
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
-) : Processor {
+) : MiwuProcessor() {
 
-    private var isProcessingOver = false
 
-    override fun process(resolver: Resolver): List<KSAnnotated> {
-        if (isProcessingOver) return emptyList()
+    override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         val deviceMap = collectDeviceClasses(resolver)
         if (deviceMap.isNotEmpty()) {
             generateDeviceRegistry(deviceMap)
         }
-        isProcessingOver = true
         return emptyList()
     }
 
@@ -100,6 +98,6 @@ internal class DeviceProcessor(
 
     companion object {
         private const val OBJECT_NAME = "DeviceRegistry"
-        private const val PACKAGE_NAME = "miwu.widget.generated.device"
+        private const val PACKAGE_NAME = "miwu.support.generated.device"
     }
 }

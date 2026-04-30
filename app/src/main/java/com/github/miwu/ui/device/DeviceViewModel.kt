@@ -9,8 +9,6 @@ import com.github.miwu.utils.MiotDeviceClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.miot.kmp.utils.to
@@ -18,6 +16,8 @@ import miwu.miot.model.MiotUser
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
+import miwu.mock.MOCK_PREFIX
+import miwu.mock.NormalMockMiotDeviceClient
 import miwu.support.manager.MiotDeviceManager
 import org.koin.core.component.KoinComponent
 
@@ -28,16 +28,23 @@ class DeviceViewModel(
     private val specAttrProvider: MiotSpecAttrProvider
 ) : AndroidViewModel(application), MiotDeviceManager.Callback, KoinComponent {
     private val logger = Logger()
-    private val device = savedStateHandle.get<String>("device")
+    private val _event = Channel<Event>()
+    private val isMockDevice: Boolean
+    val device = savedStateHandle.get<String>("device")
         ?.to<MiotDevice>()
         ?.getOrThrow()
+        ?.takeIf { it.specType != null }
+        ?.also { isMockDevice = it.specType!!.startsWith(MOCK_PREFIX) }
+        ?.let {
+            if (isMockDevice) it.copy(specType = it.specType!!.substring(MOCK_PREFIX.length))
+            else it
+        }
         ?: error("MiotDevice is not found")
-    private val user = savedStateHandle.get<String>("user")
+    val user = savedStateHandle.get<String>("user")
         ?.to<MiotUser>()
         ?.getOrThrow()
         ?: error("MiotUser is not found")
-    private val miotDeviceClient = MiotDeviceClient(user)
-    private val _event = Channel<Event>()
+    val miotDeviceClient = if (isMockDevice) null else MiotDeviceClient(user)
     val event: ReceiveChannel<Event> = _event
     val isFromTile = savedStateHandle.get<Boolean>("isFromTile") ?: false
     val manager by lazy {
@@ -49,7 +56,8 @@ class DeviceViewModel(
             AndroidCache(application),
             AndroidTranslateHelper,
             Dispatchers.Main,
-            this
+            this,
+            ::NormalMockMiotDeviceClient
         )
     }
 
@@ -80,6 +88,6 @@ class DeviceViewModel(
     }
 
     sealed interface Event {
-        object DeviceInitiated: Event
+        object DeviceInitiated : Event
     }
 }

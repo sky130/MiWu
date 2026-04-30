@@ -40,6 +40,9 @@ data class SpecAtt(
             var descriptionTranslation: String = ""
         }
 
+        /**
+         * @param valueRange 0: min, 1: max, 2: step
+         */
         @Serializable
         data class Property(
             @SerialName("access") val access: List<String>,
@@ -55,6 +58,36 @@ data class SpecAtt(
         ) {
             @Transient
             var descriptionTranslation: String = ""
+
+            /**
+             * bool	    布尔值: true/false
+             * uint8	无符号8位整型
+             * uint16	无符号16位整型
+             * uint32	无符号32位整型
+             * int8	    有符号8位整型
+             * int16	有符号16位整型
+             * int32	有符号32位整型
+             * int64	有符号64位整型
+             * float	浮点数
+             * string	字符串
+             */
+            fun getDefaultValue(): Any {
+                valueList?.firstOrNull()?.value?.let { return it }
+                val rangeMin = valueRange?.firstOrNull()
+                return when (type) {
+                    "bool" -> false
+                    "string" -> ""
+                    "uint8" -> (rangeMin as? Int) ?: 0
+                    "uint16" -> (rangeMin as? Int) ?: 0
+                    "uint32" -> (rangeMin as? Long) ?: 0L
+                    "int8" -> (rangeMin as? Int) ?: 0
+                    "int16" -> (rangeMin as? Int) ?: 0
+                    "int32" -> (rangeMin as? Int) ?: 0
+                    "int64" -> (rangeMin as? Long) ?: 0L
+                    "float" -> (rangeMin as? Number)?.toFloat() ?: 0f
+                    else -> rangeMin ?: 0
+                }
+            }
 
             @Serializable
             data class Value(

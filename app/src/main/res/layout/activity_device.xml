@@ -8,6 +8,7 @@
         <variable
             name="activity"
             type="com.github.miwu.ui.device.DeviceActivity" />
+
         <variable
             name="viewModel"
             type="com.github.miwu.ui.device.DeviceViewModel" />
@@ -27,8 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:orientation="vertical"
-                tools:ignore="UseCompoundDrawables">
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -42,6 +42,11 @@
                     style="@style/Wear.DescText"
                     android:layout_marginTop="10dp"
                     android:text="@string/current_not_support" />
+
+                <TextView
+                    style="@style/Wear.DescText"
+                    android:text="@{viewModel.device.model}"
+                    tools:text="model:114514:test"/>
 
             </LinearLayout>
 
@@ -82,11 +87,11 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-<!--            <com.github.miwu.view.AppButton-->
-<!--                style="@style/Wear.AppButton"-->
-<!--                android:onClick="@{() -> activity.onAddButtonClick()}"-->
-<!--                android:text="@string/add_to_tile"-->
-<!--                app:isVisible="@{!activity.isFromTile}" />-->
+            <!--            <com.github.miwu.view.AppButton-->
+            <!--                style="@style/Wear.AppButton"-->
+            <!--                android:onClick="@{() -> activity.onAddButtonClick()}"-->
+            <!--                android:text="@string/add_to_tile"-->
+            <!--                app:isVisible="@{!activity.isFromTile}" />-->
 
             <com.github.miwu.view.AppButton
                 style="@style/Wear.AppButton"

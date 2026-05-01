@@ -2,7 +2,7 @@ package miwu.widget
 
 import miwu.annotation.*
 import miwu.annotation.widget.*
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 
 @Widget
 @SubHeader

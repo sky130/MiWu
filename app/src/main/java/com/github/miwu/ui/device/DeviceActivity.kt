@@ -17,9 +17,9 @@ import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.kmp.utils.json
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
-import miwu.support.base.MiwuWidget
-import miwu.support.base.MiwuWrapper
-import miwu.widget.generated.wrapper.WrapperRegistry
+import miwu.support.MiwuWidget
+import miwu.support.MiwuWrapper
+import miwu.support.generated.wrapper.WrapperRegistry
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.miwu.databinding.ActivityDeviceBinding as Binding
 
@@ -111,12 +111,8 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun createWrapper(miotWidget: MiwuWidget<*>): ViewMiwuWrapper<*>? =
-        WrapperRegistry.registry[miotWidget.javaClass]
-            .let { it as? Class<out ViewMiwuWrapper<*>> }
-            ?.run { getDeclaredConstructor(Context::class.java, MiwuWidget::class.java) }
-            ?.newInstance(this, miotWidget)
+        WrapperRegistry.create(this, miotWidget)
 
     companion object {
         fun Context.startDeviceActivity(device: MiotDevice, user: MiotUser) {

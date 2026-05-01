@@ -1,6 +1,6 @@
 package miwu.device
 
-import miwu.support.base.MiwuDevice
+import miwu.support.MiwuDevice
 import miwu.annotation.*
 import miwu.widget.*
 

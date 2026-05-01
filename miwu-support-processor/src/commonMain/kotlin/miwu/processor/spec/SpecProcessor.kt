@@ -27,26 +27,37 @@ class SpecProcessor(
     override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         if (options["miwu.spec.enabled"] != "true") return emptyList()
         runBlocking {
+            val nestedTypes = mutableListOf<TypeSpec>()
             SPEC_TYPES.forEach { specType ->
                 try {
-                    handleSpecType(specType)
+                    val typeSpec = handleSpecType(specType)
+                    if (typeSpec != null) {
+                        nestedTypes.add(typeSpec)
+                    }
                 } catch (e: Exception) {
                     logger.error("Failed to process spec type: $specType")
                 }
+            }
+            if (nestedTypes.isNotEmpty()) {
+                val miotSpec = TypeSpec.objectBuilder("MiotSpec")
+                    .apply {
+                        nestedTypes.forEach { addType(it) }
+                    }
+                    .build()
+                generateSpecFile("MiotSpec", miotSpec)
             }
         }
         return emptyList()
     }
 
-    private suspend fun handleSpecType(specType: SpecType) {
+    private suspend fun handleSpecType(specType: SpecType): TypeSpec? {
         val specItems = fetchSpecItems(specType)
         if (specItems.isEmpty()) {
             logger.warn("No items found for spec type: ${specType.typeName}")
-            return
+            return null
         }
         val properties = createConstantProperties(specItems)
-        val specObject = createSpecObject(specType.typeName, properties)
-        generateSpecFile(specType.typeName, specObject)
+        return createSpecObject(specType.typeName, properties)
     }
 
     private suspend fun fetchSpecItems(specType: SpecType): List<String> {

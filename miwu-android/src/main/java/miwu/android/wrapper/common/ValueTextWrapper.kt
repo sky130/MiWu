@@ -4,7 +4,7 @@ import android.content.Context
 import miwu.android.databinding.MiotWidgetTextBinding
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 import miwu.widget.StatusText
 
 @Wrapper(StatusText::class)

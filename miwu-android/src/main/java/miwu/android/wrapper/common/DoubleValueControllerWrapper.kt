@@ -4,7 +4,7 @@ import android.content.Context
 import miwu.android.databinding.MiotWidgetIntValueControllerBinding
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 import miwu.support.unit.ValueUnit
 import miwu.widget.DoubleValueController
 

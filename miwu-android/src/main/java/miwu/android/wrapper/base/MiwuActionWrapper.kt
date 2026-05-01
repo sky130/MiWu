@@ -2,7 +2,7 @@ package miwu.android.wrapper.base
 
 import android.content.Context
 import android.view.View
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 
 abstract class MiwuActionWrapper(context: Context, widget: MiwuWidget<Unit>) :
     ViewMiwuWrapper<Unit>(context, widget) {
@@ -19,7 +19,7 @@ abstract class MiwuActionWrapper(context: Context, widget: MiwuWidget<Unit>) :
     open fun onClick() {}
 
     override fun onUpdateValue(siid: Int, piid: Int, value: Any) {
-        propertyListenerList[siid to piid]?.invoke(value)
+        propertyListenerList[siid to piid]?.apply { second.invoke(first, value) }
     }
 
     override fun onUpdateValue(value: Unit) = Unit

@@ -1,16 +1,20 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package miwu.support.base
+package miwu.support
 
+import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.att.SpecAtt.Service.Property.Value
 import miwu.support.api.WidgetObserver
+import miwu.support.base.BaseMiwuWidget
 import miwu.support.manager.MiotDeviceManager
 import miwu.support.translate.TranslateHelper
 import miwu.support.unit.ValueUnit
 
 abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
     lateinit var translateHelper: TranslateHelper
-    internal val iidList = mutableListOf<Pair<Int, Int>>()
+    internal val piidList = mutableListOf<Pair<Int, Int>>()
+
+    internal val aiidList = mutableListOf<Pair<Int, Int>>()
 
     private var _miotDeviceManager: MiotDeviceManager? = null
     private val miotDeviceManager: MiotDeviceManager
@@ -36,13 +40,15 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
     override val allowNotify get() = field.allowNotify
     override val Icons get() = field.icons
     override val descriptionTranslation by lazy {
-        if (field.desc != field.descTranslation) // 如果已经在miot有对应翻译, 则不再重复翻译
+        // 如果已经在 miot-spec 有对应翻译, 则不再重复翻译
+        if (field.desc != field.descTranslation)
             field.descTranslation
         else
             translateHelper.translate(field.desc)
     }
     override val serviceDescriptionTranslation by lazy {
-        if (field.serviceDesc != field.serviceDescTranslation) // 如果已经在miot有对应翻译, 则不再重复翻译
+        // 如果已经在 miot-spec 有对应翻译, 则不再重复翻译
+        if (field.serviceDesc != field.serviceDescTranslation)
             field.serviceDescTranslation
         else
             translateHelper.translate(field.serviceDesc)
@@ -85,7 +91,6 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
         miotDeviceManager.doAction(siid, aiid, *input)
     }
 
-
     /**
      * 执行指定 Action
      *
@@ -117,8 +122,18 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
      * @param siid siid
      * @param piid piid
      */
-    fun register(siid: Int, piid: Int) {
-        iidList.add(siid to piid)
+    fun registerProperty(siid: Int, piid: Int) {
+        piidList.add(siid to piid)
+    }
+
+    /**
+     * 注册 Action, 可以获取 Action 的回调
+     *
+     * @param siid siid
+     * @param aiid aiid
+     */
+    fun registerAction(siid: Int, aiid: Int) {
+        aiidList.add(siid to aiid)
     }
 
     /**

@@ -6,7 +6,7 @@ import miwu.android.R
 import miwu.android.databinding.MiotWidgetSwitchBinding
 import miwu.android.wrapper.base.MiwuWrapper
 import miwu.annotation.Wrapper
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 import miwu.widget.Switch
 
 @Wrapper(Switch::class)

@@ -7,27 +7,16 @@ import android.widget.ImageView
 import androidx.viewbinding.ViewBinding
 import miwu.android.icon.AndroidIcon
 import miwu.icon.NoneIcon
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWrapper
+import miwu.support.MiwuWidget
 import miwu.support.icon.Icon
 
 abstract class ViewMiwuWrapper<T>(val context: Context, widget: MiwuWidget<T>) :
-    miwu.support.base.MiwuWrapper<T>(widget) {
+    MiwuWrapper<T>(widget) {
     abstract val view: View
 
     fun View.onClick(block: View.() -> Unit) {
         setOnClickListener(block)
-    }
-
-    fun ImageView.setIcon(icon: Icon) {
-        when (icon) {
-            is AndroidIcon -> {
-                setImageResource(icon.resId)
-            }
-
-            is NoneIcon -> {
-                setImageDrawable(null)
-            }
-        }
     }
 
     protected inline fun <reified VB : ViewBinding> viewBinding(crossinline inflate: (LayoutInflater) -> VB) =
@@ -46,4 +35,17 @@ abstract class ViewMiwuWrapper<T>(val context: Context, widget: MiwuWidget<T>) :
             ).invoke(null, LayoutInflater.from(context)) as VB)
         }
 
+    companion object {
+        fun ImageView.setIcon(icon: Icon) {
+            when (icon) {
+                is AndroidIcon -> {
+                    setImageResource(icon.resId)
+                }
+
+                is NoneIcon -> {
+                    setImageDrawable(null)
+                }
+            }
+        }
+    }
 }

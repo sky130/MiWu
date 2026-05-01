@@ -8,6 +8,7 @@ import miwu.icon.NoneIcon
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.att.SpecAtt.Service.Property.Value
 import miwu.support.icon.Icon
+import miwu.support.urn.Urn
 
 /**
  * BaseMiwuWidget
@@ -213,7 +214,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      */
     fun getService(serviceName: String): SpecAtt.Service? {
         if (!field.isSpecAttInitialized) return null
-        return miotSpecAtt.services.find { it.type == serviceName }
+        return miotSpecAtt.services.find { it.name == serviceName }
     }
 
     /**
@@ -226,8 +227,8 @@ abstract class BaseMiwuWidget<T>() : Widget {
      */
     fun getProperty(serviceName: String, propertyName: String): SpecAtt.Service.Property? {
         if (!field.isSpecAttInitialized) return null
-        val service = miotSpecAtt.services.find { it.type == serviceName } ?: return null
-        return service.properties?.find { it.type == propertyName }
+        val service = miotSpecAtt.services.find { it.name == serviceName } ?: return null
+        return service.properties?.find { it.name == propertyName }
     }
 
     /**
@@ -239,8 +240,8 @@ abstract class BaseMiwuWidget<T>() : Widget {
      */
     fun getAction(serviceName: String, actionName: String): SpecAtt.Service.Action? {
         if (!field.isSpecAttInitialized) return null
-        val service = miotSpecAtt.services.find { it.type == serviceName } ?: return null
-        return service.actions?.find { it.type == actionName }
+        val service = miotSpecAtt.services.find { it.name == serviceName } ?: return null
+        return service.actions?.find { it.name == actionName }
     }
 
     // 一个内部类，用于管理 Widget 的字段

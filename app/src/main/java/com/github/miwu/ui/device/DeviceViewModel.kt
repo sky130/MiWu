@@ -16,9 +16,12 @@ import miwu.miot.model.MiotUser
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
-import miwu.mock.MOCK_PREFIX
-import miwu.mock.NormalMockMiotDeviceClient
+import miwu.support.generated.device.DeviceRegistry
+import miwu.support.generated.mock.MockRegistry
+import miwu.support.mock.MOCK_PREFIX
+import miwu.support.mock.DefaultMockMiotDeviceClient
 import miwu.support.manager.MiotDeviceManager
+import miwu.support.urn.Urn
 import org.koin.core.component.KoinComponent
 
 class DeviceViewModel(
@@ -29,22 +32,16 @@ class DeviceViewModel(
 ) : AndroidViewModel(application), MiotDeviceManager.Callback, KoinComponent {
     private val logger = Logger()
     private val _event = Channel<Event>()
-    private val isMockDevice: Boolean
     val device = savedStateHandle.get<String>("device")
         ?.to<MiotDevice>()
         ?.getOrThrow()
         ?.takeIf { it.specType != null }
-        ?.also { isMockDevice = it.specType!!.startsWith(MOCK_PREFIX) }
-        ?.let {
-            if (isMockDevice) it.copy(specType = it.specType!!.substring(MOCK_PREFIX.length))
-            else it
-        }
         ?: error("MiotDevice is not found")
     val user = savedStateHandle.get<String>("user")
         ?.to<MiotUser>()
         ?.getOrThrow()
         ?: error("MiotUser is not found")
-    val miotDeviceClient = if (isMockDevice) null else MiotDeviceClient(user)
+    val miotDeviceClient = MiotDeviceClient(user)
     val event: ReceiveChannel<Event> = _event
     val isFromTile = savedStateHandle.get<Boolean>("isFromTile") ?: false
     val manager by lazy {
@@ -56,8 +53,7 @@ class DeviceViewModel(
             AndroidCache(application),
             AndroidTranslateHelper,
             Dispatchers.Main,
-            this,
-            ::NormalMockMiotDeviceClient
+            this
         )
     }
 

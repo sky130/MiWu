@@ -6,7 +6,6 @@ import com.github.miwu.logic.database.entity.FavoriteDevice
 import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
-import kotlinx.coroutines.flow.take
 
 class EditFavoriteViewModel(
     private val localRepository: LocalRepository,
@@ -14,9 +13,7 @@ class EditFavoriteViewModel(
     mapState: MapFragmentStateUseCase,
 ) : ViewModel() {
     val metadataHandler = cacheRepository.deviceMetadataHandler
-    val devices = localRepository.deviceListFlow
-        .take(1)
-        .asLiveData()
+    val devices = localRepository.deviceListFlow.asLiveData()
     val deviceState = mapState(localRepository.deviceListFlow).asLiveData()
 
     fun updateSortIndices(list: List<FavoriteDevice>) {

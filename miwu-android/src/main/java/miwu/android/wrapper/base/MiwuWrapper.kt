@@ -2,7 +2,7 @@ package miwu.android.wrapper.base
 
 import android.content.Context
 import android.view.View
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 
 abstract class MiwuWrapper<T>(context: Context, widget: MiwuWidget<T>) :
     ViewMiwuWrapper<T>(context, widget) {

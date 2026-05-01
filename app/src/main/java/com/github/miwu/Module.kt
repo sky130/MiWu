@@ -16,15 +16,15 @@ import org.koin.dsl.module
 
 val appModule = module {
     includes(
+        MiotApiKoinModule.JVM.Client,
+        MiotApiKoinModule.JVM.Provider,
+    )
+    includes(
         repositoryModule,
         useCaseModule,
         viewModelModule,
         databaseModule,
         dataStoreModule,
-    )
-    includes(
-        MiotApiKoinModule.JVM.Client,
-        MiotApiKoinModule.JVM.Provider,
     )
     single<Job> { Job() }
     single { CoroutineScope(get<Job>()) }

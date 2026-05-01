@@ -9,11 +9,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import miwu.miot.provider.MiotSpecAttrProvider
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class CacheRepositoryImpl : KoinComponent, CacheRepository {
-    private val specAttrProvider: MiotSpecAttrProvider by inject()
+class CacheRepositoryImpl(
+    private val specAttrProvider: MiotSpecAttrProvider,
+) : CacheRepository {
     private val iconMap = mutableMapOf<String, String>()
     private val roomMap = mutableMapOf<String, String>()
     private val iconMutex = Mutex()

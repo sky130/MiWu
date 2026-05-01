@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:isRefreshing="@{viewModel.roomState}"
-        app:onRefresh="@{() -> viewModel.loadRoom()}">
+        app:onRefresh="@{() -> viewModel.refreshHome()}">
 
         <FrameLayout style="@style/Wear.Frame">
 

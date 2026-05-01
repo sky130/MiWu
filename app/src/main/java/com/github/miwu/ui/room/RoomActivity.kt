@@ -17,7 +17,7 @@ class RoomActivity : ViewActivityX<Binding>(Binding::inflate) {
     private val logger = Logger()
     override val viewModel: RoomViewModel by viewModel(parameters = { parametersOf(room) })
     val room by extra<String>("room")
-    val user get() = viewModel.miotRepository.user.also(::checkMiotUser)
+    val user get() = viewModel.info.also(::checkMiotUser)
 
     fun onItemClick(item: Any?) {
         if (item !is MiotDevice || !item.isOnline || user == null) return

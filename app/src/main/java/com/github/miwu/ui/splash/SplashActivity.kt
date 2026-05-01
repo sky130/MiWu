@@ -4,37 +4,37 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.github.miwu.logic.datastore.MiotUserDataStore
-import com.github.miwu.logic.datastore.isLogin
-import com.github.miwu.logic.setting.AppSetting
 import com.github.miwu.ui.about.crash.CrashActivity
 import com.github.miwu.ui.login.LoginActivity
 import com.github.miwu.ui.main.MainActivity
-import com.github.miwu.utils.Logger
 import kndroidx.extension.start
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
-    val dataStore: MiotUserDataStore by inject()
-    val logger = Logger()
+    private val viewModel: SplashViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (AppSetting.isCrash.value) {
-            start<CrashActivity>()
-            return finish()
-        }
-        lifecycleScope.launch {
-            if (dataStore.isLogin()) {
-                start<MainActivity>()
-            } else {
-                logger.info("user is not login")
-                start<LoginActivity>()
+        viewModel.state.onEach { state ->
+            when (state) {
+                SplashState.NavigateToCrash -> {
+                    start<CrashActivity>()
+                    finish()
+                }
+                SplashState.NavigateToMain -> {
+                    start<MainActivity>()
+                    finish()
+                }
+                SplashState.NavigateToLogin -> {
+                    start<LoginActivity>()
+                    finish()
+                }
+                SplashState.Loading -> Unit
             }
-            finish()
-        }
+        }.launchIn(lifecycleScope)
     }
 
 }

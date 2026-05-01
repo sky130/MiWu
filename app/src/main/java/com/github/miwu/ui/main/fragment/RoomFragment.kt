@@ -13,7 +13,7 @@ class RoomFragment : ViewFragmentX<Binding>(Binding::inflate) {
     val logger = Logger()
 
     fun onItemClick(item: Any?) {
-        item as MiotRoom
-        requireContext().startRoomActivity(item.name)
+        val room = item as? MiotRoom ?: return
+        requireContext().startRoomActivity(room.name)
     }
 }

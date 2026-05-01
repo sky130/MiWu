@@ -17,25 +17,24 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
     override val viewModel: EditFavoriteViewModel by viewModel()
     val itemTouchHelper = ItemTouchHelper(TouchCallback())
 
-    @get:Suppress("UNCHECKED_CAST")
-    val adapter get() = binding.recycler.adapter as? BaseBindingAdapter<FavoriteDevice, ViewBinding>
-    val list get() = adapter?.item
+    @Suppress("UNCHECKED_CAST")
+    private val adapter
+        get() = binding.recycler.adapter as? BaseBindingAdapter<FavoriteDevice, ViewBinding>
+    private val list get() = adapter?.item
 
-    override fun onDestroy() {
+    override fun onPause() {
         list?.let(viewModel::updateSortIndices)
-        super.onDestroy()
+        super.onPause()
     }
 
     private inner class TouchCallback : ItemTouchHelper.Callback() {
         override fun getMovementFlags(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder
-        ): Int {
-            return makeMovementFlags(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                ItemTouchHelper.START
-            )
-        }
+        ): Int = makeMovementFlags(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.START
+        )
 
         override fun onMove(
             recyclerView: RecyclerView,
@@ -51,15 +50,23 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
-            val view = viewHolder.itemView
-            view.animateScale(1f, 1f, 200L)
+            viewHolder.itemView.animateScale(1f, 1f, 200L)
         }
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
-            val view = viewHolder?.itemView ?: return
-            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG)
-                view.animateScale(1.03f, 0.7f, 200L)
+            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                viewHolder?.itemView?.animateScale(1.03f, 0.7f, 200L)
+            }
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.absoluteAdapterPosition
+            if (direction == ItemTouchHelper.START) {
+                list?.get(position)?.let(viewModel::remove)
+                (list as? MutableList)?.removeAt(position)
+                adapter?.notifyItemRemoved(position)
+            }
         }
 
         private fun View.animateScale(scale: Float, alpha: Float, duration: Long) =
@@ -72,14 +79,5 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
                 this.duration = duration
                 start()
             }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val position = viewHolder.absoluteAdapterPosition
-            if (direction == ItemTouchHelper.START) {
-                list?.get(position)?.let(viewModel::remove)
-                (list as? MutableList)?.removeAt(position)
-                adapter?.notifyItemRemoved(position)
-            }
-        }
     }
 }

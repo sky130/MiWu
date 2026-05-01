@@ -5,24 +5,19 @@ import androidx.lifecycle.asLiveData
 import com.github.miwu.logic.database.entity.FavoriteDevice
 import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.logic.repository.MiotRepository
-import com.github.miwu.ui.main.state.FragmentState.Empty
-import com.github.miwu.ui.main.state.FragmentState.Normal
-import kotlinx.coroutines.flow.map
+import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
 import kotlinx.coroutines.flow.take
 
 class EditFavoriteViewModel(
-    val miotRepository: MiotRepository,
-    val localRepository: LocalRepository,
-    val cacheRepository: CacheRepository
+    private val localRepository: LocalRepository,
+    cacheRepository: CacheRepository,
+    mapState: MapFragmentStateUseCase,
 ) : ViewModel() {
     val metadataHandler = cacheRepository.deviceMetadataHandler
     val devices = localRepository.deviceListFlow
         .take(1)
         .asLiveData()
-    val deviceState = localRepository.deviceListFlow
-        .map { if (it.isEmpty()) Empty else Normal }
-        .asLiveData()
+    val deviceState = mapState(localRepository.deviceListFlow).asLiveData()
 
     fun updateSortIndices(list: List<FavoriteDevice>) {
         localRepository.updateSortIndices(list)

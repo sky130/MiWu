@@ -16,7 +16,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        MainViewModel(get(), get(), get(), get())
+        MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get())
     }
     viewModel {
         LoginViewModel(get(), get(), get())
@@ -43,6 +43,6 @@ val viewModelModule = module {
         AboutViewModel()
     }
     viewModel { params ->
-        RoomViewModel(get(), get(), params[0])
+        RoomViewModel(get(), get(), get(), get(), get(), params[0])
     }
 }

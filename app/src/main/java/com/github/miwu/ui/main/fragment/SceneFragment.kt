@@ -11,7 +11,7 @@ class SceneFragment : ViewFragmentX<Binding>(Binding::inflate) {
 
     fun onItemClick(item: Any?) {
         item as MiotScenes.Result.Scene
-        viewModel.miotRepository.runScene(item)
+        viewModel.runScene(item)
     }
 
     fun onItemLongClick(item: Any?): Boolean {

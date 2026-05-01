@@ -1,4 +1,4 @@
-package miwu.mock
+package miwu.support.mock
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -12,15 +12,15 @@ import miwu.miot.att.set.value
 import miwu.miot.model.att.DeviceAtt
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
-import miwu.mock.base.BaseMockMiotDeviceClient
+import miwu.support.mock.base.BaseMockMiotDeviceClient
 
-typealias MockStore = Map<Int, MutableMap<Int, Any>>
-typealias MockAction = MutableMap<Int, MutableMap<Int, MockActionHook>>
-typealias MockActionHook = (store: MockStore, input: Array<out Any>) -> Any
-typealias MockProperty = MutableMap<Int, MutableMap<Int, MockPropertyHook>>
-typealias MockPropertyHook = suspend (store: MockStore, origin: Any) -> Unit
+typealias MockStore = MutableMap<Pair<Int, Int>, Any>
+typealias MockAction = MutableMap<Pair<Int, Int>, MockActionHook>
+typealias MockActionHook = (action: SpecAtt.Service.Action, store: MockStore, input: Array<out Any>) -> Any
+typealias MockProperty = MutableMap<Pair<Int, Int>, MockPropertyHook>
+typealias MockPropertyHook = suspend (property: SpecAtt.Service.Property, store: MockStore, origin: Any) -> Unit
 
-typealias MockMiotDeviceClientBuilder = (mockScope: CoroutineScope, specAtt: SpecAtt, device: MiotDevice) -> MockMiotDeviceClient
+typealias MockMiotDeviceClientBuilder = (deviceType: String, mockScope: CoroutineScope, specAtt: SpecAtt, device: MiotDevice) -> BaseMockMiotDeviceClient
 
 /**
  * 用于在测试中模拟 [miwu.miot.client.MiotDeviceClient] 行为的抽象基类。
@@ -56,13 +56,11 @@ abstract class MockMiotDeviceClient(
     device: MiotDevice,
 ) : BaseMockMiotDeviceClient(device), MockClient {
     private val mockStore: MockStore =
-        specAtt.services.associate { service ->
+        specAtt.services.flatMap { service ->
             service.properties
                 .orEmpty()
-                .associate { it.iid to it.getDefaultValue() }
-                .toMutableMap()
-                .let { service.iid to it }
-        }
+                .map { (service.iid to it.iid) to it.getDefaultValue() }
+        }.toMap().toMutableMap()
     private val mockAction: MockAction = mutableMapOf()
     private val mockProperty: MockProperty = mutableMapOf()
     private val mockJob: MutableMap<Pair<Int, Int>, Job> = mutableMapOf()
@@ -74,18 +72,18 @@ abstract class MockMiotDeviceClient(
     fun registerProperty(
         serviceName: String,
         propertyName: String,
-        property: MockPropertyHook
+        propertyHook: MockPropertyHook
     ) {
         val siid: Int
-        val aiid: Int
+        val piid: Int
         specAtt.services
-            .firstOrNull { it.type == serviceName }
+            .firstOrNull { it.name == serviceName }
             ?.also { siid = it.iid }
-            ?.actions
-            ?.firstOrNull { it.type == propertyName }
-            ?.also { aiid = it.iid }
+            ?.properties
+            ?.firstOrNull { it.name == propertyName }
+            ?.also { piid = it.iid }
             ?: return
-        mockProperty.getOrPut(siid) { mutableMapOf() }[aiid] = property
+        mockProperty[siid to piid] = propertyHook
     }
 
     /**
@@ -94,18 +92,51 @@ abstract class MockMiotDeviceClient(
     fun registerAction(
         serviceName: String,
         actionName: String,
-        action: MockActionHook
+        actionHook: MockActionHook
     ) {
         val siid: Int
         val aiid: Int
         specAtt.services
-            .firstOrNull { it.type == serviceName }
+            .firstOrNull { it.name == serviceName }
             ?.also { siid = it.iid }
             ?.actions
-            ?.firstOrNull { it.type == actionName }
+            ?.firstOrNull { it.name == actionName }
             ?.also { aiid = it.iid }
             ?: return
-        mockAction.getOrPut(siid) { mutableMapOf() }[aiid] = action
+        mockAction[siid to aiid] = actionHook
+    }
+
+    fun getProperty(serviceName: String, propertyName: String): SpecAtt.Service.Property? {
+        return specAtt.services
+            .firstOrNull { it.name == serviceName }
+            ?.properties
+            ?.firstOrNull { it.name == propertyName }
+    }
+
+    fun getAction(serviceName: String, actionName: String): SpecAtt.Service.Action? {
+        return specAtt.services
+            .firstOrNull { it.name == serviceName }
+            ?.actions
+            ?.firstOrNull { it.name == actionName }
+    }
+
+    fun <T> update(att: GetAtt, value: T?) {
+        value ?: return
+        mockStore[att] = value as Any
+    }
+
+    infix fun String.with(propertyName: String): GetAtt {
+        val serviceName = this
+        val siid: Int
+        val piid: Int
+        specAtt.services
+            .firstOrNull { it.name == serviceName }
+            ?.also { siid = it.iid }
+            ?.properties
+            ?.firstOrNull { it.name == propertyName }
+            ?.also { piid = it.iid }
+            ?: return -1 to -1
+        return siid to piid
     }
 
     override suspend fun onGet(att: Array<out GetAtt>): Result<DeviceAtt> =
@@ -119,7 +150,7 @@ abstract class MockMiotDeviceClient(
                         iid = "",
                         siid = info.first,
                         piid = info.second,
-                        value = mockStore[info.first]?.get(info.second),
+                        value = mockStore[info.first to info.second],
                         code = 0,
                         updateTime = null,
                         exeTime = 0
@@ -131,13 +162,18 @@ abstract class MockMiotDeviceClient(
     override suspend fun onSet(att: Array<out SetAtt>): Result<Unit> =
         runCatching {
             for (entry in att) {
-                val mockFun = mockProperty[entry.siid]?.get(entry.piid)
+                val mockFun = mockProperty[entry.siid to entry.piid]
                 if (mockFun == null) {
-                    mockStore[entry.siid]?.set(entry.piid, entry.value)
+                    mockStore[entry.siid to entry.piid] = entry.value
                     continue
                 }
+                val property = specAtt.services
+                    .firstOrNull { it.iid == entry.siid }
+                    ?.properties
+                    ?.firstOrNull { it.iid == entry.piid }
+                    ?: continue
                 val newJob = mockScope.launch {
-                    mockFun(mockStore, entry.value)
+                    mockFun(property, mockStore, entry.value)
                 }.apply {
                     invokeOnCompletion {
                         mockJob.remove(entry.siid to entry.piid)
@@ -150,6 +186,11 @@ abstract class MockMiotDeviceClient(
 
     override suspend fun onAction(siid: Int, aiid: Int, vararg input: Any): Result<Any?> =
         runCatching {
-            mockAction[siid]?.get(aiid)?.invoke(mockStore, input)
+            val action = specAtt.services
+                .firstOrNull { it.iid == siid }
+                ?.actions
+                ?.firstOrNull { it.iid == aiid }
+                ?: return@runCatching null
+            mockAction[siid to aiid]?.invoke(action, mockStore, input)
         }
 }

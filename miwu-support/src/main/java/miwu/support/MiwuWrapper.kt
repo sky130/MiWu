@@ -1,14 +1,18 @@
-package miwu.support.base
+package miwu.support
 
+import miwu.miot.model.att.SpecAction
 import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.att.SpecProperty
 import miwu.support.api.WidgetObserver
 import miwu.support.icon.Icon
 
 abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
 
     private var canUpdate = true
-    val propertyListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
-    val actionListenerList = mutableMapOf<Pair<Int, Int>, (Any) -> Unit>()
+    val propertyListenerList =
+        mutableMapOf<Pair<Int, Int>, Pair<SpecProperty, (property: SpecProperty, value: Any) -> Unit>>()
+    val actionListenerList =
+        mutableMapOf<Pair<Int, Int>, Pair<SpecAction, (action: SpecAction, input: Any) -> Unit>>()
 
     /**
      * 用于描述设备中的 `property` 或 `action`
@@ -178,7 +182,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     override fun onActionCallback(siid: Int, aiid: Int, output: Any?) {
         // Action 的回调是一次性的，不应该拦截
         if (widget.isMultiAttribute)
-            actionListenerList[siid to piid]?.invoke(output ?: Unit)
+            actionListenerList[siid to piid]?.apply { second.invoke(first, output ?: Unit) }
         if (siid != this.siid || aiid != this.aiid) return
         onActionCallback(output ?: Unit)
     }
@@ -188,7 +192,8 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
         siid: Int, piid: Int, value: Any
     ) {
         if (!canUpdate) return
-        if (widget.isMultiAttribute) propertyListenerList[siid to piid]?.invoke(value)
+        if (widget.isMultiAttribute) propertyListenerList[siid to piid]
+            ?.apply { second.invoke(first, value) }
         if (siid != this.siid || piid != this.piid) return
         onUpdateValue(value as T)
     }
@@ -262,20 +267,41 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      * @param piid piid
      * @param block 回调函数
      */
-    fun register(serviceName: String, propertyName: String, block: (Any) -> Unit) {
+    fun registerProperty(
+        serviceName: String,
+        propertyName: String,
+        block: (property: SpecProperty, value: Any) -> Unit
+    ) {
         val siid = getService(serviceName)?.iid ?: return
-        val piid = getProperty(serviceName, propertyName)?.iid ?: return
-        register(siid, piid)
-        propertyListenerList[siid to piid] = block
+        val property = getProperty(serviceName, propertyName) ?: return
+        val piid = property.iid
+        registerProperty(siid, piid)
+        propertyListenerList[siid to piid] = property to block
     }
 
     /**
-     * 注册 Action，使得可以监听 Action 的回调
+     * 注册 Action，使得可以获取 Action 的回调
      *
      * @param siid siid
-     * @param aiid aiid
+     * @param aiid piid
+     * @param block 回调函数
      */
-    fun register(siid: Int, piid: Int) {
-        if (widget.isMultiAttribute) widget.register(siid, piid)
+    fun registerAction(
+        serviceName: String,
+        actionName: String,
+        block: (action: SpecAction, input: Any) -> Unit
+    ) {
+        val siid = getService(serviceName)?.iid ?: return
+        val action = getAction(serviceName, actionName) ?: return
+        registerAction(siid, aiid)
+        actionListenerList[siid to aiid] = action to block
+    }
+
+    fun registerAction(siid: Int, aiid: Int) {
+        if (widget.isMultiAttribute) widget.registerAction(siid, aiid)
+    }
+
+    fun registerProperty(siid: Int, piid: Int) {
+        if (widget.isMultiAttribute) widget.registerProperty(siid, piid)
     }
 }

@@ -1,11 +1,11 @@
 package miwu.support.layout
 
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 
 typealias WidgetList = ArrayList<MiwuWidget<*>>
 
 /**
- * `miwu-support` 布局容器，用于按区域组织和管理[MiwuWidget]
+ * `miwu-support` 布局容器，用于按区域组织和管理 [MiwuWidget]
  *
  * 该布局将界面划分为六个区域 [WidgetList]，分别存储不同类型的 [MiwuWidget]：
  * - 头部(header)：顶部主要区域，通常用于导航栏、标题栏等
@@ -31,7 +31,7 @@ typealias WidgetList = ArrayList<MiwuWidget<*>>
  * @property footer 尾部
  * @property unknown 未分类
  */
-data class MiwuLayout(
+data class MiwuWidgetLayout(
     val header: WidgetList = arrayListOf(),
     val subHeader: WidgetList = arrayListOf(),
     val body: WidgetList = arrayListOf(),

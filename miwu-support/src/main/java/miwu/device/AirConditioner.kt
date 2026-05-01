@@ -1,7 +1,8 @@
 package miwu.device
 
-import miwu.support.base.MiwuDevice
+import miwu.support.MiwuDevice
 import miwu.annotation.*
+import miwu.support.mock.DefaultMockMiotDeviceClient
 import miwu.widget.*
 
 @Device("air-conditioner")

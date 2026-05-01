@@ -3,6 +3,7 @@
 package miwu.support.manager
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import miwu.icon.Icons
 import miwu.miot.client.MiotDeviceClient
@@ -10,9 +11,12 @@ import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.api.Cache
-import miwu.support.base.MiwuWidget
-import miwu.support.layout.MiwuLayout
+import miwu.support.MiwuWidget
+import miwu.support.generated.mock.MockRegistry
+import miwu.support.layout.MiwuWidgetLayout
+import miwu.support.mock.MOCK_PREFIX
 import miwu.support.translate.TranslateHelper
+import miwu.support.urn.Urn
 
 abstract class MiotDeviceManager {
 
@@ -21,10 +25,10 @@ abstract class MiotDeviceManager {
      *
      * 执行初始化 [init] 之后, 可在这里获取初始化结果
      */
-    abstract val layout: MiwuLayout
+    abstract val layout: MiwuWidgetLayout
 
     /**
-     * 初始化 [MiotDeviceManager] 和创建 [MiwuLayout], 并且开始遍历获取服务器上的设备信息
+     * 初始化 [MiotDeviceManager] 和创建 [MiwuWidgetLayout], 并且开始遍历获取服务器上的设备信息
      */
     abstract fun init()
 
@@ -69,24 +73,32 @@ abstract class MiotDeviceManager {
          * @return [MiotDeviceManager]
          */
         fun build(
-            miot: MiotDeviceClient,
+            miot: MiotDeviceClient?,
             specAttrProvider: MiotSpecAttrProvider,
             device: MiotDevice,
             icons: Icons,
             cache: Cache,
             translateHelper: TranslateHelper,
             dispatcher: CoroutineDispatcher = Dispatchers.Default,
-            callback: Callback? = null
-        ): MiotDeviceManager = MiotDeviceManagerImpl(
-            miot,
-            specAttrProvider,
-            device,
-            icons,
-            cache,
-            translateHelper,
-            dispatcher,
-            callback
-        )
+            callback: Callback? = null,
+        ): MiotDeviceManager {
+            val specType = device.specType ?: error("device specType is null")
+            val isMockDevice = specType.startsWith(MOCK_PREFIX)
+            val device =
+                if (isMockDevice) device.copy(specType = specType.substring(MOCK_PREFIX.length))
+                else device
+            return MiotDeviceManagerImpl(
+                if (isMockDevice) null else miot,
+                specAttrProvider,
+                device,
+                icons,
+                cache,
+                translateHelper,
+                dispatcher,
+                callback,
+                MockRegistry::createMockClient
+            )
+        }
     }
 
     interface Callback {

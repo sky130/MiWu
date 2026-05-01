@@ -1,3 +1,3 @@
-package miwu.support.base
+package miwu.support
 
 abstract class MiwuDevice

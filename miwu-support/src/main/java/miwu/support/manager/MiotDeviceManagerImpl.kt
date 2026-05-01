@@ -17,19 +17,23 @@ import miwu.annotation.widget.Header
 import miwu.annotation.widget.SubFooter
 import miwu.annotation.widget.SubHeader
 import miwu.support.api.Cache
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 import miwu.icon.Icons
-import miwu.support.layout.MiwuLayout
-import miwu.widget.generated.device.DeviceRegistry
-import miwu.widget.generated.widget.PropertyRegistry
+import miwu.support.layout.MiwuWidgetLayout
+import miwu.support.generated.device.DeviceRegistry
+import miwu.support.generated.widget.PropertyRegistry
 import miwu.miot.att.get.GetAtt
 import miwu.miot.client.MiotDeviceClient
 import miwu.support.urn.Urn
 import miwu.support.translate.TranslateHelper
 import miwu.miot.model.att.DeviceAtt
+import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
-import miwu.widget.generated.widget.ActionRegistry
+import miwu.support.mock.MockMiotDeviceClientBuilder
+import miwu.support.mock.DefaultMockMiotDeviceClient
+import miwu.support.generated.widget.ActionRegistry
+import miwu.support.mock.MockMiotDeviceClient
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.reflect.KClass
 
@@ -37,33 +41,47 @@ typealias MiwuWidgetClass = Class<MiwuWidget<*>>
 
 /**
  * @author Sky233
- * @param miot 用于调用 MiotClient 接口
+ * @param miot 用于调用 MiotDeviceClient 接口
  * @param specAttrProvider 用于调用 MiotManager 接口
  * @param device 设备详情
  * @param cache 用于缓存设备属性
  * @param dispatcher 用于更新 UI 数据的线程
  * @param callback 用于回调设备初始化状态
+ * @param mockMiotDeviceClient 用于模拟设备
  * */
 class MiotDeviceManagerImpl internal constructor(
-    val miot: MiotDeviceClient,
+    miot: MiotDeviceClient?,
     val specAttrProvider: MiotSpecAttrProvider,
     val device: MiotDevice,
     val icons: Icons,
     val cache: Cache,
     val translateHelper: TranslateHelper,
     val dispatcher: CoroutineDispatcher = Dispatchers.Default,
-    val callback: Callback? = null
+    val callback: Callback? = null,
+    val mockMiotDeviceClient: MockMiotDeviceClientBuilder = ::DefaultMockMiotDeviceClient
 ) : MiotDeviceManager() {
     private val refreshInterval = 1000L
-    private val updatingInterval = 500L
     private val widgetHolders = CopyOnWriteArrayList<WidgetHolder>()
     private val supportWidget = mutableSetOf<MiwuWidgetClass>()
-    private val deviceUrn = device.specType ?: ""
+    private val deviceSpecType = device.specType ?: ""
+    private val deviceUrn = Urn.parseFrom(deviceSpecType)
     private var isOutdated = false
     private val job = Job()
     private val scope = CoroutineScope(job)
+    private val miot: MiotDeviceClient by lazy {
+        miot ?: mockMiotDeviceClient(
+            deviceUrn.name,
+            scope,
+            specAtt,
+            device
+        ).apply {
+            if (this is MockMiotDeviceClient) onInit()
+        }
+    }
+    private lateinit var specAtt: SpecAtt
 
-    override val layout = MiwuLayout()
+    override val layout = MiwuWidgetLayout()
+
 
     override fun init() {
         scope.launch {
@@ -82,7 +100,7 @@ class MiotDeviceManagerImpl internal constructor(
     }
 
     private fun initDevice() {
-        val device = DeviceRegistry.registry[Urn.parseFrom(deviceUrn).name] ?: return
+        val device = DeviceRegistry.registry[deviceUrn.name]?.java ?: return
         val widgetAnnotations =
             device.annotations.firstOrNull { it is Widgets } as? Widgets ?: return
         supportWidget += (widgetAnnotations.widgets as Array<KClass<MiwuWidget<*>>>).map { it.java }
@@ -100,8 +118,9 @@ class MiotDeviceManagerImpl internal constructor(
     private suspend fun initWidgets() {
         val att = getAtt() ?: return
 
+        specAtt = att
         callback?.onDeviceAttLoaded(att)
-        cache.putSpecAtt(deviceUrn, att)
+        cache.putSpecAtt(deviceSpecType, att)
 
         att.initVariable()
         getLanguageMap()?.let { att.convertLanguage(it) }
@@ -209,7 +228,7 @@ class MiotDeviceManagerImpl internal constructor(
             isOutdated = true
             for (i in widgetHolders) {
                 val widget = i.widget
-                if (widget.siid == siid && widget.piid == piid) widget.updateValue(value)
+                if (widget.allowRead && widget.siid == siid && widget.piid == piid) widget.updateValue(value)
                 if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
             }
             miot.set(device, arrayOf(siid to piid to value))
@@ -218,15 +237,20 @@ class MiotDeviceManagerImpl internal constructor(
 
     override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
         scope.launch {
+            val action = siid to aiid
             val result = miot.action(device, siid, aiid, *input).getOrNull() ?: return@launch
-            for (i in widgetHolders) {
-                val widget = i.widget
-                if ((widget.siid == siid && widget.aiid == aiid) || widget.isMultiAttribute)
-                    widget.onActionCallback(
-                        siid,
-                        aiid,
-                        result
-                    )
+            for (holder in widgetHolders) {
+                with(holder.widget) {
+                    if (this.siid to this.aiid == action ||
+                        isMultiAttribute && siid to aiid in aiidList
+                    ) {
+                        onActionCallback(
+                            siid,
+                            aiid,
+                            result
+                        )
+                    }
+                }
             }
         }
     }
@@ -253,17 +277,19 @@ class MiotDeviceManagerImpl internal constructor(
     }
 
     private suspend fun getAtt() =
-        cache.getSpecAtt(deviceUrn) ?: device.getSpecAtt(specAttrProvider).getOrNull()
+        cache.getSpecAtt(deviceSpecType)
+            ?: device.getSpecAtt(specAttrProvider).getOrNull()
 
     private suspend fun getLanguageMap() =
-        cache.getLanguageMap(deviceUrn) ?: device.getSpecAttLanguageMap(specAttrProvider)
-            .getOrNull()
+        cache.getLanguageMap(deviceSpecType)
+            ?: device.getSpecAttLanguageMap(specAttrProvider).getOrNull()
 
     private fun getPropertyWidgetClass(
         serviceType: String, propertyType: String
     ): MiwuWidgetClass? {
         val map =
             PropertyRegistry.registry[Urn.parseFrom(serviceType).name to Urn.parseFrom(propertyType).name]
+                ?.java
                 ?: return null
         return map as? MiwuWidgetClass
     }
@@ -273,6 +299,7 @@ class MiotDeviceManagerImpl internal constructor(
     ): MiwuWidgetClass? {
         val map =
             ActionRegistry.registry[Urn.parseFrom(serviceType).name to Urn.parseFrom(propertyType).name]
+                ?.java
                 ?: return null
         return map as? MiwuWidgetClass
     }
@@ -292,11 +319,11 @@ class MiotDeviceManagerImpl internal constructor(
     private fun MiwuWidgetClass.createWidget() = this.getDeclaredConstructor().newInstance()
 
     private suspend fun forEach() = withContext(Dispatchers.IO) {
-        val attList = arrayListOf<GetAtt>()
-        for (i in widgetHolders) {
-            val widget = i.widget
-            if (!widget.allowRead) continue
-            if (widget.piid == -1) continue
+        val attList = mutableSetOf<GetAtt>()
+        for (holder in widgetHolders) {
+            val widget = holder.widget
+            if (widget.isMultiAttribute) attList.addAll(widget.piidList)
+            if (!widget.allowRead || widget.piid == -1) continue
             attList.add(widget.siid to widget.piid)
         }
         if (attList.isEmpty()) return@withContext
@@ -308,17 +335,25 @@ class MiotDeviceManagerImpl internal constructor(
     private suspend fun update(list: ArrayList<DeviceAtt.Att>) = withContext(dispatcher) {
         for (holder in widgetHolders) {
             val widget = holder.widget
-            var cacheAtt: DeviceAtt.Att? = null
             for (att in list) {
-                if (att.siid != widget.siid || att.piid != widget.piid) continue
-                if (isOutdated) return@withContext { isOutdated = false }.invoke()
-                widget.updateValue(att.value)
-                cacheAtt = att
+                if (att.siid to att.piid == widget.siid to widget.piid) {
+                    widget.updateValue(att.value)
+                }
+                if (att.siid to att.piid in widget.piidList) {
+                    widget.updateValue(att.siid, att.piid, att.value)
+                }
+                if (isOutdated) {
+                    isOutdated = false
+                    return@withContext
+                }
             }
-            cacheAtt?.let { list.remove(it) }
         }
     }
 
+
+    /**
+     * 绑定 MiwuWidget
+     */
     private inner class WidgetHolder(val widget: MiwuWidget<*>) {
         fun bind() {
             widget.bind(this@MiotDeviceManagerImpl)
@@ -329,6 +364,14 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
+    /**
+     * 用于更新 MiwuWidget 的属性值
+     *
+     * MiwuWidget 会绑定一个 Property, 默认情况下通过该方法更新对应的属性值,
+     * 如果需要绑定多个 Property, 请使用 [updateValue(siid: Int, piid: Int, value: Any?)] 方法
+     *
+     * @param value 属性值
+     */
     @Suppress("UNCHECKED_CAST")
     private fun <T> MiwuWidget<T>.updateValue(value: Any?) {
         runCatching {
@@ -340,8 +383,17 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
+    /**
+     * 用于更新 MiwuWidget 的属性值
+     *
+     * 可以指定 siid 和 piid 来更新对应 Property 的属性
+     *
+     * @param siid siid
+     * @param piid piid
+     * @param value 属性值
+     */
     private fun MiwuWidget<*>.updateValue(siid: Int, piid: Int, value: Any?) {
-        if (siid to piid !in iidList) return
+        if (siid to piid !in piidList) return
         runCatching {
             onValueChange(siid, piid, value!!)
         }.recoverCatching {

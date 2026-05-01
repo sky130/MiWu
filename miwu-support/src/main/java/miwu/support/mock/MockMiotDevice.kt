@@ -1,4 +1,4 @@
-package miwu.mock
+package miwu.support.mock
 
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotDeviceExtra

@@ -1,4 +1,4 @@
-package miwu.mock.base
+package miwu.support.mock.base
 
 import miwu.miot.att.get.GetAtt
 import miwu.miot.att.set.SetAtt
@@ -10,7 +10,7 @@ import miwu.miot.model.miot.MiotDevice
  * 如果想要实现 MockMiotDeviceClient 就必须继承该类去实现,
  * 用于模拟设备的属性获取和设置, onAction 可以视情况继承实现, 在需要返回数据的时候就实现
  *
- * @see [miwu.miot.client.MiotDeviceClient]
+ * @see [MiotDeviceClient]
  */
 abstract class BaseMockMiotDeviceClient(val miotDevice: MiotDevice) : MiotDeviceClient {
     abstract suspend fun onGet(att: Array<out GetAtt>): Result<DeviceAtt>

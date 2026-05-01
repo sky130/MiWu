@@ -11,15 +11,19 @@ import com.github.miwu.ui.edit.EditFavoriteViewModel
 import com.github.miwu.ui.login.LoginViewModel
 import com.github.miwu.ui.main.MainViewModel
 import com.github.miwu.ui.room.RoomViewModel
+import com.github.miwu.ui.splash.SplashViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        MainViewModel(get(), get(), get(), get())
+        SplashViewModel(get())
     }
     viewModel {
-        LoginViewModel(get(), get(), get())
+        MainViewModel(get(), get(), get(), get(), get(), get(), get(), get())
+    }
+    viewModel {
+        LoginViewModel(get(), get())
     }
     viewModel {
         LicenseViewModel()
@@ -40,9 +44,9 @@ val viewModelModule = module {
         CrashViewModel()
     }
     viewModel {
-        AboutViewModel()
+        AboutViewModel(get())
     }
     viewModel { params ->
-        RoomViewModel(get(), get(), params[0])
+        RoomViewModel(get(), get(), get(), get(), params[0])
     }
 }

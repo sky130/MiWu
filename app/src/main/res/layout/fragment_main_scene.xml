@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:isRefreshing="@{viewModel.sceneState}"
-        app:onRefresh="@{() -> viewModel.loadScene()}">
+        app:onRefresh="@{() -> viewModel.refreshHome()}">
 
         <FrameLayout style="@style/Wear.Frame">
 

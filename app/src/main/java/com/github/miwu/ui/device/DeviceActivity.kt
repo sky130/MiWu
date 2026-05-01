@@ -56,10 +56,6 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
         }
     }
 
-    fun onAddButtonClick() {
-
-    }
-
     fun onStarButtonClick() {
         viewModel.addFavorite()
     }

@@ -9,19 +9,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import miwu.annotation.ValueList
 import miwu.annotation.Widgets
-import miwu.annotation.widget.Body
-import miwu.annotation.widget.Footer
-import miwu.annotation.widget.Header
-import miwu.annotation.widget.SubFooter
-import miwu.annotation.widget.SubHeader
 import miwu.support.api.Cache
 import miwu.support.MiwuWidget
 import miwu.icon.Icons
 import miwu.support.layout.MiwuWidgetLayout
 import miwu.support.generated.device.DeviceRegistry
-import miwu.support.generated.widget.PropertyRegistry
 import miwu.miot.att.get.GetAtt
 import miwu.miot.client.MiotDeviceClient
 import miwu.support.urn.Urn
@@ -32,7 +25,6 @@ import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.mock.MockMiotDeviceClientBuilder
 import miwu.support.mock.DefaultMockMiotDeviceClient
-import miwu.support.generated.widget.ActionRegistry
 import miwu.support.mock.MockMiotDeviceClient
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.reflect.KClass
@@ -40,15 +32,21 @@ import kotlin.reflect.KClass
 typealias MiwuWidgetClass = Class<MiwuWidget<*>>
 
 /**
- * @author Sky233
- * @param miot 用于调用 MiotDeviceClient 接口
- * @param specAttrProvider 用于调用 MiotManager 接口
+ * Miot 设备管理器实现
+ *
+ * 负责设备的生命周期管理、属性轮询更新、值更新和动作执行。
+ * Widget 的加载和配置委托给 [WidgetLoader] 处理。
+ *
+ * @param miot 用于调用 MiotDeviceClient 接口，为 null 时使用 mockMiotDeviceClient
+ * @param specAttrProvider 用于调用 MiotManager 接口获取设备属性规格
  * @param device 设备详情
+ * @param icons 图标资源
  * @param cache 用于缓存设备属性
- * @param dispatcher 用于更新 UI 数据的线程
+ * @param translateHelper 翻译帮助器
+ * @param dispatcher 用于更新 UI 数据的线程调度器
  * @param callback 用于回调设备初始化状态
- * @param mockMiotDeviceClient 用于模拟设备
- * */
+ * @param mockMiotDeviceClient 用于模拟设备的构建器
+ */
 class MiotDeviceManagerImpl internal constructor(
     miot: MiotDeviceClient?,
     val specAttrProvider: MiotSpecAttrProvider,
@@ -61,7 +59,7 @@ class MiotDeviceManagerImpl internal constructor(
     val mockMiotDeviceClient: MockMiotDeviceClientBuilder = ::DefaultMockMiotDeviceClient
 ) : MiotDeviceManager() {
     private val refreshInterval = 1000L
-    private val widgetHolders = CopyOnWriteArrayList<WidgetHolder>()
+    private val widgetHolders = CopyOnWriteArrayList<WidgetLoader.WidgetHolder>()
     private val supportWidget = mutableSetOf<MiwuWidgetClass>()
     private val deviceSpecType = device.specType ?: ""
     private val deviceUrn = Urn.parseFrom(deviceSpecType)
@@ -83,6 +81,15 @@ class MiotDeviceManagerImpl internal constructor(
     override val layout = MiwuWidgetLayout()
 
 
+    /**
+     * 初始化设备管理器
+     *
+     * 在协程中执行以下操作：
+     * 1. 初始化设备（加载支持的 widget 类型）
+     * 2. 初始化 widgets（从 SpecAtt 加载并配置）
+     * 3. 回调通知设备初始化完成
+     * 4. 启动属性轮询
+     */
     override fun init() {
         scope.launch {
             initDevice()
@@ -92,13 +99,23 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
+    /**
+     * 停止设备管理器
+     *
+     * 取消协程任务，清空布局，回收所有 widget 资源。
+     */
     override fun stop() {
         job.cancel()
         layout.clear()
-        widgetHolders.forEach(WidgetHolder::recycler)
+        widgetHolders.forEach { it.recycler() }
         widgetHolders.clear()
     }
 
+    /**
+     * 初始化设备
+     *
+     * 从 [DeviceRegistry] 查找设备类，读取 [Widgets] 注解，填充 [supportWidget] 集合。
+     */
     private fun initDevice() {
         val device = DeviceRegistry.registry[deviceUrn.name]?.java ?: return
         val widgetAnnotations =
@@ -106,6 +123,11 @@ class MiotDeviceManagerImpl internal constructor(
         supportWidget += (widgetAnnotations.widgets as Array<KClass<MiwuWidget<*>>>).map { it.java }
     }
 
+    /**
+     * 启动属性轮询
+     *
+     * 在协程中循环调用 [forEach] 获取最新属性值，间隔为 [refreshInterval] 毫秒。
+     */
     private fun run() {
         scope.launch {
             while (true) {
@@ -115,6 +137,11 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
+    /**
+     * 初始化 widgets
+     *
+     * 获取设备属性规格，初始化变量和语言映射，然后委托 [WidgetLoader] 加载 widgets。
+     */
     private suspend fun initWidgets() {
         val att = getAtt() ?: return
 
@@ -125,104 +152,19 @@ class MiotDeviceManagerImpl internal constructor(
         att.initVariable()
         getLanguageMap()?.let { att.convertLanguage(it) }
 
-        fun MiwuWidget<*>.setAttr() {
-            if (isMultiAttribute) field.miotSpecAtt = att
-        }
-
-        val services = att.services
-
-        for (service in services) {
-            val properties = service.properties
-            val actions = service.actions
-            properties?.let { properties ->
-                for (property in properties) {
-                    val widgetClass =
-                        getPropertyWidgetClass(service.type, property.type) ?: continue
-                    service.description
-                    if (widgetClass !in supportWidget) continue
-
-                    fun MiwuWidget<*>.config() = this.apply {
-                        with(field) {
-                            siid = service.iid
-                            piid = property.iid
-                            propertyName = Urn.parseFrom(property.type).name
-                            serviceName = Urn.parseFrom(service.type).name
-                            desc = property.description
-                            valueOriginUnit = property.unit ?: ""
-                            serviceDesc = service.description
-                            serviceDescTranslation = service.descriptionTranslation
-                            descTranslation = property.descriptionTranslation
-                            allowWrite = "write" in property.access
-                            allowRead = "read" in property.access
-                            allowNotify = "notify" in property.access
-                            property.valueList?.also { valueList.addAll(it) }
-                        }
-                        setAttr()
-                    }
-
-                    fun load(widgetClass: MiwuWidgetClass) {
-                        if (widgetClass.hasValueList()) {
-                            when (val pointTo = widgetClass.getPointTo()) {
-                                ValueList::class -> {
-                                    property.valueList?.forEach {
-                                        val widget = widgetClass.createWidget().config()
-                                        with(widget.field) {
-                                            desc = it.description
-                                            descTranslation = it.descriptionTranslation
-                                            serviceDesc = service.description
-                                            serviceDescTranslation = service.descriptionTranslation
-                                            setDefaultValue(it.value)
-                                        }
-                                        addWidget(widget, widgetClass)
-                                    }
-                                }
-
-                                else -> {
-                                    runCatching {
-                                        pointTo as KClass<MiwuWidget<*>>
-                                        load(pointTo.java)
-                                    }
-                                }
-                            }
-                        } else {
-                            val widget = widgetClass.createWidget().config()
-                            property.valueRange?.let {
-                                widget.field.setValueRange(it[0], it[1], it[2])
-                            }
-                            addWidget(widget, widgetClass)
-                        }
-                    }
-
-                    load(widgetClass)
-                }
-            }
-            actions?.let { actions ->
-                for (action in actions) {
-                    val widgetClass = getActionWidgetClass(service.type, action.type) ?: continue
-
-                    if (widgetClass !in supportWidget) continue
-
-                    fun MiwuWidget<*>.config() = this.apply {
-                        with(field) {
-                            siid = service.iid
-                            aiid = action.iid
-                            actionName = Urn.parseFrom(action.type).name
-                            serviceName = Urn.parseFrom(service.type).name
-                            serviceDesc = service.description
-                            serviceDescTranslation = service.descriptionTranslation
-                            desc = action.description
-                            descTranslation = action.descriptionTranslation
-                        }
-                        setAttr()
-                    }
-
-                    val widget = widgetClass.createWidget().config()
-                    addWidget(widget, widgetClass)
-                }
-            }
-        }
+        val widgetLoader = WidgetLoader(this, supportWidget, layout, icons, translateHelper)
+        widgetHolders.addAll(widgetLoader.loadWidgets(att))
     }
 
+    /**
+     * 更新指定属性的值
+     *
+     * 标记为过时，更新所有匹配的 widget，然后调用 MiotDeviceClient 设置值。
+     *
+     * @param siid 服务 ID
+     * @param piid 属性 ID
+     * @param value 新的属性值
+     */
     override fun updateValue(siid: Int, piid: Int, value: Any) {
         scope.launch {
             isOutdated = true
@@ -235,6 +177,15 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
+    /**
+     * 执行设备动作
+     *
+     * 调用 MiotDeviceClient 执行动作，然后通知所有匹配的 widget 回调。
+     *
+     * @param siid 服务 ID
+     * @param aiid 动作 ID
+     * @param input 动作输入参数
+     */
     override fun doAction(siid: Int, aiid: Int, vararg input: Any) {
         scope.launch {
             val action = siid to aiid
@@ -255,69 +206,33 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
-    private fun addWidget(widget: MiwuWidget<*>, widgetClass: MiwuWidgetClass) {
-        val widgetPosition = widgetClass.getPosition()
-
-        widget.field.icons = icons
-        widget.translateHelper = translateHelper
-
-        when (widgetPosition) {
-            is Body -> layout.body.add(widget)
-            is Footer -> layout.footer.add(widget)
-            is Header -> layout.header.add(widget)
-            is SubFooter -> layout.subFooter.add(widget)
-            is SubHeader -> layout.subHeader.add(widget)
-            else -> layout.unknown.add(widget)
-        }
-
-        WidgetHolder(widget).let { holder ->
-            holder.bind()
-            widgetHolders.add(holder)
-        }
-    }
-
+    /**
+     * 获取设备属性规格
+     *
+     * 优先从缓存获取，缓存未命中则从网络请求。
+     *
+     * @return 设备属性规格，获取失败返回 null
+     */
     private suspend fun getAtt() =
         cache.getSpecAtt(deviceSpecType)
             ?: device.getSpecAtt(specAttrProvider).getOrNull()
 
+    /**
+     * 获取语言映射表
+     *
+     * 优先从缓存获取，缓存未命中则从网络请求。
+     *
+     * @return 语言映射表，获取失败返回 null
+     */
     private suspend fun getLanguageMap() =
         cache.getLanguageMap(deviceSpecType)
             ?: device.getSpecAttLanguageMap(specAttrProvider).getOrNull()
 
-    private fun getPropertyWidgetClass(
-        serviceType: String, propertyType: String
-    ): MiwuWidgetClass? {
-        val map =
-            PropertyRegistry.registry[Urn.parseFrom(serviceType).name to Urn.parseFrom(propertyType).name]
-                ?.java
-                ?: return null
-        return map as? MiwuWidgetClass
-    }
-
-    private fun getActionWidgetClass(
-        serviceType: String, propertyType: String
-    ): MiwuWidgetClass? {
-        val map =
-            ActionRegistry.registry[Urn.parseFrom(serviceType).name to Urn.parseFrom(propertyType).name]
-                ?.java
-                ?: return null
-        return map as? MiwuWidgetClass
-    }
-
-    private fun MiwuWidgetClass.hasValueList() = annotations.find { it is ValueList } != null
-
-    private fun MiwuWidgetClass.getPointTo() = annotations.find { it is ValueList }.let {
-        return@let when (it) {
-            is ValueList -> it.pointTo
-            else -> ValueList::class
-        }
-    }
-
-    private fun MiwuWidgetClass.getPosition() =
-        annotations.find { it is Body || it is Footer || it is Header || it is SubHeader || it is SubFooter }
-
-    private fun MiwuWidgetClass.createWidget() = this.getDeclaredConstructor().newInstance()
-
+    /**
+     * 轮询获取所有 widget 的最新属性值
+     *
+     * 收集所有需要读取的属性，调用 MiotDeviceClient 批量获取，然后更新 widget。
+     */
     private suspend fun forEach() = withContext(Dispatchers.IO) {
         val attList = mutableSetOf<GetAtt>()
         for (holder in widgetHolders) {
@@ -332,6 +247,14 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
+    /**
+     * 更新 widget 的属性值
+     *
+     * 遍历所有 widget，将获取到的属性值更新到对应的 widget。
+     * 如果在更新过程中检测到 [isOutdated] 标记，立即返回以避免覆盖用户刚设置的值。
+     *
+     * @param list 获取到的属性值列表
+     */
     private suspend fun update(list: ArrayList<DeviceAtt.Att>) = withContext(dispatcher) {
         for (holder in widgetHolders) {
             val widget = holder.widget
@@ -350,19 +273,6 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 
-
-    /**
-     * 绑定 MiwuWidget
-     */
-    private inner class WidgetHolder(val widget: MiwuWidget<*>) {
-        fun bind() {
-            widget.bind(this@MiotDeviceManagerImpl)
-        }
-
-        fun recycler() {
-            widget.recycler()
-        }
-    }
 
     /**
      * 用于更新 MiwuWidget 的属性值

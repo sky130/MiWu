@@ -5,7 +5,7 @@ import android.widget.SeekBar
 import miwu.android.databinding.MiotWidgetColorTemperatureSeekbarBinding
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 import miwu.widget.ColorTemperatureSeekbar
 
 @Wrapper(ColorTemperatureSeekbar::class)

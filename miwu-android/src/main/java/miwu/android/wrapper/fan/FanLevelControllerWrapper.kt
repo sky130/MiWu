@@ -4,7 +4,7 @@ import android.content.Context
 import miwu.android.databinding.MiotWidgetFanLevelBinding
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.annotation.Wrapper
-import miwu.support.base.MiwuWidget
+import miwu.support.MiwuWidget
 import miwu.widget.FanLevelController
 
 @Wrapper(FanLevelController::class)

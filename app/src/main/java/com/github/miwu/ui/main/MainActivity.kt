@@ -25,11 +25,11 @@ class MainActivity : ViewActivityX<Binding>(Binding::inflate), OnPageChangeListe
         binding.indicator.dotSize = adapter.list.size
         binding.viewPager.adapter = adapter
         binding.viewPager.addOnPageChangeListener(this)
-        checkLoginStatue()
+        checkLoginStatus()
     }
 
-    fun checkLoginStatue() {
-        viewModel.miotRepository.loginStatus.onEach {
+    fun checkLoginStatus() {
+        viewModel.loginStatus.onEach {
             when (it) {
                 LoginState.Loading -> Unit
                 LoginState.Success -> Unit

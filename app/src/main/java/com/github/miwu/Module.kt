@@ -3,6 +3,7 @@ package com.github.miwu
 import com.github.miwu.logic.database.databaseModule
 import com.github.miwu.logic.datastore.dataStoreModule
 import com.github.miwu.logic.repository.repositoryModule
+import com.github.miwu.logic.usecase.useCaseModule
 import com.github.miwu.ui.viewModelModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -16,6 +17,7 @@ import org.koin.dsl.module
 val appModule = module {
     includes(
         repositoryModule,
+        useCaseModule,
         viewModelModule,
         databaseModule,
         dataStoreModule,

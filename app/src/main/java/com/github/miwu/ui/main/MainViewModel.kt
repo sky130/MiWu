@@ -6,132 +6,61 @@ import com.github.miwu.logic.datastore.MiotUserDataStore
 import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.LocalRepository
 import com.github.miwu.logic.repository.MiotRepository
+import com.github.miwu.logic.usecase.device.GetSortedDevicesUseCase
+import com.github.miwu.logic.usecase.home.RefreshHomeDataUseCase
+import com.github.miwu.logic.usecase.room.GetSortedRoomsUseCase
+import com.github.miwu.logic.usecase.scene.GetHomeScenesUseCase
+import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
 import com.github.miwu.ui.main.state.FragmentState.Empty
-import com.github.miwu.ui.main.state.FragmentState.Error
-import com.github.miwu.ui.main.state.FragmentState.Loading
 import com.github.miwu.ui.main.state.FragmentState.Normal
-import com.github.miwu.utils.Logger
-import fr.haan.resultat.fold
 import kotlinx.coroutines.flow.map
-import miwu.support.mock.MockMiotDevice
+import miwu.miot.model.miot.MiotScene
 
 
 class MainViewModel(
-    val miotRepository: MiotRepository,
-    val cacheRepository: CacheRepository,
-    val localRepository: LocalRepository,
-    val dataStore: MiotUserDataStore
+    private val miotRepository: MiotRepository,
+    cacheRepository: CacheRepository,
+    localRepository: LocalRepository,
+    val dataStore: MiotUserDataStore,
+    private val getSortedDevices: GetSortedDevicesUseCase,
+    private val getSortedRooms: GetSortedRoomsUseCase,
+    private val getHomeScenes: GetHomeScenesUseCase,
+    private val mapState: MapFragmentStateUseCase,
+    private val refreshHome: RefreshHomeDataUseCase,
 ) : ViewModel() {
-    private val logger = Logger()
 
     val info = miotRepository.userInfo
     val home = miotRepository.currentHome
-    val scenes = home.map { it.getOrNull()?.scenes.orEmpty() }.asLiveData()
-    val devices = home.map { it.getOrNull()?.devices.orEmpty() }
-        .map {
-            it.toMutableList().apply {
-                add(
-                    MockMiotDevice(
-                        name = "Mock 窗帘",
-                        did = "abcdef123456",
-                        model = "cmjd.curtain.cmx82",
-                        specType = "urn:miot-spec-v2:device:curtain:0000A00C:cmjd-cmx82:1:0000D031"
-                    )
-                )
-            }
-        }
-        .map { device ->
-            device.sortedWith(
-                compareBy(
-                    { !it.isOnline },
-                    { cacheRepository.getRoom(it.did) },
-                    { it.name.lowercase() }
-                )
-            )
-        }.asLiveData()
+    val loginStatus = miotRepository.loginStatus
+    val user = miotRepository.user
     val metadataHandler = cacheRepository.deviceMetadataHandler
-    val rooms = home.map {
-        it.getOrNull()?.roomMap
-            .orEmpty().values
-            .sortedBy { it.name }
-            .toList()
-    }.asLiveData()
     val icons = cacheRepository.icons
+
+    val devices = getSortedDevices().asLiveData()
+    val rooms = getSortedRooms().asLiveData()
+    val scenes = getHomeScenes().asLiveData()
+
+    val roomState = mapState(home) { it.rooms.isEmpty() }.asLiveData()
+    val deviceState = mapState(home) { it.devices.isEmpty() }.asLiveData()
+    val sceneState = mapState(home) { it.scenes.isEmpty() }.asLiveData()
     val localDeviceState = localRepository.deviceListFlow
         .map { if (it.isEmpty()) Empty else Normal }
         .asLiveData()
-    val roomState = home.map { resultat ->
-        resultat.fold(
-            onSuccess = { if (it.rooms.isEmpty()) Empty else Normal },
-            onFailure = { Error },
-            onLoading = { Loading }
-        )
-    }.asLiveData()
-    val deviceState = home.map { resultat ->
-        resultat.fold(
-            onSuccess = { if (it.devices.isEmpty()) Empty else Normal },
-            onFailure = { Error },
-            onLoading = { Loading }
-        )
-    }.asLiveData()
-    val sceneState = home.map { resultat ->
-        resultat.fold(
-            onSuccess = { if (it.scenes.isEmpty()) Empty else Normal },
-            onFailure = { Error },
-            onLoading = { Loading }
-        )
-    }.asLiveData()
-    val localDevices = localRepository.deviceListFlow
-        .asLiveData()
-//    val localDeviceState = localRepository.deviceListFlow
-//        .map { if (it.isEmpty()) Empty else Normal }
-//        .asLiveData()
-
-    //    val scenes = appRepository.scenes
-//        .map { it.getOrNull() ?: emptyList() }
-//        .asLiveData()
-//    val devices = appRepository.devices
-//        .map { it.getOrNull() ?: emptyList() }
-//        .map { device ->
-//            device.sortedWith(
-//                compareBy(
-//                    { !it.isOnline },
-//                    { deviceRepository.getRoom(it.did) },
-//                    { it.name.lowercase() }
-//                )
-//            )
-//        }
-//        .asLiveData()
-//    val deviceState = appRepository.devices
-//        .map { resultat ->
-//            resultat.fold(
-//                onSuccess = { if (it.isEmpty()) Empty else Normal },
-//                onFailure = { Error },
-//                onLoading = { Loading }
-//            )
-//        }
-//        .asLiveData()
-//    val sceneState = appRepository.scenes
-//        .map { resultat ->
-//            resultat.fold(
-//                onSuccess = { if (it.isEmpty()) Empty else Normal },
-//                onFailure = { Error },
-//                onLoading = { Loading }
-//            )
-//        }
-//        .asLiveData()
-//    val info = appRepository.userInfo
+    val localDevices = localRepository.deviceListFlow.asLiveData()
 
     fun loadScene() {
-        miotRepository.refreshCurrentHome()
+        refreshHome()
     }
 
     fun loadDevice() {
-        miotRepository.refreshCurrentHome()
+        refreshHome()
     }
 
     fun loadRoom() {
-        miotRepository.refreshCurrentHome()
+        refreshHome()
     }
 
+    fun runScene(scene: MiotScene) {
+        miotRepository.runScene(scene)
+    }
 }

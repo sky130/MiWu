@@ -13,7 +13,7 @@ import com.github.miwu.ui.main.state.FragmentState.Normal
 import com.github.miwu.utils.Logger
 import fr.haan.resultat.fold
 import kotlinx.coroutines.flow.map
-import miwu.mock.MockMiotDevice
+import miwu.support.mock.MockMiotDevice
 
 
 class MainViewModel(

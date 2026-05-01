@@ -3,7 +3,6 @@ package com.github.miwu.ui.edit
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -11,8 +10,6 @@ import com.github.miwu.logic.database.entity.FavoriteDevice
 import com.github.miwu.databinding.ActivityEditFavoriteBinding as Binding
 import kndroidx.activity.ViewActivityX
 import kndroidx.databinding.recycler.BaseBindingAdapter
-import kotlinx.coroutines.launch
-import miwu.support.base.MiwuDevice
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Collections
 

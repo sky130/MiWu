@@ -5,4 +5,4 @@ import kotlin.reflect.KClass
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Mock(val mockClient: KClass<out MockClient>)
+annotation class Mock(val client: KClass<out MockClient>)

@@ -3,7 +3,6 @@ package miwu.processor.widget
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.processing.SymbolProcessor as Processor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -13,6 +12,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import miwu.annotation.Widget
 import miwu.processor.MiwuProcessor
+import kotlin.reflect.KClass
 
 internal class WidgetProcessor(
     private val options: Map<String, String>,
@@ -116,18 +116,28 @@ internal class WidgetProcessor(
     }
 
     private fun generateRegistries(mappings: WidgetMappings) {
-        generateRegistry(PROPERTY_REGISTRY_NAME, mappings.propertyMappings)
-        generateRegistry(ACTION_REGISTRY_NAME, mappings.actionMappings)
+        generateRegistry("property", PROPERTY_REGISTRY_NAME, mappings.propertyMappings)
+        generateRegistry("action", ACTION_REGISTRY_NAME, mappings.actionMappings)
     }
 
-    private fun generateRegistry(objectName: String, classMap: Map<ServiceItem, ClassName>) {
+    private fun generateRegistry(
+        type: String,
+        objectName: String,
+        classMap: Map<ServiceItem, ClassName>
+    ) {
         if (classMap.isEmpty()) {
             logger.info("No mappings found for $objectName, skipping generation")
             return
         }
 
         val registryCodeBlock = createRegistryCodeBlock(classMap)
-        val registryObject = createRegistryObject(objectName, registryCodeBlock)
+        val constructorCodeBlock = createConstructorCodeBlock(classMap)
+        val registryObject = createRegistryObject(
+            type,
+            objectName,
+            registryCodeBlock,
+            constructorCodeBlock
+        )
 
         FileSpec.builder(PACKAGE_NAME, objectName)
             .addType(registryObject)
@@ -142,7 +152,7 @@ internal class WidgetProcessor(
             .apply {
                 classMap.forEach { (serviceItem, className) ->
                     add(
-                        "(%S to %S) to %T::class.java,\n",
+                        "(%S to %S) to %T::class,\n",
                         serviceItem.service,
                         serviceItem.item,
                         className
@@ -154,11 +164,54 @@ internal class WidgetProcessor(
             .build()
     }
 
-    private fun createRegistryObject(objectName: String, codeBlock: CodeBlock): TypeSpec {
+    private fun createConstructorCodeBlock(classMap: Map<ServiceItem, ClassName>): CodeBlock {
+        return CodeBlock.builder()
+            .add("mapOf(\n")
+            .indent()
+            .apply {
+                classMap.forEach { (serviceItem, className) ->
+                    add(
+                        "(%S to %S) to ::%T,\n",
+                        serviceItem.service,
+                        serviceItem.item,
+                        className
+                    )
+                }
+            }
+            .unindent()
+            .add(")")
+            .build()
+    }
+
+    private fun createRegistryObject(
+        type: String,
+        objectName: String,
+        registryBlock: CodeBlock,
+        constructorBlock: CodeBlock
+    ): TypeSpec {
         return TypeSpec.objectBuilder(objectName)
             .addProperty(
                 PropertySpec.builder("registry", REGISTRY_MAP_TYPE)
-                    .initializer(codeBlock)
+                    .initializer(registryBlock)
+                    .build()
+            )
+            .addProperty(
+                PropertySpec.builder("constructor", CONSTRUCTOR_MAP_TYPE)
+                    .initializer(constructorBlock)
+                    .build()
+            )
+            .addFunction(
+                FunSpec.builder("create")
+                    .returns(MiwuWidget.parameterizedBy(STAR).copy(nullable = true))
+                    .addParameter("namePair", PAIR_TYPE)
+                    .addCode("return constructor[namePair]?.invoke()")
+                    .build()
+            ).addFunction(
+                FunSpec.builder("create")
+                    .returns(MiwuWidget.parameterizedBy(STAR).copy(nullable = true))
+                    .addParameter("service", String::class.asTypeName())
+                    .addParameter(type, String::class.asTypeName())
+                    .addCode($$"return constructor[service to $$type]?.invoke()")
                     .build()
             )
             .build()
@@ -231,11 +284,24 @@ internal class WidgetProcessor(
         private const val PROPERTY_ANNOTATION_QUALIFIED_NAME = "miwu.annotation.Property"
         private const val ACTION_ANNOTATION_QUALIFIED_NAME = "miwu.annotation.Action"
 
+        private val PAIR_TYPE = Pair::class.asClassName()
+            .parameterizedBy(
+                String::class.asTypeName(),
+                String::class.asTypeName()
+            )
         private val REGISTRY_MAP_TYPE = Map::class.asClassName()
             .parameterizedBy(
-                Pair::class.asClassName()
-                    .parameterizedBy(String::class.asTypeName(), String::class.asTypeName()),
-                Class::class.asTypeName().parameterizedBy(STAR)
+                PAIR_TYPE,
+                KClass::class.asTypeName()
+                    .parameterizedBy(
+                        WildcardTypeName.producerOf(MiwuWidget.parameterizedBy(STAR))
+                    )
+            )
+        private val CONSTRUCTOR_MAP_TYPE = Map::class.asClassName()
+            .parameterizedBy(
+                PAIR_TYPE,
+                Function0::class.asTypeName()
+                    .parameterizedBy(MiwuWidget.parameterizedBy(STAR))
             )
     }
 }

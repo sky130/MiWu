@@ -8,10 +8,12 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.jvm.jvmWildcard
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import miwu.annotation.Device
 import miwu.processor.MiwuProcessor
+import kotlin.reflect.KClass
 
 internal class DeviceProcessor(
     private val options: Map<String, String>,
@@ -76,10 +78,12 @@ internal class DeviceProcessor(
     }
 
     private fun createMapType(): ParameterizedTypeName {
-        return Map::class.asClassName().parameterizedBy(
-            String::class.asTypeName(),
-            Class::class.asTypeName().parameterizedBy(STAR)
-        )
+        return Map::class.asClassName()
+            .parameterizedBy(
+                String::class.asTypeName(),
+                KClass::class.asTypeName()
+                    .parameterizedBy(WildcardTypeName.producerOf(MiwuDevice))
+            )
     }
 
     private fun createRegistryCodeBlock(deviceMap: Map<String, ClassName>): CodeBlock {
@@ -88,7 +92,7 @@ internal class DeviceProcessor(
             .indent()
             .apply {
                 deviceMap.forEach { (model, className) ->
-                    add("%S to %T::class.java,\n", model, className)
+                    add("%S to %T::class,\n", model, className)
                 }
             }
             .unindent()

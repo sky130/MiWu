@@ -3,10 +3,12 @@ package miwu.miot.model.att
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import miwu.miot.model.JsonAnySerializer
-import kotlin.collections.iterator
+import miwu.support.urn.Urn
+
+typealias SpecService = SpecAtt.Service
+typealias SpecAction = SpecAtt.Service.Action
+typealias SpecProperty = SpecAtt.Service.Property
 
 @Serializable
 data class SpecAtt(
@@ -28,6 +30,8 @@ data class SpecAtt(
         @Transient
         var descriptionTranslation: String = ""
 
+        val name: String by lazy { Urn.parseFrom(type).name }
+
         @Serializable
         data class Action(
             @SerialName("description") val description: String,
@@ -38,6 +42,8 @@ data class SpecAtt(
         ) {
             @Transient
             var descriptionTranslation: String = ""
+
+            val name: String by lazy { Urn.parseFrom(type).name }
         }
 
         /**
@@ -58,6 +64,8 @@ data class SpecAtt(
         ) {
             @Transient
             var descriptionTranslation: String = ""
+
+            val name: String by lazy { Urn.parseFrom(type).name }
 
             /**
              * bool	    布尔值: true/false
@@ -87,6 +95,10 @@ data class SpecAtt(
                     "float" -> (rangeMin as? Number)?.toFloat() ?: 0f
                     else -> rangeMin ?: 0
                 }
+            }
+
+            fun firstValueOrNull(predicate: (String) -> Boolean): Value? {
+                return valueList?.firstOrNull { predicate(it.description) }
             }
 
             @Serializable

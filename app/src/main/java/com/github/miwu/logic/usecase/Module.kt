@@ -1,7 +1,8 @@
 package com.github.miwu.logic.usecase
 
 import com.github.miwu.logic.usecase.device.GetSortedDevicesUseCase
-import com.github.miwu.logic.usecase.home.RefreshHomeDataUseCase
+import com.github.miwu.logic.usecase.home.ConvertHomeDataUseCase
+import com.github.miwu.logic.usecase.login.LoginUseCase
 import com.github.miwu.logic.usecase.room.GetSortedRoomsUseCase
 import com.github.miwu.logic.usecase.scene.GetHomeScenesUseCase
 import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
@@ -12,5 +13,6 @@ val useCaseModule = module {
     factory { MapFragmentStateUseCase() }
     factory { GetSortedRoomsUseCase(get()) }
     factory { GetHomeScenesUseCase(get()) }
-    factory { RefreshHomeDataUseCase(get()) }
+    factory { ConvertHomeDataUseCase(get()) }
+    factory { LoginUseCase(get(), get()) }
 }

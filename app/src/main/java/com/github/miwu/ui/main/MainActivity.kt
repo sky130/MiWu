@@ -3,7 +3,6 @@ package com.github.miwu.ui.main
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.github.miwu.R
-import com.github.miwu.logic.datastore.serializer.MiotUserSerializer
 import com.github.miwu.logic.state.LoginState
 import com.github.miwu.ui.login.LoginActivity
 import com.github.miwu.ui.main.adapter.MainViewPagerAdapter
@@ -35,7 +34,7 @@ class MainActivity : ViewActivityX<Binding>(Binding::inflate), OnPageChangeListe
                 LoginState.Success -> Unit
 
                 is LoginState.Failure -> {
-                    viewModel.dataStore.updateData { MiotUserSerializer.defaultValue }
+                    viewModel.logout()
                     R.string.auth_expired_plz_login_again.toast()
                     start<LoginActivity>()
                     finish()

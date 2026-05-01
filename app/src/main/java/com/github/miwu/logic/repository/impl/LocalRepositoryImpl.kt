@@ -7,7 +7,6 @@ import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiwu
 import com.github.miwu.logic.database.entity.FavoriteDeviceMetadata
 import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.service.DeviceTileService
 import com.github.miwu.utils.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -18,15 +17,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotDevice
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.util.concurrent.CopyOnWriteArrayList
 
-class LocalRepositoryImpl : KoinComponent, LocalRepository {
-    private val scope: CoroutineScope by inject()
-    private val database: AppDatabase by inject()
+class LocalRepositoryImpl(
+    private val scope: CoroutineScope,
+    private val database: AppDatabase,
+    private val cacheRepository: CacheRepository,
+) : LocalRepository {
     private val dao get() = database.deviceDAO()
-    private val cacheRepository: CacheRepository by inject()
     private val deviceMetadataHandler = cacheRepository.deviceMetadataHandler
     private val httpClient = HttpClient()
     private val logger = Logger()
@@ -45,7 +43,6 @@ class LocalRepositoryImpl : KoinComponent, LocalRepository {
             deviceList.clear()
             deviceList.addAll(it)
             refreshIcon()
-            DeviceTileService.refresh()
         }
 
     override fun addDevice(miotDevice: MiotDevice) {

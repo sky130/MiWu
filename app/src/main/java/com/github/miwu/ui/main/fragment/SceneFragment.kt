@@ -10,12 +10,12 @@ class SceneFragment : ViewFragmentX<Binding>(Binding::inflate) {
     override val viewModel: MainViewModel by viewModel()
 
     fun onItemClick(item: Any?) {
-        item as MiotScenes.Result.Scene
-        viewModel.runScene(item)
+        val scene = item as? MiotScenes.Result.Scene ?: return
+        viewModel.runScene(scene)
     }
 
     fun onItemLongClick(item: Any?): Boolean {
-        item as MiotScenes.Result.Scene
+        val scene = item as? MiotScenes.Result.Scene ?: return false
         // TODO("暂未实现")
         return true
     }

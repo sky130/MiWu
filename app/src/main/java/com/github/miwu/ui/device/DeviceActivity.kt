@@ -111,12 +111,8 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun createWrapper(miotWidget: MiwuWidget<*>): ViewMiwuWrapper<*>? =
-        WrapperRegistry.registry[miotWidget.javaClass]
-            .let { it as? Class<out ViewMiwuWrapper<*>> }
-            ?.run { getDeclaredConstructor(Context::class.java, MiwuWidget::class.java) }
-            ?.newInstance(this, miotWidget)
+        WrapperRegistry.create(this, miotWidget)
 
     companion object {
         fun Context.startDeviceActivity(device: MiotDevice, user: MiotUser) {

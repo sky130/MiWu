@@ -29,7 +29,7 @@ StartCharge -> Charge
 PointUp
 PointDown
 Continuous -> Dry
-Clothes Drying -> Hot
+Clothes Drying -> Heat
 Soft Sound -> Sleep
 Circle -> Refresh
 Custom

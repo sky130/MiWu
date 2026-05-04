@@ -88,14 +88,17 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
                 Header {
                     header.addWidget(it)
                 }
-                SubHeader {
-                    subHeader.addWidget(it)
+                HeaderPanel {
+                    headerPanel.addWidget(it)
+                }
+                ControlPanel {
+                    controlPanel.addWidget(it)
                 }
                 Body {
                     body.addWidget(it) { add(it.view) }
                 }
-                SubFooter {
-                    subFooter.addWidget(it)
+                FooterPanel {
+                    footerPanel.addWidget(it)
                 }
                 Footer {
                     footer.addWidget(it)

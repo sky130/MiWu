@@ -5,7 +5,7 @@ import miwu.annotation.widget.*
 import miwu.support.MiwuWidget
 
 @Widget
-@SubHeader
+@ControlPanel
 @Bind<Property>("air-conditioner", "target-temperature")
 @Bind<Property>("dehumidifier", "target-humidity")
 class NumberValueController: MiwuWidget<Number>()

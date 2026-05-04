@@ -26,6 +26,7 @@ import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.mock.MockMiotDeviceClientBuilder
 import miwu.support.mock.DefaultMockMiotDeviceClient
 import miwu.support.mock.MockMiotDeviceClient
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.reflect.KClass
 
@@ -58,12 +59,17 @@ class MiotDeviceManagerImpl internal constructor(
     val callback: Callback? = null,
     val mockMiotDeviceClient: MockMiotDeviceClientBuilder = ::DefaultMockMiotDeviceClient
 ) : MiotDeviceManager() {
-    private val refreshInterval = 1000L
+
+    companion object {
+        private const val STALE_PROTECTION_BUFFER = 30000L
+        private const val REFRESH_INTERVAL = 1000L
+    }
+
     private val widgetHolders = CopyOnWriteArrayList<WidgetLoader.WidgetHolder>()
     private val supportWidget = mutableSetOf<MiwuWidgetClass>()
     private val deviceSpecType = device.specType ?: ""
     private val deviceUrn = Urn.parseFrom(deviceSpecType)
-    private var isOutdated = false
+    private val dirtyProperties = ConcurrentHashMap<Pair<Int, Int>, Long>()
     private val job = Job()
     private val scope = CoroutineScope(job)
     private val miot: MiotDeviceClient by lazy {
@@ -126,13 +132,13 @@ class MiotDeviceManagerImpl internal constructor(
     /**
      * 启动属性轮询
      *
-     * 在协程中循环调用 [forEach] 获取最新属性值，间隔为 [refreshInterval] 毫秒。
+     * 在协程中循环调用 [forEach] 获取最新属性值，间隔为 [REFRESH_INTERVAL] 毫秒。
      */
     private fun run() {
         scope.launch {
             while (true) {
                 forEach()
-                delay(refreshInterval)
+                delay(REFRESH_INTERVAL)
             }
         }
     }
@@ -159,7 +165,8 @@ class MiotDeviceManagerImpl internal constructor(
     /**
      * 更新指定属性的值
      *
-     * 标记为过时，更新所有匹配的 widget，然后调用 MiotDeviceClient 设置值。
+     * 标记属性为脏，更新所有匹配的 widget，然后调用 MiotDeviceClient 设置值。
+     * 设置成功后保持脏标记 30 秒，防止飞行中的轮询返回旧值覆盖本地更新。
      *
      * @param siid 服务 ID
      * @param piid 属性 ID
@@ -167,7 +174,9 @@ class MiotDeviceManagerImpl internal constructor(
      */
     override fun updateValue(siid: Int, piid: Int, value: Any) {
         scope.launch {
-            isOutdated = true
+            val key = siid to piid
+            dirtyProperties[key] = System.currentTimeMillis()
+
             for (i in widgetHolders) {
                 val widget = i.widget
                 if (widget.allowRead && widget.siid == siid && widget.piid == piid) widget.updateValue(
@@ -175,7 +184,14 @@ class MiotDeviceManagerImpl internal constructor(
                 )
                 if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
             }
-            miot.set(device, arrayOf(siid to piid to value))
+
+            val result = miot.set(device, arrayOf(siid to piid to value))
+            if (result.isSuccess) {
+                scope.launch {
+                    delay(STALE_PROTECTION_BUFFER)
+                    dirtyProperties.remove(key)
+                }
+            }
         }
     }
 
@@ -253,23 +269,34 @@ class MiotDeviceManagerImpl internal constructor(
      * 更新 widget 的属性值
      *
      * 遍历所有 widget，将获取到的属性值更新到对应的 widget。
-     * 如果在更新过程中检测到 [isOutdated] 标记，立即返回以避免覆盖用户刚设置的值。
+     * 跳过脏属性（本地已更新但云端未确认的属性），避免覆盖用户刚设置的值。
      *
      * @param list 获取到的属性值列表
      */
     private suspend fun update(list: PropertyList) = withContext(dispatcher) {
+        val now = System.currentTimeMillis()
+
+        val iterator = dirtyProperties.entries.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            if (now - entry.value > STALE_PROTECTION_BUFFER * 2) {
+                iterator.remove()
+            }
+        }
+
         for (holder in widgetHolders) {
             val widget = holder.widget
             for (att in list) {
-                if (att.siid to att.piid == widget.siid to widget.piid) {
+                val attKey = att.siid to att.piid
+
+                // 跳过脏属性, 本地值优先于可能过时的云端值
+                if (dirtyProperties.containsKey(attKey)) continue
+
+                if (attKey == widget.siid to widget.piid) {
                     widget.updateValue(att.value)
                 }
-                if (att.siid to att.piid in widget.piidList) {
+                if (attKey in widget.piidList) {
                     widget.updateValue(att.siid, att.piid, att.value)
-                }
-                if (isOutdated) {
-                    isOutdated = false
-                    return@withContext
                 }
             }
         }

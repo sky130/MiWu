@@ -24,8 +24,6 @@ kotlin {
 
 
                 implementation(libs.squareup.okio)
-
-
                 implementation(libs.koin.core)
 
 

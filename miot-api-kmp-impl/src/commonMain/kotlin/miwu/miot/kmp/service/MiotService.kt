@@ -6,16 +6,16 @@ import miwu.miot.kmp.service.body.ActionBody
 import miwu.miot.kmp.service.body.GetParams
 import miwu.miot.kmp.service.body.SetParams
 import miwu.miot.model.MiotResponse
-import miwu.miot.model.att.ActionResponse
-import miwu.miot.model.att.PropertyResponse
+import miwu.miot.model.att.ActionList
+import miwu.miot.model.att.PropertyList
 
 interface MiotService {
     @POST("miotspec/prop/set")
     suspend fun setDeviceAtt(@Body body: SetParams): String
 
     @POST("miotspec/prop/get")
-    suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyResponse>
+    suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyList?>
 
     @POST("miotspec/action")
-    suspend fun doAction(@Body body: ActionBody): MiotResponse<ActionResponse>
+    suspend fun doAction(@Body body: ActionBody): MiotResponse<ActionList?>
 }

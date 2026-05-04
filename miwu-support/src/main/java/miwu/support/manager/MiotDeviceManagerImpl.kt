@@ -19,7 +19,8 @@ import miwu.miot.att.get.GetAtt
 import miwu.miot.client.MiotDeviceClient
 import miwu.support.urn.Urn
 import miwu.support.translate.TranslateHelper
-import miwu.miot.model.att.PropertyResult
+import miwu.miot.model.att.Property
+import miwu.miot.model.att.PropertyList
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
@@ -243,7 +244,7 @@ class MiotDeviceManagerImpl internal constructor(
         }
         if (attList.isEmpty()) return@withContext
         miot.get(device, attList.toTypedArray()).onSuccess {
-            update(it.result.result ?: return@onSuccess)
+            update(it.result ?: return@onSuccess)
         }
     }
 
@@ -255,7 +256,7 @@ class MiotDeviceManagerImpl internal constructor(
      *
      * @param list 获取到的属性值列表
      */
-    private suspend fun update(list: ArrayList<PropertyResult>) = withContext(dispatcher) {
+    private suspend fun update(list: PropertyList) = withContext(dispatcher) {
         for (holder in widgetHolders) {
             val widget = holder.widget
             for (att in list) {

@@ -5,11 +5,8 @@ import androidx.annotation.Keep
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
-import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.model.miot.MiotDeviceExtra
-import kotlin.hashCode
 
 @Keep
 @Entity(
@@ -91,7 +88,7 @@ data class FavoriteDevice(
             cnt = this.cnt,
             comFlag = this.comFlag,
             did = this.did,
-            extra = MiotDeviceExtra(
+            extra = MiotDevice.Extra(
                 fwVersion = this.extra.fwVersion,
                 isSetPinCode = this.extra.isSetPinCode,
                 isSubGroup = this.extra.isSubGroup,

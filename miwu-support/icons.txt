@@ -1,3 +1,4 @@
+// ArrowUp -> ic_arrow_up
 ArrowUp
 ArrowDown
 CurtainOpen
@@ -19,3 +20,5 @@ Clean
 Charge
 StartSweep -> Clean
 StartCharge -> Charge
+PointUp
+PointDown

@@ -10,6 +10,6 @@ import miwu.widget.*
     IntSeekbar::class,
     FanController::class,
     FanLevelController::class,
-    WidgetSwitch::class
+    SwitchBar::class
 )
 class Light : MiwuDevice()

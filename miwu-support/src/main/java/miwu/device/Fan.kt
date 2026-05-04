@@ -8,6 +8,6 @@ import miwu.widget.*
 @Widgets(
     FanController::class,
     FanLevelController::class,
-    WidgetSwitch::class,
+    SwitchBar::class,
 )
 class Fan : MiwuDevice()

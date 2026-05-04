@@ -311,4 +311,11 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     fun registerProperty(siid: Int, piid: Int) {
         if (widget.isMultiAttribute) widget.registerProperty(siid, piid)
     }
+
+    // 搜索 `valueList` 中的 `value`
+    fun valueListOf(desc: String): SpecAtt.Service.Property.Value =
+        widget.valueList.first { it.description == desc }
+
+    fun valueListOfOrNull(desc: String): SpecAtt.Service.Property.Value? =
+        widget.valueList.firstOrNull { it.description == desc }
 }

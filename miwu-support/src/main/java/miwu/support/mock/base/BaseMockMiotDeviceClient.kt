@@ -4,7 +4,7 @@ import miwu.miot.att.get.GetAtt
 import miwu.miot.att.set.SetAtt
 import miwu.miot.client.MiotDeviceClient
 import miwu.miot.model.MiotResponse
-import miwu.miot.model.att.PropertyResponse
+import miwu.miot.model.att.PropertyList
 import miwu.miot.model.miot.MiotDevice
 
 /**
@@ -14,7 +14,7 @@ import miwu.miot.model.miot.MiotDevice
  * @see [MiotDeviceClient]
  */
 abstract class BaseMockMiotDeviceClient(val miotDevice: MiotDevice) : MiotDeviceClient {
-    abstract suspend fun onGet(att: Array<out GetAtt>): Result<MiotResponse<PropertyResponse>>
+    abstract suspend fun onGet(att: Array<out GetAtt>): Result<MiotResponse<PropertyList?>>
 
     abstract suspend fun onSet(att: Array<out SetAtt>): Result<Unit>
 
@@ -24,7 +24,7 @@ abstract class BaseMockMiotDeviceClient(val miotDevice: MiotDevice) : MiotDevice
     override suspend fun get(
         device: MiotDevice,
         att: Array<out GetAtt>
-    ): Result<MiotResponse<PropertyResponse>> = onGet(att)
+    ): Result<MiotResponse<PropertyList?>> = onGet(att)
 
     override suspend fun set(
         device: MiotDevice,

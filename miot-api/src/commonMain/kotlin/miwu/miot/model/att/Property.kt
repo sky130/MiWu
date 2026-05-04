@@ -4,15 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import miwu.miot.model.JsonAnySerializer
 
-@Serializable
-data class PropertyResponse(
-    @SerialName("code") val code: Int,
-    @SerialName("message") val message: String,
-    @SerialName("result") val result: ArrayList<PropertyResult>? = null,
-)
+typealias PropertyList = ArrayList<Property>
 
 @Serializable
-data class PropertyResult(
+data class Property(
     @SerialName("did") val did: String,
     @SerialName("iid") val iid: String,
     @SerialName("siid") val siid: Int,

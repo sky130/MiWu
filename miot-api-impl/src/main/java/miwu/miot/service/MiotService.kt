@@ -1,9 +1,11 @@
 package miwu.miot.service
 
 import miwu.miot.model.MiotResponse
-import miwu.miot.model.att.ActionResponse
-import miwu.miot.model.att.PropertyResponse
-import miwu.miot.service.body.*
+import miwu.miot.model.att.ActionList
+import miwu.miot.model.att.PropertyList
+import miwu.miot.service.body.ActionBody
+import miwu.miot.service.body.GetParams
+import miwu.miot.service.body.SetParams
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -13,8 +15,8 @@ interface MiotService {
     suspend fun setDeviceAtt(@Body body: SetParams): ResponseBody
 
     @POST("miotspec/prop/get")
-    suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyResponse>
+    suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyList?>
 
     @POST("miotspec/action")
-    suspend fun doAction(@Body body: ActionBody): MiotResponse<ActionResponse>
+    suspend fun doAction(@Body body: ActionBody): MiotResponse<ActionList?>
 }

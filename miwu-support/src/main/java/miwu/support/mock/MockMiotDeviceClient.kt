@@ -10,8 +10,8 @@ import miwu.miot.att.set.piid
 import miwu.miot.att.set.siid
 import miwu.miot.att.set.value
 import miwu.miot.model.MiotResponse
-import miwu.miot.model.att.PropertyResponse
-import miwu.miot.model.att.PropertyResult
+import miwu.miot.model.att.Property
+import miwu.miot.model.att.PropertyList
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.support.mock.base.BaseMockMiotDeviceClient
@@ -141,27 +141,23 @@ abstract class MockMiotDeviceClient(
         return siid to piid
     }
 
-    override suspend fun onGet(att: Array<out GetAtt>): Result<MiotResponse<PropertyResponse>> =
+    override suspend fun onGet(att: Array<out GetAtt>): Result<MiotResponse<PropertyList?>> =
         runCatching {
             MiotResponse(
                 code = 0,
                 message = "",
-                result = PropertyResponse(
-                    code = 0,
-                    message = "",
-                    result = att.map { info ->
-                        PropertyResult(
-                            did = miotDevice.did,
-                            iid = "",
-                            siid = info.first,
-                            piid = info.second,
-                            value = mockStore[info.first to info.second],
-                            code = 0,
-                            updateTime = null,
-                            exeTime = 0
-                        )
-                    }.let { ArrayList(it) }
-                )
+                result = att.map { info ->
+                    Property(
+                        did = miotDevice.did,
+                        iid = "",
+                        siid = info.first,
+                        piid = info.second,
+                        value = mockStore[info.first to info.second],
+                        code = 0,
+                        updateTime = null,
+                        exeTime = 0
+                    )
+                }.let { ArrayList(it) }
             )
         }
 
@@ -190,7 +186,8 @@ abstract class MockMiotDeviceClient(
             }
         }
 
-    override suspend fun onAction(siid: Int, aiid: Int, vararg input: Any): Result<Any?> =
+    override suspend
+    fun onAction(siid: Int, aiid: Int, vararg input: Any): Result<Any?> =
         runCatching {
             val action = specAtt.services
                 .firstOrNull { it.iid == siid }

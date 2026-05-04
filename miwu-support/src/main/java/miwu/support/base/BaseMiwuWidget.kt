@@ -194,6 +194,11 @@ abstract class BaseMiwuWidget<T>() : Widget {
     abstract val descriptionTranslation: String
 
     /**
+     * 设备型号
+     */
+    abstract val deviceType: String
+
+    /**
      * `service` 描述翻译
      *
      * @see [serviceDescription]
@@ -264,6 +269,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
         var allowWrite: Boolean = false,
         var allowRead: Boolean = false,
         var allowNotify: Boolean = false,
+        var deviceType: String = ""
     ) {
         lateinit var miotSpecAtt: SpecAtt
         lateinit var icons: Icons

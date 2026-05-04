@@ -139,6 +139,13 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     val valueUnit get() = widget.valueUnit
 
     /**
+     * MiotDevice 设备类型
+     *
+     * 如 `light`, `fan`, `switch`
+     */
+    val deviceType get() = widget.deviceType
+
+    /**
      * 默认值
      *
      * 该属性只在以下情况存在

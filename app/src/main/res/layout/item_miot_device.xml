@@ -11,7 +11,7 @@
 
         <variable
             name="item"
-            type="miwu.miot.model.miot.MiotDevices.Result.Device" />
+            type="miwu.miot.model.miot.MiotDevice" />
     </data>
 
     <LinearLayout

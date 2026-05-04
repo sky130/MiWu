@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import miwu.miot.client.MiotHomeClient
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotHome
-import miwu.miot.model.miot.MiotHomes.Result.Home.Room
+import miwu.miot.model.miot.MiotRoom
 import miwu.miot.model.miot.MiotScene
 
 class ConvertHomeDataUseCase(
@@ -44,7 +44,7 @@ class ConvertHomeDataUseCase(
 
         return MiotHomeData(
             home = home,
-            rooms = home.rooms.associateBy(Room::name) {
+            rooms = home.rooms.associateBy(MiotRoom::name) {
                 it.dids
                     .mapNotNull(deviceMap::get)
                     .sortedBy(MiotDevice::name)
@@ -60,7 +60,7 @@ class ConvertHomeDataUseCase(
                     }
                 },
             devices = devices,
-            roomMap = home.rooms.associateBy(Room::name)
+            roomMap = home.rooms.associateBy(MiotRoom::name)
         )
     }
 

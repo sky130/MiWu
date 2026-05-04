@@ -9,7 +9,9 @@ import miwu.miot.att.set.SetAtt
 import miwu.miot.att.set.piid
 import miwu.miot.att.set.siid
 import miwu.miot.att.set.value
-import miwu.miot.model.att.DeviceAtt
+import miwu.miot.model.MiotResponse
+import miwu.miot.model.att.PropertyResponse
+import miwu.miot.model.att.PropertyResult
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.support.mock.base.BaseMockMiotDeviceClient
@@ -139,23 +141,27 @@ abstract class MockMiotDeviceClient(
         return siid to piid
     }
 
-    override suspend fun onGet(att: Array<out GetAtt>): Result<DeviceAtt> =
+    override suspend fun onGet(att: Array<out GetAtt>): Result<MiotResponse<PropertyResponse>> =
         runCatching {
-            DeviceAtt(
+            MiotResponse(
                 code = 0,
                 message = "",
-                result = att.map { info ->
-                    DeviceAtt.Att(
-                        did = miotDevice.did,
-                        iid = "",
-                        siid = info.first,
-                        piid = info.second,
-                        value = mockStore[info.first to info.second],
-                        code = 0,
-                        updateTime = null,
-                        exeTime = 0
-                    )
-                }.let { ArrayList(it) }
+                result = PropertyResponse(
+                    code = 0,
+                    message = "",
+                    result = att.map { info ->
+                        PropertyResult(
+                            did = miotDevice.did,
+                            iid = "",
+                            siid = info.first,
+                            piid = info.second,
+                            value = mockStore[info.first to info.second],
+                            code = 0,
+                            updateTime = null,
+                            exeTime = 0
+                        )
+                    }.let { ArrayList(it) }
+                )
             )
         }
 

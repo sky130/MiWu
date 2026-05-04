@@ -61,6 +61,7 @@
         <com.github.miwu.view.AppTitleBar
             android:id="@+id/title"
             style="@style/Wear.TitleBar"
+            app:back="true"
             app:title="@{activity.room}" />
     </FrameLayout>
 </layout>

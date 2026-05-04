@@ -12,15 +12,17 @@ abstract class MiwuLayoutWrapper<T>(context: Context, widget: MiwuWidget<T>) :
     private val binding by viewBinding(MiotLayoutWrapperBinding::inflate)
     override val view get() = binding.root
 
+    @WrapperFun
     protected inline fun <reified VB : ViewBinding> view(
         crossinline inflate: (LayoutInflater) -> VB,
         block: VB.() -> Unit
     ): VB = inflate(LayoutInflater.from(context)).apply {
         block()
-        add(root)
+        addView(root)
     }
 
-    fun add(content: View) {
+    @WrapperFun
+    fun addView(content: View) {
         binding.root.add(content)
     }
 }

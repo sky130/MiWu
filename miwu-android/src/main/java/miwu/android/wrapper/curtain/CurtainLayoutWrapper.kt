@@ -13,7 +13,6 @@ import miwu.android.wrapper.curtain.CurtainLayoutWrapper.CurtainState.Closing
 import miwu.android.wrapper.curtain.CurtainLayoutWrapper.CurtainState.Opening
 import miwu.android.wrapper.curtain.CurtainLayoutWrapper.CurtainState.Stop
 import miwu.annotation.Wrapper
-import miwu.miot.model.att.SpecAtt
 import miwu.layout.CurtainLayout
 import miwu.spec.MiotSpec.Property
 import miwu.spec.MiotSpec.Service
@@ -24,50 +23,49 @@ import miwu.android.databinding.MiotWidgetListButtonBinding as ButtonBinding
 class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
     MiwuLayoutWrapper<Int>(context, widget) {
 
-    private val Open get() = valueList[0]
-    private val Close get() = valueList[1]
-    private val Pause get() = valueList[2]
+    private val Open = valueListOf("Open")
+    private val Close = valueListOf("Close")
+    private val Pause = valueListOf("Pause")
     private val stateListeners = mutableSetOf<(state: CurtainState) -> Unit>()
     private var currentState: CurtainState = Stop
-
+        set(value) {
+            if (currentState == value) return
+            field = value
+            stateListeners.forEach { it.invoke(value) }
+        }
 
     override fun initWrapper() {
         registerProperty(Service.Curtain, Property.Status) { property, value ->
-            val name = property.valueList!!.first { it.value == value }.description
+            val name = property.valueListOf(value as Int).description
             val state = when (name) {
                 "Opening" -> Opening
                 "Closing" -> Closing
                 else -> Stop
             }
-            if (currentState == state) return@registerProperty
             currentState = state
-            stateListeners.forEach { it.invoke(state) }
         }
-
-        // 开窗
         view(ButtonBinding::inflate) {
             title = Open.descriptionTranslation
             icon(AndroidIcons.CurtainOpen)
             onClick {
                 if (currentState == Opening) {
-                    update(Pause)
+                    updateValue(Pause)
                 } else {
-                    update(Open)
+                    updateValue(Open)
                 }
             }
             onStateChanged { state ->
                 updateState(state == Opening)
             }
         }
-        // 关窗
         view(ButtonBinding::inflate) {
             title = Close.descriptionTranslation
             icon(AndroidIcons.CurtainClose)
             onClick {
                 if (currentState == Closing) {
-                    update(Pause)
+                    updateValue(Pause)
                 } else {
-                    update(Close)
+                    updateValue(Close)
                 }
             }
             onStateChanged { state ->
@@ -79,10 +77,7 @@ class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
     // 窗帘的属性由其他东西定义, 绑定的属性只能写不能读
     override fun onUpdateValue(value: Int) = Unit
 
-    private fun update(value: SpecAtt.Service.Property.Value) {
-        update(value.value)
-    }
-
+    @WrapperFun
     private fun onStateChanged(block: (state: CurtainState) -> Unit) {
         stateListeners.add(block)
     }

@@ -1,9 +1,8 @@
 package miwu.miot.service
 
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecType
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecType
 import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -15,7 +15,6 @@ import miwu.miot.kmp.impl.provider.MiotSpecAttrProviderImpl
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.processor.MiwuProcessor
 import java.util.Locale
-import com.google.devtools.ksp.processing.SymbolProcessor as Processor
 
 class SpecProcessor(
     private val options: Map<String, String>,
@@ -153,7 +152,7 @@ class SpecProcessor(
         PROPERTY("Property");
     }
 
-    private fun miwu.miot.model.att.SpecType.toNameList(): List<String> =
+    private fun miwu.miot.model.spec.SpecType.toNameList(): List<String> =
         types.map { Urn.parseFrom(it).name }
 
     companion object {

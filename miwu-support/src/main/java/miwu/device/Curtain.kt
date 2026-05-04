@@ -2,11 +2,14 @@ package miwu.device
 
 import miwu.support.MiwuDevice
 import miwu.annotation.*
-import miwu.layout.CurtainLayout
+import miwu.layout.*
 import miwu.mock.CurtainMockClient
-import miwu.support.mock.DefaultMockMiotDeviceClient
+import miwu.widget.*
 
 @Device("curtain")
-@Widgets(CurtainLayout::class)
+@Widgets(
+    StatusText::class,
+    CurtainLayout::class
+)
 @Mock(CurtainMockClient::class)
 class Curtain : MiwuDevice()

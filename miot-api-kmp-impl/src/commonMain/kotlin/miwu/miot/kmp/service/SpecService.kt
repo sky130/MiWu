@@ -2,8 +2,8 @@ package miwu.miot.kmp.service
 
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecType
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecType
 
 interface SpecService {
 

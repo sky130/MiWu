@@ -19,9 +19,8 @@ import miwu.miot.att.get.GetAtt
 import miwu.miot.client.MiotDeviceClient
 import miwu.support.urn.Urn
 import miwu.support.translate.TranslateHelper
-import miwu.miot.model.att.Property
 import miwu.miot.model.att.PropertyList
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.mock.MockMiotDeviceClientBuilder

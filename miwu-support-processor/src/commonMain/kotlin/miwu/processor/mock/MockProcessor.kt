@@ -22,7 +22,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import kotlinx.coroutines.CoroutineScope
 import miwu.annotation.Mock
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.processor.MiwuProcessor
 import kotlin.reflect.KClass

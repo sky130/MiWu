@@ -3,21 +3,24 @@ package miwu.android.view.binding
 import miwu.android.R
 import miwu.android.databinding.MiotWidgetListButtonBinding
 import miwu.android.wrapper.base.ViewMiwuWrapper.Companion.setIcon
+import miwu.support.MiwuWrapper
 import miwu.support.icon.Icon
 
+@MiwuWrapper.WrapperFun
 fun MiotWidgetListButtonBinding.icon(
     icon: Icon? = null,
-    desc: String? = null, ) {
+) {
     icon?.let { on.setIcon(it) }
-    desc?.let {  }
 }
 
+@MiwuWrapper.WrapperFun
 var MiotWidgetListButtonBinding.title: String
     get() = desc.text.toString()
     set(value) {
         desc.text = value
     }
 
+@MiwuWrapper.WrapperFun
 inline fun MiotWidgetListButtonBinding.onClick(
     crossinline onClick: () -> Unit = {}
 ) {

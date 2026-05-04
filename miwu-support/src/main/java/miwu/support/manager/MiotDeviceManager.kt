@@ -3,11 +3,10 @@
 package miwu.support.manager
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import miwu.icon.Icons
 import miwu.miot.client.MiotDeviceClient
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.api.Cache
@@ -16,7 +15,6 @@ import miwu.support.generated.mock.MockRegistry
 import miwu.support.layout.MiwuWidgetLayout
 import miwu.support.mock.MOCK_PREFIX
 import miwu.support.translate.TranslateHelper
-import miwu.support.urn.Urn
 
 abstract class MiotDeviceManager {
 

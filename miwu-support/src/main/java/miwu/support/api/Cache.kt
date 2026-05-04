@@ -1,6 +1,6 @@
 package miwu.support.api
 
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 
 interface Cache {
 

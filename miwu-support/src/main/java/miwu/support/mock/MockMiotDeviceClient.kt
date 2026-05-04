@@ -73,6 +73,7 @@ abstract class MockMiotDeviceClient(
     /**
      * 注册一个 MockProperty
      */
+    @MockFun
     fun registerProperty(
         serviceName: String,
         propertyName: String,
@@ -93,6 +94,7 @@ abstract class MockMiotDeviceClient(
     /**
      * 注册一个 MockAction
      */
+    @MockFun
     fun registerAction(
         serviceName: String,
         actionName: String,
@@ -110,6 +112,7 @@ abstract class MockMiotDeviceClient(
         mockAction[siid to aiid] = actionHook
     }
 
+    @MockFun
     fun getProperty(serviceName: String, propertyName: String): SpecProperty? {
         return specAtt.services
             .firstOrNull { it.name == serviceName }
@@ -117,6 +120,7 @@ abstract class MockMiotDeviceClient(
             ?.firstOrNull { it.name == propertyName }
     }
 
+    @MockFun
     fun getAction(serviceName: String, actionName: String): SpecAction? {
         return specAtt.services
             .firstOrNull { it.name == serviceName }
@@ -124,11 +128,13 @@ abstract class MockMiotDeviceClient(
             ?.firstOrNull { it.name == actionName }
     }
 
+    @MockManager
     fun <T> update(att: GetAtt, value: T?) {
         value ?: return
         mockStore[att] = value as Any
     }
 
+    @MockFun
     infix fun String.with(propertyName: String): GetAtt {
         val serviceName = this
         val siid: Int
@@ -188,8 +194,7 @@ abstract class MockMiotDeviceClient(
             }
         }
 
-    override suspend
-    fun onAction(siid: Int, aiid: Int, vararg input: Any): Result<Any?> =
+    override suspend fun onAction(siid: Int, aiid: Int, vararg input: Any): Result<Any?> =
         runCatching {
             val action = specAtt.services
                 .firstOrNull { it.iid == siid }
@@ -198,4 +203,10 @@ abstract class MockMiotDeviceClient(
                 ?: return@runCatching null
             mockAction[siid to aiid]?.invoke(action, mockStore, input)
         }
+
+    @DslMarker
+    annotation class MockFun
+
+    @DslMarker
+    annotation class MockManager
 }

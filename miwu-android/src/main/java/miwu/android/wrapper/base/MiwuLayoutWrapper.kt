@@ -18,10 +18,11 @@ abstract class MiwuLayoutWrapper<T>(context: Context, widget: MiwuWidget<T>) :
         block: VB.() -> Unit
     ): VB = inflate(LayoutInflater.from(context)).apply {
         block()
-        add(root)
+        addView(root)
     }
 
-    fun add(content: View) {
+    @WrapperFun
+    fun addView(content: View) {
         binding.root.add(content)
     }
 }

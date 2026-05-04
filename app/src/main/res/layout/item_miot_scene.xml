@@ -11,7 +11,7 @@
 
         <variable
             name="item"
-            type="miwu.miot.model.miot.MiotScenes.Result.Scene" />
+            type="miwu.miot.model.miot.MiotScene" />
     </data>
 
     <LinearLayout

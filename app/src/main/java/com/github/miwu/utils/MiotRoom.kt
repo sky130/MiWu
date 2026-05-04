@@ -1,5 +1,5 @@
 package com.github.miwu.utils
 
-import miwu.miot.model.miot.MiotHomes.Result.Home.Room
+import miwu.miot.model.miot.MiotRoom
 
-fun Room.size() = this.dids.size
+fun MiotRoom.size() = this.dids.size

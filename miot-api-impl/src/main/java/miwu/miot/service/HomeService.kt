@@ -1,6 +1,9 @@
 package miwu.miot.service
 
-import miwu.miot.model.miot.*
+import miwu.miot.model.MiotResponse
+import miwu.miot.model.miot.DeviceList
+import miwu.miot.model.miot.HomeList
+import miwu.miot.model.miot.SceneList
 import miwu.miot.service.body.*
 import okhttp3.ResponseBody
 import retrofit2.http.Body
@@ -9,10 +12,10 @@ import retrofit2.http.POST
 interface HomeService {
 
     @POST("v2/homeroom/gethome")
-    suspend fun getHomes(@Body body: GetHome = GetHome()): MiotHomes
+    suspend fun getHomes(@Body body: GetHome = GetHome()): MiotResponse<HomeList>
 
     @POST("v2/home/home_device_list")
-    suspend fun getDevices(@Body body: GetDevices): MiotDevices
+    suspend fun getDevices(@Body body: GetDevices): MiotResponse<DeviceList>
 
     /**
      * @POST("appgateway/miot/appsceneservice/AppSceneService/GetCommonUsedSceneList")
@@ -23,7 +26,7 @@ interface HomeService {
      **/
 
     @POST("appgateway/miot/appsceneservice/AppSceneService/GetSimpleSceneList")
-    suspend fun getScenes(@Body body: GetScene): MiotScenes
+    suspend fun getScenes(@Body body: GetScene): MiotResponse<SceneList>
 
 
     @POST("appgateway/miot/appsceneservice/AppSceneService/NewRunScene")

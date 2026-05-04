@@ -8,13 +8,14 @@ import miwu.miot.kmp.service.createUserService
 import miwu.miot.kmp.utils.IO
 import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.model.MiotUser
-import miwu.miot.model.miot.MiotUserInfo
+import miwu.miot.model.MiotResponse
+import miwu.miot.model.miot.UserInfo
 
 class MiotUserClientImpl(private val user: MiotUser) : MiotUserClient {
     private val ktorfit = MiotAuthKtorfit(user)
     private val userService = ktorfit.createUserService()
 
-    override suspend fun getUserInfo(): Result<MiotUserInfo> = withContext(Dispatchers.IO) {
+    override suspend fun getUserInfo(): Result<MiotResponse<UserInfo>> = withContext(Dispatchers.IO) {
         runCatching {
             val getUserInfo = GetUserInfo(user.userId)
             return@runCatching userService.getUserInfo(getUserInfo)

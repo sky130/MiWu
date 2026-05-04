@@ -20,10 +20,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import miwu.miot.client.MiotHomeClient
 import miwu.miot.model.miot.MiotHome
-import miwu.miot.model.miot.MiotHomes
+import miwu.miot.model.MiotResponse
 import miwu.miot.model.miot.MiotScene
-import miwu.miot.model.miot.MiotUserInfo
-import miwu.miot.model.miot.MiotUserInfo.UserInfo
+import miwu.miot.model.miot.UserInfo
 import org.koin.core.component.KoinComponent
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -50,7 +49,7 @@ class MiotRepositoryImpl(
     override val homes = MutableResultatState<List<MiotHome>>(Resultat.loading())
     override val currentHome = MutableResultatState<MiotHomeData>(Resultat.loading())
     override val user get() = authService.getCurrentUser()
-    override val userInfo = MutableStateFlow(MiotUserInfo.UserInfo(-1, "", ""))
+    override val userInfo = MutableStateFlow(UserInfo(-1, "", ""))
 
     init {
         authService.loginStatus.onEach { state ->
@@ -95,7 +94,7 @@ class MiotRepositoryImpl(
                 val homesList = client
                     .getHomes()
                     .getOrThrow()
-                    .let(MiotHomes::result)
+                    .result
                     .let { it.homes + it.shareHomes.orEmpty() }
                 client to homesList
             }.onFailure {
@@ -134,10 +133,10 @@ class MiotRepositoryImpl(
         runCatching {
             getUserInfo().getOrThrow()
         }.onSuccess {
-            userInfo.emit(it.info)
+            userInfo.emit(it.result)
         }.onFailure {
             logger.error("get user info failed, {}", it.message)
-            userInfo.emit(UserInfo(0L, "", "null"))
+            userInfo.emit(UserInfo(0L, "", ""))
         }
     }
 

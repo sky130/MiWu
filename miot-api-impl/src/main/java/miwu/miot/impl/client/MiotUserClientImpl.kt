@@ -6,7 +6,8 @@ import miwu.miot.client.MiotUserClient
 import miwu.miot.common.MIOT_SERVER_URL
 import miwu.miot.interceptor.MiotAuthInterceptor
 import miwu.miot.model.MiotUser
-import miwu.miot.model.miot.MiotUserInfo
+import miwu.miot.model.MiotResponse
+import miwu.miot.model.miot.UserInfo
 import miwu.miot.service.UserService
 import miwu.miot.service.body.GetUserInfo
 import miwu.miot.utils.JsonConverterFactory
@@ -27,7 +28,7 @@ class MiotUserClientImpl(private val user: MiotUser) : MiotUserClient {
     )
     private val userService = retrofit.create<UserService>()
 
-    override suspend fun getUserInfo(): Result<MiotUserInfo> = withContext(Dispatchers.IO) {
+    override suspend fun getUserInfo(): Result<MiotResponse<UserInfo>> = withContext(Dispatchers.IO) {
         runCatching {
             val getUserInfo = GetUserInfo(user.userId)
             return@runCatching userService.getUserInfo(getUserInfo)

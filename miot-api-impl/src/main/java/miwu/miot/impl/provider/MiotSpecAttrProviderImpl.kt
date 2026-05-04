@@ -14,8 +14,8 @@ import miwu.miot.common.SPEC_SERVER_URL
 import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecType
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecType
 import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.miot.utils.get

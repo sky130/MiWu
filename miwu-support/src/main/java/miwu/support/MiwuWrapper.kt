@@ -1,8 +1,8 @@
 package miwu.support
 
-import miwu.miot.model.att.SpecAction
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecProperty
+import miwu.miot.model.spec.SpecAction
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecProperty
 import miwu.support.api.WidgetObserver
 import miwu.support.icon.Icon
 
@@ -46,7 +46,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     /**
      * Action 名称
      *
-     * @see [SpecAtt.Service.Action]
+     * @see [SpecAtt.Action]
      */
     val actionName get() = widget.actionName
 
@@ -60,7 +60,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     /**
      * Property名称
      *
-     * @see [SpecAtt.Service.Property]
+     * @see [SpecAtt.Property]
      */
     val propertyName get() = widget.propertyName
 
@@ -80,7 +80,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * 用于区分设备中的 `property`
      *
-     * @see [SpecAtt.Service.Property]
+     * @see [SpecAtt.Property]
      */
     val piid get() = widget.piid
 
@@ -90,7 +90,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * 用于区分设备中的 `action`
      *
-     * @see [SpecAtt.Service.Action]
+     * @see [SpecAtt.Action]
      */
     val aiid get() = widget.aiid
 
@@ -104,7 +104,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     val icon get() = widget.icon
 
     /**
-     * @see [SpecAtt.Service.Property.valueList]
+     * @see [SpecAtt.Property.valueList]
      */
     val valueList get() = widget.valueList
     val valueRange get() = widget.valueRange
@@ -116,7 +116,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * - 在 `property` 有 `value-range` 的情况
      *
-     * @see [SpecAtt.Service.Property.valueRange]
+     * @see [SpecAtt.Property.valueRange]
      */
     val valueStep get() = widget.valueStep
 
@@ -125,7 +125,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * 如果需要获取转换过的计量单位，请使用 [valueUnit]
      *
-     * @see [SpecAtt.Service.Property.unit]
+     * @see [SpecAtt.Property.unit]
      */
     val valueOriginUnit get() = widget.valueOriginUnit
 
@@ -152,7 +152,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * - 在 `property` 有 `value-list` 的情况
      *
-     * @see [SpecAtt.Service.Property.Value]
+     * @see [SpecAtt.Property.Value]
      */
     val defaultValue get() = widget.defaultValue
 
@@ -175,6 +175,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     /**
      * 停止 Value 的更新
      */
+    @WrapperManager
     fun stopUpdate() {
         canUpdate = false
     }
@@ -182,6 +183,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     /**
      * 恢复 Value 的更新
      */
+    @WrapperManager
     fun continueUpdate() {
         canUpdate = true
     }
@@ -210,6 +212,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * @param value 要更新的数据
      */
+    @WrapperManager
     fun update(value: T) = widget.update(value)
 
     /**
@@ -219,6 +222,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      * @param piid piid
      * @param value 要更新的数据
      */
+    @WrapperManager
     fun update(siid: Int, piid: Int, value: Any) = widget.update(siid, piid, value)
 
     /**
@@ -226,6 +230,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * @param input Action 的输入
      */
+    @WrapperManager
     fun action(vararg input: Any) = widget.action(*input)
 
     /**
@@ -235,6 +240,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      * @param aiid aiid
      * @param input Action 的输入
      */
+    @WrapperManager
     fun action(siid: Int, aiid: Int, vararg input: Any) = widget.action(siid, aiid, *input)
 
     /**
@@ -242,29 +248,32 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      *
      * 如果不存在该 [SpecAtt.Service] 则返回 null
      *
-     * @see [miwu.spec.Service]
+     * @see [miwu.spec.MiotSpec.Service]
      */
+    @WrapperFun
     fun getService(serviceName: String): SpecAtt.Service? = widget.getService(serviceName)
 
     /**
-     * 根据 `ServiceName` 和 `ActionName` 获取对应的 [SpecAtt.Service.Action]
+     * 根据 `ServiceName` 和 `ActionName` 获取对应的 [SpecAtt.Action]
      *
-     * 如果不存在该 [SpecAtt.Service.Action] 则返回 null
+     * 如果不存在该 [SpecAtt.Action] 则返回 null
      *
-     * @see [miwu.spec.Service]
+     * @see [miwu.spec.MiotSpec.Service]
      */
-    fun getAction(serviceName: String, actionName: String): SpecAtt.Service.Action? =
+    @WrapperFun
+    fun getAction(serviceName: String, actionName: String): SpecAtt.Action? =
         widget.getAction(serviceName, actionName)
 
     /**
-     * 根据 `ServiceName` 和 `PropertyName` 获取对应的 [SpecAtt.Service.Property]
+     * 根据 `ServiceName` 和 `PropertyName` 获取对应的 [SpecAtt.Property]
      *
-     * 如果不存在该 [SpecAtt.Service.Property] 则返回 null
+     * 如果不存在该 [SpecAtt.Property] 则返回 null
      *
-     * @see [miwu.spec.Service]
-     * @see [miwu.spec.Property]
+     * @see [miwu.spec.MiotSpec.Service]
+     * @see [miwu.spec.MiotSpec.Property]
      */
-    fun getProperty(serviceName: String, propertyName: String): SpecAtt.Service.Property? =
+    @WrapperFun
+    fun getProperty(serviceName: String, propertyName: String): SpecProperty? =
         widget.getProperty(serviceName, propertyName)
 
     /**
@@ -274,6 +283,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      * @param piid piid
      * @param block 回调函数
      */
+    @WrapperFun
     fun registerProperty(
         serviceName: String,
         propertyName: String,
@@ -293,6 +303,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
      * @param aiid piid
      * @param block 回调函数
      */
+    @WrapperFun
     fun registerAction(
         serviceName: String,
         actionName: String,
@@ -304,18 +315,36 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
         actionListenerList[siid to aiid] = action to block
     }
 
+    @WrapperFun
     fun registerAction(siid: Int, aiid: Int) {
         if (widget.isMultiAttribute) widget.registerAction(siid, aiid)
     }
 
+    @WrapperFun
     fun registerProperty(siid: Int, piid: Int) {
         if (widget.isMultiAttribute) widget.registerProperty(siid, piid)
     }
 
     // 搜索 `valueList` 中的 `value`
-    fun valueListOf(desc: String): SpecAtt.Service.Property.Value =
+    @WrapperFun
+    fun valueListOf(desc: String): SpecAtt.Property.Value =
         widget.valueList.first { it.description == desc }
 
-    fun valueListOfOrNull(desc: String): SpecAtt.Service.Property.Value? =
+    @WrapperFun
+    fun valueListOfOrNull(desc: String): SpecAtt.Property.Value? =
         widget.valueList.firstOrNull { it.description == desc }
+
+    /**
+     * 用于注解 Wrapper 内部封装的辅助函数
+     */
+    @DslMarker
+    annotation class WrapperFun
+
+    /**
+     * 用于注解 Wrapper 和 MiotManager 有关的交互的函数
+     *
+     * 包括 [canUpdate]
+     */
+    @DslMarker
+    annotation class WrapperManager
 }

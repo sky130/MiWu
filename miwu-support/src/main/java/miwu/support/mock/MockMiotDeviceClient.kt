@@ -12,15 +12,17 @@ import miwu.miot.att.set.value
 import miwu.miot.model.MiotResponse
 import miwu.miot.model.att.Property
 import miwu.miot.model.att.PropertyList
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
+import miwu.miot.model.spec.SpecAction
+import miwu.miot.model.spec.SpecProperty
 import miwu.support.mock.base.BaseMockMiotDeviceClient
 
 typealias MockStore = MutableMap<Pair<Int, Int>, Any>
 typealias MockAction = MutableMap<Pair<Int, Int>, MockActionHook>
-typealias MockActionHook = (action: SpecAtt.Service.Action, store: MockStore, input: Array<out Any>) -> Any
+typealias MockActionHook = (action: SpecAction, store: MockStore, input: Array<out Any>) -> Any
 typealias MockProperty = MutableMap<Pair<Int, Int>, MockPropertyHook>
-typealias MockPropertyHook = suspend (property: SpecAtt.Service.Property, store: MockStore, origin: Any) -> Unit
+typealias MockPropertyHook = suspend (property: SpecProperty, store: MockStore, origin: Any) -> Unit
 
 typealias MockMiotDeviceClientBuilder = (deviceType: String, mockScope: CoroutineScope, specAtt: SpecAtt, device: MiotDevice) -> BaseMockMiotDeviceClient
 
@@ -108,14 +110,14 @@ abstract class MockMiotDeviceClient(
         mockAction[siid to aiid] = actionHook
     }
 
-    fun getProperty(serviceName: String, propertyName: String): SpecAtt.Service.Property? {
+    fun getProperty(serviceName: String, propertyName: String): SpecProperty? {
         return specAtt.services
             .firstOrNull { it.name == serviceName }
             ?.properties
             ?.firstOrNull { it.name == propertyName }
     }
 
-    fun getAction(serviceName: String, actionName: String): SpecAtt.Service.Action? {
+    fun getAction(serviceName: String, actionName: String): SpecAction? {
         return specAtt.services
             .firstOrNull { it.name == serviceName }
             ?.actions

@@ -1,4 +1,4 @@
-package miwu.miot.model.att
+package miwu.miot.model.spec
 
 import kotlinx.serialization.Serializable
 

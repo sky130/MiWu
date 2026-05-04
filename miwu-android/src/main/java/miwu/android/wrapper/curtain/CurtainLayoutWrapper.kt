@@ -13,7 +13,7 @@ import miwu.android.wrapper.curtain.CurtainLayoutWrapper.CurtainState.Closing
 import miwu.android.wrapper.curtain.CurtainLayoutWrapper.CurtainState.Opening
 import miwu.android.wrapper.curtain.CurtainLayoutWrapper.CurtainState.Stop
 import miwu.annotation.Wrapper
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.layout.CurtainLayout
 import miwu.spec.MiotSpec.Property
 import miwu.spec.MiotSpec.Service
@@ -29,6 +29,11 @@ class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
     private val Pause = valueListOf("Pause")
     private val stateListeners = mutableSetOf<(state: CurtainState) -> Unit>()
     private var currentState: CurtainState = Stop
+        set(value) {
+            if (currentState == value) return
+            field = value
+            stateListeners.forEach { it.invoke(value) }
+        }
 
 
     override fun initWrapper() {
@@ -39,9 +44,7 @@ class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
                 "Closing" -> Closing
                 else -> Stop
             }
-            if (currentState == state) return@registerProperty
             currentState = state
-            stateListeners.forEach { it.invoke(state) }
         }
 
         // 开窗
@@ -79,7 +82,7 @@ class CurtainLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
     // 窗帘的属性由其他东西定义, 绑定的属性只能写不能读
     override fun onUpdateValue(value: Int) = Unit
 
-    private fun update(value: SpecAtt.Service.Property.Value) {
+    private fun update(value: SpecAtt.Property.Value) {
         update(value.value)
     }
 

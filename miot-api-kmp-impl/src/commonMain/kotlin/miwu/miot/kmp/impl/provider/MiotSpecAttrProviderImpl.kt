@@ -20,8 +20,8 @@ import miwu.miot.kmp.service.createSpecService
 import miwu.miot.kmp.utils.IO
 import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecType
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecType
 import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
 

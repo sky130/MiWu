@@ -13,15 +13,10 @@ import miwu.android.icon.generated.icon.AndroidIcons
 import miwu.android.translate.AndroidTranslateHelper
 import miwu.miot.kmp.utils.to
 import miwu.miot.model.MiotUser
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
-import miwu.support.generated.device.DeviceRegistry
-import miwu.support.generated.mock.MockRegistry
-import miwu.support.mock.MOCK_PREFIX
-import miwu.support.mock.DefaultMockMiotDeviceClient
 import miwu.support.manager.MiotDeviceManager
-import miwu.support.urn.Urn
 import org.koin.core.component.KoinComponent
 
 class DeviceViewModel(

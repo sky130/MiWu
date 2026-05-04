@@ -5,7 +5,7 @@ import miwu.annotation.widget.*
 import miwu.support.MiwuWidget
 
 @Widget
-@SubHeader
+@HeaderPanel
 @Bind<Property>("light", "on")
 @Bind<Property>("fan", "on")
 @Bind<Property>("camera", "on")

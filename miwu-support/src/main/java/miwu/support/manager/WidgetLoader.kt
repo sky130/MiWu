@@ -4,17 +4,18 @@ package miwu.support.manager
 
 import miwu.annotation.ValueList
 import miwu.annotation.widget.Body
+import miwu.annotation.widget.ControlPanel
 import miwu.annotation.widget.Footer
+import miwu.annotation.widget.FooterPanel
 import miwu.annotation.widget.Header
-import miwu.annotation.widget.SubFooter
-import miwu.annotation.widget.SubHeader
+import miwu.annotation.widget.HeaderPanel
+import miwu.icon.Icons
 import miwu.support.MiwuWidget
 import miwu.support.generated.widget.ActionRegistry
 import miwu.support.generated.widget.PropertyRegistry
 import miwu.support.layout.MiwuWidgetLayout
 import miwu.support.urn.Urn
 import miwu.miot.model.spec.SpecAtt
-import miwu.icon.Icons
 import miwu.miot.model.miot.MiotDevice
 import miwu.support.translate.TranslateHelper
 import kotlin.reflect.KClass
@@ -342,7 +343,7 @@ class WidgetLoader(
     /**
      * 根据注解将 widget 添加到 layout 的对应区域
      *
-     * 支持的区域：Header, SubHeader, Body, SubFooter, Footer。
+     * 支持的区域：Header, HeaderPanel, ControlPanel, Body, FooterPanel, Footer。
      * 未匹配到任何注解的 widget 添加到 unknown 区域。
      *
      * @param widget widget 实例
@@ -351,9 +352,10 @@ class WidgetLoader(
         val widgetClass = widget.javaClass
         when (widgetClass.getPosition()) {
             is Header -> layout.header.add(widget)
-            is SubHeader -> layout.subHeader.add(widget)
+            is HeaderPanel -> layout.headerPanel.add(widget)
+            is ControlPanel -> layout.controlPanel.add(widget)
             is Body -> layout.body.add(widget)
-            is SubFooter -> layout.subFooter.add(widget)
+            is FooterPanel -> layout.footerPanel.add(widget)
             is Footer -> layout.footer.add(widget)
             else -> layout.unknown.add(widget)
         }
@@ -414,10 +416,10 @@ class WidgetLoader(
     /**
      * 获取 widget class 的位置注解
      *
-     * @return 位置注解实例（Body/Footer/Header/SubHeader/SubFooter），无则返回 null
+     * @return 位置注解实例（Body/ControlPanel/Footer/FooterPanel/Header/HeaderPanel），无则返回 null
      */
     private fun MiwuWidgetClass.getPosition(): Any? =
-        annotations.find { it is Body || it is Footer || it is Header || it is SubHeader || it is SubFooter }
+        annotations.find { it is Body || it is ControlPanel || it is Footer || it is FooterPanel || it is Header || it is HeaderPanel }
 
     /**
      * 通过反射创建 widget 实例

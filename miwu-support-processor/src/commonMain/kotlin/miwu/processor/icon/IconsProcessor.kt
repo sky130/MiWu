@@ -88,7 +88,7 @@ class IconsProcessor(
             .addModifiers(KModifier.PUBLIC)
             .returns(iconClass)
             .addParameter("name", String::class)
-            .beginControlFlow("return when(name)")
+            .beginControlFlow("return when(name.replace(\" \", \"\"))")
             .apply {
                 mappings.forEach { mapping ->
                     addStatement(

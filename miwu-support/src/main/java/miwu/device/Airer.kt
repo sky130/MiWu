@@ -8,7 +8,6 @@ import miwu.widget.*
 
 @Device("airer")
 @Widgets(
-    StatusText::class,
     AirerLayout::class,
     SwitchBar::class
 )

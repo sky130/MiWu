@@ -29,7 +29,7 @@ class AirerLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
 
 
     override fun initWrapper() {
-        registerProperty(Service.Curtain, Property.Status) { property, value ->
+        registerProperty(Service.Airer, Property.Status) { property, value ->
             val name = property.valueList!!.first { it.value == value }.description
             val state = when (name) {
                 "Stop" -> {
@@ -37,7 +37,7 @@ class AirerLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
                     else AirerState.DownStop
                 }
 
-                "Rising" -> AirerState.Rising
+                "Rising", "Up" -> AirerState.Rising
                 "Down" -> AirerState.Down
                 "Pause" -> AirerState.Pause
                 else -> AirerState.DownStop

@@ -32,7 +32,7 @@
             android:includeFontPadding="false"
             android:scrollbars="none"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             tools:text="开启" />
 
@@ -43,7 +43,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:scrollbars="none"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:visibility="gone"
             tools:text="灯"
             tools:visibility="visible" />

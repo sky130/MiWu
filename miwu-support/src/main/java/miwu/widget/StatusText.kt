@@ -10,5 +10,4 @@ import miwu.support.MiwuWidget
 @Bind<Property>("vacuum", "mode")
 @Bind<Property>("curtain", "status")
 @Bind<Property>("gas-sensor", "status")
-@Bind<Property>("airer", "status")
 class StatusText : MiwuWidget<Int>()

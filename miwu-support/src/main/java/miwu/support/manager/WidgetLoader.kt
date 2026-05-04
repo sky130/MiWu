@@ -15,6 +15,7 @@ import miwu.support.layout.MiwuWidgetLayout
 import miwu.support.urn.Urn
 import miwu.miot.model.att.SpecAtt
 import miwu.icon.Icons
+import miwu.miot.model.miot.MiotDevice
 import miwu.support.translate.TranslateHelper
 import kotlin.reflect.KClass
 
@@ -33,12 +34,16 @@ import kotlin.reflect.KClass
  * @param translateHelper 翻译帮助器
  */
 class WidgetLoader(
+    private val device: MiotDevice,
     private val manager: MiotDeviceManager,
     private val supportWidget: Set<MiwuWidgetClass>,
     private val layout: MiwuWidgetLayout,
     private val icons: Icons,
     private val translateHelper: TranslateHelper,
 ) {
+
+    private val deviceType = Urn.parseFrom(device.specType!!).name
+
     /**
      * widget 持有者，用于绑定和回收 widget
      *
@@ -200,7 +205,8 @@ class WidgetLoader(
         return when (val pointTo = widgetClass.getPointTo()) {
             ValueList::class -> {
                 property.valueList?.map { valueItem ->
-                    val widget = createAndConfigPropertyWidget(widgetClass, property, service, specAtt)
+                    val widget =
+                        createAndConfigPropertyWidget(widgetClass, property, service, specAtt)
                     widget.field.apply {
                         desc = valueItem.description
                         descTranslation = valueItem.descriptionTranslation
@@ -254,6 +260,7 @@ class WidgetLoader(
                 allowWrite = "write" in property.access
                 allowRead = "read" in property.access
                 allowNotify = "notify" in property.access
+                deviceType = this@WidgetLoader.deviceType
                 property.valueList?.also { valueList.addAll(it) }
             }
         }
@@ -286,6 +293,7 @@ class WidgetLoader(
                 actionName = Urn.parseFrom(action.type).name
                 desc = action.description
                 descTranslation = action.descriptionTranslation
+                deviceType = this@WidgetLoader.deviceType
             }
         }
         return createHolder(widget)

@@ -153,7 +153,7 @@ class MiotDeviceManagerImpl internal constructor(
         att.initVariable()
         getLanguageMap()?.let { att.convertLanguage(it) }
 
-        val widgetLoader = WidgetLoader(this, supportWidget, layout, icons, translateHelper)
+        val widgetLoader = WidgetLoader(device, this, supportWidget, layout, icons, translateHelper)
         widgetHolders.addAll(widgetLoader.loadWidgets(att))
     }
 
@@ -171,7 +171,9 @@ class MiotDeviceManagerImpl internal constructor(
             isOutdated = true
             for (i in widgetHolders) {
                 val widget = i.widget
-                if (widget.allowRead && widget.siid == siid && widget.piid == piid) widget.updateValue(value)
+                if (widget.allowRead && widget.siid == siid && widget.piid == piid) widget.updateValue(
+                    value
+                )
                 if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
             }
             miot.set(device, arrayOf(siid to piid to value))

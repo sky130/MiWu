@@ -38,6 +38,7 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
     override val allowWrite get() = field.allowWrite
     override val allowRead get() = field.allowRead
     override val allowNotify get() = field.allowNotify
+    override val deviceType get() = field.deviceType
     override val Icons get() = field.icons
     override val descriptionTranslation by lazy {
         // 如果已经在 miot-spec 有对应翻译, 则不再重复翻译

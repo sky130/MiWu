@@ -1,5 +1,6 @@
 package miwu.support
 
+import miwu.annotation.Property
 import miwu.miot.model.spec.SpecAction
 import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.spec.SpecProperty
@@ -215,6 +216,10 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     @WrapperManager
     fun update(value: T) = widget.update(value)
 
+    @Suppress("UNCHECKED_CAST")
+    @WrapperManager
+    fun updateValue(value: SpecAtt.Property.Value) = update(value.value as T)
+
     /**
      * 指定 siid 和 piid 更新 Property
      *
@@ -333,6 +338,30 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     @WrapperFun
     fun valueListOfOrNull(desc: String): SpecAtt.Property.Value? =
         widget.valueList.firstOrNull { it.description == desc }
+
+    @WrapperFun
+    fun valueListOf(value: Int): SpecAtt.Property.Value =
+        widget.valueList.first { it.value == value }
+
+    @WrapperFun
+    fun valueListOfOrNull(value: Int): SpecAtt.Property.Value? =
+        widget.valueList.firstOrNull { it.value == value }
+
+    @WrapperFun
+    fun SpecAtt.Property.valueListOf(desc: String): SpecAtt.Property.Value =
+        this.valueList!!.first { it.description == desc }
+
+    @WrapperFun
+    fun SpecAtt.Property.valueListOfOrNull(desc: String): SpecAtt.Property.Value? =
+        this.valueList?.firstOrNull { it.description == desc }
+
+    @WrapperFun
+    fun SpecAtt.Property.valueListOf(value: Int): SpecAtt.Property.Value =
+        this.valueList!!.first { it.value == value }
+
+    @WrapperFun
+    fun SpecAtt.Property.valueListOfOrNull(value: Int): SpecAtt.Property.Value? =
+        this.valueList?.firstOrNull { it.value == value }
 
     /**
      * 用于注解 Wrapper 内部封装的辅助函数

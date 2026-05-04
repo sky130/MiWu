@@ -1,7 +1,7 @@
 package miwu.support.mock
 
 import kotlinx.coroutines.CoroutineScope
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 
 class DefaultMockMiotDeviceClient(

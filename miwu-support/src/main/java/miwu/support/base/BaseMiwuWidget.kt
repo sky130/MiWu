@@ -5,10 +5,10 @@ package miwu.support.base
 import miwu.annotation.basic.Widget
 import miwu.icon.Icons
 import miwu.icon.NoneIcon
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecAtt.Service.Property.Value
+import miwu.miot.model.spec.SpecAction
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecProperty
 import miwu.support.icon.Icon
-import miwu.support.urn.Urn
 
 /**
  * BaseMiwuWidget
@@ -58,7 +58,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * 用于区分设备中的 `property`
      *
-     * @see [SpecAtt.Service.Property]
+     * @see [SpecAtt.Property]
      */
     abstract val piid: Int
 
@@ -68,7 +68,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * 用于区分设备中的 `action`
      *
-     * @see [SpecAtt.Service.Action]
+     * @see [SpecAtt.Action]
      */
     abstract val aiid: Int
 
@@ -82,14 +82,14 @@ abstract class BaseMiwuWidget<T>() : Widget {
     /**
      * Property名称
      *
-     * @see [SpecAtt.Service.Property]
+     * @see [SpecAtt.Property]
      */
     abstract val propertyName: String
 
     /**
      * Action 名称
      *
-     * @see [SpecAtt.Service.Action]
+     * @see [SpecAtt.Action]
      */
     abstract val actionName: String
 
@@ -110,7 +110,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * - 在 `property` 有 `value-list` 的情况
      *
-     * @see [SpecAtt.Service.Property.Value]
+     * @see [SpecAtt.Property.Value]
      */
     abstract val defaultValue: T
 
@@ -121,7 +121,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * - 在 `property` 有 `value-range` 的情况
      *
-     * @see [SpecAtt.Service.Property.valueRange]
+     * @see [SpecAtt.Property.valueRange]
      */
     abstract val valueRange: Pair<T, T>
 
@@ -132,7 +132,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * - 在 `property` 有 `value-range` 的情况
      *
-     * @see [SpecAtt.Service.Property.valueRange]
+     * @see [SpecAtt.Property.valueRange]
      */
     abstract val valueStep: T
 
@@ -150,21 +150,21 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * 如果需要获取转换过的计量单位，请使用 [valueUnit]
      *
-     * @see [SpecAtt.Service.Property.unit]
+     * @see [SpecAtt.Property.unit]
      */
     abstract val valueOriginUnit: String
 
     /**
-     * @see [SpecAtt.Service.Property.valueList]
+     * @see [SpecAtt.Property.valueList]
      */
-    abstract val valueList: List<Value>
+    abstract val valueList: List<SpecAtt.Property.Value>
 
     /**
      * `property` 描述
      *
      * 是否可以写入
      *
-     * @see [SpecAtt.Service.Property.access]
+     * @see [SpecAtt.Property.access]
      */
     abstract val allowWrite: Boolean
 
@@ -173,7 +173,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * 是否可以读取
      *
-     * @see [SpecAtt.Service.Property.access]
+     * @see [SpecAtt.Property.access]
      */
     abstract val allowRead: Boolean
 
@@ -182,7 +182,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * 是否可以通知
      *
-     * @see [SpecAtt.Service.Property.access]
+     * @see [SpecAtt.Property.access]
      */
     abstract val allowNotify: Boolean
 
@@ -215,7 +215,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
      *
      * 如果不存在该 [SpecAtt.Service] 则返回 null
      *
-     * @see [miwu.spec.Service]
+     * @see [miwu.spec.MiotSpec.Service]
      */
     fun getService(serviceName: String): SpecAtt.Service? {
         if (!field.isSpecAttInitialized) return null
@@ -223,27 +223,27 @@ abstract class BaseMiwuWidget<T>() : Widget {
     }
 
     /**
-     * 根据 `ServiceName` 和 `PropertyName` 获取对应的 [SpecAtt.Service.Property]
+     * 根据 `ServiceName` 和 `PropertyName` 获取对应的 [SpecProperty]
      *
-     * 如果不存在该 [SpecAtt.Service.Property] 则返回 null
+     * 如果不存在该 [SpecProperty] 则返回 null
      *
-     * @see [miwu.spec.Service]
-     * @see [miwu.spec.Property]
+     * @see [miwu.spec.MiotSpec.Service]
+     * @see [miwu.spec.MiotSpec.Property]
      */
-    fun getProperty(serviceName: String, propertyName: String): SpecAtt.Service.Property? {
+    fun getProperty(serviceName: String, propertyName: String): SpecProperty? {
         if (!field.isSpecAttInitialized) return null
         val service = miotSpecAtt.services.find { it.name == serviceName } ?: return null
         return service.properties?.find { it.name == propertyName }
     }
 
     /**
-     * 根据 `ServiceName` 和 `ActionName` 获取对应的 [SpecAtt.Service.Action]
+     * 根据 `ServiceName` 和 `ActionName` 获取对应的 [SpecAtt.Action]
      *
-     * 如果不存在该 [SpecAtt.Service.Action] 则返回 null
+     * 如果不存在该 [SpecAtt.Action] 则返回 null
      *
-     * @see [miwu.spec.Service]
+     * @see [miwu.spec.MiotSpec.Service]
      */
-    fun getAction(serviceName: String, actionName: String): SpecAtt.Service.Action? {
+    fun getAction(serviceName: String, actionName: String): SpecAction? {
         if (!field.isSpecAttInitialized) return null
         val service = miotSpecAtt.services.find { it.name == serviceName } ?: return null
         return service.actions?.find { it.name == actionName }
@@ -265,7 +265,7 @@ abstract class BaseMiwuWidget<T>() : Widget {
         var valueRange: Pair<T, T>? = null,
         var valueStep: T? = null,
         var valueOriginUnit: String = "",
-        val valueList: ArrayList<Value> = arrayListOf(),
+        val valueList: ArrayList<SpecAtt.Property.Value> = arrayListOf(),
         var allowWrite: Boolean = false,
         var allowRead: Boolean = false,
         var allowNotify: Boolean = false,

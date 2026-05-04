@@ -11,7 +11,7 @@ import miwu.android.view.binding.updateState
 import miwu.android.wrapper.base.MiwuLayoutWrapper
 import miwu.annotation.Wrapper
 import miwu.layout.AirerLayout
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.spec.MiotSpec.Property
 import miwu.spec.MiotSpec.Service
 import miwu.support.MiwuWidget
@@ -83,7 +83,7 @@ class AirerLayoutWrapper(context: Context, widget: MiwuWidget<Int>) :
 
     override fun onUpdateValue(value: Int) = Unit
 
-    private fun update(value: SpecAtt.Service.Property.Value) {
+    private fun update(value: SpecAtt.Property.Value) {
         update(value.value)
     }
 

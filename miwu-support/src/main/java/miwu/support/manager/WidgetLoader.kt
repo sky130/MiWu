@@ -13,7 +13,7 @@ import miwu.support.generated.widget.ActionRegistry
 import miwu.support.generated.widget.PropertyRegistry
 import miwu.support.layout.MiwuWidgetLayout
 import miwu.support.urn.Urn
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.icon.Icons
 import miwu.miot.model.miot.MiotDevice
 import miwu.support.translate.TranslateHelper
@@ -117,7 +117,7 @@ class WidgetLoader(
      */
     private fun loadProperties(
         service: SpecAtt.Service,
-        properties: List<SpecAtt.Service.Property>,
+        properties: List<SpecAtt.Property>,
         specAtt: SpecAtt
     ): List<WidgetHolder> {
         val holders = mutableListOf<WidgetHolder>()
@@ -142,7 +142,7 @@ class WidgetLoader(
      */
     private fun loadActions(
         service: SpecAtt.Service,
-        actions: List<SpecAtt.Service.Action>,
+        actions: List<SpecAtt.Action>,
         specAtt: SpecAtt
     ): List<WidgetHolder> {
         val holders = mutableListOf<WidgetHolder>()
@@ -170,7 +170,7 @@ class WidgetLoader(
      */
     private fun createPropertyWidget(
         widgetClass: MiwuWidgetClass,
-        property: SpecAtt.Service.Property,
+        property: SpecAtt.Property,
         service: SpecAtt.Service,
         specAtt: SpecAtt
     ): List<WidgetHolder> {
@@ -198,7 +198,7 @@ class WidgetLoader(
      */
     private fun loadValueListWidgets(
         widgetClass: MiwuWidgetClass,
-        property: SpecAtt.Service.Property,
+        property: SpecAtt.Property,
         service: SpecAtt.Service,
         specAtt: SpecAtt
     ): List<WidgetHolder> {
@@ -244,7 +244,7 @@ class WidgetLoader(
      */
     private fun createAndConfigPropertyWidget(
         widgetClass: MiwuWidgetClass,
-        property: SpecAtt.Service.Property,
+        property: SpecAtt.Property,
         service: SpecAtt.Service,
         specAtt: SpecAtt
     ): MiwuWidget<*> {
@@ -281,7 +281,7 @@ class WidgetLoader(
      */
     private fun createAndConfigActionWidget(
         widgetClass: MiwuWidgetClass,
-        action: SpecAtt.Service.Action,
+        action: SpecAtt.Action,
         service: SpecAtt.Service,
         specAtt: SpecAtt
     ): WidgetHolder {

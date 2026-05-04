@@ -2,8 +2,7 @@
 
 package miwu.support
 
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecAtt.Service.Property.Value
+import miwu.miot.model.spec.SpecAtt.Property.Value
 import miwu.support.api.WidgetObserver
 import miwu.support.base.BaseMiwuWidget
 import miwu.support.manager.MiotDeviceManager

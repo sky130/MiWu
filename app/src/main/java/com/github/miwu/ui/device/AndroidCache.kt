@@ -3,7 +3,7 @@ package com.github.miwu.ui.device
 import android.content.Context
 import miwu.miot.kmp.utils.json
 import miwu.miot.kmp.utils.to
-import miwu.miot.model.att.SpecAtt
+import miwu.miot.model.spec.SpecAtt
 import miwu.support.api.Cache
 import java.io.File
 

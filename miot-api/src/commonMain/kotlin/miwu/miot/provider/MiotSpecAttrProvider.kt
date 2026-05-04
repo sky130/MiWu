@@ -1,7 +1,7 @@
 package miwu.miot.provider
 
-import miwu.miot.model.att.SpecAtt
-import miwu.miot.model.att.SpecType
+import miwu.miot.model.spec.SpecAtt
+import miwu.miot.model.spec.SpecType
 
 interface MiotSpecAttrProvider {
 

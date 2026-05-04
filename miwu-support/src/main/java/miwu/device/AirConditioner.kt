@@ -9,6 +9,6 @@ import miwu.widget.*
 @Widgets(
     SwitchButton::class,
     ModeButton::class,
-    DoubleValueController::class
+    NumberValueController::class
 )
 class AirConditioner : MiwuDevice()

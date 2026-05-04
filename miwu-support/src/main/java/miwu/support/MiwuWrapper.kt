@@ -192,9 +192,12 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     override fun onActionCallback(siid: Int, aiid: Int, output: Any?) {
         // Action 的回调是一次性的，不应该拦截
         if (widget.isMultiAttribute)
-            actionListenerList[siid to piid]?.apply { second.invoke(first, output ?: Unit) }
-        if (siid != this.siid || aiid != this.aiid) return
-        onActionCallback(output ?: Unit)
+            actionListenerList[siid to piid]?.also { (action, func) ->
+                func(action, output ?: Unit)
+            }
+        if (this.siid to this.aiid == siid to aiid) {
+            onActionCallback(output ?: Unit)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -202,10 +205,13 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
         siid: Int, piid: Int, value: Any
     ) {
         if (!canUpdate) return
-        if (widget.isMultiAttribute) propertyListenerList[siid to piid]
-            ?.apply { second.invoke(first, value) }
-        if (siid != this.siid || piid != this.piid) return
-        onUpdateValue(value as T)
+        if (widget.isMultiAttribute)
+            propertyListenerList[siid to piid]?.also { (property, func) ->
+                func(property, value)
+            }
+        if (this.siid to this.piid == siid to piid) {
+            onUpdateValue(value as T)
+        }
     }
 
     /**

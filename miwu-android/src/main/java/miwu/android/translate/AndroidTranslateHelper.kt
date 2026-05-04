@@ -20,6 +20,8 @@ object AndroidTranslateHelper : TranslateHelper {
         "Battery" -> R.string.battery
         "Pet Food Out" -> R.string.pet_food_out
         "fan" -> R.string.fan
+        "Clothes Drying" -> R.string.clothes_drying
+        "Smart" -> R.string.Smart2
         else -> origin
     }.let {
         when (it) {

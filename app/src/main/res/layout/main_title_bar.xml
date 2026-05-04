@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    tools:parentTag="android.widget.LinearLayout"
-    android:background="@color/black"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_title_round"
+    tools:parentTag="android.widget.LinearLayout">
 
     <TextView
         android:id="@+id/textView"

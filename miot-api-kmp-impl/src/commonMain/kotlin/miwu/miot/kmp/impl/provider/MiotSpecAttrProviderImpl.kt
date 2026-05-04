@@ -22,7 +22,7 @@ import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json
 import miwu.miot.model.att.SpecAtt
 import miwu.miot.model.att.SpecType
-import miwu.miot.model.miot.MiotDevices.Result.Info
+import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
 
 class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
@@ -87,7 +87,7 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     override suspend fun getIconUrl(model: String) = withContext(Dispatchers.IO) {
         runCatching {
             val url = "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${model}"
-            val info = httpClient.get(url).body<Info>()
+            val info = httpClient.get(url).body<DeviceInfoResponse>()
             if (info.code != 0) throw MiotClientException.getIconUrlFailed(model)
             info.data.realIcon
         }

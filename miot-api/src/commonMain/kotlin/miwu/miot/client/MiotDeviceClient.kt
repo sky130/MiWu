@@ -2,9 +2,10 @@ package miwu.miot.client
 
 import miwu.miot.att.get.GetAtt
 import miwu.miot.att.set.SetAtt
-import miwu.miot.model.att.DeviceAtt
-import miwu.miot.model.miot.MiotDevice
+import miwu.miot.model.MiotResponse
 import miwu.miot.model.MiotUser
+import miwu.miot.model.att.PropertyResponse
+import miwu.miot.model.miot.MiotDevice
 
 /**
  * 与 MIoT (小米物联网) 设备交互的客户端接口。
@@ -27,7 +28,7 @@ import miwu.miot.model.MiotUser
  * @see [MiotUser] 用户身份信息
  * @see [MiotDevice] 设备标识符
  * @see [GetAtt] 属性请求结构
- * @see [DeviceAtt] 属性响应数据
+ * @see [PropertyResponse] 属性响应数据
  *
  */
 interface MiotDeviceClient {
@@ -36,9 +37,9 @@ interface MiotDeviceClient {
      *
      * @param device 目标设备 [MiotDevice]。
      * @param att 需要获取的属性数组，每个元素都是一个 [GetAtt] 实例。
-     * @return 返回一个 [Result] 对象，成功时包含设备属性 [DeviceAtt]，失败时则包含异常信息。
+     * @return 返回一个 [Result] 对象，成功时包含设备属性 [PropertyResponse]，失败时则包含异常信息。
      */
-    suspend fun get(device: MiotDevice, att: Array<out GetAtt>): Result<DeviceAtt>
+    suspend fun get(device: MiotDevice, att: Array<out GetAtt>): Result<MiotResponse<PropertyResponse>>
 
     /**
      * 异步设置指定的设备属性。

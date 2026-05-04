@@ -1,7 +1,8 @@
 package miwu.miot.client
 
+import miwu.miot.model.MiotResponse
 import miwu.miot.model.MiotUser
-import miwu.miot.model.miot.MiotUserInfo
+import miwu.miot.model.miot.UserInfo
 
 /**
  * 用于获取米家用户信息以及管理用户状态。
@@ -18,16 +19,16 @@ import miwu.miot.model.miot.MiotUserInfo
  * ```
  *
  * @see [MiotUser] 用户身份信息
- * @see [MiotUserInfo] 用户信息
+ * @see [UserInfo] 用户信息
  */
 interface MiotUserClient {
 
     /**
      * 获取用户信息
      *
-     * @return 包含 [MiotUserInfo] 的 [Result] 对象
+     * @return 包含 [UserInfo] 的 [Result] 对象
      */
-    suspend fun getUserInfo(): Result<MiotUserInfo>
+    suspend fun getUserInfo(): Result<MiotResponse<UserInfo>>
 
     /**
      * 检查当前用户的 `serviceToken` 是否有效，

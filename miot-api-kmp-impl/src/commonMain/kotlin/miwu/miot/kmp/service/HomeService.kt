@@ -8,17 +8,18 @@ import miwu.miot.kmp.service.body.GetScene
 import miwu.miot.kmp.service.body.RunCommonScene
 import miwu.miot.kmp.service.body.RunNewScene
 import miwu.miot.kmp.service.body.RunScene
-import miwu.miot.model.miot.MiotDevices
-import miwu.miot.model.miot.MiotHomes
-import miwu.miot.model.miot.MiotScenes
+import miwu.miot.model.MiotResponse
+import miwu.miot.model.miot.DeviceList
+import miwu.miot.model.miot.HomeList
+import miwu.miot.model.miot.SceneList
 
 interface HomeService {
 
     @POST("v2/homeroom/gethome")
-    suspend fun getHomes(@Body body: GetHome = GetHome()): MiotHomes
+    suspend fun getHomes(@Body body: GetHome = GetHome()): MiotResponse<HomeList>
 
     @POST("v2/home/home_device_list")
-    suspend fun getDevices(@Body body: GetDevices): MiotDevices
+    suspend fun getDevices(@Body body: GetDevices): MiotResponse<DeviceList>
 
     /**
      * @POST("appgateway/miot/appsceneservice/AppSceneService/GetCommonUsedSceneList")
@@ -29,7 +30,7 @@ interface HomeService {
      **/
 
     @POST("appgateway/miot/appsceneservice/AppSceneService/GetSimpleSceneList")
-    suspend fun getScenes(@Body body: GetScene): MiotScenes
+    suspend fun getScenes(@Body body: GetScene): MiotResponse<SceneList>
 
 
     @POST("appgateway/miot/appsceneservice/AppSceneService/NewRunScene")

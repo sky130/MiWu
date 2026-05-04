@@ -12,7 +12,7 @@ import com.github.miwu.R
 import com.github.miwu.logic.handler.DeviceMetadataHandler
 import kndroidx.extension.dp
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.model.miot.MiotScenes
+import miwu.miot.model.miot.MiotScene
 
 
 @BindingAdapter(value = ["deviceModel", "deviceMetadataHandler"])
@@ -45,7 +45,7 @@ fun ImageView.loadUrl(bitmap: Bitmap?) {
 }
 
 @BindingAdapter(value = ["scene"])
-fun ImageView.loadUrl(scene: MiotScenes.Result.Scene) {
+fun ImageView.loadUrl(scene: MiotScene) {
     Glide.with(this)
         .load(scene.iconUrl)
         .placeholder(R.drawable.ic_miwu_placeholder)

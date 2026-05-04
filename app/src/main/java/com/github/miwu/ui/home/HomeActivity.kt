@@ -1,7 +1,7 @@
 package com.github.miwu.ui.home
 
 import kndroidx.activity.ViewActivityX
-import miwu.miot.model.miot.MiotHomes
+import miwu.miot.model.miot.MiotHome
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.miwu.databinding.ActivityHomeBinding as Binding
 
@@ -10,7 +10,7 @@ class HomeActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     fun onItemClick(item: Any?) {
         when (item) {
-            is MiotHomes.Result.Home -> {
+            is MiotHome -> {
                 viewModel.setHome(item)
                 finish()
             }

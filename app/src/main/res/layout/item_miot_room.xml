@@ -9,7 +9,7 @@
 
         <variable
             name="item"
-            type="miwu.miot.model.miot.MiotHomes.Result.Home.Room" />
+            type="miwu.miot.model.miot.MiotRoom" />
     </data>
 
     <LinearLayout

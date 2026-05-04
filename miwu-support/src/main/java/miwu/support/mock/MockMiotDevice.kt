@@ -1,7 +1,6 @@
 package miwu.support.mock
 
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.model.miot.MiotDeviceExtra
 
 const val MOCK_PREFIX = "mock-"
 
@@ -32,7 +31,7 @@ fun MockMiotDevice(
         cnt = null,
         comFlag = 0,
         did = did,
-        extra = MiotDeviceExtra(
+        extra = MiotDevice.Extra(
             fwVersion = null,
             isSetPinCode = null,
             isSubGroup = null,

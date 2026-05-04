@@ -67,10 +67,9 @@ object JsonAnySerializer : KSerializer<Any> {
         else -> throw SerializationException("Unsupported type: ${value::class}")
     }
 
-    private fun parseJsonElement(element: JsonElement): Any = when {
-        element is JsonNull -> throw SerializationException("Null value in JSON")
-
-        element is JsonPrimitive -> with(element) {
+    private fun parseJsonElement(element: JsonElement): Any = when (element) {
+        is JsonNull -> throw SerializationException("Null value in JSON")
+        is JsonPrimitive -> with(element) {
             when {
                 isString -> content
                 intOrNull != null -> int
@@ -82,9 +81,8 @@ object JsonAnySerializer : KSerializer<Any> {
             }
         }
 
-        element is JsonArray -> element.map { parseJsonElement(it) }
-        element is JsonObject -> element.mapValues { parseJsonElement(it.value) }
-        else -> throw SerializationException("Unknown JSON element: $element")
+        is JsonArray -> element.map { parseJsonElement(it) }
+        is JsonObject -> element.mapValues { parseJsonElement(it.value) }
     }
 }
 

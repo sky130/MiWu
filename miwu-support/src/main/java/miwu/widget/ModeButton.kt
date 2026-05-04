@@ -8,6 +8,7 @@ import miwu.support.MiwuWidget
 @Body
 @Bind<Property>("air-conditioner", "mode")
 @Bind<Property>("air-purifier", "mode")
+@Bind<Property>("dehumidifier", "mode")
 @ValueList
 class ModeButton : MiwuWidget<Int>() {
     // warning 这里一定要用 getter 写法, 不可以直接赋值

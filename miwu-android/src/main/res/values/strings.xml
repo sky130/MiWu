@@ -20,4 +20,6 @@
     <string name="EmptyFood">已经没得吃了</string>
     <string name="Medium">中速</string>
     <string name="High">高速</string>
+    <string name="clothes_drying">烘衣</string>
+    <string name="Smart2">智能</string>
 </resources>

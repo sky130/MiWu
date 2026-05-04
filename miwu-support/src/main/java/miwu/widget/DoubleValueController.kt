@@ -6,5 +6,5 @@ import miwu.support.MiwuWidget
 
 @Widget
 @SubHeader
-@Bind<Property>("air-conditioner", "target-temperature")
-class DoubleValueController: MiwuWidget<Int>()
+// @Bind<Property>("air-conditioner", "target-temperature")
+class DoubleValueController : MiwuWidget<Int>()

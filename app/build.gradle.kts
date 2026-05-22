@@ -13,6 +13,7 @@ plugins {
 }
 
 val tag = latestGitTag
+val mockDevicesFile = layout.projectDirectory.file("mock-devices.yaml")
 
 android {
     namespace = "com.github.miwu"
@@ -67,6 +68,12 @@ android {
 
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
+    arg("miwu.mock.enabled", "true")
+    arg("miwu.mock.filePath", mockDevicesFile.asFile.absolutePath)
+}
+
+tasks.matching { it.name.startsWith("ksp") }.configureEach {
+    inputs.file(mockDevicesFile)
 }
 
 dependencies {
@@ -82,6 +89,7 @@ dependencies {
 
 
     implementation(libs.glide)
+    ksp(project(":miwu-support-processor"))
     ksp(libs.glide.compiler)
 
 

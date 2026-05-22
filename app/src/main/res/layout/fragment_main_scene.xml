@@ -31,7 +31,7 @@
                 app:state="@{viewModel.sceneState}"
                 tools:visibility="visible">
 
-                <ImageView style="@style/FragmentEmptyPage.Icon"/>
+                <ImageView style="@style/FragmentEmptyPage.Icon" />
 
                 <TextView
                     style="@style/FragmentEmptyPage.Title"
@@ -50,7 +50,10 @@
                 app:itemClick="@{(i,v)->fragment.onItemClick(i)}"
                 app:itemEventHandler="@{fragment}"
                 app:itemLayout="@{@layout/item_miot_scene}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+                <requestFocus />
+            </com.github.miwu.view.SmoothRecyclerView>
 
         </FrameLayout>
 

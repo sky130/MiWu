@@ -5,7 +5,7 @@ import miwu.annotation.widget.*
 import miwu.support.MiwuLayout
 
 @Widget
-@SubHeader
+@ControlPanel
 @Bind<Property>("airer", "motor-control")
 class AirerLayout : MiwuLayout<Int>() {
     override val isMultiAttribute = true

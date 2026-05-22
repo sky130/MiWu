@@ -10,9 +10,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import miwu.annotation.Widgets
+import miwu.icon.Icons
 import miwu.support.api.Cache
 import miwu.support.MiwuWidget
-import miwu.icon.Icons
 import miwu.support.layout.MiwuWidgetLayout
 import miwu.support.generated.device.DeviceRegistry
 import miwu.miot.att.get.GetAtt

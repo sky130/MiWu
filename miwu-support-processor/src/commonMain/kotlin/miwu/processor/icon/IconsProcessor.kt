@@ -88,7 +88,7 @@ class IconsProcessor(
             .addModifiers(KModifier.PUBLIC)
             .returns(iconClass)
             .addParameter("name", String::class)
-            .beginControlFlow("return when(name)")
+            .beginControlFlow("return when(name.replace(\" \", \"\"))")
             .apply {
                 mappings.forEach { mapping ->
                     addStatement(
@@ -128,12 +128,14 @@ class IconsProcessor(
     private fun String.toSnakeCase(): String {
         return replace(Regex("([A-Z])"), "_$1")
             .lowercase()
+            .replace(" ", "_")
             .trim('_')
     }
 
     private fun String.toKebabCase(): String {
         return replace(Regex("([a-z])([A-Z])"), "$1-$2")
             .lowercase()
+            .replace(" ", "-")
             .trim('-')
     }
 

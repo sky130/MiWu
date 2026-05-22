@@ -1,4 +1,9 @@
-// ArrowUp -> ic_arrow_up
+// 语法规则:
+// 1. 开头为 `//` 时为注释, 注释内容会被忽略;
+// 2. 使用 `->`, 可以复用已声明的图标
+// 3. 命名中间可以有空格
+//
+// 转换规则: 驼峰转下划线, 并且自动在开头加上 `ic_`, 如 ArrowUp -> ic_arrow_up
 ArrowUp
 ArrowDown
 CurtainOpen
@@ -18,7 +23,19 @@ Brightness
 FanLevel
 Clean
 Charge
+Refresh
 StartSweep -> Clean
 StartCharge -> Charge
 PointUp
 PointDown
+Continuous -> Dry
+Clothes Drying -> Heat
+Soft Sound -> Sleep
+Circle -> Refresh
+Custom
+Smart -> Auto
+Strong -> Fan
+Close
+// Low
+// Medium
+// High

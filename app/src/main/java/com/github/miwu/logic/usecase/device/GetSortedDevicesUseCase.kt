@@ -1,11 +1,12 @@
 package com.github.miwu.logic.usecase.device
 
+import com.github.miwu.BuildConfig
+import com.github.miwu.mock.GeneratedMockDevices
 import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.MiotRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import miwu.miot.model.miot.MiotDevice
-import miwu.support.mock.MockMiotDevice
 
 class GetSortedDevicesUseCase(
     private val miotRepository: MiotRepository,
@@ -13,20 +14,9 @@ class GetSortedDevicesUseCase(
 ) {
     operator fun invoke(): Flow<List<MiotDevice>> {
         return miotRepository.currentHome.map { resultat ->
-            resultat.getOrNull()
-                ?.devices
-                .orEmpty()
-                .toMutableList()
-                .apply {
-                    add(
-                        MockMiotDevice(
-                            name = "NWT智能除湿机23L",
-                            did = "012345689abcdef",
-                            model = "nwt.derh.n23l",
-                            specType = "urn:miot-spec-v2:device:dehumidifier:0000A02D:nwt-n23l:1:0000D025"
-                        )
-                    )
-                }
+            val mockDevices = loadMockDevices()
+
+            (resultat.getOrNull()?.devices.orEmpty() + mockDevices)
                 .sortedWith(
                     compareBy(
                         { !it.isOnline },
@@ -39,9 +29,10 @@ class GetSortedDevicesUseCase(
 
     operator fun invoke(roomName: String): Flow<List<MiotDevice>> {
         return miotRepository.currentHome.map { resultat ->
-            resultat.getOrNull()
-                ?.rooms?.get(roomName)
-                .orEmpty()
+            val mockDevices = loadMockDevices()
+                .filter { GeneratedMockDevices.rooms[it.did] == roomName }
+
+            (resultat.getOrNull()?.rooms?.get(roomName).orEmpty() + mockDevices)
                 .sortedWith(
                     compareBy(
                         { !it.isOnline },
@@ -52,4 +43,14 @@ class GetSortedDevicesUseCase(
         }
     }
 
+    private suspend fun loadMockDevices(): List<MiotDevice> {
+        if (!BuildConfig.DEBUG || !GeneratedMockDevices.enabled) return emptyList()
+
+        val devices = GeneratedMockDevices.devices
+        if (devices.isEmpty()) return emptyList()
+
+        cacheRepository.addIcon(devices.map(MiotDevice::model))
+        cacheRepository.addRoom(GeneratedMockDevices.rooms)
+        return devices
+    }
 }

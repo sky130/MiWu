@@ -1,0 +1,10 @@
+enabled: true
+devices:
+  - name: NWT智能除湿机23L
+    did: mock-nwt-derh-n23l
+    model: nwt.derh.n23l
+    specType: urn:miot-spec-v2:device:dehumidifier:0000A02D:nwt-n23l:1:0000D025
+    isOnline: true
+    mac: 00:00:00:00:00:00
+    uid: "114514"
+    roomName:

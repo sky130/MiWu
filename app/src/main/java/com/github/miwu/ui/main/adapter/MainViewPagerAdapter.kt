@@ -12,7 +12,7 @@ import kndroidx.extension.string
 
 @Suppress("DEPRECATION")
 class MainViewPagerAdapter(activity: AppCompatActivity) :
-    FragmentPagerAdapter(activity.supportFragmentManager) {
+    FragmentPagerAdapter(activity.supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     val list = listOf(
         R.string.app_name.string to MiWuFragment(),

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.viewbinding.ViewBinding
+import miwu.android.R
 import miwu.android.icon.AndroidIcon
 import miwu.icon.NoneIcon
 import miwu.support.MiwuWrapper
@@ -43,7 +44,7 @@ abstract class ViewMiwuWrapper<T>(val context: Context, widget: MiwuWidget<T>) :
                 }
 
                 is NoneIcon -> {
-                    setImageDrawable(null)
+                    setImageResource(R.drawable.ic_default)
                 }
             }
         }

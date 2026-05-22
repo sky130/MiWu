@@ -1,5 +1,7 @@
 package miwu.support.unit
 
+import miwu.spec.MiotSpec
+
 /**
  * @author Sky233
  *
@@ -24,9 +26,23 @@ object ValueUnit {
     }
 
     /**
+     * 兜底机制
+     *
+     * 部分属性是没有返回对应的单位的, 所以需要根据属性名来判断
+     */
+    fun fromProperty(name: String) = when (name) {
+        MiotSpec.Property.PowerConsumption -> "kwh"
+        MiotSpec.Property.ElectricCurrent -> "A"
+        MiotSpec.Property.Voltage -> "V"
+        MiotSpec.Property.Temperature -> "°C"
+        MiotSpec.Property.RelativeHumidity -> "%"
+        else -> ""
+    }
+
+    /**
      * 摄氏度
      */
-    const val Celsius  = "celsius"
+    const val Celsius = "celsius"
 
     /**
      * 华氏度

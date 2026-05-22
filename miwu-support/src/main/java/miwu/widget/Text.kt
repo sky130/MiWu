@@ -12,4 +12,8 @@ import miwu.support.MiwuWidget
 @Bind<Property>("environment", "pm2.5-density")
 @Bind<Property>("environment", "temperature")
 @Bind<Property>("gas-sensor", "gas-concentration")
+@Bind<Property>("power-consumption", "power-consumption")
+@Bind<Property>("power-consumption", "electric-current")
+@Bind<Property>("power-consumption", "voltage")
+@Bind<Property>("power-consumption", "voltage")
 class Text : MiwuWidget<String>()

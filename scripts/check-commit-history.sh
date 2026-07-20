@@ -13,10 +13,12 @@ zero_sha=0000000000000000000000000000000000000000
 
 git rev-parse --verify "${head_sha}^{commit}" >/dev/null
 
-if [[ "$base_sha" == "$zero_sha" ]]; then
+if [[ "$base_sha" == "$zero_sha" ]] || ! git cat-file -e "${base_sha}^{commit}" 2>/dev/null; then
+    if [[ "$base_sha" != "$zero_sha" ]]; then
+        echo "base commit is unavailable; validating the complete history at $head_sha" >&2
+    fi
     range=$head_sha
 else
-    git rev-parse --verify "${base_sha}^{commit}" >/dev/null
     range="${base_sha}..${head_sha}"
 fi
 

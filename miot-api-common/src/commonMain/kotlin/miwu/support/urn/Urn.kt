@@ -3,10 +3,11 @@ package miwu.support.urn
 /**
  * MIoT（小米物联网）规范的 URN（统一资源名称）表示类
  *
- * URN 表达式遵循 URN 语法规范 (RFC2141), 6个字段, 最后一个字段为可选:
+ * URN 表达式遵循 MIoT 规范，厂商设备类型可以带版本和修订号:
  *
  * ```
- * <URN> ::= "urn:"<namespace>":"<type>":"<name>":"<value>[":"<vendor-product>":"<version>]
+ * <URN> ::= "urn:"<namespace>":"<type>":"<name>":"<value>
+ *           [":"<vendor-product> [":"<version> [":"<revision>]]]
  * ```
  *
  * 示例:
@@ -21,6 +22,7 @@ package miwu.support.urn
  * @param value 资源值, 16进制字符串, 使用UUID前8个字符
  * @param vendorProduct 厂商产品标识, 可选, 厂家 + 产品代号, 有意义的单词或单词组合(小写字母)
  * @param version 版本号, 可选, 只能是数字
+ * @param revision 规范修订号, 可选, 通常为 8 位十六进制字符串
  */
 data class Urn(
     val namespace: String,
@@ -29,6 +31,7 @@ data class Urn(
     val value: String,
     val vendorProduct: String?,
     val version: Int?,
+    val revision: String? = null,
 ) {
 
     override fun toString() = buildString {
@@ -39,6 +42,7 @@ data class Urn(
         append(':').append(value)
         vendorProduct?.let { append(':').append(it) }
         version?.let { append(':').append(it.toString().padStart(8, '0')) }
+        revision?.let { append(':').append(it) }
     }
 
     companion object {
@@ -71,10 +75,11 @@ data class Urn(
             if (type !in validType) error("Invalid type of urn")
             val name = parts[3]
             val value = parts[4]
-            if (parts.size > 7) error("Invalid URN string: $str")
+            if (parts.size > 8) error("Invalid URN string: $str")
             val vendorProduct = parts.getOrNull(5)?.takeIf(String::isNotEmpty)
             val version = if (parts.size > 6) parts[6] else null
-            Urn(namespace, type, name, value, vendorProduct, version?.toInt())
+            val revision = parts.getOrNull(7)?.takeIf(String::isNotEmpty)
+            Urn(namespace, type, name, value, vendorProduct, version?.toInt(), revision)
         }
     }
 }

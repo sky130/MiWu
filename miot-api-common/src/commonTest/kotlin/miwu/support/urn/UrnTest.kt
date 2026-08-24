@@ -12,5 +12,15 @@ class UrnTest {
         ).forEach { value ->
             assertEquals(value, Urn.parseFrom(value).toString())
         }
+
+        val device = Urn.parseFrom(
+            "urn:miot-spec-v2:device:light:0000A001:bull-jld01:1:0000C802"
+        )
+        assertEquals(1, device.version)
+        assertEquals("0000C802", device.revision)
+        assertEquals(
+            "urn:miot-spec-v2:device:light:0000A001:bull-jld01:00000001:0000C802",
+            device.toString()
+        )
     }
 }

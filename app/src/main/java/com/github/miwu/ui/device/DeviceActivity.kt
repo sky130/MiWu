@@ -9,13 +9,12 @@ import com.github.miwu.ui.device.DeviceViewModel.Event.DeviceInitiated
 import com.github.miwu.utils.Logger
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
+import kndroidx.extension.toast
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import miwu.android.R
 import miwu.android.wrapper.base.ViewMiwuWrapper
-import miwu.miot.kmp.utils.json
-import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
 import miwu.support.MiwuWidget
 import miwu.support.MiwuWrapper
@@ -30,17 +29,22 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
 
     override fun init() {
+        if (viewModel.device == null || viewModel.manager == null) {
+            "设备不可用，请返回后重试".toast()
+            finish()
+            return
+        }
         with(viewModel) {
             event.receiveAsFlow()
                 .onEach(::onEvent)
                 .launchIn(lifecycleScope)
             printDeviceInfo()
-            manager.init()
+            manager?.init()
         }
     }
 
     override fun onDestroy() {
-        viewModel.manager.stop()
+        viewModel.manager?.stop()
         super.onDestroy()
     }
 
@@ -83,7 +87,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
         }
 
     private fun initDeviceLayout() {
-        with(viewModel.manager.layout) {
+        with(viewModel.manager?.layout ?: return) {
             with(binding) {
                 Header {
                     header.addWidget(it)
@@ -114,10 +118,9 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
         WrapperRegistry.create(this, miotWidget)
 
     companion object {
-        fun Context.startDeviceActivity(device: MiotDevice, user: MiotUser) {
+        fun Context.startDeviceActivity(device: MiotDevice) {
             start<DeviceActivity> {
-                putExtra("device", json.encodeToString(device))
-                putExtra("user", json.encodeToString(user))
+                putExtra("did", device.did)
             }
         }
     }

@@ -32,6 +32,10 @@ class MainActivity : ViewActivityX<Binding>(Binding::inflate), OnPageChangeListe
             when (it) {
                 LoginState.Loading -> Unit
                 LoginState.Success -> Unit
+                LoginState.LoggedOut -> {
+                    start<LoginActivity>()
+                    finish()
+                }
 
                 is LoginState.Failure -> {
                     viewModel.logout()

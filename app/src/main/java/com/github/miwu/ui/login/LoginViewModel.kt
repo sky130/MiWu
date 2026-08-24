@@ -5,15 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.github.miwu.logic.repository.MiotRepository
 import com.github.miwu.logic.usecase.login.LoginUseCase
 import com.github.miwu.utils.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import miwu.miot.model.MiotUser
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
@@ -21,74 +23,85 @@ import java.util.concurrent.TimeoutException
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     val miotRepository: MiotRepository,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val logger = Logger()
-    private val loginJob = Job()
-    private val scope = CoroutineScope(loginJob)
-    private val _qrcode = MutableStateFlow("")
+    private val _uiState = MutableStateFlow(LoginUiState())
     private val _event = MutableSharedFlow<Event>()
+    private var loginJob: Job? = null
 
     val user = MutableStateFlow("")
     val password = MutableStateFlow("")
-
-    val qrcode = _qrcode.asStateFlow()
+    val uiState = _uiState.asStateFlow()
     val event = _event.asSharedFlow()
 
     fun requestClassicLogin() {
-        val user = user.value
-        val pwd = password.value
-        viewModelScope.launch(Dispatchers.IO) {
-            event(Event.ShowLoading(true))
-            loginUseCase.loginByPassword(user, pwd)
-                .onFailure { e -> loginFailure(e) }
-                .onSuccess { user ->
-                    event(Event.LoginSuccess(user))
-                    event(Event.ShowLoading(false))
+        loginJob?.cancel()
+        loginJob = viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            try {
+                val loggedInUser = withContext(ioDispatcher) {
+                    loginUseCase.loginByPassword(user.value, password.value).getOrThrow()
                 }
+                event(Event.LoginSuccess(loggedInUser))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                loginFailure(e)
+            } finally {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
         }
     }
 
     fun requestQRCodeLogin() {
-        logger.info("Request for a login qrcode")
-        loginJob.cancelChildren()
-        scope.launch(Dispatchers.IO) {
-            runCatching {
-                _qrcode.emit("")
-                val qrCodeData = loginUseCase.generateQrCode().getOrThrow()
-                _qrcode.emit(qrCodeData.data)
-                loginUseCase.loginByQrCode(qrCodeData.loginUrl).getOrThrow()
-            }.onFailure { e ->
-                if (e is SocketTimeoutException || e is TimeoutException) {
-                    requestQRCodeLogin()
-                } else {
+        loginJob?.cancel()
+        loginJob = viewModelScope.launch(ioDispatcher) {
+            while (true) {
+                currentCoroutineContext().ensureActive()
+                try {
+                    _uiState.value = LoginUiState()
+                    val qrCodeData = loginUseCase.generateQrCode().getOrThrow()
+                    _uiState.value = LoginUiState(qrCode = qrCodeData.data)
+                    val loggedInUser = loginUseCase.loginByQrCode(qrCodeData.loginUrl).getOrThrow()
+                    event(Event.LoginSuccess(loggedInUser))
+                    return@launch
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    if (e is SocketTimeoutException || e is TimeoutException) continue
                     loginFailure(e)
+                    return@launch
                 }
-            }.onSuccess { user ->
-                event(Event.LoginSuccess(user))
             }
         }
     }
 
     private suspend fun loginFailure(e: Throwable) {
-        logger.warn("login failure, cause by {}", e.stackTraceToString())
+        logger.warn("Login failed: {}", e.message)
         event(Event.LoginFailure(e))
     }
 
     fun cancelLogin() {
-        loginJob.cancelChildren()
-        _qrcode.value = ""
+        loginJob?.cancel()
+        loginJob = null
+        _uiState.value = LoginUiState()
     }
 
     override fun onCleared() {
-        loginJob.cancelChildren()
+        loginJob?.cancel()
         super.onCleared()
     }
 
     private suspend fun event(event: Event) = _event.emit(event)
 
+    data class LoginUiState(
+        val isLoading: Boolean = false,
+        val qrCode: String = "",
+    )
+
     sealed interface Event {
         data class LoginSuccess(val user: MiotUser) : Event
         data class LoginFailure(val e: Throwable) : Event
-        data class ShowLoading(val show: Boolean) : Event
     }
 }

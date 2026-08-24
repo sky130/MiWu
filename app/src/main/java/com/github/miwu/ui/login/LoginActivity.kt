@@ -1,11 +1,11 @@
 package com.github.miwu.ui.login
 
-import android.os.Handler
-import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.QrErrorCorrectionLevel
 import com.github.alexzhirkevich.customqrgenerator.style.Color
@@ -20,18 +20,14 @@ import com.github.miwu.ui.about.help.HelpActivity
 import com.github.miwu.ui.about.license.LicenseActivity
 import com.github.miwu.ui.login.LoginViewModel.Event.LoginFailure
 import com.github.miwu.ui.login.LoginViewModel.Event.LoginSuccess
-import com.github.miwu.ui.login.LoginViewModel.Event.ShowLoading
 import com.github.miwu.ui.login.dialog.LoadingDialog
 import com.github.miwu.ui.main.MainActivity
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import kndroidx.extension.string
 import kndroidx.extension.toast
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -53,15 +49,13 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
     }
 
     override fun init() {
-        viewModel.event
-            .onEach(::handleEvent)
-            .launchIn(lifecycleScope)
-        viewModel.qrcode
-            .onEach(::handleQrCode)
-            .launchIn(lifecycleScope)
-        showQrCode
-            .onEach(::handleDisplay)
-            .launchIn(lifecycleScope)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.event.collect(::handleEvent) }
+                launch { viewModel.uiState.collect(::handleUiState) }
+                launch { showQrCode.collect(::handleDisplay) }
+            }
+        }
     }
 
     suspend fun handleDisplay(show: Boolean) {
@@ -73,7 +67,17 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
         }
     }
 
-    suspend fun handleQrCode(data: String) {
+    private fun handleUiState(state: LoginViewModel.LoginUiState) {
+        handleQrCode(state.qrCode)
+        val currentDialog = supportFragmentManager.findFragmentByTag(LOADING_TAG) as? LoadingDialog
+        if (state.isLoading && currentDialog == null) {
+            LoadingDialog().show(supportFragmentManager, LOADING_TAG)
+        } else if (!state.isLoading) {
+            currentDialog?.dismissAllowingStateLoss()
+        }
+    }
+
+    fun handleQrCode(data: String) {
         data.takeIf(String::isNotEmpty)
             ?.let(QrData::Url)
             ?.let { QrCodeDrawable(it, options) }
@@ -96,11 +100,6 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
                 finish()
             }
 
-            is ShowLoading -> {
-                if (event.show) {
-                    LoadingDialog().show(supportFragmentManager)
-                }
-            }
         }
     }
 
@@ -120,6 +119,10 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     fun changeDisplayMode() {
         showQrCode.value = !showQrCode.value
+    }
+
+    private companion object {
+        const val LOADING_TAG = "login_loading"
     }
 
 }

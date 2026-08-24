@@ -23,7 +23,7 @@ val viewModelModule = module {
         MainViewModel(get(), get(), get(), get(), get(), get(), get(), get())
     }
     viewModel {
-        LoginViewModel(get(), get())
+        LoginViewModel(get(), get(), get(org.koin.core.qualifier.named("io")))
     }
     viewModel {
         LicenseViewModel()
@@ -38,7 +38,11 @@ val viewModelModule = module {
         EditFavoriteViewModel(get(), get(), get())
     }
     viewModel {
-        DeviceViewModel(get(), get(), get(), get())
+        DeviceViewModel(
+            get(), get(), get(), get(), get(),
+            get(org.koin.core.qualifier.named("ui")),
+            get(org.koin.core.qualifier.named("io"))
+        )
     }
     viewModel {
         CrashViewModel()

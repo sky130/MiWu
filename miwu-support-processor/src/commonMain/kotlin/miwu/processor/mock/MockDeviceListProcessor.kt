@@ -93,11 +93,18 @@ internal class MockDeviceListProcessor(
             device.putField(index, content)
         }
 
+        val parsedDevices = devices.mapIndexedNotNull { index, device ->
+            device.toMockDevice(index)
+        }
+        parsedDevices.groupBy(MockDevice::did)
+            .filterValues { it.size > 1 }
+            .keys
+            .firstOrNull()
+            ?.let { duplicateDid -> error("mock-devices.yaml contains duplicate did: $duplicateDid") }
+
         return MockDeviceConfig(
             enabled = enabled,
-            devices = devices.mapIndexedNotNull { index, device ->
-                device.toMockDevice(index)
-            }
+            devices = parsedDevices
         )
     }
 

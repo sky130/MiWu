@@ -25,12 +25,16 @@ class LegacyMiotUserMigration(
             val bytes = legacyFile.readBytes()
             require(bytes.size > IV_LENGTH)
             val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE_PROVIDER).apply { load(null) }
-            val key = (keyStore.getEntry(LEGACY_KEY_ALIAS, null) as KeyStore.SecretKeyEntry).secretKey
+            val key = (keyStore.getEntry(LEGACY_KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)
+                ?.secretKey
+                ?: error("Legacy MiotUser key is unavailable")
+            val encrypted = bytes.copyOfRange(IV_LENGTH, bytes.size)
+            require(encrypted.isNotEmpty() && encrypted.size % BLOCK_SIZE == 0)
             val cipher = Cipher.getInstance(LEGACY_TRANSFORMATION).apply {
                 init(Cipher.DECRYPT_MODE, key, IvParameterSpec(bytes.copyOfRange(0, IV_LENGTH)))
             }
             Json.decodeFromString<MiotUser>(
-                cipher.doFinal(bytes.copyOfRange(IV_LENGTH, bytes.size)).decodeToString()
+                cipher.doFinal(encrypted).decodeToString()
             )
         }.getOrNull()
         migrated = migratedUser != null
@@ -39,7 +43,7 @@ class LegacyMiotUserMigration(
 
     override suspend fun cleanUp() {
         if (!migrated) return
-        legacyFile.delete()
+        if (legacyFile.exists() && !legacyFile.delete()) return
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE_PROVIDER).apply { load(null) }
         if (keyStore.containsAlias(LEGACY_KEY_ALIAS)) keyStore.deleteEntry(LEGACY_KEY_ALIAS)
     }
@@ -52,5 +56,6 @@ class LegacyMiotUserMigration(
         const val ANDROID_KEYSTORE_PROVIDER = "AndroidKeyStore"
         const val LEGACY_KEY_ALIAS = "miot_user_datastore_key_v1"
         const val IV_LENGTH = 16
+        const val BLOCK_SIZE = 16
     }
 }

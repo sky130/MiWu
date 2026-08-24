@@ -30,6 +30,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     override fun init() {
         if (viewModel.device == null || viewModel.manager == null) {
+            logger.error("device = ${viewModel.device}, manager = ${viewModel.manager}")
             "设备不可用，请返回后重试".toast()
             finish()
             return

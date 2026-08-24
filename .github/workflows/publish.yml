@@ -3,8 +3,27 @@ on:
   release:
     types: [released, prereleased]
 jobs:
+  validation:
+    name: Full release validation
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 21
+      - run: chmod +x gradlew
+      - name: Validate release artifacts and all platforms
+        run: >-
+          ./gradlew
+          :app:assembleRelease
+          test
+          :miot-api-kmp-impl:compileKotlinJs
+          :miwu-support:compileKotlin
+          :miwu-android:compileDebugKotlin
   publish:
     name: Release build and publish
+    needs: validation
     runs-on: macOS-latest
     steps:
       - name: Check out code

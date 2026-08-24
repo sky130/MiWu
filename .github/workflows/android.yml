@@ -22,13 +22,22 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Validate JVM, JS and processors
+      run: >-
+        ./gradlew
+        :app:compileDebugKotlin
+        test
+        lintDebug
+        :miot-api-kmp-impl:compileKotlinJs
+        :miwu-support:compileKotlin
+        :miwu-support-processor:compileKotlinJvm
+        :miwu-icon-android-processor:compileKotlinJvm
+        :miwu-android:compileDebugKotlin
     - uses: gradle/gradle-build-action@v2
       name: Release Apk
       with:
         gradle-version: current
-        arguments: assembleRelease
+        arguments: :app:assembleRelease
     - uses: ilharp/sign-android-release@v2 
       name: Sign Apk
       id: sign_app

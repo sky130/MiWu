@@ -27,7 +27,7 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
     override val serviceName get() = field.serviceName
     override val propertyName get() = field.propertyName
     override val description get() = field.desc
-    override val serviceDescription get() = field.serviceDescTranslation
+    override val serviceDescription get() = field.serviceDesc
     override val defaultValue get() = field.defaultValue!!
     override val valueRange get() = field.valueRange!!
     override val valueStep get() = field.valueStep!!
@@ -63,7 +63,6 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
      */
     fun update(value: T) {
         miotDeviceManager.updateValue(siid, piid, value as Any)
-        observers.forEach { it.onUpdateValue(value) }
     }
 
     /**
@@ -77,7 +76,6 @@ abstract class MiwuWidget<T>() : BaseMiwuWidget<T>() {
      */
     fun update(siid: Int, piid: Int, value: Any) {
         miotDeviceManager.updateValue(siid, piid, value)
-        observers.forEach { it.onUpdateValue(siid, piid, value) }
     }
 
     /**

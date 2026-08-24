@@ -9,6 +9,8 @@ import miwu.miot.common.MIOT_SERVER_URL
 import miwu.miot.exception.MiotClientException
 import miwu.miot.interceptor.MiotAuthInterceptor
 import miwu.miot.model.MiotUser
+import miwu.miot.model.requireSuccess
+import kotlinx.coroutines.CancellationException
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
 import miwu.miot.service.HomeService
@@ -16,6 +18,7 @@ import miwu.miot.service.body.GetDevices
 import miwu.miot.service.body.GetHome
 import miwu.miot.service.body.GetScene
 import miwu.miot.service.body.RunNewScene
+import miwu.miot.utils.runCatchingSuspend
 
 class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
     private val client = OkHttpClient {
@@ -35,8 +38,9 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
         fetchShareDev: Boolean,
         appVer: Int,
         limit: Int
-    ) = runCatching {
+    ) = runCatchingSuspend {
         homeService.getHomes(GetHome(appVer, fetchShare, fetchShareDev, false, limit))
+            .requireSuccess("Get homes")
     }.recoverCatching {
         throw MiotClientException.getHomesFailed(it)
     }
@@ -44,12 +48,13 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
     override suspend fun getDevices(
         home: MiotHome,
         limit: Int
-    ) = runCatching {
+    ) = runCatchingSuspend {
         getDevices(home.uid, home.id.toLong(), limit).getOrThrow()
     }
 
-    override suspend fun getScenes(home: MiotHome) = runCatching {
+    override suspend fun getScenes(home: MiotHome) = runCatchingSuspend {
         homeService.getScenes(GetScene(homeId = home.id, ownerUid = home.uid.toString()))
+            .requireSuccess("Get scenes")
     }.recoverCatching {
         throw MiotClientException.getScenesFailed(it)
     }
@@ -57,8 +62,9 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
     override suspend fun getScenes(
         homeId: Long,
         ownerUid: Long
-    ) = runCatching {
+    ) = runCatchingSuspend {
         homeService.getScenes(GetScene(homeId = homeId.toString(), ownerUid = ownerUid.toString()))
+            .requireSuccess("Get scenes")
     }.recoverCatching {
         throw MiotClientException.getScenesFailed(it)
     }
@@ -67,8 +73,8 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
         homeId: Long,
         ownerUid: Long,
         limit: Int
-    ) = runCatching {
-        homeService.getDevices(GetDevices(ownerUid, homeId, limit))
+    ) = runCatchingSuspend {
+        homeService.getDevices(GetDevices(ownerUid, homeId, limit)).requireSuccess("Get devices")
     }.recoverCatching {
         throw MiotClientException.getDevicesFailed(it)
     }
@@ -76,7 +82,7 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
     override suspend fun runScene(
         home: MiotHome,
         scene: MiotScene
-    ): Result<Unit> = runCatching {
+    ): Result<Unit> = runCatchingSuspend {
         homeService.runScene(RunNewScene(home.id, home.uid.toString(), scene.sceneId)).use {
             it.string()
         }
@@ -86,7 +92,7 @@ class MiotHomeClientImpl(private val user: MiotUser) : MiotHomeClient {
         homeId: Long,
         ownerUid: Long,
         scene: MiotScene
-    ): Result<Unit> = runCatching {
+    ): Result<Unit> = runCatchingSuspend {
         homeService.runScene(RunNewScene(homeId.toString(), ownerUid.toString(), scene.sceneId))
     }
 }

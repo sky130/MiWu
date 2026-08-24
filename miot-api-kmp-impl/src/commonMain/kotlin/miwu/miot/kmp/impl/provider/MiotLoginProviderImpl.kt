@@ -7,19 +7,23 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
-import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.Cookie
 import io.ktor.http.CookieEncoding
 import io.ktor.http.HttpHeaders
+import io.ktor.http.Parameters
 import io.ktor.http.Url
 import io.ktor.http.contentType
 import io.ktor.http.parseServerSetCookieHeader
 import io.ktor.http.parseUrlEncodedParameters
+import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import miwu.miot.common.MIOT_SID
@@ -42,6 +46,7 @@ import miwu.miot.model.login.Login
 import miwu.miot.model.login.LoginQrCode
 import miwu.miot.model.login.ServiceData
 import miwu.miot.provider.MiotLoginProvider
+import miwu.miot.utils.runCatchingSuspend
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Clock
 
@@ -70,7 +75,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         cookiesStorage.clear()
         val sidDetails = getLocation().getOrThrow()
         val pwdHash = pwd.md5()
-        val body = formData {
+        val body = parameters {
             append("qs", sidDetails.qs ?: "")
             append("sid", sidDetails.sid ?: "")
             append("_sign", sidDetails.sign ?: "")
@@ -227,8 +232,12 @@ class MiotLoginProviderImpl : MiotLoginProvider {
     private suspend inline fun <reified T> get(
         url: String,
         body: Any? = null,
-    ): Result<T> = runCatching {
-        httpClient.get(url) { setBody(body) }.body()
+    ): Result<T> = runCatchingSuspend {
+        if (body is Parameters) {
+            httpClient.post(url) { setBody(FormDataContent(body)) }.body<T>()
+        } else {
+            httpClient.get(url) { if (body != null) setBody(body) }.body<T>()
+        }
     }
 
     private class SimpleCookiesStorage : CookiesStorage {

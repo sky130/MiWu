@@ -16,7 +16,11 @@ import miwu.miot.kmp.service.body.SetParams
 import miwu.miot.kmp.service.createMiotService
 import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.model.MiotUser
+import miwu.miot.model.actionOutputOrUnit
+import miwu.miot.model.requirePropertySuccess
+import kotlinx.coroutines.CancellationException
 import miwu.miot.model.miot.MiotDevice
+import miwu.miot.utils.runCatchingSuspend
 
 
 class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
@@ -26,11 +30,11 @@ class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
     override suspend fun get(
         device: MiotDevice,
         att: Array<out GetAtt>
-    ) = runCatching {
+    ) = runCatchingSuspend {
         val list = Array(att.size) {
             att[it].run { GetParams.Att(device.did, siid, piid) }
         }
-        miotService.getDeviceAtt(GetParams(list))
+        miotService.getDeviceAtt(GetParams(list)).requirePropertySuccess("Get device properties")
     }.recoverCatching {
         val specType = device.specType ?: throw it
         throw MiotClientException.getSpecAttFailed(specType, it)
@@ -39,11 +43,11 @@ class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
     override suspend fun set(
         device: MiotDevice,
         att: Array<out SetAtt>
-    ) = runCatching {
+    ) = runCatchingSuspend {
         val list = Array(att.size) {
             att[it].run { SetParams.Att(device.did, siid, piid, value) }
         }
-        miotService.setDeviceAtt(SetParams(list))
+        miotService.setDeviceAtt(SetParams(list)).requirePropertySuccess("Set device properties")
         Unit
     }.recoverCatching {
         val specType = device.specType ?: throw MiotDeviceException.specNotFound(device.model)
@@ -55,12 +59,12 @@ class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
         siid: Int,
         aiid: Int,
         vararg input: Any
-    ) = runCatching {
+    ) = runCatchingSuspend {
         miotService.doAction(
             ActionBody.Action(device.did, siid, aiid)
                 .apply { `in`.addAll(input) }
                 .body()
-        )
+        ).actionOutputOrUnit("Execute device action")
     }.recoverCatching {
         throw MiotClientException.actionFailed(device.did, siid, aiid, *input, it)
     }

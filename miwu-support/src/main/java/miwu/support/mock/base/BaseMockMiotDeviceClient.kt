@@ -36,5 +36,5 @@ abstract class BaseMockMiotDeviceClient(val miotDevice: MiotDevice) : MiotDevice
         siid: Int,
         aiid: Int,
         vararg input: Any
-    ): Result<Any?> = onAction(siid, aiid, input)
+    ): Result<Any?> = onAction(siid, aiid, *input)
 }

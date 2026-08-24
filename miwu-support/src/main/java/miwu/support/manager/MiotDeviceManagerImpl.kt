@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -56,6 +57,7 @@ class MiotDeviceManagerImpl internal constructor(
     val cache: Cache,
     val translateHelper: TranslateHelper,
     val dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    val workDispatcher: CoroutineDispatcher = Dispatchers.Default,
     val callback: Callback? = null,
     val mockMiotDeviceClient: MockMiotDeviceClientBuilder = ::DefaultMockMiotDeviceClient
 ) : MiotDeviceManager() {
@@ -70,8 +72,9 @@ class MiotDeviceManagerImpl internal constructor(
     private val deviceSpecType = device.specType ?: ""
     private val deviceUrn = Urn.parseFrom(deviceSpecType)
     private val dirtyProperties = ConcurrentHashMap<Pair<Int, Int>, Long>()
-    private val job = Job()
-    private val scope = CoroutineScope(job)
+    private val latestValues = ConcurrentHashMap<Pair<Int, Int>, Any?>()
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(job + workDispatcher)
     private val miot: MiotDeviceClient by lazy {
         miot ?: mockMiotDeviceClient(
             deviceUrn.name,
@@ -152,7 +155,7 @@ class MiotDeviceManagerImpl internal constructor(
         val att = getAtt() ?: return
 
         specAtt = att
-        callback?.onDeviceAttLoaded(att)
+        withContext(dispatcher) { callback?.onDeviceAttLoaded(att) }
         cache.putSpecAtt(deviceSpecType, att)
 
         att.initVariable()
@@ -175,22 +178,21 @@ class MiotDeviceManagerImpl internal constructor(
     override fun updateValue(siid: Int, piid: Int, value: Any) {
         scope.launch {
             val key = siid to piid
+            val previousValue = latestValues[key]
             dirtyProperties[key] = System.currentTimeMillis()
 
-            for (i in widgetHolders) {
-                val widget = i.widget
-                if (widget.allowRead && widget.siid == siid && widget.piid == piid) widget.updateValue(
-                    value
-                )
-                if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
-            }
+            notifyValue(siid, piid, value)
 
             val result = miot.set(device, arrayOf(siid to piid to value))
             if (result.isSuccess) {
+                latestValues[key] = value
                 scope.launch {
                     delay(STALE_PROTECTION_BUFFER)
                     dirtyProperties.remove(key)
                 }
+            } else {
+                dirtyProperties.remove(key)
+                previousValue?.let { notifyValue(siid, piid, it) }
             }
         }
     }
@@ -208,16 +210,14 @@ class MiotDeviceManagerImpl internal constructor(
         scope.launch {
             val action = siid to aiid
             val result = miot.action(device, siid, aiid, *input).getOrNull() ?: return@launch
-            for (holder in widgetHolders) {
-                with(holder.widget) {
-                    if (this.siid to this.aiid == action ||
-                        isMultiAttribute && siid to aiid in aiidList
-                    ) {
-                        onActionCallback(
-                            siid,
-                            aiid,
-                            result
-                        )
+            withContext(dispatcher) {
+                for (holder in widgetHolders) {
+                    with(holder.widget) {
+                        if (this.siid to this.aiid == action ||
+                            isMultiAttribute && siid to aiid in aiidList
+                        ) {
+                            onActionCallback(siid, aiid, result)
+                        }
                     }
                 }
             }
@@ -251,7 +251,7 @@ class MiotDeviceManagerImpl internal constructor(
      *
      * 收集所有需要读取的属性，调用 MiotDeviceClient 批量获取，然后更新 widget。
      */
-    private suspend fun forEach() = withContext(Dispatchers.IO) {
+    private suspend fun forEach() = withContext(workDispatcher) {
         val attList = mutableSetOf<GetAtt>()
         for (holder in widgetHolders) {
             val widget = holder.widget
@@ -288,6 +288,7 @@ class MiotDeviceManagerImpl internal constructor(
             val widget = holder.widget
             for (att in list) {
                 val attKey = att.siid to att.piid
+                att.value?.let { latestValues[attKey] = it }
 
                 // 跳过脏属性, 本地值优先于可能过时的云端值
                 if (dirtyProperties.containsKey(attKey)) continue
@@ -299,6 +300,16 @@ class MiotDeviceManagerImpl internal constructor(
                     widget.updateValue(att.siid, att.piid, att.value)
                 }
             }
+        }
+    }
+
+    private suspend fun notifyValue(siid: Int, piid: Int, value: Any) = withContext(dispatcher) {
+        for (holder in widgetHolders) {
+            val widget = holder.widget
+            if (widget.allowRead && widget.siid == siid && widget.piid == piid) {
+                widget.updateValue(value)
+            }
+            if (widget.isMultiAttribute) widget.updateValue(siid, piid, value)
         }
     }
 
@@ -340,4 +351,3 @@ class MiotDeviceManagerImpl internal constructor(
         }
     }
 }
-

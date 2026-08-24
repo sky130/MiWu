@@ -31,15 +31,15 @@ data class Urn(
     val version: Int?,
 ) {
 
-    override fun toString() =
-        arrayOf(
-            namespace,
-            type,
-            name,
-            value,
-            vendorProduct ?: "",
-            version.toString()
-        ).filter(String::isNotEmpty).joinToString { ":" }
+    override fun toString() = buildString {
+        append("urn:")
+        append(namespace)
+        append(':').append(type)
+        append(':').append(name)
+        append(':').append(value)
+        vendorProduct?.let { append(':').append(it) }
+        version?.let { append(':').append(it.toString().padStart(8, '0')) }
+    }
 
     companion object {
         /** 有效的资源类型集合, 定义 MIoT 规范支持的所有资源类型 */
@@ -71,7 +71,8 @@ data class Urn(
             if (type !in validType) error("Invalid type of urn")
             val name = parts[3]
             val value = parts[4]
-            val vendorProduct = if (parts.size > 5) parts[5] else null
+            if (parts.size > 7) error("Invalid URN string: $str")
+            val vendorProduct = parts.getOrNull(5)?.takeIf(String::isNotEmpty)
             val version = if (parts.size > 6) parts[6] else null
             Urn(namespace, type, name, value, vendorProduct, version?.toInt())
         }

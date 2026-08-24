@@ -14,6 +14,9 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
             }
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
     }
 }
 

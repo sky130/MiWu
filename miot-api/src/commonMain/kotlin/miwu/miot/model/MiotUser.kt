@@ -12,4 +12,6 @@ data class MiotUser(
     val passToken: String,
     val serviceToken: String,
     val deviceId: String,
-)
+) {
+    override fun toString(): String = "MiotUser(credentials=redacted)"
+}

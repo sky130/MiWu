@@ -1,6 +1,5 @@
 pluginManagement {
     repositories {
-        mavenLocal()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -14,11 +13,13 @@ pluginManagement {
             setUrl("https://jitpack.io/")
             isAllowInsecureProtocol = true
         }
+        if (providers.gradleProperty("useMavenLocal").orNull == "true") {
+            mavenLocal()
+        }
     }
 }
 dependencyResolutionManagement {
     repositories {
-        mavenLocal()
         mavenCentral()
         google()
         maven {
@@ -26,6 +27,9 @@ dependencyResolutionManagement {
             isAllowInsecureProtocol = true
         }
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+        if (providers.gradleProperty("useMavenLocal").orNull == "true") {
+            mavenLocal()
+        }
     }
 }
 

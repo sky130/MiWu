@@ -6,13 +6,12 @@ import miwu.miot.model.att.PropertyList
 import miwu.miot.service.body.ActionBody
 import miwu.miot.service.body.GetParams
 import miwu.miot.service.body.SetParams
-import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface MiotService {
     @POST("miotspec/prop/set")
-    suspend fun setDeviceAtt(@Body body: SetParams): ResponseBody
+    suspend fun setDeviceAtt(@Body body: SetParams): MiotResponse<PropertyList?>
 
     @POST("miotspec/prop/get")
     suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyList?>

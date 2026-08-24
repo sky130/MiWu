@@ -80,6 +80,23 @@ abstract class MiotDeviceManager {
             dispatcher: CoroutineDispatcher = Dispatchers.Default,
             callback: Callback? = null,
         ): MiotDeviceManager {
+            return build(
+                miot, specAttrProvider, device, icons, cache, translateHelper,
+                dispatcher, Dispatchers.Default, callback
+            )
+        }
+
+        fun build(
+            miot: MiotDeviceClient?,
+            specAttrProvider: MiotSpecAttrProvider,
+            device: MiotDevice,
+            icons: Icons,
+            cache: Cache,
+            translateHelper: TranslateHelper,
+            uiDispatcher: CoroutineDispatcher,
+            workDispatcher: CoroutineDispatcher,
+            callback: Callback? = null,
+        ): MiotDeviceManager {
             val specType = device.specType ?: error("device specType is null")
             val isMockDevice = specType.startsWith(MOCK_PREFIX)
             val device =
@@ -92,7 +109,8 @@ abstract class MiotDeviceManager {
                 icons,
                 cache,
                 translateHelper,
-                dispatcher,
+                uiDispatcher,
+                workDispatcher,
                 callback,
                 MockRegistry::createMockClient
             )
@@ -105,4 +123,3 @@ abstract class MiotDeviceManager {
         fun onDeviceAttLoaded(specAtt: SpecAtt) = Unit
     }
 }
-

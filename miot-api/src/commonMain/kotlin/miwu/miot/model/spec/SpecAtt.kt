@@ -70,18 +70,15 @@ data class SpecAtt(
          */
         fun getDefaultValue(): Any {
             valueList?.firstOrNull()?.value?.let { return it }
-            val rangeMin = valueRange?.firstOrNull()
-            return when (type) {
+            val rangeMin = valueRange
+                ?.takeIf { it.size >= 3 && it.all { item -> item is Number } }
+                ?.firstOrNull() as? Number
+            return when (format) {
                 "bool" -> false
                 "string" -> ""
-                "uint8" -> (rangeMin as? Int) ?: 0
-                "uint16" -> (rangeMin as? Int) ?: 0
-                "uint32" -> (rangeMin as? Long) ?: 0L
-                "int8" -> (rangeMin as? Int) ?: 0
-                "int16" -> (rangeMin as? Int) ?: 0
-                "int32" -> (rangeMin as? Int) ?: 0
-                "int64" -> (rangeMin as? Long) ?: 0L
-                "float" -> (rangeMin as? Number)?.toFloat() ?: 0f
+                "uint8", "uint16", "int8", "int16", "int32" -> rangeMin?.toInt() ?: 0
+                "uint32", "int64" -> rangeMin?.toLong() ?: 0L
+                "float" -> rangeMin?.toFloat() ?: 0f
                 else -> rangeMin ?: 0
             }
         }

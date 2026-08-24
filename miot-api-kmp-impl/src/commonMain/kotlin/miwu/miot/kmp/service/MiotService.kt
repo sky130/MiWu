@@ -11,7 +11,7 @@ import miwu.miot.model.att.PropertyList
 
 interface MiotService {
     @POST("miotspec/prop/set")
-    suspend fun setDeviceAtt(@Body body: SetParams): String
+    suspend fun setDeviceAtt(@Body body: SetParams): MiotResponse<PropertyList?>
 
     @POST("miotspec/prop/get")
     suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyList?>

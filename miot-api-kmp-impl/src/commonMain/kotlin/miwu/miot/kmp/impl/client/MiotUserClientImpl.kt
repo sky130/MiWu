@@ -1,31 +1,28 @@
 package miwu.miot.kmp.impl.client
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CancellationException
 import miwu.miot.client.MiotUserClient
 import miwu.miot.kmp.service.body.GetUserInfo
 import miwu.miot.kmp.service.createUserService
-import miwu.miot.kmp.utils.IO
 import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.model.MiotUser
 import miwu.miot.model.MiotResponse
+import miwu.miot.model.requireSuccess
 import miwu.miot.model.miot.UserInfo
+import miwu.miot.utils.runCatchingSuspend
 
 class MiotUserClientImpl(private val user: MiotUser) : MiotUserClient {
     private val ktorfit = MiotAuthKtorfit(user)
     private val userService = ktorfit.createUserService()
 
-    override suspend fun getUserInfo(): Result<MiotResponse<UserInfo>> = withContext(Dispatchers.IO) {
-        runCatching {
-            val getUserInfo = GetUserInfo(user.userId)
-            return@runCatching userService.getUserInfo(getUserInfo)
+    override suspend fun getUserInfo(): Result<MiotResponse<UserInfo>> =
+        runCatchingSuspend {
+            userService.getUserInfo(GetUserInfo(user.userId)).requireSuccess("Get user info")
         }
-    }
 
-    override suspend fun getIsServiceTokenValid(): Result<Boolean> = withContext(Dispatchers.IO) {
-        runCatching {
-            val userInfo = getUserInfo().getOrThrow()
-            return@runCatching userInfo.code == 0
+    override suspend fun getIsServiceTokenValid(): Result<Boolean> =
+        runCatchingSuspend {
+            getUserInfo().getOrThrow()
+            true
         }
-    }
 }

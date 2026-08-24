@@ -192,7 +192,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     override fun onActionCallback(siid: Int, aiid: Int, output: Any?) {
         // Action 的回调是一次性的，不应该拦截
         if (widget.isMultiAttribute)
-            actionListenerList[siid to piid]?.also { (action, func) ->
+            actionListenerList[siid to aiid]?.also { (action, func) ->
                 func(action, output ?: Unit)
             }
         if (this.siid to this.aiid == siid to aiid) {
@@ -322,6 +322,7 @@ abstract class MiwuWrapper<T>(val widget: MiwuWidget<T>) : WidgetObserver<T> {
     ) {
         val siid = getService(serviceName)?.iid ?: return
         val action = getAction(serviceName, actionName) ?: return
+        val aiid = action.iid
         registerAction(siid, aiid)
         actionListenerList[siid to aiid] = action to block
     }

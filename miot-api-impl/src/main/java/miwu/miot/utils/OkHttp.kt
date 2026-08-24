@@ -8,6 +8,8 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
+import miwu.miot.exception.MiotHttpException
+import kotlinx.coroutines.CancellationException
 import java.nio.charset.Charset
 
 
@@ -28,13 +30,16 @@ internal suspend inline fun <reified T> OkHttpClient.get(
     url: String,
     body: RequestBody? = null,
 ): Result<T> = withContext(Dispatchers.IO) {
-    runCatching {
+    runCatchingSuspend {
         val request = Request.Builder()
             .url(url)
             .apply { if (body != null) post(body) }
             .build()
         newCall(request).execute().use { response ->
-            return@runCatching when (T::class) {
+            if (!response.isSuccessful) {
+                throw MiotHttpException("HTTP ${response.code} for ${request.url}")
+            }
+            return@runCatchingSuspend when (T::class) {
                 Response::class -> response as T
                 String::class -> response.body.string() as T
                 else -> response.body.string().to<T>().getOrThrow()

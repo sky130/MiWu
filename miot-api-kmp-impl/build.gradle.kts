@@ -47,11 +47,7 @@ kotlin {
             }
         }
 
-        jsMain {
-            dependencies {
-                implementation(libs.ktor.client.cio)
-            }
-        }
+        jsMain.dependencies { }
     }
 }
 

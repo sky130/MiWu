@@ -44,6 +44,10 @@ class DeviceViewModel(
     private val miotDeviceClient = user?.let(clientFactory::createDeviceClient)
     val event: StateFlow<Event?> = mutableEvent.asStateFlow()
     val isFromTile = savedStateHandle.get<Boolean>("isFromTile") ?: false
+    private var favorite = device?.let { current ->
+        favoriteDeviceRepository.devices.value.any { it.did == current.did }
+    } == true
+    val isFavorite: Boolean get() = favorite
     val manager: MiotDeviceManager? by lazy {
         val currentDevice = device ?: return@lazy null
         MiotDeviceManager.build(
@@ -75,6 +79,16 @@ class DeviceViewModel(
         device?.let { currentDevice ->
             viewModelScope.launch { favoriteDeviceRepository.add(currentDevice) }
         }
+    }
+
+    fun toggleFavorite(): Boolean {
+        val currentDevice = device ?: return favorite
+        favorite = !favorite
+        viewModelScope.launch {
+            if (favorite) favoriteDeviceRepository.add(currentDevice)
+            else favoriteDeviceRepository.remove(currentDevice)
+        }
+        return favorite
     }
 
     override fun onDeviceInitiated() {

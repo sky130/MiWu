@@ -99,6 +99,7 @@
             <!--                app:isVisible="@{!activity.isFromTile}" />-->
 
             <com.github.miwu.view.AppButton
+                android:id="@+id/favorite_button"
                 style="@style/Wear.AppButton"
                 android:onClick="@{() -> activity.onStarButtonClick()}"
                 android:text="@string/favorite_device"

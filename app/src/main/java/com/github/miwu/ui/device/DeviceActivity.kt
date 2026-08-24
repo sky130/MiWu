@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.github.miwu.R as AppR
 import com.github.miwu.ui.device.DeviceViewModel.Event.DeviceInitiated
 import com.github.miwu.utils.Logger
 import kndroidx.activity.ViewActivityX
@@ -27,6 +28,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     private val logger = Logger()
     private val marginBottom by lazy { resources.getDimensionPixelSize(R.dimen.device_miwu_layout_margin_bottom) }
     private val wrapperList = arrayListOf<ViewMiwuWrapper<*>>()
+    private var hasFavoriteAction = false
 
     override fun init() {
         if (viewModel.device == null || viewModel.manager == null) {
@@ -47,6 +49,7 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
                 }
             }
             printDeviceInfo()
+            updateFavoriteButton()
             manager?.init()
         }
     }
@@ -69,7 +72,24 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
     }
 
     fun onStarButtonClick() {
-        viewModel.addFavorite()
+        val isFavorite = viewModel.toggleFavorite()
+        hasFavoriteAction = true
+        updateFavoriteButton()
+        if (isFavorite) {
+            AppR.string.device_favorited.toast()
+        } else {
+            AppR.string.device_unfavorited.toast()
+        }
+    }
+
+    private fun updateFavoriteButton() {
+        binding.favoriteButton.setText(
+            when {
+                viewModel.isFavorite -> AppR.string.device_favorited
+                hasFavoriteAction -> AppR.string.device_unfavorited
+                else -> AppR.string.favorite_device
+            }
+        )
     }
 
     private inline fun <reified T : ViewGroup> T.addWidget(

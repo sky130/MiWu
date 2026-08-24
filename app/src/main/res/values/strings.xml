@@ -93,6 +93,8 @@
     <string name="auth_expired_plz_login_again">登录过期, 请重新登录</string>
     <string name="add_to_tile">添加到卡片</string>
     <string name="favorite_device">收藏设备</string>
+    <string name="device_favorited">已收藏</string>
+    <string name="device_unfavorited">取消收藏</string>
     <string name="no_room">暂无房间</string>
     <string name="room_tip">打开手机端添加房间</string>
     <string name="current_room_no_devices">当前房间无设备</string>

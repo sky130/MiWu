@@ -9,9 +9,11 @@ import com.github.miwu.logic.state.LoginState
 import com.github.miwu.logic.usecase.home.ConvertHomeDataUseCase
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotHomeClient
+import com.github.miwu.utils.runCatchingSuspend
 import fr.haan.resultat.Resultat
 import fr.haan.resultat.toResultat
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -53,10 +55,18 @@ class MiotRepositoryImpl(
 
     init {
         authService.loginStatus.onEach { state ->
-            if (state is LoginState.Success) {
-                miotHomeClient = authService.getCurrentUser()?.let { MiotHomeClient(it) }
-                refreshUserInfo()
-                refreshHomes()
+            when (state) {
+                LoginState.Success -> {
+                    miotHomeClient = authService.getCurrentUser()?.let { MiotHomeClient(it) }
+                    refreshUserInfo()
+                    refreshHomes()
+                }
+
+                LoginState.LoggedOut, is LoginState.Failure -> {
+                    clearAccountState()
+                }
+
+                LoginState.Loading, is LoginState.NetworkError -> Unit
             }
         }.launchIn(scope)
     }
@@ -64,7 +74,7 @@ class MiotRepositoryImpl(
     override fun setActiveHome(home: MiotHome) {
         scope.launch {
             currentHome.emit(Resultat.loading())
-            runCatching {
+            runCatchingSuspend {
                 currentHomeId = home.id.toLong()
                 currentOwnerId = home.uid
                 cacheHome[home.id] ?: error("MiotHome not found")
@@ -78,7 +88,7 @@ class MiotRepositoryImpl(
 
     override fun runScene(scene: MiotScene) {
         scope.launch {
-            runCatching {
+            runCatchingSuspend {
                 convertHomeData.getSceneHome(scene)?.let { miotHomeClient?.runScene(it, scene) }
             }.onFailure {
                 logger.error("run scene failure, {}", it.stackTraceToString())
@@ -88,7 +98,7 @@ class MiotRepositoryImpl(
 
     override fun refreshHomes() {
         scope.launch {
-            runCatching {
+            runCatchingSuspend {
                 homes.emit(Resultat.loading())
                 val client = miotHomeClient ?: error("MiotHomeClient is not initialized")
                 val homesList = client
@@ -113,7 +123,7 @@ class MiotRepositoryImpl(
     override fun refreshCurrentHome() {
         scope.launch {
             currentHome.emit(Resultat.loading())
-            runCatching {
+            runCatchingSuspend {
                 val client = miotHomeClient ?: error("MiotHomeClient is not initialized")
                 val currentHomeId = currentHomeId.toString()
                     .takeIf(String::isNotEmpty)
@@ -130,7 +140,7 @@ class MiotRepositoryImpl(
     }
 
     private fun refreshUserInfo() = scope.launch {
-        runCatching {
+        runCatchingSuspend {
             getUserInfo().getOrThrow()
         }.onSuccess {
             userInfo.emit(it.result)
@@ -145,6 +155,17 @@ class MiotRepositoryImpl(
             ?.getUserInfo()
             ?.getOrThrow()
             ?: throw IllegalStateException("MiotUserClient is null")
+    }
+
+    private suspend fun clearAccountState() {
+        miotHomeClient = null
+        cacheHome.clear()
+        currentHomeId = 0L
+        currentOwnerId = 0L
+        cacheRepository.clear()
+        homes.emit(Resultat.loading())
+        currentHome.emit(Resultat.loading())
+        userInfo.emit(UserInfo(-1, "", ""))
     }
 
     @Suppress("FunctionName")

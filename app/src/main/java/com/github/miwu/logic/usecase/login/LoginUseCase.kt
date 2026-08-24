@@ -21,12 +21,8 @@ class LoginUseCase(
         return loginProvider.generateLoginQrCode()
             .mapCatching { response ->
                 val qrcode = response.toQrCode()
-                    ?: error("generate login qrcode failure, response=${response}")
-                logger.info(
-                    "generate login qrcode successfully, qrcode data: {}, login url: {}",
-                    qrcode.data,
-                    qrcode.loginUrl
-                )
+                    ?: error("generate login qrcode failure")
+                logger.info("Generated login QR code")
                 QRCodeData(qrcode.data, qrcode.loginUrl)
             }
     }

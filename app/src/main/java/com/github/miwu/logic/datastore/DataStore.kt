@@ -2,7 +2,9 @@ package com.github.miwu.logic.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStore
+import com.github.miwu.logic.datastore.serializer.LegacyMiotUserMigration
 import com.github.miwu.logic.datastore.serializer.MiotUserSerializer
 import kotlinx.coroutines.flow.first
 import miwu.miot.model.MiotUser
@@ -23,8 +25,10 @@ fun MiotUser.isLogin(): Boolean = run {
 }
 
 private val Context.miotUserStore: MiotUserDataStore by dataStore(
-    fileName = "miot_user.json",
+    fileName = "miot_user_v2",
     serializer = MiotUserSerializer,
+    corruptionHandler = ReplaceFileCorruptionHandler { MiotUserSerializer.defaultValue },
+    produceMigrations = { context -> listOf(LegacyMiotUserMigration(context)) },
 )
 
 val dataStoreModule = module {

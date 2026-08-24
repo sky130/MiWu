@@ -2,7 +2,9 @@ package com.github.miwu.logic.usecase.home
 
 import com.github.miwu.logic.repository.CacheRepository
 import com.github.miwu.logic.repository.entity.MiotHomeData
-import kotlinx.coroutines.Dispatchers
+import com.github.miwu.utils.throwIfCancelled
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.sync.Mutex
@@ -16,6 +18,7 @@ import miwu.miot.model.miot.MiotScene
 
 class ConvertHomeDataUseCase(
     private val cacheRepository: CacheRepository,
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val sceneMutex = Mutex()
     private val sceneMap = mutableMapOf<MiotScene, MiotHome>()
@@ -23,7 +26,7 @@ class ConvertHomeDataUseCase(
     suspend operator fun invoke(
         client: MiotHomeClient,
         homes: List<MiotHome>,
-    ): List<Pair<String, MiotHomeData>> = withContext(Dispatchers.IO) {
+    ): List<Pair<String, MiotHomeData>> = withContext(ioDispatcher) {
         homes.map { home -> async { convertToData(client, home)?.let { home.id to it } } }
             .awaitAll()
             .filterNotNull()
@@ -66,9 +69,7 @@ class ConvertHomeDataUseCase(
 
     private suspend fun getDevices(client: MiotHomeClient, home: MiotHome) =
         client.getDevices(home.id.toLong(), home.uid)
-            .onFailure {
-                it.printStackTrace()
-            }
+            .throwIfCancelled()
             .getOrNull()
             ?.result
             ?.deviceInfo

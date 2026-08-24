@@ -13,6 +13,6 @@ val useCaseModule = module {
     factory { MapFragmentStateUseCase() }
     factory { GetSortedRoomsUseCase(get()) }
     factory { GetHomeScenesUseCase(get()) }
-    factory { ConvertHomeDataUseCase(get()) }
+    factory { ConvertHomeDataUseCase(get(), get(org.koin.core.qualifier.named("io"))) }
     factory { LoginUseCase(get(), get()) }
 }

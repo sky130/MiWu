@@ -45,7 +45,6 @@ import kndroidx.wear.tile.width
 import kndroidx.wear.tile.wrapContentHeight
 import kndroidx.wear.tile.wrapContentSize
 import miwu.miot.model.miot.MiotDevice
-import miwu.miot.utils.json
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -125,8 +124,7 @@ class DeviceTileService : LayoutTileService() {
                             className = "com.github.miwu.ui.device.DeviceActivity"
                         ) {
                             boolean("isFromTile", true)
-                            string("device", json.encodeToString(device))
-                            string("user", json.encodeToString(miotRepository.user))
+                            string("did", device.did)
                         }
                     )
             ) {

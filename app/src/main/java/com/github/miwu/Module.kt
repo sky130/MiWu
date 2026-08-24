@@ -6,13 +6,15 @@ import com.github.miwu.logic.repository.repositoryModule
 import com.github.miwu.logic.usecase.useCaseModule
 import com.github.miwu.ui.viewModelModule
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import miwu.miot.Client
 import miwu.miot.Provider
 import miwu.miot.common.MiotApiKoinModule
 import miwu.miot.kmp.Client
 import miwu.miot.kmp.Provider
 import org.koin.dsl.module
+import org.koin.core.qualifier.named
 
 val appModule = module {
     includes(
@@ -26,6 +28,8 @@ val appModule = module {
         databaseModule,
         dataStoreModule,
     )
-    single<Job> { Job() }
-    single { CoroutineScope(get<Job>()) }
+    single(named("io")) { Dispatchers.IO }
+    single(named("default")) { Dispatchers.Default }
+    single(named("ui")) { Dispatchers.Main.immediate }
+    single { CoroutineScope(SupervisorJob() + get<kotlinx.coroutines.CoroutineDispatcher>(named("default"))) }
 }

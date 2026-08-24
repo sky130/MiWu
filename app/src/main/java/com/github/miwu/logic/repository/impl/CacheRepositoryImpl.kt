@@ -3,6 +3,7 @@ package com.github.miwu.logic.repository.impl
 import com.github.miwu.logic.handler.DeviceMetadataHandler
 import com.github.miwu.logic.repository.CacheRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -12,6 +13,7 @@ import miwu.miot.provider.MiotSpecAttrProvider
 
 class CacheRepositoryImpl(
     private val specAttrProvider: MiotSpecAttrProvider,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : CacheRepository {
     private val iconMap = mutableMapOf<String, String>()
     private val roomMap = mutableMapOf<String, String>()
@@ -21,7 +23,7 @@ class CacheRepositoryImpl(
     override val rooms = MutableStateFlow<Map<String, String>>(emptyMap())
     override val deviceMetadataHandler = MutableStateFlow(DeviceMetadataHandler(iconMap, roomMap))
 
-    override suspend fun addIcon(models: List<String>): Unit = withContext(Dispatchers.IO) {
+    override suspend fun addIcon(models: List<String>): Unit = withContext(ioDispatcher) {
         models
             .mapNotNull { model ->
                 if (model in iconMap) null
@@ -45,6 +47,12 @@ class CacheRepositoryImpl(
             roomMap.putAll(map)
             rooms.emit(roomMap)
         }
+        update()
+    }
+
+    override suspend fun clear() {
+        iconMutex.withLock { iconMap.clear() }
+        roomMutex.withLock { roomMap.clear() }
         update()
     }
 

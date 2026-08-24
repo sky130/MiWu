@@ -23,6 +23,6 @@ interface CrashDAO {
     @Query("select * from crash_item ORDER BY `timestamp`")
     fun getListFlow(): Flow<List<CrashItem>>
 
-    @Query("delete from favorite_device")
+    @Query("delete from crash_item")
     suspend fun deleteAll()
 }

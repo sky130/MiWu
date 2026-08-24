@@ -18,4 +18,6 @@ interface LocalRepository {
     fun removeDevice(favoriteDevice: FavoriteDevice)
 
     fun updateSortIndices(list: List<FavoriteDevice>)
+
+    fun findDevice(did: String, uid: Long): MiotDevice?
 }

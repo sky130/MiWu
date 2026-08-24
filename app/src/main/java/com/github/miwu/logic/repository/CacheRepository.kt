@@ -13,6 +13,8 @@ interface CacheRepository {
 
     suspend fun addRoom(map: Map<String, String>)
 
+    suspend fun clear()
+
     fun getIcon(model: String): String?
 
     fun getRoom(did: String): String

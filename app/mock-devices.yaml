@@ -8,3 +8,11 @@ devices:
     mac: 00:00:00:00:00:00
     uid: "114514"
     roomName:
+  - name: Mock 灯具
+    did: mock-nwt-derh-n23l
+    model: bull.light.jld01
+    specType: urn:miot-spec-v2:device:light:0000A001:bull-jld01:1:0000C802
+    isOnline: true
+    mac: 00:00:00:00:00:00
+    uid: "114514"
+    roomName:

@@ -42,18 +42,23 @@ interface FavoriteDeviceDAO {
         """
         SELECT m.* FROM favorite_device m
         INNER JOIN favorite_device_metadata pmc ON m.did = pmc.did and m.uid = pmc.uid
+        WHERE m.uid = :uid
         ORDER BY pmc.sort_index ASC
     """
     )
-    suspend fun getList(): List<FavoriteDevice>
+    suspend fun getList(uid: Long): List<FavoriteDevice>
 
     @Transaction
     @Query(
         """
         SELECT m.* FROM favorite_device m
         INNER JOIN favorite_device_metadata pmc ON m.did = pmc.did and m.uid = pmc.uid
+        WHERE m.uid = :uid
         ORDER BY pmc.sort_index ASC
     """
     )
-    fun observeList(): Flow<List<FavoriteDevice>>
+    fun observeList(uid: Long): Flow<List<FavoriteDevice>>
+
+    @Query("SELECT * FROM favorite_device WHERE uid = :uid AND did = :did LIMIT 1")
+    suspend fun find(uid: Long, did: String): FavoriteDevice?
 }

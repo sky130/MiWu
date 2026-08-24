@@ -7,6 +7,7 @@ import com.github.miwu.logic.state.LoginState
 import com.github.miwu.utils.Logger
 import com.github.miwu.utils.MiotUserClient
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -45,6 +46,11 @@ class AuthService(
     }
 
     private suspend fun validateAndUpdateLoginStatus(user: MiotUser) {
+        if (!user.isLogin()) {
+            currentUser = null
+            _loginStatus.emit(LoginState.LoggedOut)
+            return
+        }
         val isTokenValid = miotUserClient
             ?.takeIf { user.isLogin() }
             ?.getIsServiceTokenValid()
@@ -62,7 +68,7 @@ class AuthService(
         loginProvider.refreshServiceToken(user)
             .onSuccess { newUser -> dataStore.updateData { newUser } }
             .onFailure { e ->
-                e.printStackTrace()
+                if (e is CancellationException) throw e
                 logger.error("refresh user token failure, {}", e.stackTraceToString())
                 handleTokenRefreshFailure(e)
             }
@@ -82,6 +88,7 @@ class AuthService(
 
     suspend fun logout() {
         dataStore.updateData { MiotUserSerializer.defaultValue }
-        _loginStatus.emit(LoginState.Loading)
+        currentUser = null
+        _loginStatus.emit(LoginState.LoggedOut)
     }
 }

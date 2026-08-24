@@ -42,12 +42,11 @@ data class FavoriteDevice(
     val showMode: Int? = 0,
     val specType: String?,
     val ssid: String?,
-    val token: String,
     val uid: Long
 ) {
 
     companion object {
-        fun MiotDevice.toMiwu() = FavoriteDevice(
+        fun MiotDevice.toMiwu(uid: Long = this.uid) = FavoriteDevice(
             bssid = this.bssid,
             cnt = this.cnt,
             comFlag = this.comFlag,
@@ -79,8 +78,7 @@ data class FavoriteDevice(
             showMode = this.showMode,
             specType = this.specType,
             ssid = this.ssid,
-            token = this.token,
-            uid = this.uid
+            uid = uid
         )
 
         fun FavoriteDevice.toMiot() = MiotDevice(
@@ -115,7 +113,7 @@ data class FavoriteDevice(
             showMode = this.showMode,
             specType = this.specType,
             ssid = this.ssid,
-            token = this.token,
+            token = "",
             uid = this.uid
         )
     }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
+import org.koin.core.annotation.KoinViewModel
 
 sealed interface SplashState {
     object Loading : SplashState
@@ -18,6 +19,7 @@ sealed interface SplashState {
     object NavigateToLogin : SplashState
 }
 
+@KoinViewModel
 class SplashViewModel(
     accountRepository: AccountRepository,
     settingsRepository: SettingsRepository,

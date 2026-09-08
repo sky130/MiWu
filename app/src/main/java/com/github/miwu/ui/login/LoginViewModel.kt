@@ -13,9 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import miwu.miot.model.MiotUser
+import org.koin.core.annotation.KoinViewModel
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
+@KoinViewModel
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
 ) : ViewModel() {

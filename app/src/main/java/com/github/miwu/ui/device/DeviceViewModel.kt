@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.github.miwu.di.IoDispatcher
+import com.github.miwu.di.UiDispatcher
 import com.github.miwu.domain.gateway.MiotClientFactory
 import com.github.miwu.domain.repository.FavoriteDeviceRepository
 import com.github.miwu.domain.usecase.device.ResolveDeviceSessionUseCase
@@ -19,18 +21,20 @@ import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.manager.MiotDeviceManager
+import org.koin.core.annotation.KoinViewModel
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Provided
 
+@KoinViewModel
 class DeviceViewModel(
     @Provided private val application: Application,
-    private val favoriteDeviceRepository: FavoriteDeviceRepository,
     @Provided private val savedStateHandle: SavedStateHandle,
+    @UiDispatcher private val uiDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val workDispatcher: CoroutineDispatcher,
+    private val favoriteDeviceRepository: FavoriteDeviceRepository,
     private val specAttrProvider: MiotSpecAttrProvider,
     resolveDeviceSession: ResolveDeviceSessionUseCase,
     clientFactory: MiotClientFactory,
-    @Named("app_main_dispatcher") private val uiDispatcher: CoroutineDispatcher,
-    @Named("app_io_dispatcher") private val workDispatcher: CoroutineDispatcher,
 ) : AndroidViewModel(application), MiotDeviceManager.Callback {
     private val logger = Logger()
     private val mutableEvent = MutableStateFlow<Event?>(null)

@@ -6,7 +6,9 @@ import kndroidx.kndroidx
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class HelpViewModel : ViewModel() {
     val list = liveData {
         kndroidx {

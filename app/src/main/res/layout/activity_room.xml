@@ -62,6 +62,6 @@
             android:id="@+id/title"
             style="@style/Wear.TitleBar"
             app:back="true"
-            app:title="@{activity.room}" />
+            app:title="@{viewModel.room}" />
     </FrameLayout>
 </layout>

@@ -2,8 +2,10 @@ package com.github.miwu.ui.about
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
+import org.koin.core.annotation.KoinViewModel
 import org.koin.core.annotation.Provided
 
+@KoinViewModel
 class AboutViewModel(
     @Provided private val application: Application,
 ) : ViewModel() {

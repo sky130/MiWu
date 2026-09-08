@@ -8,7 +8,9 @@ import com.github.miwu.domain.repository.FavoriteDeviceRepository
 import com.github.miwu.ui.common.mapFragmentState
 import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotDevice
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class EditFavoriteViewModel(
     private val favoriteDeviceRepository: FavoriteDeviceRepository,
     metadataRepository: DeviceMetadataRepository,

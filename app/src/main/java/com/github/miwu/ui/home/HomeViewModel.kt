@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotHome
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class HomeViewModel(
     private val homeRepository: HomeRepository,
     private val settingsRepository: SettingsRepository,

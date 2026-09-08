@@ -13,8 +13,9 @@ import com.github.miwu.domain.usecase.scene.GetHomeScenesUseCase
 import com.github.miwu.ui.common.mapFragmentState
 import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotScene
+import org.koin.core.annotation.KoinViewModel
 
-
+@KoinViewModel
 class MainViewModel(
     private val homeRepository: HomeRepository,
     metadataRepository: DeviceMetadataRepository,

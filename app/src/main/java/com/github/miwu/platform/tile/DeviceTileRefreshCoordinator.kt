@@ -6,11 +6,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.koin.core.annotation.Named
 
 class DeviceTileRefreshCoordinator(
     favoriteDeviceRepository: FavoriteDeviceRepository,
     deviceIconRepository: DeviceIconRepository,
-    applicationScope: CoroutineScope,
+    @Named("app_scope") applicationScope: CoroutineScope,
 ) {
     init {
         combine(favoriteDeviceRepository.devices, deviceIconRepository.icons) { _, _ -> Unit }

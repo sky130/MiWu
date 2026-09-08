@@ -24,10 +24,10 @@ val appModule = module {
         dataModule,
         platformModule,
     )
-    single(appIoDispatcher) { Dispatchers.IO }
-    single(appDefaultDispatcher) { Dispatchers.Default }
-    single(appMainDispatcher) { Dispatchers.Main.immediate }
-    single(appScope) {
+    single<CoroutineDispatcher>(appIoDispatcher) { Dispatchers.IO }
+    single<CoroutineDispatcher>(appDefaultDispatcher) { Dispatchers.Default }
+    single<CoroutineDispatcher>(appMainDispatcher) { Dispatchers.Main.immediate }
+    single<CoroutineScope>(appScope) {
         CoroutineScope(SupervisorJob() + get<CoroutineDispatcher>(appDefaultDispatcher))
     }
 }

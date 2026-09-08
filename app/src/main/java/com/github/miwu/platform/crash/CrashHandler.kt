@@ -16,11 +16,12 @@ import java.io.FileWriter
 import java.io.IOException
 import java.io.PrintWriter
 import java.lang.reflect.InvocationTargetException
+import org.koin.core.annotation.Named
 
 class CrashHandler(
     context: Context,
     private val settingsRepository: SettingsRepository,
-    private val ioDispatcher: CoroutineDispatcher,
+    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
 ) : Thread.UncaughtExceptionHandler, CrashLogRepository {
     private val appContext = context.applicationContext
     private var defaultHandler: Thread.UncaughtExceptionHandler? = null

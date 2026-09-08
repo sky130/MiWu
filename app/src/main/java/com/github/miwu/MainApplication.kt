@@ -2,14 +2,14 @@ package com.github.miwu
 
 import android.app.Application
 import androidx.core.content.edit
-import com.github.miwu.di.appModule
 import com.github.miwu.platform.crash.CrashHandler
 import com.github.miwu.utils.LazyLogger
 import kndroidx.kndroidxConfig
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.GlobalContext.startKoin
+import org.koin.plugin.module.dsl.modules
+import org.koin.plugin.module.dsl.startKoin
 
 class MainApplication : Application() {
     val logger by LazyLogger()
@@ -37,10 +37,9 @@ class MainApplication : Application() {
 
     fun configKoin() {
         logger.info("Config koin")
-        startKoin {
+        startKoin<KoinApp> {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(appModule)
         }
     }
 }

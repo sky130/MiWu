@@ -4,9 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import com.github.miwu.domain.gateway.DeviceIdProvider
+import org.koin.core.annotation.Provided
 
 class AndroidDeviceIdProvider(
-    private val context: Context,
+    @Provided private val context: Context,
 ) : DeviceIdProvider {
     @delegate:SuppressLint("HardwareIds")
     override val id: String by lazy {

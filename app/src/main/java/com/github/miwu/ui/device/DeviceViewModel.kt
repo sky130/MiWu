@@ -20,11 +20,12 @@ import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.manager.MiotDeviceManager
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Provided
 
 class DeviceViewModel(
-    private val application: Application,
+    @Provided private val application: Application,
     private val favoriteDeviceRepository: FavoriteDeviceRepository,
-    private val savedStateHandle: SavedStateHandle,
+    @Provided private val savedStateHandle: SavedStateHandle,
     private val specAttrProvider: MiotSpecAttrProvider,
     resolveDeviceSession: ResolveDeviceSessionUseCase,
     clientFactory: MiotClientFactory,

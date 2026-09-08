@@ -6,11 +6,12 @@ import com.github.miwu.domain.usecase.device.ResolveDeviceSessionUseCase
 import com.github.miwu.domain.usecase.room.GetSortedRoomsUseCase
 import com.github.miwu.domain.usecase.scene.GetHomeScenesUseCase
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.factory
 
 val domainModule = module {
-    factory { LoginUseCase(get(), get(), get(appIoDispatcher)) }
-    factory { GetSortedDevicesUseCase(get(), get()) }
-    factory { GetSortedRoomsUseCase(get()) }
-    factory { GetHomeScenesUseCase(get()) }
-    factory { ResolveDeviceSessionUseCase(get(), get(), get()) }
+    factory<LoginUseCase>()
+    factory<GetSortedDevicesUseCase>()
+    factory<GetSortedRoomsUseCase>()
+    factory<GetHomeScenesUseCase>()
+    factory<ResolveDeviceSessionUseCase>()
 }

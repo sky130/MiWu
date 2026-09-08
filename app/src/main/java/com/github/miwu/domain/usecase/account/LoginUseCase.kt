@@ -6,11 +6,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import miwu.miot.model.MiotUser
 import miwu.miot.provider.MiotLoginProvider
+import org.koin.core.annotation.Named
 
 class LoginUseCase(
     private val loginProvider: MiotLoginProvider,
     private val accountRepository: AccountRepository,
-    private val ioDispatcher: CoroutineDispatcher,
+    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend fun loginByPassword(user: String, password: String): Result<MiotUser> =
         withContext(ioDispatcher) {

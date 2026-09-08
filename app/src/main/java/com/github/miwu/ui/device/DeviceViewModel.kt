@@ -19,6 +19,7 @@ import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.support.manager.MiotDeviceManager
+import org.koin.core.annotation.Named
 
 class DeviceViewModel(
     private val application: Application,
@@ -27,8 +28,8 @@ class DeviceViewModel(
     private val specAttrProvider: MiotSpecAttrProvider,
     resolveDeviceSession: ResolveDeviceSessionUseCase,
     clientFactory: MiotClientFactory,
-    private val uiDispatcher: CoroutineDispatcher,
-    private val workDispatcher: CoroutineDispatcher,
+    @Named("app_main_dispatcher") private val uiDispatcher: CoroutineDispatcher,
+    @Named("app_io_dispatcher") private val workDispatcher: CoroutineDispatcher,
 ) : AndroidViewModel(application), MiotDeviceManager.Callback {
     private val logger = Logger()
     private val mutableEvent = MutableStateFlow<Event?>(null)

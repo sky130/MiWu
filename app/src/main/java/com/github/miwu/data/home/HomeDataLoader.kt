@@ -15,11 +15,12 @@ import miwu.miot.model.miot.MiotDevice
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotRoom
 import miwu.miot.model.miot.MiotScene
+import org.koin.core.annotation.Named
 import java.util.concurrent.ConcurrentHashMap
 
 class HomeDataLoader(
     private val metadataRepository: DeviceMetadataRepository,
-    private val ioDispatcher: CoroutineDispatcher,
+    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val sceneHomes = ConcurrentHashMap<MiotScene, MiotHome>()
 

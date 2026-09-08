@@ -21,6 +21,7 @@ import kotlinx.serialization.MissingFieldException
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.model.MiotUser
 import miwu.miot.provider.MiotLoginProvider
+import org.koin.core.annotation.Named
 
 @OptIn(ExperimentalSerializationApi::class)
 class AccountRepositoryImpl(
@@ -28,7 +29,7 @@ class AccountRepositoryImpl(
     private val dataStore: MiotUserDataStore,
     private val deviceIdProvider: DeviceIdProvider,
     private val clientFactory: MiotClientFactory,
-    applicationScope: CoroutineScope,
+    @Named("app_scope") applicationScope: CoroutineScope,
 ) : AccountRepository {
     private val logger = Logger()
 

@@ -21,6 +21,7 @@ import miwu.miot.client.MiotHomeClient
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
 import miwu.miot.model.miot.UserInfo
+import org.koin.core.annotation.Named
 
 class HomeRepositoryImpl(
     private val accountRepository: AccountRepository,
@@ -28,7 +29,7 @@ class HomeRepositoryImpl(
     private val settingsRepository: SettingsRepository,
     private val homeDataLoader: HomeDataLoader,
     private val clientFactory: MiotClientFactory,
-    applicationScope: CoroutineScope,
+    @Named("app_scope") applicationScope: CoroutineScope,
 ) : HomeRepository {
     private val logger = Logger()
     private var homeClient: MiotHomeClient? = null

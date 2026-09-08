@@ -10,10 +10,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import miwu.miot.provider.MiotSpecAttrProvider
+import org.koin.core.annotation.Named
 
 class DeviceMetadataRepositoryImpl(
     private val specAttrProvider: MiotSpecAttrProvider,
-    private val ioDispatcher: CoroutineDispatcher,
+    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
 ) : DeviceMetadataRepository {
     private val mutex = Mutex()
     private val mutableMetadata = MutableStateFlow(DeviceMetadata())

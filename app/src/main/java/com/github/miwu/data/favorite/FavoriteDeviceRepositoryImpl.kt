@@ -20,14 +20,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import miwu.miot.model.miot.MiotDevice
+import org.koin.core.annotation.Named
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FavoriteDeviceRepositoryImpl(
     database: AppDatabase,
     private val accountRepository: AccountRepository,
     private val metadataRepository: DeviceMetadataRepository,
-    private val ioDispatcher: CoroutineDispatcher,
-    applicationScope: CoroutineScope,
+    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
+    @Named("app_scope") applicationScope: CoroutineScope,
 ) : FavoriteDeviceRepository {
     private val dao = database.favoriteDeviceDao()
 

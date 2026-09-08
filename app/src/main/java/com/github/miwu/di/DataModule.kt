@@ -21,7 +21,9 @@ import com.github.miwu.domain.repository.FavoriteDeviceRepository
 import com.github.miwu.domain.repository.HomeRepository
 import com.github.miwu.domain.repository.SettingsRepository
 import io.ktor.client.HttpClient
+import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.single
 
 private const val databaseName = "app_database_v3"
 
@@ -34,23 +36,13 @@ val dataModule = module {
     single<MiotUserDataStore> {
         get<Context>().miotUserStore
     }
-    single { HttpClient() }
-    single<MiotClientFactory> { JvmMiotClientFactory() }
-    single<SettingsRepository> { SettingsRepositoryImpl() }
-    single<DeviceMetadataRepository> {
-        DeviceMetadataRepositoryImpl(get(), get(appIoDispatcher))
-    }
-    single<AccountRepository> {
-        AccountRepositoryImpl(get(), get(), get(), get(), get(appScope))
-    }
-    single<FavoriteDeviceRepository> {
-        FavoriteDeviceRepositoryImpl(get(), get(), get(), get(appIoDispatcher), get(appScope))
-    }
-    single<DeviceIconRepository> {
-        DeviceIconRepositoryImpl(get(), get(), get(), get(appIoDispatcher), get(appScope))
-    }
-    single { HomeDataLoader(get(), get(appIoDispatcher)) }
-    single<HomeRepository> {
-        HomeRepositoryImpl(get(), get(), get(), get(), get(), get(appScope))
-    }
+    single<HttpClient> { HttpClient() }
+    single<JvmMiotClientFactory>().bind<MiotClientFactory>()
+    single<SettingsRepositoryImpl>().bind<SettingsRepository>()
+    single<DeviceMetadataRepositoryImpl>().bind<DeviceMetadataRepository>()
+    single<AccountRepositoryImpl>().bind<AccountRepository>()
+    single<FavoriteDeviceRepositoryImpl>().bind<FavoriteDeviceRepository>()
+    single<DeviceIconRepositoryImpl>().bind<DeviceIconRepository>()
+    single<HomeDataLoader>()
+    single<HomeRepositoryImpl>().bind<HomeRepository>()
 }

@@ -34,12 +34,14 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl
 import okhttp3.RequestBody
 import okhttp3.Response
+import org.koin.core.annotation.Singleton
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 
+@Singleton
 class MiotLoginProviderImpl : MiotLoginProvider {
     private val cookieJar = SimpleCookieJar()
     private val miotLoginClient = OkHttpClient {

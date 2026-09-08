@@ -14,8 +14,10 @@ import kotlinx.coroutines.CancellationException
 import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
 import miwu.miot.utils.runCatchingSuspend
+import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
+@Factory
 class MiotHomeClientImpl(@InjectedParam private val user: MiotUser) : MiotHomeClient {
     private val ktorfit = MiotAuthKtorfit(user)
     private val homeService = ktorfit.createHomeService()

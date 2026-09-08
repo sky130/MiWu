@@ -19,8 +19,10 @@ import miwu.miot.service.body.GetHome
 import miwu.miot.service.body.GetScene
 import miwu.miot.service.body.RunNewScene
 import miwu.miot.utils.runCatchingSuspend
+import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
+@Factory
 class MiotHomeClientImpl(@InjectedParam private val user: MiotUser) : MiotHomeClient {
     private val client = OkHttpClient {
         addInterceptor(MiotAuthInterceptor(user))

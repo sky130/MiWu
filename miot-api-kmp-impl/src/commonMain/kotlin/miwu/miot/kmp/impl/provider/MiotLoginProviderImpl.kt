@@ -47,9 +47,11 @@ import miwu.miot.model.login.LoginQrCode
 import miwu.miot.model.login.ServiceData
 import miwu.miot.provider.MiotLoginProvider
 import miwu.miot.utils.runCatchingSuspend
+import org.koin.core.annotation.Singleton
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Clock
 
+@Singleton
 class MiotLoginProviderImpl : MiotLoginProvider {
     private val cookiesStorage = SimpleCookiesStorage()
     private val httpClient = MiotHttpClient {

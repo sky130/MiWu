@@ -24,7 +24,9 @@ import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.spec.SpecType
 import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     private val httpClient = MiotHttpClient {
         install(ContentNegotiation) {

@@ -19,7 +19,9 @@ import miwu.miot.model.spec.SpecType
 import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.miot.utils.get
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     private val client = OkHttpClient()
     private val specRetrofit = Retrofit(

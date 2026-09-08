@@ -3,33 +3,18 @@ package miwu
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.MavenPublishPlugin
 import com.vanniktech.maven.publish.SourcesJar
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.withType
-
-open class MiwuPublishingExtension {
-    var name: String? = null
-    var group: String? = null
-    var artifactId: String? = null
-    var url: String? = "https://github.com/sky130/MiWu"
-    var version: String? = "3.0.0"
-    var description: String? = null
-    var inceptionYear: String? = null
-
-    fun autoVersion() = latestGitTag
-}
 
 class MiwuPublishingPlugin : Plugin<Project> {
 
-    override fun apply(project: Project) {
-        val extension = project.extensions.create<MiwuPublishingExtension>("miwuPublishing")
-        project.pluginManager.apply("com.vanniktech.maven.publish")
-
-        project.plugins.withId("com.android.library") {
+    override fun apply(project: Project) = with(project) {
+        val extension = extensions.create<MiwuPublishingExtension>(MIWU_PUBLISHING)
+        pluginManager.apply(VANNIKTECH_MAVEN_PUBLISH)
+        plugins.withId(ANDROID_LIBRARY) {
             project.extensions.configure<MavenPublishBaseExtension> {
                 configure(
                     AndroidSingleVariantLibrary(
@@ -40,7 +25,7 @@ class MiwuPublishingPlugin : Plugin<Project> {
                 )
             }
         }
-        project.afterEvaluate {
+        afterEvaluate {
             configurePublishing(project, extension)
         }
     }

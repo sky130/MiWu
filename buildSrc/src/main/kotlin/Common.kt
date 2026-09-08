@@ -3,6 +3,10 @@ package miwu
 import java.io.BufferedReader
 import kotlin.math.pow
 
+internal const val VANNIKTECH_MAVEN_PUBLISH = "com.vanniktech.maven.publish"
+internal const val ANDROID_LIBRARY = "com.android.library"
+internal const val MIWU_PUBLISHING = "miwuPublishing"
+
 val latestGitTag = ProcessBuilder("git", "describe", "--tags", "--abbrev=0")
     .start()
     .inputStream

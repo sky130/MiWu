@@ -29,30 +29,29 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        buildTypes {
-            release {
-                isMinifyEnabled = true
-                isShrinkResources = true
-                isDebuggable = false
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
-                applicationVariants.all {
-                    outputs.all {
-                        if (name.contains("release"))
-                            (this as BaseVariantOutputImpl).outputFileName =
-                                "$name-$versionName-$versionCode.apk"
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            applicationVariants.all {
+                outputs.all {
+                    if (name.contains("release")) {
+                        (this as BaseVariantOutputImpl).outputFileName =
+                            "$name-$versionName-$versionCode.apk"
                     }
                 }
             }
-            debug {
-                isMinifyEnabled = false
-                isShrinkResources = false
-                isDebuggable = true
-                applicationIdSuffix = ".dev"
-                versionNameSuffix = "-DEV"
-            }
+        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-DEV"
         }
     }
     buildFeatures {
@@ -77,7 +76,12 @@ tasks.matching { it.name.startsWith("ksp") }.configureEach {
 }
 
 dependencies {
+    ksp(project(":miwu-support-processor"))
+    ksp(libs.glide.compiler)
+
+
     implementation(kotlin("reflect"))
+
 
     implementation(project(":miwu-android"))
     implementation(project(":miwu-support"))
@@ -89,8 +93,6 @@ dependencies {
 
 
     implementation(libs.glide)
-    ksp(project(":miwu-support-processor"))
-    ksp(libs.glide.compiler)
 
 
     implementation(libs.kndroidx.core)

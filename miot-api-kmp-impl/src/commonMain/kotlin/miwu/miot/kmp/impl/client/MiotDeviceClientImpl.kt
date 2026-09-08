@@ -21,9 +21,10 @@ import miwu.miot.model.requirePropertySuccess
 import kotlinx.coroutines.CancellationException
 import miwu.miot.model.miot.MiotDevice
 import miwu.miot.utils.runCatchingSuspend
+import org.koin.core.annotation.InjectedParam
 
 
-class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
+class MiotDeviceClientImpl(@InjectedParam private val user: MiotUser) : MiotDeviceClient {
     private val ktorfit = MiotAuthKtorfit(user)
     private val miotService = ktorfit.createMiotService()
 

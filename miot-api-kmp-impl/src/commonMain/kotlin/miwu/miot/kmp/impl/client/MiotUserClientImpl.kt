@@ -10,8 +10,9 @@ import miwu.miot.model.MiotResponse
 import miwu.miot.model.requireSuccess
 import miwu.miot.model.miot.UserInfo
 import miwu.miot.utils.runCatchingSuspend
+import org.koin.core.annotation.InjectedParam
 
-class MiotUserClientImpl(private val user: MiotUser) : MiotUserClient {
+class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserClient {
     private val ktorfit = MiotAuthKtorfit(user)
     private val userService = ktorfit.createUserService()
 

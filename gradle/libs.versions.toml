@@ -75,13 +75,13 @@ kotlincrypto-hash-bom = { module = "org.kotlincrypto.hash:bom", version.ref = "k
 kotlincrypto-hash-md = { module = "org.kotlincrypto.hash:md" }
 
 # koin libraries
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-android-compat = { module = "io.insert-koin:koin-android-compat", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-android-compat = { module = "io.insert-koin:koin-android-compat" }
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-annotations = { module = "io.insert-koin:koin-annotations" }
 
 # microsoft app center
 microsoft-appcenter-crashes = { module = "com.microsoft.appcenter:appcenter-crashes", version.ref = "microsoft-appcenter" }

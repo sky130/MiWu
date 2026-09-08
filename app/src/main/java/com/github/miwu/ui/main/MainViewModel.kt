@@ -3,62 +3,54 @@ package com.github.miwu.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.miwu.logic.auth.AuthService
-import com.github.miwu.logic.repository.CacheRepository
-import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.logic.repository.MiotRepository
-import com.github.miwu.logic.usecase.device.GetSortedDevicesUseCase
-import com.github.miwu.logic.usecase.room.GetSortedRoomsUseCase
-import com.github.miwu.logic.usecase.scene.GetHomeScenesUseCase
-import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
-import com.github.miwu.ui.main.state.FragmentState.Empty
-import com.github.miwu.ui.main.state.FragmentState.Normal
-import kotlinx.coroutines.flow.map
+import com.github.miwu.domain.repository.AccountRepository
+import com.github.miwu.domain.repository.DeviceMetadataRepository
+import com.github.miwu.domain.repository.FavoriteDeviceRepository
+import com.github.miwu.domain.repository.HomeRepository
+import com.github.miwu.domain.usecase.device.GetSortedDevicesUseCase
+import com.github.miwu.domain.usecase.room.GetSortedRoomsUseCase
+import com.github.miwu.domain.usecase.scene.GetHomeScenesUseCase
+import com.github.miwu.ui.common.mapFragmentState
 import kotlinx.coroutines.launch
 import miwu.miot.model.miot.MiotScene
 
 
 class MainViewModel(
-    private val miotRepository: MiotRepository,
-    cacheRepository: CacheRepository,
-    localRepository: LocalRepository,
-    private val authService: AuthService,
+    private val homeRepository: HomeRepository,
+    metadataRepository: DeviceMetadataRepository,
+    favoriteDeviceRepository: FavoriteDeviceRepository,
+    private val accountRepository: AccountRepository,
     private val getSortedDevices: GetSortedDevicesUseCase,
     private val getSortedRooms: GetSortedRoomsUseCase,
     private val getHomeScenes: GetHomeScenesUseCase,
-    private val mapState: MapFragmentStateUseCase,
 ) : ViewModel() {
 
-    val info = miotRepository.userInfo
-    val home = miotRepository.currentHome
-    val loginStatus = miotRepository.loginStatus
-    val user = miotRepository.user
-    val metadataHandler = cacheRepository.deviceMetadataHandler
-    val icons = cacheRepository.icons
+    val info = homeRepository.userInfo
+    val home = homeRepository.currentHome
+    val loginStatus = accountRepository.loginState
+    val metadataHandler = metadataRepository.metadata
 
     val devices = getSortedDevices().asLiveData()
     val rooms = getSortedRooms().asLiveData()
     val scenes = getHomeScenes().asLiveData()
 
-    val roomState = mapState(home) { it.rooms.isEmpty() }.asLiveData()
-    val deviceState = mapState(home) { it.devices.isEmpty() }.asLiveData()
-    val sceneState = mapState(home) { it.scenes.isEmpty() }.asLiveData()
-    val localDeviceState = localRepository.deviceListFlow
-        .map { if (it.isEmpty()) Empty else Normal }
-        .asLiveData()
-    val localDevices = localRepository.deviceListFlow.asLiveData()
+    val roomState = home.mapFragmentState { it.rooms.isEmpty() }.asLiveData()
+    val deviceState = home.mapFragmentState { it.devices.isEmpty() }.asLiveData()
+    val sceneState = home.mapFragmentState { it.scenes.isEmpty() }.asLiveData()
+    val localDeviceState = favoriteDeviceRepository.devices.mapFragmentState().asLiveData()
+    val localDevices = favoriteDeviceRepository.devices.asLiveData()
 
     fun refreshHome() {
-        miotRepository.refreshCurrentHome()
+        viewModelScope.launch { homeRepository.refreshCurrentHome() }
     }
 
     fun runScene(scene: MiotScene) {
-        miotRepository.runScene(scene)
+        viewModelScope.launch { homeRepository.runScene(scene) }
     }
 
     fun logout() {
         viewModelScope.launch {
-            authService.logout()
+            accountRepository.logout()
         }
     }
 }

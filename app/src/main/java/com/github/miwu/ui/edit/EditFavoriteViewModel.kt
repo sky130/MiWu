@@ -2,25 +2,26 @@ package com.github.miwu.ui.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.github.miwu.logic.database.entity.FavoriteDevice
-import com.github.miwu.logic.repository.CacheRepository
-import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
+import androidx.lifecycle.viewModelScope
+import com.github.miwu.domain.repository.DeviceMetadataRepository
+import com.github.miwu.domain.repository.FavoriteDeviceRepository
+import com.github.miwu.ui.common.mapFragmentState
+import kotlinx.coroutines.launch
+import miwu.miot.model.miot.MiotDevice
 
 class EditFavoriteViewModel(
-    private val localRepository: LocalRepository,
-    cacheRepository: CacheRepository,
-    mapState: MapFragmentStateUseCase,
+    private val favoriteDeviceRepository: FavoriteDeviceRepository,
+    metadataRepository: DeviceMetadataRepository,
 ) : ViewModel() {
-    val metadataHandler = cacheRepository.deviceMetadataHandler
-    val devices = localRepository.deviceListFlow.asLiveData()
-    val deviceState = mapState(localRepository.deviceListFlow).asLiveData()
+    val metadataHandler = metadataRepository.metadata
+    val devices = favoriteDeviceRepository.devices.asLiveData()
+    val deviceState = favoriteDeviceRepository.devices.mapFragmentState().asLiveData()
 
-    fun updateSortIndices(list: List<FavoriteDevice>) {
-        localRepository.updateSortIndices(list)
+    fun updateSortIndices(list: List<MiotDevice>) {
+        viewModelScope.launch { favoriteDeviceRepository.updateOrder(list) }
     }
 
-    fun remove(item: FavoriteDevice) {
-        localRepository.removeDevice(item)
+    fun remove(item: MiotDevice) {
+        viewModelScope.launch { favoriteDeviceRepository.remove(item) }
     }
 }

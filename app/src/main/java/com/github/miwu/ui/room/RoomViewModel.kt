@@ -2,28 +2,26 @@ package com.github.miwu.ui.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.github.miwu.logic.repository.CacheRepository
-import com.github.miwu.logic.repository.MiotRepository
-import com.github.miwu.logic.usecase.device.GetSortedDevicesUseCase
-import com.github.miwu.logic.usecase.state.MapFragmentStateUseCase
-import com.github.miwu.utils.Logger
+import androidx.lifecycle.viewModelScope
+import com.github.miwu.domain.repository.DeviceMetadataRepository
+import com.github.miwu.domain.repository.HomeRepository
+import com.github.miwu.domain.usecase.device.GetSortedDevicesUseCase
+import com.github.miwu.ui.common.mapFragmentState
+import kotlinx.coroutines.launch
 
 
 class RoomViewModel(
-    private val miotRepository: MiotRepository,
-    cacheRepository: CacheRepository,
+    private val homeRepository: HomeRepository,
+    metadataRepository: DeviceMetadataRepository,
     private val getSortedDevices: GetSortedDevicesUseCase,
-    private val mapState: MapFragmentStateUseCase,
     val room: String,
 ) : ViewModel() {
-    private val logger = Logger()
-    val info get() = miotRepository.user
-    val home = miotRepository.currentHome
+    val home = homeRepository.currentHome
     val devices = getSortedDevices(room).asLiveData()
-    val metadataHandler = cacheRepository.deviceMetadataHandler
-    val deviceState = mapState(home) { it.devices.isEmpty() }.asLiveData()
+    val metadataHandler = metadataRepository.metadata
+    val deviceState = home.mapFragmentState { it.rooms[room].isNullOrEmpty() }.asLiveData()
 
     fun loadDevice() {
-        miotRepository.refreshCurrentHome()
+        viewModelScope.launch { homeRepository.refreshCurrentHome() }
     }
 }

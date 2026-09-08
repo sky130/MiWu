@@ -6,11 +6,11 @@ import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.github.miwu.logic.database.entity.FavoriteDevice
 import com.github.miwu.databinding.ActivityEditFavoriteBinding as Binding
 import kndroidx.activity.ViewActivityX
 import kndroidx.databinding.recycler.BaseBindingAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import miwu.miot.model.miot.MiotDevice
 import java.util.Collections
 
 class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
@@ -19,13 +19,8 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
 
     @Suppress("UNCHECKED_CAST")
     private val adapter
-        get() = binding.recycler.adapter as? BaseBindingAdapter<FavoriteDevice, ViewBinding>
+        get() = binding.recycler.adapter as? BaseBindingAdapter<MiotDevice, ViewBinding>
     private val list get() = adapter?.item
-
-    override fun onPause() {
-        list?.let(viewModel::updateSortIndices)
-        super.onPause()
-    }
 
     private inner class TouchCallback : ItemTouchHelper.Callback() {
         override fun getMovementFlags(
@@ -51,6 +46,7 @@ class EditFavoriteActivity : ViewActivityX<Binding>(Binding::inflate) {
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             viewHolder.itemView.animateScale(1f, 1f, 200L)
+            list?.let(viewModel::updateSortIndices)
         }
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {

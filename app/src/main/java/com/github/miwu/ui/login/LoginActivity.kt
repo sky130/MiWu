@@ -2,18 +2,13 @@ package com.github.miwu.ui.login
 
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
-import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.QrErrorCorrectionLevel
-import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
 import com.github.alexzhirkevich.customqrgenerator.vector.createQrVectorOptions
-import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorBallShape
-import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorColor
-import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorFrameShape
 import com.github.miwu.R
 import com.github.miwu.databinding.ActivityLoginBinding as Binding
 import com.github.miwu.ui.about.help.HelpActivity
@@ -24,16 +19,17 @@ import com.github.miwu.ui.login.dialog.LoadingDialog
 import com.github.miwu.ui.main.MainActivity
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
-import kndroidx.extension.string
 import kndroidx.extension.toast
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
-import org.koin.android.ext.android.inject
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
     override val viewModel: LoginViewModel by viewModel()
-    val showQrCode = MutableStateFlow(true)
+    private val mutableShowQrCode = MutableStateFlow(true)
+    val showQrCode: StateFlow<Boolean> = mutableShowQrCode.asStateFlow()
     val height by lazy {
         @Suppress("DEPRECATION") windowManager.defaultDisplay.height
     }
@@ -51,7 +47,14 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
     override fun init() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.event.collect(::handleEvent) }
+                launch {
+                    viewModel.event.collect { pendingEvent ->
+                        pendingEvent?.let {
+                            handleEvent(it)
+                            viewModel.consumeEvent(it)
+                        }
+                    }
+                }
                 launch { viewModel.uiState.collect(::handleUiState) }
                 launch { showQrCode.collect(::handleDisplay) }
             }
@@ -118,7 +121,7 @@ class LoginActivity : ViewActivityX<Binding>(Binding::inflate) {
     }
 
     fun changeDisplayMode() {
-        showQrCode.value = !showQrCode.value
+        mutableShowQrCode.value = !mutableShowQrCode.value
     }
 
     private companion object {

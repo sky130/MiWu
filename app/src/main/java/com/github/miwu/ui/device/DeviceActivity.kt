@@ -4,15 +4,15 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.github.miwu.ui.device.DeviceViewModel.Event.DeviceInitiated
 import com.github.miwu.utils.Logger
 import kndroidx.activity.ViewActivityX
 import kndroidx.extension.start
 import kndroidx.extension.toast
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import miwu.android.R
 import miwu.android.wrapper.base.ViewMiwuWrapper
 import miwu.miot.model.miot.MiotDevice
@@ -35,9 +35,16 @@ class DeviceActivity : ViewActivityX<Binding>(Binding::inflate) {
             return
         }
         with(viewModel) {
-            event.receiveAsFlow()
-                .onEach(::onEvent)
-                .launchIn(lifecycleScope)
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    event.collect { pendingEvent ->
+                        pendingEvent?.let {
+                            onEvent(it)
+                            consumeEvent(it)
+                        }
+                    }
+                }
+            }
             printDeviceInfo()
             manager?.init()
         }

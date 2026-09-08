@@ -1,29 +1,29 @@
 package com.github.miwu.ui.about.crash
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.miwu.logic.handler.CrashHandler
-import kotlinx.coroutines.Dispatchers
+import com.github.miwu.domain.repository.CrashLogRepository
+import com.github.miwu.domain.repository.SettingsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.File
 
-class CrashViewModel : ViewModel() {
-
-    val crashText = MutableLiveData<String>("")
-    val crashPath get() = CrashHandler.PATH
+class CrashViewModel(
+    private val crashLogRepository: CrashLogRepository,
+    private val settingsRepository: SettingsRepository,
+) : ViewModel() {
+    private val mutableCrashText = MutableStateFlow("")
+    val crashText: StateFlow<String> = mutableCrashText.asStateFlow()
+    val crashPath get() = crashLogRepository.path
 
     fun load() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            File(CrashHandler.PATH).apply {
-//                if (isDirectory) {
-//                    val list = listFiles() ?: return@apply
-//                    list.sortedBy { it.nameWithoutExtension }
-//                    crashText.postValue(list.last().readText())
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            mutableCrashText.value = crashLogRepository.readLatest()
+        }
     }
 
-
+    fun acknowledgeCrash() {
+        settingsRepository.hasPendingCrash = false
+    }
 }

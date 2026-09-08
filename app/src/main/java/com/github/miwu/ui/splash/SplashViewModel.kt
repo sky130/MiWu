@@ -2,12 +2,14 @@ package com.github.miwu.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.miwu.logic.datastore.MiotUserDataStore
-import com.github.miwu.logic.datastore.isLogin
-import com.github.miwu.logic.setting.AppSetting
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.github.miwu.domain.model.LoginState
+import com.github.miwu.domain.repository.AccountRepository
+import com.github.miwu.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
 
 sealed interface SplashState {
     object Loading : SplashState
@@ -17,25 +19,18 @@ sealed interface SplashState {
 }
 
 class SplashViewModel(
-    private val dataStore: MiotUserDataStore,
+    accountRepository: AccountRepository,
+    settingsRepository: SettingsRepository,
 ) : ViewModel() {
+    val state: StateFlow<SplashState> = if (settingsRepository.hasPendingCrash) {
+        flowOf(SplashState.NavigateToCrash)
+    } else {
+        accountRepository.loginState.map { it.toSplashState() }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, SplashState.Loading)
 
-    private val _state = MutableStateFlow<SplashState>(SplashState.Loading)
-    val state: StateFlow<SplashState> = _state
-
-    init {
-        checkNavigation()
-    }
-
-    private fun checkNavigation() {
-        viewModelScope.launch {
-            if (AppSetting.isCrash.value) {
-                _state.value = SplashState.NavigateToCrash
-            } else if (dataStore.isLogin()) {
-                _state.value = SplashState.NavigateToMain
-            } else {
-                _state.value = SplashState.NavigateToLogin
-            }
-        }
+    private fun LoginState.toSplashState(): SplashState = when (this) {
+        LoginState.Loading -> SplashState.Loading
+        LoginState.LoggedOut, is LoginState.Failure -> SplashState.NavigateToLogin
+        LoginState.Success, is LoginState.NetworkError -> SplashState.NavigateToMain
     }
 }

@@ -49,14 +49,16 @@
                         style="@style/Miwu.EditView"
                         android:hint="@string/login_edit_user"
                         android:inputType="text"
-                        android:text="@={viewModel.user}" />
+                        android:text="@{viewModel.user}"
+                        android:onTextChanged="@{(text, start, before, count) -> viewModel.onUserChanged(text)}" />
 
                     <EditText
                         style="@style/Miwu.EditView"
                         android:layout_marginTop="10dp"
                         android:hint="@string/login_edit_pwd"
                         android:inputType="textPassword"
-                        android:text="@={viewModel.password}"
+                        android:text="@{viewModel.password}"
+                        android:onTextChanged="@{(text, start, before, count) -> viewModel.onPasswordChanged(text)}"
                         tools:ignore="WearPasswordInput" />
 
                     <Button

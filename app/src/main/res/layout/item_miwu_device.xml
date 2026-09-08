@@ -7,11 +7,11 @@
 
         <variable
             name="handler"
-            type="com.github.miwu.logic.handler.DeviceMetadataHandler" />
+            type="com.github.miwu.domain.model.DeviceMetadata" />
 
         <variable
             name="item"
-            type="com.github.miwu.logic.database.entity.FavoriteDevice" />
+            type="miwu.miot.model.miot.MiotDevice" />
     </data>
 
     <LinearLayout

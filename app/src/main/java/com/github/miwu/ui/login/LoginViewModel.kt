@@ -2,67 +2,69 @@ package com.github.miwu.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.miwu.logic.repository.MiotRepository
-import com.github.miwu.logic.usecase.login.LoginUseCase
+import com.github.miwu.domain.usecase.account.LoginUseCase
 import com.github.miwu.utils.Logger
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import miwu.miot.model.MiotUser
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeoutException
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    val miotRepository: MiotRepository,
-    private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val logger = Logger()
-    private val _uiState = MutableStateFlow(LoginUiState())
-    private val _event = MutableSharedFlow<Event>()
+    private val mutableUiState = MutableStateFlow(LoginUiState())
+    private val mutableEvent = MutableStateFlow<Event?>(null)
+    private val mutableUser = MutableStateFlow("")
+    private val mutablePassword = MutableStateFlow("")
     private var loginJob: Job? = null
 
-    val user = MutableStateFlow("")
-    val password = MutableStateFlow("")
-    val uiState = _uiState.asStateFlow()
-    val event = _event.asSharedFlow()
+    val user = mutableUser.asStateFlow()
+    val password = mutablePassword.asStateFlow()
+    val uiState = mutableUiState.asStateFlow()
+    val event: StateFlow<Event?> = mutableEvent.asStateFlow()
+
+    fun onUserChanged(value: CharSequence?) {
+        mutableUser.value = value?.toString().orEmpty()
+    }
+
+    fun onPasswordChanged(value: CharSequence?) {
+        mutablePassword.value = value?.toString().orEmpty()
+    }
 
     fun requestClassicLogin() {
         loginJob?.cancel()
         loginJob = viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            mutableUiState.value = mutableUiState.value.copy(isLoading = true)
             try {
-                val loggedInUser = withContext(ioDispatcher) {
-                    loginUseCase.loginByPassword(user.value, password.value).getOrThrow()
-                }
+                val loggedInUser = loginUseCase.loginByPassword(user.value, password.value).getOrThrow()
                 event(Event.LoginSuccess(loggedInUser))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
                 loginFailure(e)
             } finally {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                mutableUiState.value = mutableUiState.value.copy(isLoading = false)
             }
         }
     }
 
     fun requestQRCodeLogin() {
         loginJob?.cancel()
-        loginJob = viewModelScope.launch(ioDispatcher) {
+        loginJob = viewModelScope.launch {
             while (true) {
                 currentCoroutineContext().ensureActive()
                 try {
-                    _uiState.value = LoginUiState()
+                    mutableUiState.value = LoginUiState()
                     val qrCodeData = loginUseCase.generateQrCode().getOrThrow()
-                    _uiState.value = LoginUiState(qrCode = qrCodeData.data)
+                    mutableUiState.value = LoginUiState(qrCode = qrCodeData.data)
                     val loggedInUser = loginUseCase.loginByQrCode(qrCodeData.loginUrl).getOrThrow()
                     event(Event.LoginSuccess(loggedInUser))
                     return@launch
@@ -77,7 +79,7 @@ class LoginViewModel(
         }
     }
 
-    private suspend fun loginFailure(e: Throwable) {
+    private fun loginFailure(e: Throwable) {
         logger.warn("Login failed: {}", e.message)
         event(Event.LoginFailure(e))
     }
@@ -85,7 +87,11 @@ class LoginViewModel(
     fun cancelLogin() {
         loginJob?.cancel()
         loginJob = null
-        _uiState.value = LoginUiState()
+        mutableUiState.value = LoginUiState()
+    }
+
+    fun consumeEvent(event: Event) {
+        mutableEvent.compareAndSet(event, null)
     }
 
     override fun onCleared() {
@@ -93,7 +99,9 @@ class LoginViewModel(
         super.onCleared()
     }
 
-    private suspend fun event(event: Event) = _event.emit(event)
+    private fun event(event: Event) {
+        mutableEvent.value = event
+    }
 
     data class LoginUiState(
         val isLoading: Boolean = false,

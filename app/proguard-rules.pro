@@ -22,7 +22,6 @@
 
 -renamesourcefileattribute SourceFile
 -keepattributes Signature
--keep class com.github.miwu.logic.** { *; }
 -keep class androidx.databinding.**{ *; }
 -keep class com.github.miwu.databinding.**{ *; }
 -keep class com.github.miwu.ui.**{ *; }

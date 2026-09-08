@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package com.github.miwu.service
+package com.github.miwu.platform.tile
 
 import android.content.Context
 import androidx.wear.protolayout.material.Typography.TYPOGRAPHY_BUTTON
@@ -10,10 +10,10 @@ import androidx.wear.tiles.tooling.preview.TilePreviewData
 import androidx.wear.tiles.tooling.preview.TilePreviewHelper
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.github.miwu.R
-import com.github.miwu.appModule
-import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiot
-import com.github.miwu.logic.repository.LocalRepository
-import com.github.miwu.logic.repository.MiotRepository
+import com.github.miwu.di.appModule
+import com.github.miwu.domain.repository.AccountRepository
+import com.github.miwu.domain.repository.DeviceIconRepository
+import com.github.miwu.domain.repository.FavoriteDeviceRepository
 import com.github.miwu.utils.Logger
 import kndroidx.KndroidConfig
 import kndroidx.KndroidX
@@ -52,10 +52,11 @@ import org.koin.core.context.startKoin
 
 class DeviceTileService : LayoutTileService() {
     private val logger = Logger()
-    val localRepository: LocalRepository by inject()
-    val miotRepository: MiotRepository by inject()
+    private val favoriteDeviceRepository: FavoriteDeviceRepository by inject()
+    private val deviceIconRepository: DeviceIconRepository by inject()
+    private val accountRepository: AccountRepository by inject()
 
-    override val version get() = (localRepository.iconMap.hashCode() + resVersion).toString()
+    override val version get() = (deviceIconRepository.icons.value.hashCode() + resVersion).toString()
     private val resVersion = 1
 
     init {
@@ -70,7 +71,7 @@ class DeviceTileService : LayoutTileService() {
 
     override fun onResourcesRequest() {
         ResImage("scene", R.drawable.ic_miwu_scene_tile)
-        for ((model, icon) in localRepository.iconMap) {
+        for ((model, icon) in deviceIconRepository.icons.value) {
             logger.info("res version {}", version)
             ByteImage(model, icon)
         }
@@ -82,10 +83,10 @@ class DeviceTileService : LayoutTileService() {
             horizontalAlignment = HorizontalAlignment.Center,
             verticalAlignment = VerticalAlignment.Center
         ) {
-            if (localRepository.deviceList.isEmpty() || miotRepository.user == null) {
+            if (favoriteDeviceRepository.devices.value.isEmpty() || accountRepository.currentUser == null) {
                 Text(text = "hello tile")
             } else {
-                Page(localRepository.deviceList.map { it.toMiot() })
+                Page(favoriteDeviceRepository.devices.value)
             }
         }
     }

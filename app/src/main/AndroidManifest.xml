@@ -31,7 +31,7 @@
             android:taskAffinity="" />
 
         <service
-            android:name=".service.DeviceTileService"
+            android:name=".platform.tile.DeviceTileService"
             android:description="@string/tile_description"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"

@@ -26,8 +26,9 @@ import miwu.miot.utils.OkHttpClient
 import miwu.miot.utils.Retrofit
 import miwu.miot.utils.create
 import miwu.miot.utils.runCatchingSuspend
+import org.koin.core.annotation.InjectedParam
 
-class MiotDeviceClientImpl(private val user: MiotUser) : MiotDeviceClient {
+class MiotDeviceClientImpl(@InjectedParam private val user: MiotUser) : MiotDeviceClient {
     private val client = OkHttpClient {
         addInterceptor(MiotAuthInterceptor(user))
     }

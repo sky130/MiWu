@@ -146,6 +146,7 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.core.viewmodel)
     implementation(libs.koin.android)
     implementation(libs.koin.android.compat)
     implementation(libs.koin.annotations)
@@ -159,6 +160,7 @@ dependencies {
 
 
     implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
 
 
     testImplementation(libs.junit)

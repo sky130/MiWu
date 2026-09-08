@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ktorfit)
-    kotlin("plugin.serialization") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.21"
     id("miwu-publish")
 }
 

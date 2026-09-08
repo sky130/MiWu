@@ -2,14 +2,13 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import miwu.latestGitTag
 import miwu.getVersionInt
 
-// TODO https://github.com/InsertKoinIO/koin/issues/2357
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
-    // alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.koin.compiler)
     kotlin("kapt")
-    kotlin("plugin.serialization") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.21"
 }
 
 val tag = latestGitTag
@@ -145,8 +144,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
 
-    implementation(libs.koin.core)
     implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.android.compat)
     implementation(libs.koin.annotations)

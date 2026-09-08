@@ -1,7 +1,8 @@
 plugins {
     kotlin("jvm")
+    alias(libs.plugins.koin.compiler)
     id("miwu-publish")
-    kotlin("plugin.serialization") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.21"
 }
 
 java {
@@ -21,7 +22,9 @@ dependencies {
     implementation(project(":miot-api-common"))
     implementation(libs.squareup.retrofit.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
+    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
     implementation(libs.json)
     implementation(libs.squareup.retrofit)
     implementation(libs.squareup.okhttp)

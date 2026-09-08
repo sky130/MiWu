@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
-    kotlin("plugin.serialization") version "2.3.0"
+    alias(libs.plugins.koin.compiler)
+    kotlin("plugin.serialization") version "2.3.21"
     id("miwu-publish")
 }
 
@@ -24,7 +25,9 @@ kotlin {
 
 
                 implementation(libs.squareup.okio)
+                implementation(platform(libs.koin.bom))
                 implementation(libs.koin.core)
+                implementation(libs.koin.annotations)
 
 
                 implementation(libs.ktorfit)

@@ -1,5 +1,6 @@
 package com.github.miwu.data.metadata
 
+import com.github.miwu.di.IoDispatcher
 import com.github.miwu.domain.model.DeviceMetadata
 import com.github.miwu.domain.repository.DeviceMetadataRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,10 +12,12 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import miwu.miot.provider.MiotSpecAttrProvider
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class DeviceMetadataRepositoryImpl(
     private val specAttrProvider: MiotSpecAttrProvider,
-    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : DeviceMetadataRepository {
     private val mutex = Mutex()
     private val mutableMetadata = MutableStateFlow(DeviceMetadata())

@@ -8,7 +8,9 @@ import miwu.miot.impl.client.MiotDeviceClientImpl
 import miwu.miot.impl.client.MiotHomeClientImpl
 import miwu.miot.impl.client.MiotUserClientImpl
 import miwu.miot.model.MiotUser
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class JvmMiotClientFactory : MiotClientFactory {
     override fun createUserClient(user: MiotUser): MiotUserClient =
         MiotUserClientImpl(user)

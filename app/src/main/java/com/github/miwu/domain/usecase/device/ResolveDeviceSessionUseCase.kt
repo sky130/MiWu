@@ -5,7 +5,9 @@ import com.github.miwu.domain.repository.FavoriteDeviceRepository
 import com.github.miwu.domain.repository.HomeRepository
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.MiotDevice
+import org.koin.core.annotation.Factory
 
+@Factory
 class ResolveDeviceSessionUseCase(
     private val accountRepository: AccountRepository,
     private val homeRepository: HomeRepository,

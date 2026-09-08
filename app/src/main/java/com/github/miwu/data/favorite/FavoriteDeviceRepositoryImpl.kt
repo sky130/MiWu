@@ -4,6 +4,8 @@ import com.github.miwu.data.local.database.AppDatabase
 import com.github.miwu.data.local.database.entity.FavoriteDeviceEntity.Companion.toEntity
 import com.github.miwu.data.local.database.entity.FavoriteDeviceEntity.Companion.toMiot
 import com.github.miwu.data.local.database.entity.FavoriteDeviceOrderEntity
+import com.github.miwu.di.AppScope
+import com.github.miwu.di.IoDispatcher
 import com.github.miwu.domain.model.LoginState
 import com.github.miwu.domain.repository.AccountRepository
 import com.github.miwu.domain.repository.DeviceMetadataRepository
@@ -21,14 +23,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import miwu.miot.model.miot.MiotDevice
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 
+@Singleton
 @OptIn(ExperimentalCoroutinesApi::class)
 class FavoriteDeviceRepositoryImpl(
     database: AppDatabase,
     private val accountRepository: AccountRepository,
     private val metadataRepository: DeviceMetadataRepository,
-    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
-    @Named("app_scope") applicationScope: CoroutineScope,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @AppScope applicationScope: CoroutineScope,
 ) : FavoriteDeviceRepository {
     private val dao = database.favoriteDeviceDao()
 

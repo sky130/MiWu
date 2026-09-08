@@ -1,5 +1,6 @@
 package com.github.miwu.data.home
 
+import com.github.miwu.di.AppScope
 import com.github.miwu.domain.model.HomeData
 import com.github.miwu.domain.model.LoginState
 import com.github.miwu.domain.gateway.MiotClientFactory
@@ -22,14 +23,16 @@ import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotScene
 import miwu.miot.model.miot.UserInfo
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class HomeRepositoryImpl(
     private val accountRepository: AccountRepository,
     private val metadataRepository: DeviceMetadataRepository,
     private val settingsRepository: SettingsRepository,
     private val homeDataLoader: HomeDataLoader,
     private val clientFactory: MiotClientFactory,
-    @Named("app_scope") applicationScope: CoroutineScope,
+    @AppScope applicationScope: CoroutineScope,
 ) : HomeRepository {
     private val logger = Logger()
     private var homeClient: MiotHomeClient? = null

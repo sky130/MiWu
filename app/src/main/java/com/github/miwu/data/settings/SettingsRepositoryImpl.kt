@@ -1,7 +1,9 @@
 package com.github.miwu.data.settings
 
 import com.github.miwu.domain.repository.SettingsRepository
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class SettingsRepositoryImpl : SettingsRepository {
     override var selectedHomeId: Long
         get() = AppSettings.homeId.value

@@ -2,6 +2,7 @@ package com.github.miwu.data.account
 
 import com.github.miwu.data.account.local.MiotUserDataStore
 import com.github.miwu.data.account.local.serializer.MiotUserSerializer
+import com.github.miwu.di.AppScope
 import com.github.miwu.domain.gateway.MiotClientFactory
 import com.github.miwu.domain.gateway.DeviceIdProvider
 import com.github.miwu.domain.model.LoginState
@@ -22,14 +23,16 @@ import miwu.miot.exception.MiotAuthException
 import miwu.miot.model.MiotUser
 import miwu.miot.provider.MiotLoginProvider
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 
+@Singleton
 @OptIn(ExperimentalSerializationApi::class)
 class AccountRepositoryImpl(
     private val loginProvider: MiotLoginProvider,
     private val dataStore: MiotUserDataStore,
     private val deviceIdProvider: DeviceIdProvider,
     private val clientFactory: MiotClientFactory,
-    @Named("app_scope") applicationScope: CoroutineScope,
+    @AppScope applicationScope: CoroutineScope,
 ) : AccountRepository {
     private val logger = Logger()
 

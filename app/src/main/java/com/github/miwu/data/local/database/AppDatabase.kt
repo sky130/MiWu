@@ -10,7 +10,9 @@ import com.github.miwu.data.local.database.dao.FavoriteDeviceDao
 import com.github.miwu.data.local.database.entity.CrashEntity
 import com.github.miwu.data.local.database.entity.FavoriteDeviceEntity
 import com.github.miwu.data.local.database.entity.FavoriteDeviceOrderEntity
+import org.koin.core.annotation.Singleton
 
+@Singleton
 @Database(
     version = 3,
     entities = [

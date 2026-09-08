@@ -5,7 +5,9 @@ import com.github.miwu.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import miwu.miot.model.miot.MiotDevice
+import org.koin.core.annotation.Factory
 
+@Factory
 class GetSortedDevicesUseCase(
     private val homeRepository: HomeRepository,
     private val metadataRepository: DeviceMetadataRepository,

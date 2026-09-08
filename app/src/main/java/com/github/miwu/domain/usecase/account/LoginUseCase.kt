@@ -1,17 +1,19 @@
 package com.github.miwu.domain.usecase.account
 
+import com.github.miwu.di.IoDispatcher
 import com.github.miwu.domain.repository.AccountRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import miwu.miot.model.MiotUser
 import miwu.miot.provider.MiotLoginProvider
-import org.koin.core.annotation.Named
+import org.koin.core.annotation.Factory
 
+@Factory
 class LoginUseCase(
     private val loginProvider: MiotLoginProvider,
     private val accountRepository: AccountRepository,
-    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend fun loginByPassword(user: String, password: String): Result<MiotUser> =
         withContext(ioDispatcher) {

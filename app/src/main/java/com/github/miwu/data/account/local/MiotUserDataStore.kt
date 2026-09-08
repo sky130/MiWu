@@ -10,9 +10,11 @@ import miwu.miot.model.MiotUser
 
 typealias MiotUserDataStore = DataStore<MiotUser>
 
-val Context.miotUserStore: MiotUserDataStore by dataStore(
+private val Context.miotUserStore: MiotUserDataStore by dataStore(
     fileName = "miot_user_v2",
     serializer = MiotUserSerializer,
     corruptionHandler = ReplaceFileCorruptionHandler { MiotUserSerializer.defaultValue },
     produceMigrations = { context -> listOf(LegacyMiotUserMigration(context)) },
 )
+
+fun datastore(context: Context): MiotUserDataStore = context.miotUserStore

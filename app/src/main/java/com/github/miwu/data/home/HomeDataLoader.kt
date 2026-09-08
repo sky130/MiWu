@@ -1,6 +1,7 @@
 package com.github.miwu.data.home
 
 import com.github.miwu.BuildConfig
+import com.github.miwu.di.IoDispatcher
 import com.github.miwu.domain.model.HomeData
 import com.github.miwu.domain.repository.DeviceMetadataRepository
 import com.github.miwu.mock.GeneratedMockDevices
@@ -16,11 +17,13 @@ import miwu.miot.model.miot.MiotHome
 import miwu.miot.model.miot.MiotRoom
 import miwu.miot.model.miot.MiotScene
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 import java.util.concurrent.ConcurrentHashMap
 
+@Singleton
 class HomeDataLoader(
     private val metadataRepository: DeviceMetadataRepository,
-    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val sceneHomes = ConcurrentHashMap<MiotScene, MiotHome>()
 

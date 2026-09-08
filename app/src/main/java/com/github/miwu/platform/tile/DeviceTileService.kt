@@ -9,8 +9,8 @@ import androidx.wear.tiles.tooling.preview.Preview
 import androidx.wear.tiles.tooling.preview.TilePreviewData
 import androidx.wear.tiles.tooling.preview.TilePreviewHelper
 import androidx.wear.tooling.preview.devices.WearDevices
+import com.github.miwu.KoinApp
 import com.github.miwu.R
-import com.github.miwu.di.appModule
 import com.github.miwu.domain.repository.AccountRepository
 import com.github.miwu.domain.repository.DeviceIconRepository
 import com.github.miwu.domain.repository.FavoriteDeviceRepository
@@ -49,6 +49,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.plugin.module.dsl.startKoin
 
 class DeviceTileService : LayoutTileService() {
     private val logger = Logger()
@@ -164,10 +165,9 @@ class DeviceTileService : LayoutTileService() {
     @Preview(device = WearDevices.LARGE_ROUND)
     fun tilePreview(context: Context) = TilePreviewData { request ->
         KndroidConfig.context = context
-        startKoin {
+        startKoin<KoinApp> {
             androidLogger()
             androidContext(context)
-            modules(appModule)
         }
         onLayout()
             .let(TilePreviewHelper::singleTimelineEntryTileBuilder)

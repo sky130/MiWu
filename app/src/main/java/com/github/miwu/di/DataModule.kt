@@ -2,47 +2,36 @@ package com.github.miwu.di
 
 import android.content.Context
 import androidx.room.Room
-import com.github.miwu.data.account.AccountRepositoryImpl
-import com.github.miwu.data.account.local.MiotUserDataStore
-import com.github.miwu.data.account.local.miotUserStore
-import com.github.miwu.data.favorite.FavoriteDeviceRepositoryImpl
-import com.github.miwu.data.home.HomeDataLoader
-import com.github.miwu.data.home.HomeRepositoryImpl
+import com.github.miwu.data.account.local.datastore
 import com.github.miwu.data.local.database.AppDatabase
-import com.github.miwu.data.metadata.DeviceIconRepositoryImpl
-import com.github.miwu.data.metadata.DeviceMetadataRepositoryImpl
-import com.github.miwu.data.miot.JvmMiotClientFactory
-import com.github.miwu.data.settings.SettingsRepositoryImpl
-import com.github.miwu.domain.gateway.MiotClientFactory
-import com.github.miwu.domain.repository.AccountRepository
-import com.github.miwu.domain.repository.DeviceIconRepository
-import com.github.miwu.domain.repository.DeviceMetadataRepository
-import com.github.miwu.domain.repository.FavoriteDeviceRepository
-import com.github.miwu.domain.repository.HomeRepository
-import com.github.miwu.domain.repository.SettingsRepository
 import io.ktor.client.HttpClient
-import org.koin.dsl.bind
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.okhttp.OkHttpConfig
+import io.ktor.client.engine.okhttp.OkHttpEngine
 import org.koin.dsl.module
-import org.koin.plugin.module.dsl.single
+import org.koin.plugin.module.dsl.create
 
-private const val databaseName = "app_database_v3"
 
 val dataModule = module {
-    single<AppDatabase> {
-        Room.databaseBuilder<AppDatabase>(get(), databaseName)
-            .addMigrations(AppDatabase.MIGRATION_2_3)
-            .build()
-    }
-    single<MiotUserDataStore> {
-        get<Context>().miotUserStore
-    }
-    single<HttpClient> { HttpClient() }
-    single<JvmMiotClientFactory>().bind<MiotClientFactory>()
-    single<SettingsRepositoryImpl>().bind<SettingsRepository>()
-    single<DeviceMetadataRepositoryImpl>().bind<DeviceMetadataRepository>()
-    single<AccountRepositoryImpl>().bind<AccountRepository>()
-    single<FavoriteDeviceRepositoryImpl>().bind<FavoriteDeviceRepository>()
-    single<DeviceIconRepositoryImpl>().bind<DeviceIconRepository>()
-    single<HomeDataLoader>()
-    single<HomeRepositoryImpl>().bind<HomeRepository>()
+    single { create(::httpClientEngine) }
+    single { create(::datastore) }
+    single { create(::httpClient) }
+    single { create(::database) }
+    single { create(::favoriteDeviceDao) }
+    single { create(::crashDao) }
 }
+
+private const val APP_DATABASE_NAME = "app_database_v3"
+
+private fun httpClientEngine(): HttpClientEngine = OkHttpEngine(OkHttpConfig())
+
+private fun httpClient(): HttpClient = HttpClient()
+
+private fun database(context: Context) =
+    Room.databaseBuilder<AppDatabase>(context, APP_DATABASE_NAME)
+        .addMigrations(AppDatabase.MIGRATION_2_3)
+        .build()
+
+private fun favoriteDeviceDao(database: AppDatabase) = database.favoriteDeviceDao()
+
+private fun crashDao(database: AppDatabase) = database.crashDao()

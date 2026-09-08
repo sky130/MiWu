@@ -4,7 +4,9 @@ import com.github.miwu.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import miwu.miot.model.miot.MiotRoom
+import org.koin.core.annotation.Factory
 
+@Factory
 class GetSortedRoomsUseCase(
     private val homeRepository: HomeRepository,
 ) {

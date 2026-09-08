@@ -1,5 +1,7 @@
 package com.github.miwu.data.metadata
 
+import com.github.miwu.di.AppScope
+import com.github.miwu.di.IoDispatcher
 import com.github.miwu.domain.repository.DeviceIconRepository
 import com.github.miwu.domain.repository.DeviceMetadataRepository
 import com.github.miwu.domain.repository.FavoriteDeviceRepository
@@ -21,14 +23,16 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Named
+import org.koin.core.annotation.Singleton
 
+@Singleton
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class DeviceIconRepositoryImpl(
     favoriteDeviceRepository: FavoriteDeviceRepository,
     metadataRepository: DeviceMetadataRepository,
     private val httpClient: HttpClient,
-    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
-    @Named("app_scope") applicationScope: CoroutineScope,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @AppScope applicationScope: CoroutineScope,
 ) : DeviceIconRepository {
     private val logger = Logger()
     private val mutableIcons = MutableStateFlow<Map<String, ByteArray>>(emptyMap())

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
+import com.github.miwu.di.IoDispatcher
 import com.github.miwu.domain.repository.CrashLogRepository
 import com.github.miwu.domain.repository.SettingsRepository
 import kotlinx.coroutines.CancellationException
@@ -18,11 +19,13 @@ import java.io.PrintWriter
 import java.lang.reflect.InvocationTargetException
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Provided
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class CrashHandler(
     @Provided context: Context,
     private val settingsRepository: SettingsRepository,
-    @Named("app_io_dispatcher") private val ioDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : Thread.UncaughtExceptionHandler, CrashLogRepository {
     private val appContext = context.applicationContext
     private var defaultHandler: Thread.UncaughtExceptionHandler? = null

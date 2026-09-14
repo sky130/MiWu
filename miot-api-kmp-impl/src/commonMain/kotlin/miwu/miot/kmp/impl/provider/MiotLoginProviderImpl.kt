@@ -24,7 +24,7 @@ import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import miwu.miot.common.MIOT_SID
 import miwu.miot.common.QRCODE_GENERATE_URL
@@ -35,7 +35,7 @@ import miwu.miot.common.removePrefix
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotBusinessException
 import miwu.miot.exception.MiotHttpException
-import miwu.miot.kmp.utils.IO
+import miwu.miot.kmp.di.IoDispatcher
 import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json
 import miwu.miot.kmp.utils.md5
@@ -52,7 +52,9 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.Clock
 
 @Singleton
-class MiotLoginProviderImpl : MiotLoginProvider {
+class MiotLoginProviderImpl(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) : MiotLoginProvider {
     private val cookiesStorage = SimpleCookiesStorage()
     private val httpClient = MiotHttpClient {
         install(HttpCookies) {
@@ -116,7 +118,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         onTimeout: suspend CoroutineScope.() -> Unit,
         onFailure: suspend CoroutineScope.(Throwable?) -> Unit,
         context: CoroutineContext
-    ): Unit = withContext(Dispatchers.IO) {
+    ): Unit = withContext(ioDispatcher) {
         cookiesStorage.clear()
         try {
             get<String>(loginUrl)

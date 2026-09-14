@@ -4,6 +4,7 @@ import miwu.miot.client.MiotDeviceClient
 import miwu.miot.client.MiotHomeClient
 import miwu.miot.client.MiotUserClient
 import miwu.miot.common.MiotApiKoinModule
+import miwu.miot.kmp.di.dispatchersModule
 import miwu.miot.kmp.impl.client.MiotDeviceClientImpl
 import miwu.miot.kmp.impl.client.MiotHomeClientImpl
 import miwu.miot.kmp.impl.client.MiotUserClientImpl
@@ -26,6 +27,8 @@ internal val clientModule = module {
 }
 
 internal val providerModule = module {
+    includes(dispatchersModule)
+
     single<MiotLoginProviderImpl>().bind<MiotLoginProvider>()
     single<MiotSpecAttrProviderImpl>().bind<MiotSpecAttrProvider>()
 }

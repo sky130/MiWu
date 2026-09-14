@@ -9,10 +9,7 @@ plugins {
 
 kotlin {
     jvm()
-    js(IR) {
-        browser()
-        binaries.executable()
-    }
+    linuxX64()
     jvmToolchain(21)
     sourceSets {
         commonMain {

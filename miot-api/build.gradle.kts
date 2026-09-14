@@ -6,9 +6,7 @@ plugins {
 
 kotlin {
     jvm()
-    js {
-        browser()
-    }
+    linuxX64()
     sourceSets {
         commonMain {
             dependencies {

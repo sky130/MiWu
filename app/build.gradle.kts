@@ -89,6 +89,7 @@ dependencies {
     implementation(project(":miot-api-common"))
     implementation(project(":miot-api-impl"))
     implementation(project(":miot-api-kmp-impl"))
+    implementation(project(":miwu-dispatchers"))
 
 
     implementation(libs.glide)

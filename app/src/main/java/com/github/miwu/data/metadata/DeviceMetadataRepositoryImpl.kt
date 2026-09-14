@@ -1,6 +1,6 @@
 package com.github.miwu.data.metadata
 
-import com.github.miwu.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import com.github.miwu.domain.model.DeviceMetadata
 import com.github.miwu.domain.repository.DeviceMetadataRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -5,7 +5,7 @@ import com.github.miwu.data.local.database.entity.FavoriteDeviceEntity.Companion
 import com.github.miwu.data.local.database.entity.FavoriteDeviceEntity.Companion.toMiot
 import com.github.miwu.data.local.database.entity.FavoriteDeviceOrderEntity
 import com.github.miwu.di.AppScope
-import com.github.miwu.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import com.github.miwu.domain.model.LoginState
 import com.github.miwu.domain.repository.AccountRepository
 import com.github.miwu.domain.repository.DeviceMetadataRepository

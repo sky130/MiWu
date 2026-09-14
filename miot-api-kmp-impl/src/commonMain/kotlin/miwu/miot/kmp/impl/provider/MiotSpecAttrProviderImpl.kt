@@ -8,7 +8,7 @@ import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,8 +16,8 @@ import miwu.miot.common.SPEC_SERVER_URL
 import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
+import miwu.dispatchers.IoDispatcher
 import miwu.miot.kmp.service.createSpecService
-import miwu.miot.kmp.utils.IO
 import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json
 import miwu.miot.model.spec.SpecAtt
@@ -27,7 +27,9 @@ import miwu.miot.provider.MiotSpecAttrProvider
 import org.koin.core.annotation.Singleton
 
 @Singleton
-class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
+class MiotSpecAttrProviderImpl(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) : MiotSpecAttrProvider {
     private val httpClient = MiotHttpClient {
         install(ContentNegotiation) {
             json(json)
@@ -42,7 +44,7 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
         .build()
     private val specService = ktorfit.createSpecService()
 
-    override suspend fun getSpecAtt(urn: String) = withContext(Dispatchers.IO) {
+    override suspend fun getSpecAtt(urn: String) = withContext(ioDispatcher) {
         runCatching {
             specService.getInstance(urn)
         }.recoverCatching {
@@ -50,7 +52,7 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
         }
     }
 
-    override suspend fun getSpecMultiLanguage(urn: String) = withContext(Dispatchers.IO) {
+    override suspend fun getSpecMultiLanguage(urn: String) = withContext(ioDispatcher) {
         runCatching {
             when (val response = specService.getSpecMultiLanguage(urn)) {
                 "model not found" -> throw MiotDeviceException.modelNotFound(urn)
@@ -63,7 +65,7 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     override suspend fun getSpecAttWithLanguage(
         urn: String,
         languageCode: String
-    ) = withContext(Dispatchers.IO) {
+    ) = withContext(ioDispatcher) {
         runCatching {
             val att: SpecAtt = getSpecAtt(urn).getOrThrow()
             val language = getSpecMultiLanguage(urn).getOrThrow()
@@ -86,7 +88,7 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
         throw MiotParseException.jsonParse(it)
     }
 
-    override suspend fun getIconUrl(model: String) = withContext(Dispatchers.IO) {
+    override suspend fun getIconUrl(model: String) = withContext(ioDispatcher) {
         runCatching {
             val url = "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${model}"
             val info = httpClient.get(url).body<DeviceInfoResponse>()
@@ -95,25 +97,25 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
         }
     }
 
-    override suspend fun getDevices(): Result<SpecType> = withContext(Dispatchers.IO) {
+    override suspend fun getDevices(): Result<SpecType> = withContext(ioDispatcher) {
         runCatching {
             specService.getDevices()
         }
     }
 
-    override suspend fun getServices(): Result<SpecType> = withContext(Dispatchers.IO) {
+    override suspend fun getServices(): Result<SpecType> = withContext(ioDispatcher) {
         runCatching {
             specService.getServices()
         }
     }
 
-    override suspend fun getActions(): Result<SpecType> = withContext(Dispatchers.IO) {
+    override suspend fun getActions(): Result<SpecType> = withContext(ioDispatcher) {
         runCatching {
             specService.getActions()
         }
     }
 
-    override suspend fun getProperties(): Result<SpecType> = withContext(Dispatchers.IO) {
+    override suspend fun getProperties(): Result<SpecType> = withContext(ioDispatcher) {
         runCatching {
             specService.getProperties()
         }

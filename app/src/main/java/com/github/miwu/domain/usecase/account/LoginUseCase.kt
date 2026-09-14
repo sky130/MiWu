@@ -1,6 +1,6 @@
 package com.github.miwu.domain.usecase.account
 
-import com.github.miwu.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import com.github.miwu.domain.repository.AccountRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher

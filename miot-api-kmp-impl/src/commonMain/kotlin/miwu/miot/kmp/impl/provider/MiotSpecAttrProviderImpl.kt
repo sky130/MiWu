@@ -16,7 +16,7 @@ import miwu.miot.common.SPEC_SERVER_URL
 import miwu.miot.exception.MiotClientException
 import miwu.miot.exception.MiotDeviceException
 import miwu.miot.exception.MiotParseException
-import miwu.miot.kmp.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import miwu.miot.kmp.service.createSpecService
 import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json

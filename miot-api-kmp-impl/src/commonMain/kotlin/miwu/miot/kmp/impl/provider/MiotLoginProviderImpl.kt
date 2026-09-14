@@ -35,7 +35,7 @@ import miwu.miot.common.removePrefix
 import miwu.miot.exception.MiotAuthException
 import miwu.miot.exception.MiotBusinessException
 import miwu.miot.exception.MiotHttpException
-import miwu.miot.kmp.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import miwu.miot.kmp.utils.MiotHttpClient
 import miwu.miot.kmp.utils.json
 import miwu.miot.kmp.utils.md5

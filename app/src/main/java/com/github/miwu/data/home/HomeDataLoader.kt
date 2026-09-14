@@ -1,7 +1,7 @@
 package com.github.miwu.data.home
 
 import com.github.miwu.BuildConfig
-import com.github.miwu.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import com.github.miwu.domain.model.HomeData
 import com.github.miwu.domain.repository.DeviceMetadataRepository
 import com.github.miwu.mock.GeneratedMockDevices

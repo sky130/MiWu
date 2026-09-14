@@ -19,6 +19,7 @@ kotlin {
 
                 implementation(project(":miot-api"))
                 implementation(project(":miot-api-common"))
+                implementation(project(":miwu-dispatchers"))
 
 
                 implementation(libs.squareup.okio)

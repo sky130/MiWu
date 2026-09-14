@@ -1,7 +1,7 @@
 package com.github.miwu.data.metadata
 
 import com.github.miwu.di.AppScope
-import com.github.miwu.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import com.github.miwu.domain.repository.DeviceIconRepository
 import com.github.miwu.domain.repository.DeviceMetadataRepository
 import com.github.miwu.domain.repository.FavoriteDeviceRepository

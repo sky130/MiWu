@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
-import com.github.miwu.di.IoDispatcher
+import miwu.dispatchers.IoDispatcher
 import com.github.miwu.domain.repository.CrashLogRepository
 import com.github.miwu.domain.repository.SettingsRepository
 import kotlinx.coroutines.CancellationException

@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.github.miwu.di.IoDispatcher
-import com.github.miwu.di.UiDispatcher
+import miwu.dispatchers.IoDispatcher
+import miwu.dispatchers.UiDispatcher
 import com.github.miwu.domain.gateway.MiotClientFactory
 import com.github.miwu.domain.repository.FavoriteDeviceRepository
 import com.github.miwu.domain.usecase.device.ResolveDeviceSessionUseCase

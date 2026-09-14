@@ -24,11 +24,8 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-      - uses: gradle/gradle-build-action@v2
-        name: Release Apk
-        with:
-          gradle-version: current
-          arguments: assembleRelease
+      - name: Release Apk
+        run: ./gradlew assembleRelease
       - uses: ilharp/sign-android-release@v2
         name: Sign Apk
         id: sign_app

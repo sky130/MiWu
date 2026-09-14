@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.writeTo
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import miwu.support.urn.Urn
 import miwu.miot.kmp.impl.provider.MiotSpecAttrProviderImpl
@@ -21,7 +22,7 @@ class SpecProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : MiwuProcessor() {
-    private val provider: MiotSpecAttrProvider = MiotSpecAttrProviderImpl()
+    private val provider: MiotSpecAttrProvider = MiotSpecAttrProviderImpl(Dispatchers.IO)
 
     override fun onProcess(resolver: Resolver): List<KSAnnotated> {
         if (options["miwu.spec.enabled"] != "true") return emptyList()

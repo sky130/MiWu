@@ -2,8 +2,6 @@ package com.github.miwu.ui.main.fragment
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.lifecycleScope
-import com.github.miwu.logic.database.entity.FavoriteDevice
-import com.github.miwu.logic.database.entity.FavoriteDevice.Companion.toMiot
 import com.github.miwu.ui.device.DeviceActivity.Companion.startDeviceActivity
 import com.github.miwu.ui.edit.EditFavoriteActivity
 import com.github.miwu.ui.main.MainViewModel
@@ -12,6 +10,7 @@ import kndroidx.extension.start
 import kndroidx.fragment.ViewFragmentX
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import miwu.miot.model.miot.MiotDevice
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.github.miwu.databinding.FragmentMainMiwuBinding as Binding
 
@@ -27,8 +26,8 @@ class MiWuFragment : ViewFragmentX<Binding>(Binding::inflate) {
     }
 
     fun onItemClick(item: Any?) {
-        if (item !is FavoriteDevice) return
-        requireContext().startDeviceActivity(item.toMiot())
+        if (item !is MiotDevice || !item.isOnline) return
+        requireContext().startDeviceActivity(item)
     }
 
     fun onItemLongClick(item: Any?) {

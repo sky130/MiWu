@@ -99,6 +99,11 @@ class DeviceViewModel(
         mutableEvent.compareAndSet(event, null)
     }
 
+    override fun onCleared() {
+        miotDeviceClient?.close()
+        super.onCleared()
+    }
+
     override fun onDeviceAttLoaded(specAtt: SpecAtt) {
         logger.info("Device attributes loaded: did={}", device?.did)
     }

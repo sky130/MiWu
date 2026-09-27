@@ -17,6 +17,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.Cookie
 import io.ktor.http.CookieEncoding
 import io.ktor.http.HttpHeaders
+import io.ktor.http.Headers
 import io.ktor.http.Parameters
 import io.ktor.http.Url
 import io.ktor.http.URLBuilder
@@ -153,15 +154,7 @@ class MiotLoginProviderImpl(
     }
 
     override suspend fun generateLoginQrCode() = runCatchingSuspend {
-        val generateQrCode = URLBuilder(QRCODE_GENERATE_URL).apply {
-            parameters.append("_qrsize", "240")
-            parameters.append("qs", "?sid=$MIOT_SID")
-            parameters.append("callback", "https://sts.api.io.mi.com/sts")
-            parameters.append("sid", MIOT_SID)
-            parameters.append("serviceParam", "")
-            parameters.append("_locale", "zh_CN")
-            parameters.append("_dc", Clock.System.now().toEpochMilliseconds().toString())
-        }.buildString()
+        val generateQrCode = buildLoginQrCodeUrl(Clock.System.now().toEpochMilliseconds())
         get<String>(generateQrCode)
             .getOrThrow()
             .removePrefix()
@@ -208,12 +201,10 @@ class MiotLoginProviderImpl(
         val response = try {
             httpClient.get(location)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             throw MiotHttpException("Login", e)
         }
-        response.headers.getAll(HttpHeaders.SetCookie)
-            ?.flatMap { it.splitSetCookieHeader() }
-            ?.map { parseServerSetCookieHeader(it) }
-            ?.first { it.name == "serviceToken" }
+        response.headers.findSetCookie("serviceToken")
             ?.value
             ?: throw MiotAuthException.tokenMissing()
     }
@@ -290,55 +281,72 @@ class MiotLoginProviderImpl(
         }
     }
 
-    fun String.splitSetCookieHeader(): List<String> {
-        var comma = indexOf(',')
+}
 
-        if (comma == -1) {
-            return listOf(this)
-        }
+internal fun Headers.findSetCookie(name: String): Cookie? =
+    getAll(HttpHeaders.SetCookie)
+        ?.flatMap { it.splitSetCookieHeader() }
+        ?.map { parseServerSetCookieHeader(it) }
+        ?.firstOrNull { it.name == name }
 
-        val result = mutableListOf<String>()
-        var current = 0
+internal fun String.splitSetCookieHeader(): List<String> {
+    var comma = indexOf(',')
 
-        var equals = indexOf('=', comma)
-        var semicolon = indexOf(';', comma)
-        while (current < length && comma > 0) {
-            if (equals < comma) {
-                equals = indexOf('=', comma)
-            }
-
-            var nextComma = indexOf(',', comma + 1)
-            while (nextComma in 0..<equals) {
-                comma = nextComma
-                nextComma = indexOf(',', nextComma + 1)
-            }
-
-            if (semicolon < comma) {
-                semicolon = indexOf(';', comma)
-            }
-
-            // No more keys remaining.
-            if (equals < 0) {
-                result += substring(current)
-                return result
-            }
-
-            // No ';' between ',' and '=' => We're on a header border.
-            if (semicolon == -1 || semicolon > equals) {
-                result += substring(current, comma)
-                current = comma + 1
-                // Update comma index at the end of loop.
-            }
-
-            // ',' in value, skip it and find next.
-            comma = nextComma
-        }
-
-        if (current < length) {
-            result += substring(current)
-        }
-
-        return result
+    if (comma == -1) {
+        return listOf(this)
     }
 
+    val result = mutableListOf<String>()
+    var current = 0
+
+    var equals = indexOf('=', comma)
+    var semicolon = indexOf(';', comma)
+    while (current < length && comma > 0) {
+        if (equals < comma) {
+            equals = indexOf('=', comma)
+        }
+
+        var nextComma = indexOf(',', comma + 1)
+        while (nextComma in 0..<equals) {
+            comma = nextComma
+            nextComma = indexOf(',', nextComma + 1)
+        }
+
+        if (semicolon < comma) {
+            semicolon = indexOf(';', comma)
+        }
+
+        // No more keys remaining.
+        if (equals < 0) {
+            result += substring(current)
+            return result
+        }
+
+        // No ';' between ',' and '=' => We're on a header border.
+        if (semicolon == -1 || semicolon > equals) {
+            result += substring(current, comma)
+            current = comma + 1
+            // Update comma index at the end of loop.
+        }
+
+        // ',' in value, skip it and find next.
+        comma = nextComma
+    }
+
+    if (current < length) {
+        result += substring(current)
+    }
+
+    return result
 }
+
+internal fun buildLoginQrCodeUrl(nowMillis: Long): String =
+    URLBuilder(QRCODE_GENERATE_URL).apply {
+        parameters.append("_qrsize", "240")
+        parameters.append("qs", "?sid=$MIOT_SID")
+        parameters.append("callback", "https://sts.api.io.mi.com/sts")
+        parameters.append("sid", MIOT_SID)
+        parameters.append("serviceParam", "")
+        parameters.append("_locale", "zh_CN")
+        parameters.append("_dc", nowMillis.toString())
+    }.buildString()

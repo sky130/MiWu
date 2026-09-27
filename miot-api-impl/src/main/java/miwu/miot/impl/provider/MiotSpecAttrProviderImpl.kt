@@ -1,7 +1,6 @@
 package miwu.miot.impl.provider
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,7 +25,7 @@ import org.koin.core.annotation.Singleton
 
 @Singleton
 class MiotSpecAttrProviderImpl(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : MiotSpecAttrProvider {
     private val client = OkHttpClient()
     private val specRetrofit = Retrofit(

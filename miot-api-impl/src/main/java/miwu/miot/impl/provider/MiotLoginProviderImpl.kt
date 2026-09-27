@@ -2,7 +2,6 @@ package miwu.miot.impl.provider
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CoroutineDispatcher
 import miwu.dispatchers.IoDispatcher
@@ -46,7 +45,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class MiotLoginProviderImpl(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : MiotLoginProvider {
     private val cookieJar = SimpleCookieJar()
     private val miotLoginClient = OkHttpClient {
@@ -130,16 +129,7 @@ class MiotLoginProviderImpl(
 
     // 为啥这里要在IO上下文执行？
     override suspend fun generateLoginQrCode(): Result<LoginQrCode> = runCatchingSuspend {
-        val generateQrCode = QRCODE_GENERATE_URL.toHttpUrl().newBuilder()
-            .addQueryParameter("_qrsize", "240")
-            .addQueryParameter("qs", "?sid=$MIOT_SID")
-            .addQueryParameter("callback", "https://sts.api.io.mi.com/sts")
-            .addQueryParameter("sid", MIOT_SID)
-            .addQueryParameter("serviceParam", "")
-            .addQueryParameter("_locale", "zh_CN")
-            .addQueryParameter("_dc", System.currentTimeMillis().toString())
-            .build()
-            .toString()
+        val generateQrCode = buildLoginQrCodeUrl(System.currentTimeMillis())
         get<String>(generateQrCode)
             .getOrThrow()
             .removePrefix()
@@ -189,9 +179,7 @@ class MiotLoginProviderImpl(
                 else -> throw MiotHttpException("Login", e)
             }
         }
-        response.headers.values("Set-Cookie")
-            .mapNotNull { Cookie.parse(response.request.url, it) }
-            .firstOrNull { it.name == "serviceToken" }
+        response.findSetCookie("serviceToken")
             ?.value
             ?: throw MiotAuthException.tokenMissing()
     }
@@ -244,3 +232,20 @@ class MiotLoginProviderImpl(
         fun clear() = storage.clear()
     }
 }
+
+internal fun buildLoginQrCodeUrl(nowMillis: Long): String =
+    QRCODE_GENERATE_URL.toHttpUrl().newBuilder()
+        .addQueryParameter("_qrsize", "240")
+        .addQueryParameter("qs", "?sid=$MIOT_SID")
+        .addQueryParameter("callback", "https://sts.api.io.mi.com/sts")
+        .addQueryParameter("sid", MIOT_SID)
+        .addQueryParameter("serviceParam", "")
+        .addQueryParameter("_locale", "zh_CN")
+        .addQueryParameter("_dc", nowMillis.toString())
+        .build()
+        .toString()
+
+internal fun Response.findSetCookie(name: String): Cookie? =
+    headers.values("Set-Cookie")
+        .mapNotNull { Cookie.parse(request.url, it) }
+        .firstOrNull { it.name == name }

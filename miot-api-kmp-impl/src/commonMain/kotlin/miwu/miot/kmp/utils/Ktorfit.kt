@@ -2,6 +2,8 @@ package miwu.miot.kmp.utils
 
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -16,7 +18,17 @@ import miwu.miot.common.MI_HOME_USER_AGENT
 import miwu.miot.model.MiotUser
 
 @Suppress("FunctionName")
-fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
+fun MiotAuthHttpClient(user: MiotUser, engine: HttpClientEngine? = null) =
+    if (engine == null) {
+        MiotHttpClient { configureMiotAuth(user) }
+    } else {
+        HttpClient(engine) { configureMiotAuth(user) }
+    }
+
+private fun HttpClientConfig<*>.configureMiotAuth(user: MiotUser) {
+    install(MiotAuth) {
+        user(user)
+    }
     install(ContentNegotiation) {
         json(json, ContentType.Application.Json)
         json(json, ContentType.Text.Plain)
@@ -37,14 +49,14 @@ fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
         requestTimeoutMillis = timeoutMillis
         socketTimeoutMillis = timeoutMillis
     }
-    install(MiotAuth) {
-        user(user)
-    }
     expectSuccess = true
 }
 
 @Suppress("FunctionName")
-fun MiotAuthKtorfit(httpClient: HttpClient) = Ktorfit.Builder()
-    .baseUrl(MIOT_SERVER_URL)
+fun MiotAuthKtorfit(
+    httpClient: HttpClient,
+    baseUrl: String = MIOT_SERVER_URL,
+) = Ktorfit.Builder()
+    .baseUrl(baseUrl)
     .httpClient(httpClient)
     .build()

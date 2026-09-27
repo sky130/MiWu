@@ -1,7 +1,6 @@
 package miwu.miot.utils
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -44,7 +43,7 @@ internal suspend inline fun <reified T> OkHttpClient.get(
     url: String,
     body: RequestBody? = null,
     headers: Map<String, String> = emptyMap(),
-    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    dispatcher: CoroutineDispatcher,
 ): Result<T> = withContext(dispatcher) {
     runCatchingSuspend {
         val request = Request.Builder()

@@ -5,10 +5,12 @@ import miwu.miot.client.MiotHomeClient
 import miwu.miot.client.MiotUserClient
 import miwu.miot.model.MiotUser
 
-interface MiotClientFactory {
+interface MiotClientFactory : AutoCloseable {
     fun createUserClient(user: MiotUser): MiotUserClient
 
     fun createHomeClient(user: MiotUser): MiotHomeClient
 
     fun createDeviceClient(user: MiotUser): MiotDeviceClient
+
+    override fun close() = Unit
 }

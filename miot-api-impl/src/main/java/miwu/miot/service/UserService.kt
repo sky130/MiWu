@@ -2,7 +2,7 @@ package miwu.miot.service
 
 import miwu.miot.model.MiotResponse
 import miwu.miot.model.miot.UserInfo
-import miwu.miot.service.body.GetUserInfo
+import miwu.miot.model.request.GetUserInfo
 import retrofit2.http.Body
 import retrofit2.http.POST
 

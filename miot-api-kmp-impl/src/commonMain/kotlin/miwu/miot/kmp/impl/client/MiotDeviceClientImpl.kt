@@ -1,77 +1,23 @@
 package miwu.miot.kmp.impl.client
 
-import miwu.miot.att.get.GetAtt
-import miwu.miot.att.get.piid
-import miwu.miot.att.get.siid
-import miwu.miot.att.set.SetAtt
-import miwu.miot.att.set.piid
-import miwu.miot.att.set.siid
-import miwu.miot.att.set.value
-import miwu.miot.client.MiotDeviceClient
-import miwu.miot.exception.MiotClientException
-import miwu.miot.exception.MiotDeviceException
-import miwu.miot.kmp.service.body.ActionBody
-import miwu.miot.kmp.service.body.GetParams
-import miwu.miot.kmp.service.body.SetParams
+import miwu.miot.client.transport.TransportMiotDeviceClient
 import miwu.miot.kmp.service.createMiotService
-import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.kmp.utils.MiotAuthHttpClient
+import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.model.MiotUser
-import miwu.miot.model.actionOutputOrUnit
-import miwu.miot.model.requirePropertySuccess
-import kotlinx.coroutines.CancellationException
-import miwu.miot.model.miot.MiotDevice
-import miwu.miot.utils.runCatchingSuspend
+import miwu.miot.model.request.ActionBody
+import miwu.miot.model.request.GetParams
+import miwu.miot.model.request.SetParams
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
 @Factory
-class MiotDeviceClientImpl(@InjectedParam private val user: MiotUser) : MiotDeviceClient {
+class MiotDeviceClientImpl(@InjectedParam user: MiotUser) : TransportMiotDeviceClient() {
     private val httpClient = MiotAuthHttpClient(user)
-    private val ktorfit = MiotAuthKtorfit(httpClient)
-    private val miotService = ktorfit.createMiotService()
+    private val service = MiotAuthKtorfit(httpClient).createMiotService()
 
+    override suspend fun requestGetProperties(body: GetParams) = service.getDeviceAtt(body)
+    override suspend fun requestSetProperties(body: SetParams) = service.setDeviceAtt(body)
+    override suspend fun requestAction(body: ActionBody) = service.doAction(body)
     override fun close() = httpClient.close()
-
-    override suspend fun get(
-        device: MiotDevice,
-        att: Array<out GetAtt>
-    ) = runCatchingSuspend {
-        val list = Array(att.size) {
-            att[it].run { GetParams.Att(device.did, siid, piid) }
-        }
-        miotService.getDeviceAtt(GetParams(list)).requirePropertySuccess("Get device properties")
-    }.recoverCatching {
-        val specType = device.specType ?: throw it
-        throw MiotClientException.getSpecAttFailed(specType, it)
-    }
-
-    override suspend fun set(
-        device: MiotDevice,
-        att: Array<out SetAtt>
-    ) = runCatchingSuspend {
-        val list = Array(att.size) {
-            att[it].run { SetParams.Att(device.did, siid, piid, value) }
-        }
-        miotService.setDeviceAtt(SetParams(list)).requirePropertySuccess("Set device properties")
-        Unit
-    }.recoverCatching {
-        val specType = device.specType ?: throw MiotDeviceException.specNotFound(device.model)
-        throw MiotClientException.getSpecAttFailed(specType, it)
-    }
-
-    override suspend fun action(
-        device: MiotDevice,
-        siid: Int,
-        aiid: Int,
-        vararg input: Any
-    ) = runCatchingSuspend {
-        miotService.doAction(
-            ActionBody.Action(device.did, siid, aiid)
-                .apply { `in`.addAll(input) }
-                .body()
-        ).actionOutputOrUnit("Execute device action")
-    }.recoverCatching {
-        throw MiotClientException.actionFailed(device.did, siid, aiid, *input, it)
-    }
 }

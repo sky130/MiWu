@@ -14,6 +14,10 @@ fun <T> MiotResponse<T>.requireSuccess(operation: String): MiotSuccess<T> {
     )
 }
 
+fun MiotResponse<*>.requireCodeSuccess(operation: String) {
+    if (code != 0) throw MiotBusinessException(code, "$operation failed: $message")
+}
+
 fun MiotResponse<PropertyList>.requirePropertySuccess(operation: String): MiotSuccess<PropertyList> {
     val success = requireSuccess(operation)
     success.result.firstOrNull { it.code != 0 }?.let {

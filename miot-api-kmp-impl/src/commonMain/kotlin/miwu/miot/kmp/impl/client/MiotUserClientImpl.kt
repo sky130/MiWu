@@ -1,35 +1,21 @@
 package miwu.miot.kmp.impl.client
 
-import kotlinx.coroutines.CancellationException
-import miwu.miot.client.MiotUserClient
-import miwu.miot.kmp.service.body.GetUserInfo
+import miwu.miot.client.transport.TransportMiotUserClient
 import miwu.miot.kmp.service.createUserService
-import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.kmp.utils.MiotAuthHttpClient
+import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.model.MiotUser
-import miwu.miot.model.MiotSuccess
-import miwu.miot.model.requireSuccess
-import miwu.miot.model.miot.UserInfo
-import miwu.miot.utils.runCatchingSuspend
+import miwu.miot.model.request.GetUserInfo
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
 @Factory
-class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserClient {
+class MiotUserClientImpl(
+    @InjectedParam private val user: MiotUser,
+) : TransportMiotUserClient(user) {
     private val httpClient = MiotAuthHttpClient(user)
-    private val ktorfit = MiotAuthKtorfit(httpClient)
-    private val userService = ktorfit.createUserService()
+    private val service = MiotAuthKtorfit(httpClient).createUserService()
 
+    override suspend fun requestUserInfo(body: GetUserInfo) = service.getUserInfo(body)
     override fun close() = httpClient.close()
-
-    override suspend fun getUserInfo(): Result<MiotSuccess<UserInfo>> =
-        runCatchingSuspend {
-            userService.getUserInfo(GetUserInfo(user.userId)).requireSuccess("Get user info")
-        }
-
-    override suspend fun getIsServiceTokenValid(): Result<Boolean> =
-        runCatchingSuspend {
-            getUserInfo().getOrThrow()
-            true
-        }
 }

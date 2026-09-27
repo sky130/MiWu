@@ -3,9 +3,9 @@ package miwu.miot.service
 import miwu.miot.model.MiotResponse
 import miwu.miot.model.att.ActionList
 import miwu.miot.model.att.PropertyList
-import miwu.miot.service.body.ActionBody
-import miwu.miot.service.body.GetParams
-import miwu.miot.service.body.SetParams
+import miwu.miot.model.request.ActionBody
+import miwu.miot.model.request.GetParams
+import miwu.miot.model.request.SetParams
 import retrofit2.http.Body
 import retrofit2.http.POST
 

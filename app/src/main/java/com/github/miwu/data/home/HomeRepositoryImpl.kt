@@ -145,6 +145,7 @@ class HomeRepositoryImpl(
     private suspend fun clearAccountState() {
         homeClient?.close()
         homeClient = null
+        clientFactory.close()
         cachedHomes.clear()
         homeDataLoader.clear()
         settingsRepository.selectedHomeId = 0L

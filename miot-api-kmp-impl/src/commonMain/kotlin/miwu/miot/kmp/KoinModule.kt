@@ -3,10 +3,12 @@ package miwu.miot.kmp
 import miwu.dispatchers.DispatcherModule
 import miwu.miot.client.MiotDeviceClient
 import miwu.miot.client.MiotHomeClient
+import miwu.miot.client.MiotClientSession
 import miwu.miot.client.MiotUserClient
 import miwu.miot.common.MiotApiKoinModule
 import miwu.miot.kmp.impl.client.MiotDeviceClientImpl
 import miwu.miot.kmp.impl.client.MiotHomeClientImpl
+import miwu.miot.kmp.impl.client.MiotClientSessionImpl
 import miwu.miot.kmp.impl.client.MiotUserClientImpl
 import miwu.miot.kmp.impl.provider.MiotLoginProviderImpl
 import miwu.miot.kmp.impl.provider.MiotSpecAttrProviderImpl
@@ -22,6 +24,7 @@ val MiotApiKoinModule.KMP.Client get() = clientModule
 val MiotApiKoinModule.KMP.Provider get() = providerModule
 
 internal val clientModule = module {
+    factory<MiotClientSessionImpl>().bind<MiotClientSession>()
     factory<MiotDeviceClientImpl>().bind<MiotDeviceClient>()
     factory<MiotHomeClientImpl>().bind<MiotHomeClient>()
     factory<MiotUserClientImpl>().bind<MiotUserClient>()

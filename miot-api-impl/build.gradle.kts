@@ -31,6 +31,8 @@ dependencies {
     implementation(libs.squareup.okhttp)
     implementation(libs.squareup.okio)
     implementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.junit)
+    testImplementation(libs.squareup.okhttp.mockwebserver)
 }
 
 miwuPublishing {

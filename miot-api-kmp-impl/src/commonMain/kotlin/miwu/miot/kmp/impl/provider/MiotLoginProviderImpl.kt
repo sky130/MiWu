@@ -13,6 +13,7 @@ import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.discardRemaining
 import io.ktor.http.ContentType
 import io.ktor.http.Cookie
 import io.ktor.http.CookieEncoding
@@ -204,9 +205,13 @@ class MiotLoginProviderImpl(
             if (e is CancellationException) throw e
             throw MiotHttpException("Login", e)
         }
-        response.headers.findSetCookie("serviceToken")
-            ?.value
-            ?: throw MiotAuthException.tokenMissing()
+        try {
+            response.headers.findSetCookie("serviceToken")
+                ?.value
+                ?: throw MiotAuthException.tokenMissing()
+        } finally {
+            response.discardRemaining()
+        }
     }
 
     private suspend fun getLocation(): Result<Location> = runCatchingSuspend {

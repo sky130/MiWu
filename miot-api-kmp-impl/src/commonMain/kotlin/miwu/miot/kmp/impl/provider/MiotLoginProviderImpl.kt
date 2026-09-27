@@ -17,9 +17,9 @@ import io.ktor.http.CookieEncoding
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import io.ktor.http.Url
+import io.ktor.http.URLBuilder
 import io.ktor.http.contentType
 import io.ktor.http.parseServerSetCookieHeader
-import io.ktor.http.parseUrlEncodedParameters
 import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
@@ -146,20 +146,15 @@ class MiotLoginProviderImpl(
     }
 
     override suspend fun generateLoginQrCode() = runCatching {
-        val generateQrCode = """
-            ${QRCODE_GENERATE_URL}?
-            ${
-            """
-                _qrsize=240
-                qs=?sid=${MIOT_SID}
-                callback=https://sts.api.io.mi.com/sts
-                sid=${MIOT_SID}
-                serviceParam=
-                _locale=zh_CN
-                _dc=${Clock.System.now().toEpochMilliseconds()}
-            """.trimIndent().parseUrlEncodedParameters()
-        }
-        """.trimIndent()
+        val generateQrCode = URLBuilder(QRCODE_GENERATE_URL).apply {
+            parameters.append("_qrsize", "240")
+            parameters.append("qs", "?sid=$MIOT_SID")
+            parameters.append("callback", "https://sts.api.io.mi.com/sts")
+            parameters.append("sid", MIOT_SID)
+            parameters.append("serviceParam", "")
+            parameters.append("_locale", "zh_CN")
+            parameters.append("_dc", Clock.System.now().toEpochMilliseconds().toString())
+        }.buildString()
         get<String>(generateQrCode)
             .getOrThrow()
             .removePrefix()

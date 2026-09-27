@@ -32,7 +32,9 @@ import miwu.miot.model.miot.SceneList
  * @see [SceneList] 情景详情列表
  *
  */
-interface MiotHomeClient {
+interface MiotHomeClient : AutoCloseable {
+
+    override fun close() = Unit
 
     /**
      * 异步获取用户账户下的所有家庭列表（包括自己创建的和他人共享的）。

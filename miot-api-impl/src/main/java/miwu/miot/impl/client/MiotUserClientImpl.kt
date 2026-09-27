@@ -15,12 +15,15 @@ import miwu.miot.utils.OkHttpClient
 import miwu.miot.utils.Retrofit
 import miwu.miot.utils.create
 import miwu.miot.utils.runCatchingSuspend
+import miwu.miot.utils.close
+import miwu.miot.utils.miotTimeouts
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
 @Factory
 class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserClient {
     private val client = OkHttpClient {
+        miotTimeouts()
         addInterceptor(MiotAuthInterceptor(user))
     }
     private val retrofit = Retrofit(
@@ -31,6 +34,8 @@ class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserCl
         client = client
     )
     private val userService = retrofit.create<UserService>()
+
+    override fun close() = client.close()
 
     override suspend fun getUserInfo(): Result<MiotSuccess<UserInfo>> =
         runCatchingSuspend {

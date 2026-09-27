@@ -120,6 +120,7 @@ class HomeRepositoryImpl(
         when (state) {
             LoginState.Success -> {
                 val user = accountRepository.currentUser ?: return
+                homeClient?.close()
                 homeClient = clientFactory.createHomeClient(user)
                 refreshUserInfo(user)
                 refreshHomes()
@@ -131,7 +132,9 @@ class HomeRepositoryImpl(
     }
 
     private suspend fun refreshUserInfo(user: miwu.miot.model.MiotUser) {
-        runCatchingSuspend { clientFactory.createUserClient(user).getUserInfo().getOrThrow().result }
+        runCatchingSuspend {
+            clientFactory.createUserClient(user).use { it.getUserInfo().getOrThrow().result }
+        }
             .onSuccess { mutableUserInfo.emit(it) }
             .onFailure {
                 logger.error("get user info failed, {}", it.message)
@@ -140,6 +143,7 @@ class HomeRepositoryImpl(
     }
 
     private suspend fun clearAccountState() {
+        homeClient?.close()
         homeClient = null
         cachedHomes.clear()
         homeDataLoader.clear()

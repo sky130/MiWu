@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineDispatcher
+import miwu.dispatchers.IoDispatcher
 import miwu.miot.common.MIOT_SID
 import miwu.miot.common.MI_HOME_USER_AGENT
 import miwu.miot.common.QRCODE_GENERATE_URL
@@ -28,6 +30,7 @@ import miwu.miot.utils.get
 import miwu.miot.utils.md5
 import miwu.miot.utils.to
 import miwu.miot.utils.userAgent
+import miwu.miot.utils.runCatchingSuspend
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
@@ -42,7 +45,9 @@ import java.util.concurrent.TimeoutException
 import kotlin.coroutines.CoroutineContext
 
 @Singleton
-class MiotLoginProviderImpl : MiotLoginProvider {
+class MiotLoginProviderImpl(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : MiotLoginProvider {
     private val cookieJar = SimpleCookieJar()
     private val miotLoginClient = OkHttpClient {
         userAgent(MI_HOME_USER_AGENT)
@@ -50,7 +55,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         readTimeout(5, TimeUnit.MINUTES)
     }
 
-    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatching {
+    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatchingSuspend {
         cookieJar.clear()
         val sidDetails = getLocation().getOrThrow()
         val pwdHash = pwd.md5()
@@ -71,7 +76,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             .getOrThrow()
     }
 
-    override suspend fun loginByQrCode(loginUrl: String): Result<MiotUser> = runCatching {
+    override suspend fun loginByQrCode(loginUrl: String): Result<MiotUser> = runCatchingSuspend {
         cookieJar.clear()
         get<String>(loginUrl)
             .getOrThrow()
@@ -93,7 +98,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         onTimeout: suspend CoroutineScope.() -> Unit,
         onFailure: suspend CoroutineScope.(Throwable?) -> Unit,
         context: CoroutineContext
-    ): Unit = withContext(Dispatchers.IO) {
+    ): Unit = withContext(ioDispatcher) {
         cookieJar.clear()
         try {
             get<String>(loginUrl)
@@ -107,9 +112,12 @@ class MiotLoginProviderImpl : MiotLoginProvider {
                     it.ssecurity = securityToken
                 }
                 .execute()
-                .onSuccess { user -> withContext(context) { onSuccess(user) } }
-                .onFailure { onFailure(it) }
+                .fold(
+                    onSuccess = { user -> withContext(context) { onSuccess(user) } },
+                    onFailure = { throw it },
+                )
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             withContext(context) {
                 if (e is SocketTimeoutException || e is TimeoutException) {
                     onTimeout()
@@ -121,7 +129,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
     }
 
     // 为啥这里要在IO上下文执行？
-    override suspend fun generateLoginQrCode(): Result<LoginQrCode> = runCatching {
+    override suspend fun generateLoginQrCode(): Result<LoginQrCode> = runCatchingSuspend {
         val generateQrCode = QRCODE_GENERATE_URL.toHttpUrl().newBuilder()
             .addQueryParameter("_qrsize", "240")
             .addQueryParameter("qs", "?sid=$MIOT_SID")
@@ -139,7 +147,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             .getOrThrow()
     }
 
-    override suspend fun refreshServiceToken(miotUser: MiotUser): Result<MiotUser> = runCatching {
+    override suspend fun refreshServiceToken(miotUser: MiotUser): Result<MiotUser> = runCatchingSuspend {
         cookieJar.clear()
         val cookieHeader = with(miotUser) {
             listOf(
@@ -158,7 +166,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         )
     }
 
-    private suspend fun Login.execute(): Result<MiotUser> = runCatching {
+    private suspend fun Login.execute(): Result<MiotUser> = runCatchingSuspend {
         if (code != 0) throw MiotBusinessException.loginFailed(code)
         val serviceToken = getServiceToken(location).getOrThrow()
         MiotUser(
@@ -173,7 +181,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         )
     }
 
-    private suspend fun getServiceToken(location: String): Result<String> = runCatching {
+    private suspend fun getServiceToken(location: String): Result<String> = runCatchingSuspend {
         val response = get<Response>(location).getOrElse { e ->
             when (e) {
                 is TimeoutException -> throw MiotTimeoutException("Login", e)
@@ -188,7 +196,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             ?: throw MiotAuthException.tokenMissing()
     }
 
-    private suspend fun getLocation(headers: Map<String, String> = emptyMap()): Result<Location> = runCatching {
+    private suspend fun getLocation(headers: Map<String, String> = emptyMap()): Result<Location> = runCatchingSuspend {
         // 如果Location的code不是预期的是否可以在这里就把结果包装成异常
         get<String>(SERVICE_LOGIN_URL, headers = headers)
             .getOrThrow()
@@ -198,7 +206,7 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             .getOrThrowAuthException()
     }
 
-    private suspend fun getServiceData(): Result<ServiceData> = runCatching {
+    private suspend fun getServiceData(): Result<ServiceData> = runCatchingSuspend {
         get<String>(SERVICE_LOGIN_URL)
             .getOrThrow()
             .removePrefix()
@@ -210,17 +218,29 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         url: String,
         body: RequestBody? = null,
         headers: Map<String, String> = emptyMap(),
-    ): Result<T> = miotLoginClient.get<T>(url, body, headers)
+    ): Result<T> = miotLoginClient.get<T>(url, body, headers, ioDispatcher)
 
     class SimpleCookieJar : CookieJar {
-        private val storage = arrayListOf<Cookie>()
+        private val storage = mutableListOf<Cookie>()
 
+        @Synchronized
         override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-            storage.addAll(cookies)
+            cookies.forEach { cookie ->
+                storage.removeAll {
+                    it.name == cookie.name && it.domain == cookie.domain && it.path == cookie.path
+                }
+                if (cookie.expiresAt > System.currentTimeMillis()) storage += cookie
+            }
         }
 
-        override fun loadForRequest(url: HttpUrl): List<Cookie> = storage
+        @Synchronized
+        override fun loadForRequest(url: HttpUrl): List<Cookie> {
+            val now = System.currentTimeMillis()
+            storage.removeAll { it.expiresAt <= now }
+            return storage.filter { it.matches(url) }
+        }
 
+        @Synchronized
         fun clear() = storage.clear()
     }
 }

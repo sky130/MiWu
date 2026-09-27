@@ -19,12 +19,15 @@ import miwu.miot.service.body.GetHome
 import miwu.miot.service.body.GetScene
 import miwu.miot.service.body.RunNewScene
 import miwu.miot.utils.runCatchingSuspend
+import miwu.miot.utils.close
+import miwu.miot.utils.miotTimeouts
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 
 @Factory
 class MiotHomeClientImpl(@InjectedParam private val user: MiotUser) : MiotHomeClient {
     private val client = OkHttpClient {
+        miotTimeouts()
         addInterceptor(MiotAuthInterceptor(user))
     }
     private val retrofit = Retrofit(
@@ -35,6 +38,8 @@ class MiotHomeClientImpl(@InjectedParam private val user: MiotUser) : MiotHomeCl
         client = client
     )
     private val homeService = retrofit.create<HomeService>()
+
+    override fun close() = client.close()
 
     override suspend fun getHomes(
         fetchShare: Boolean,

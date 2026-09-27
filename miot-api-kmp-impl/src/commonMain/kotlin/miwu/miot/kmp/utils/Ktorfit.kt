@@ -3,6 +3,7 @@ package miwu.miot.kmp.utils
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -30,6 +31,12 @@ fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
         headers["Cookie"] =
             "PassportDeviceId=${deviceId};userId=${userId};serviceToken=$serviceToken"
     }
+    install(HttpTimeout) {
+        val timeoutMillis = 30_000L
+        connectTimeoutMillis = timeoutMillis
+        requestTimeoutMillis = timeoutMillis
+        socketTimeoutMillis = timeoutMillis
+    }
     install(MiotAuth) {
         user(user)
     }
@@ -37,7 +44,7 @@ fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
 }
 
 @Suppress("FunctionName")
-fun MiotAuthKtorfit(user: MiotUser) = Ktorfit.Builder()
+fun MiotAuthKtorfit(httpClient: HttpClient) = Ktorfit.Builder()
     .baseUrl(MIOT_SERVER_URL)
-    .httpClient(MiotAuthHttpClient(user))
+    .httpClient(httpClient)
     .build()

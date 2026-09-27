@@ -24,6 +24,7 @@ import miwu.miot.model.spec.SpecAtt
 import miwu.miot.model.spec.SpecType
 import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
+import miwu.miot.utils.runCatchingSuspend
 import org.koin.core.annotation.Singleton
 
 @Singleton
@@ -45,7 +46,7 @@ class MiotSpecAttrProviderImpl(
     private val specService = ktorfit.createSpecService()
 
     override suspend fun getSpecAtt(urn: String) = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             specService.getInstance(urn)
         }.recoverCatching {
             throw MiotDeviceException.specNotFound(urn, it)
@@ -53,7 +54,7 @@ class MiotSpecAttrProviderImpl(
     }
 
     override suspend fun getSpecMultiLanguage(urn: String) = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             when (val response = specService.getSpecMultiLanguage(urn)) {
                 "model not found" -> throw MiotDeviceException.modelNotFound(urn)
                 "urn is not iot namespace" -> throw MiotDeviceException.urnFormatError(urn)
@@ -66,13 +67,13 @@ class MiotSpecAttrProviderImpl(
         urn: String,
         languageCode: String
     ) = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             val att: SpecAtt = getSpecAtt(urn).getOrThrow()
             val language = getSpecMultiLanguage(urn).getOrThrow()
             val map = getSpecAttLanguageMap(
                 language,
                 languageCode
-            ).getOrElse { return@withContext Result.success(att) }
+            ).getOrNull() ?: return@runCatchingSuspend att
             att.initVariable()
             att.convertLanguage(map)
         }
@@ -89,7 +90,7 @@ class MiotSpecAttrProviderImpl(
     }
 
     override suspend fun getIconUrl(model: String) = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             val url = "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${model}"
             val info = httpClient.get(url).body<DeviceInfoResponse>()
             if (info.code != 0) throw MiotClientException.getIconUrlFailed(model)
@@ -98,25 +99,25 @@ class MiotSpecAttrProviderImpl(
     }
 
     override suspend fun getDevices(): Result<SpecType> = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             specService.getDevices()
         }
     }
 
     override suspend fun getServices(): Result<SpecType> = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             specService.getServices()
         }
     }
 
     override suspend fun getActions(): Result<SpecType> = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             specService.getActions()
         }
     }
 
     override suspend fun getProperties(): Result<SpecType> = withContext(ioDispatcher) {
-        runCatching {
+        runCatchingSuspend {
             specService.getProperties()
         }
     }

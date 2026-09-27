@@ -7,6 +7,8 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.cookies.fillDefaults
+import io.ktor.client.plugins.cookies.matches
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -26,6 +28,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import miwu.miot.common.MIOT_SID
 import miwu.miot.common.QRCODE_GENERATE_URL
 import miwu.miot.common.SERVICE_LOGIN_AUTH_URL
@@ -75,7 +79,7 @@ class MiotLoginProviderImpl(
         expectSuccess = true
     }
 
-    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatching {
+    override suspend fun login(user: String, pwd: String): Result<MiotUser> = runCatchingSuspend {
         cookiesStorage.clear()
         val sidDetails = getLocation().getOrThrow()
         val pwdHash = pwd.md5()
@@ -96,7 +100,7 @@ class MiotLoginProviderImpl(
             .getOrThrow()
     }
 
-    override suspend fun loginByQrCode(loginUrl: String): Result<MiotUser> = runCatching {
+    override suspend fun loginByQrCode(loginUrl: String): Result<MiotUser> = runCatchingSuspend {
         cookiesStorage.clear()
         get<String>(loginUrl)
             .getOrThrow()
@@ -132,9 +136,12 @@ class MiotLoginProviderImpl(
                     it.ssecurity = securityToken
                 }
                 .execute()
-                .onSuccess { user -> withContext(context) { onSuccess(user) } }
-                .onFailure { onFailure(it) }
+                .fold(
+                    onSuccess = { user -> withContext(context) { onSuccess(user) } },
+                    onFailure = { throw it },
+                )
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             withContext(context) {
                 if (e is SocketTimeoutException) {
                     onTimeout()
@@ -145,7 +152,7 @@ class MiotLoginProviderImpl(
         }
     }
 
-    override suspend fun generateLoginQrCode() = runCatching {
+    override suspend fun generateLoginQrCode() = runCatchingSuspend {
         val generateQrCode = URLBuilder(QRCODE_GENERATE_URL).apply {
             parameters.append("_qrsize", "240")
             parameters.append("qs", "?sid=$MIOT_SID")
@@ -162,7 +169,7 @@ class MiotLoginProviderImpl(
             .getOrThrow()
     }
 
-    override suspend fun refreshServiceToken(miotUser: MiotUser) = runCatching {
+    override suspend fun refreshServiceToken(miotUser: MiotUser) = runCatchingSuspend {
         cookiesStorage.clear()
         val cookies = with(miotUser) {
             listOf(
@@ -172,7 +179,7 @@ class MiotLoginProviderImpl(
                 Cookie("passToken", passToken, encoding = CookieEncoding.RAW),
             )
         }
-        cookiesStorage.addAll(cookies)
+        cookiesStorage.addAll(Url(SERVICE_LOGIN_URL), cookies)
         val data = getLocation().getOrThrow()
         val location = data.location
         val serviceToken = getServiceToken(location).getOrThrow()
@@ -182,7 +189,7 @@ class MiotLoginProviderImpl(
         )
     }
 
-    private suspend fun Login.execute(): Result<MiotUser> = runCatching {
+    private suspend fun Login.execute(): Result<MiotUser> = runCatchingSuspend {
         if (code != 0) throw MiotBusinessException.loginFailed(code)
         val serviceToken = getServiceToken(location).getOrThrow()
         MiotUser(
@@ -197,7 +204,7 @@ class MiotLoginProviderImpl(
         )
     }
 
-    private suspend fun getServiceToken(location: String) = runCatching {
+    private suspend fun getServiceToken(location: String) = runCatchingSuspend {
         val response = try {
             httpClient.get(location)
         } catch (e: Exception) {
@@ -211,7 +218,7 @@ class MiotLoginProviderImpl(
             ?: throw MiotAuthException.tokenMissing()
     }
 
-    private suspend fun getLocation(): Result<Location> = runCatching {
+    private suspend fun getLocation(): Result<Location> = runCatchingSuspend {
         get<String>(SERVICE_LOGIN_URL)
             .getOrThrow()
             .removePrefix()
@@ -220,7 +227,7 @@ class MiotLoginProviderImpl(
             .getOrThrowAuthException()
     }
 
-    private suspend fun getServiceData(): Result<ServiceData> = runCatching {
+    private suspend fun getServiceData(): Result<ServiceData> = runCatchingSuspend {
         get<String>(SERVICE_LOGIN_URL)
             .getOrThrow()
             .removePrefix()
@@ -240,24 +247,47 @@ class MiotLoginProviderImpl(
     }
 
     private class SimpleCookiesStorage : CookiesStorage {
-        private val storage = mutableListOf<Cookie>()
+        private data class StoredCookie(val cookie: Cookie, val createdAtMillis: Long)
 
-        override suspend fun get(requestUrl: Url): List<Cookie> {
-            return storage
+        private val storage = mutableListOf<StoredCookie>()
+        private val mutex = Mutex()
+
+        override suspend fun get(requestUrl: Url): List<Cookie> = mutex.withLock {
+            removeExpired()
+            storage.map(StoredCookie::cookie).filter { it.matches(requestUrl) }
         }
 
         override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
-            storage.add(cookie)
+            mutex.withLock {
+                val normalized = cookie.fillDefaults(requestUrl)
+                storage.removeAll {
+                    it.cookie.name == normalized.name &&
+                        it.cookie.domain == normalized.domain &&
+                        it.cookie.path == normalized.path
+                }
+                storage += StoredCookie(normalized, Clock.System.now().toEpochMilliseconds())
+                removeExpired()
+            }
         }
 
         override fun close() {
-            storage.clear()
+            // The owning HttpClient closes this storage after requests have stopped.
         }
 
-        // 添加和Url无关的手动修改Cookie的方法
-        fun addAll(cookies: List<Cookie>) = storage.addAll(cookies)
+        suspend fun addAll(requestUrl: Url, cookies: List<Cookie>) {
+            cookies.forEach { addCookie(requestUrl, it) }
+        }
 
-        fun clear() = storage.clear()
+        suspend fun clear() = mutex.withLock { storage.clear() }
+
+        private fun removeExpired() {
+            val now = Clock.System.now().toEpochMilliseconds()
+            storage.removeAll { stored ->
+                val expiresAt = stored.cookie.maxAge?.let { stored.createdAtMillis + it * 1_000L }
+                    ?: stored.cookie.expires?.timestamp
+                expiresAt != null && expiresAt <= now
+            }
+        }
     }
 
     fun String.splitSetCookieHeader(): List<String> {

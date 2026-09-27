@@ -8,6 +8,7 @@ import miwu.miot.kmp.service.body.GetScene
 import miwu.miot.kmp.service.body.RunNewScene
 import miwu.miot.kmp.service.createHomeService
 import miwu.miot.kmp.utils.MiotAuthKtorfit
+import miwu.miot.kmp.utils.MiotAuthHttpClient
 import miwu.miot.model.MiotUser
 import miwu.miot.model.requireSuccess
 import kotlinx.coroutines.CancellationException
@@ -19,8 +20,11 @@ import org.koin.core.annotation.InjectedParam
 
 @Factory
 class MiotHomeClientImpl(@InjectedParam private val user: MiotUser) : MiotHomeClient {
-    private val ktorfit = MiotAuthKtorfit(user)
+    private val httpClient = MiotAuthHttpClient(user)
+    private val ktorfit = MiotAuthKtorfit(httpClient)
     private val homeService = ktorfit.createHomeService()
+
+    override fun close() = httpClient.close()
 
     override suspend fun getHomes(
         fetchShare: Boolean,

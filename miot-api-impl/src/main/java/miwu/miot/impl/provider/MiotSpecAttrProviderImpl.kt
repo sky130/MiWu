@@ -1,5 +1,6 @@
 package miwu.miot.impl.provider
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
@@ -19,10 +20,14 @@ import miwu.miot.model.spec.SpecType
 import miwu.miot.model.miot.DeviceInfoResponse
 import miwu.miot.provider.MiotSpecAttrProvider
 import miwu.miot.utils.get
+import miwu.miot.utils.runCatchingSuspend
+import miwu.dispatchers.IoDispatcher
 import org.koin.core.annotation.Singleton
 
 @Singleton
-class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
+class MiotSpecAttrProviderImpl(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : MiotSpecAttrProvider {
     private val client = OkHttpClient()
     private val specRetrofit = Retrofit(
         baseUrl = SPEC_SERVER_URL,
@@ -33,17 +38,17 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     )
     private val specService = specRetrofit.create<SpecService>()
 
-    override suspend fun getSpecAtt(urn: String) = withContext(Dispatchers.IO) {
-        runCatching {
+    override suspend fun getSpecAtt(urn: String) = withContext(ioDispatcher) {
+        runCatchingSuspend {
             specService.getInstance(urn)
         }.recoverCatching {
             throw MiotDeviceException.specNotFound(urn, it)
         }
     }
 
-    override suspend fun getSpecMultiLanguage(urn: String) = withContext(Dispatchers.IO) {
+    override suspend fun getSpecMultiLanguage(urn: String) = withContext(ioDispatcher) {
         specService.getSpecMultiLanguage(urn).use { response ->
-            runCatching {
+            runCatchingSuspend {
                 when (val string = response.string()) {
                     "model not found" -> throw MiotDeviceException.modelNotFound(urn)
                     "urn is not iot namespace" -> throw MiotDeviceException.urnFormatError(urn)
@@ -56,14 +61,14 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
     override suspend fun getSpecAttWithLanguage(
         urn: String,
         languageCode: String
-    ) = withContext(Dispatchers.IO) {
-        runCatching {
+    ) = withContext(ioDispatcher) {
+        runCatchingSuspend {
             val att: SpecAtt = getSpecAtt(urn).getOrThrow()
             val language = getSpecMultiLanguage(urn).getOrThrow()
             val map = getSpecAttLanguageMap(
                 language,
                 languageCode
-            ).getOrElse { return@withContext Result.success(att) }
+            ).getOrNull() ?: return@runCatchingSuspend att
             att.initVariable()
             att.convertLanguage(map)
         }
@@ -79,35 +84,35 @@ class MiotSpecAttrProviderImpl : MiotSpecAttrProvider {
         throw MiotParseException.jsonParse(it)
     }
 
-    override suspend fun getIconUrl(model: String) = withContext(Dispatchers.IO) {
-        runCatching {
+    override suspend fun getIconUrl(model: String) = withContext(ioDispatcher) {
+        runCatchingSuspend {
             val url = "https://home.mi.com/cgi-op/api/v1/baike/v2/product?model=${model}"
-            val info = client.get<DeviceInfoResponse>(url).getOrThrow()
+            val info = client.get<DeviceInfoResponse>(url, dispatcher = ioDispatcher).getOrThrow()
             if (info.code != 0) throw MiotClientException.getIconUrlFailed(model)
             info.data.realIcon
         }
     }
 
-    override suspend fun getDevices(): Result<SpecType> = withContext(Dispatchers.IO) {
-        runCatching {
+    override suspend fun getDevices(): Result<SpecType> = withContext(ioDispatcher) {
+        runCatchingSuspend {
             specService.getDevices()
         }
     }
 
-    override suspend fun getServices(): Result<SpecType> = withContext(Dispatchers.IO) {
-        runCatching {
+    override suspend fun getServices(): Result<SpecType> = withContext(ioDispatcher) {
+        runCatchingSuspend {
             specService.getServices()
         }
     }
 
-    override suspend fun getActions(): Result<SpecType> = withContext(Dispatchers.IO) {
-        runCatching {
+    override suspend fun getActions(): Result<SpecType> = withContext(ioDispatcher) {
+        runCatchingSuspend {
             specService.getActions()
         }
     }
 
-    override suspend fun getProperties(): Result<SpecType> = withContext(Dispatchers.IO) {
-        runCatching {
+    override suspend fun getProperties(): Result<SpecType> = withContext(ioDispatcher) {
+        runCatchingSuspend {
             specService.getProperties()
         }
     }

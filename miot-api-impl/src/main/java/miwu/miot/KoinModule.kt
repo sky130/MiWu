@@ -1,5 +1,6 @@
 package miwu.miot
 
+import miwu.dispatchers.DispatcherModule
 import miwu.miot.client.MiotDeviceClient
 import miwu.miot.client.MiotHomeClient
 import miwu.miot.client.MiotUserClient
@@ -15,6 +16,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.plugin.module.dsl.factory
 import org.koin.plugin.module.dsl.single
+import miwu.dispatchers.module as toKoinModule
 
 val MiotApiKoinModule.JVM.Client get() = clientModule
 val MiotApiKoinModule.JVM.Provider get() = providerModule
@@ -26,7 +28,8 @@ internal val clientModule = module {
 }
 
 internal val providerModule = module {
+    includes(DispatcherModule().toKoinModule())
+
     single<MiotLoginProviderImpl>().bind<MiotLoginProvider>()
     single<MiotSpecAttrProviderImpl>().bind<MiotSpecAttrProvider>()
 }
-

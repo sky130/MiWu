@@ -20,6 +20,7 @@ kotlin {
 dependencies {
     implementation(project(":miot-api"))
     implementation(project(":miot-api-common"))
+    implementation(project(":miwu-dispatchers"))
     implementation(libs.squareup.retrofit.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.koin.bom))

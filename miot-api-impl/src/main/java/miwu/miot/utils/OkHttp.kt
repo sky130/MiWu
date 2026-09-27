@@ -29,11 +29,13 @@ fun OkHttpClient(block: OkHttpClient.Builder.() -> Unit = {}): OkHttpClient =
 internal suspend inline fun <reified T> OkHttpClient.get(
     url: String,
     body: RequestBody? = null,
+    headers: Map<String, String> = emptyMap(),
 ): Result<T> = withContext(Dispatchers.IO) {
     runCatchingSuspend {
         val request = Request.Builder()
             .url(url)
             .apply { if (body != null) post(body) }
+            .apply { headers.forEach(::addHeader) }
             .build()
         newCall(request).execute().use { response ->
             if (!response.isSuccessful) {

@@ -27,13 +27,13 @@ import miwu.miot.utils.OkHttpClient
 import miwu.miot.utils.get
 import miwu.miot.utils.md5
 import miwu.miot.utils.to
-import miwu.miot.utils.urlEncode
 import miwu.miot.utils.userAgent
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.koin.core.annotation.Singleton
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -122,20 +122,16 @@ class MiotLoginProviderImpl : MiotLoginProvider {
 
     // 为啥这里要在IO上下文执行？
     override suspend fun generateLoginQrCode(): Result<LoginQrCode> = runCatching {
-        val generateQrCode = """
-            ${QRCODE_GENERATE_URL}?
-            ${
-            """
-                _qrsize=240
-                qs=?sid=${MIOT_SID}
-                callback=https://sts.api.io.mi.com/sts
-                sid=${MIOT_SID}
-                serviceParam=
-                _locale=zh_CN
-                _dc=${System.currentTimeMillis()}
-            """.trimIndent().urlEncode()
-        }
-        """.trimIndent()
+        val generateQrCode = QRCODE_GENERATE_URL.toHttpUrl().newBuilder()
+            .addQueryParameter("_qrsize", "240")
+            .addQueryParameter("qs", "?sid=$MIOT_SID")
+            .addQueryParameter("callback", "https://sts.api.io.mi.com/sts")
+            .addQueryParameter("sid", MIOT_SID)
+            .addQueryParameter("serviceParam", "")
+            .addQueryParameter("_locale", "zh_CN")
+            .addQueryParameter("_dc", System.currentTimeMillis().toString())
+            .build()
+            .toString()
         get<String>(generateQrCode)
             .getOrThrow()
             .removePrefix()
@@ -145,18 +141,15 @@ class MiotLoginProviderImpl : MiotLoginProvider {
 
     override suspend fun refreshServiceToken(miotUser: MiotUser): Result<MiotUser> = runCatching {
         cookieJar.clear()
-        // 因为SimpleCookieJar的Store和Url无关，如果是手动添加Cookie是否不需要添加Url了呢
-        // 所以添加一个手动实现addAll函数表示是手动添加Cookie
-        val cookies = with(miotUser) {
+        val cookieHeader = with(miotUser) {
             listOf(
-                Cookie("deviceId", deviceId),
-                Cookie("userId", userId),
-                Cookie("cUserId", cUserId),
-                Cookie("passToken", passToken),
-            )
+                "deviceId=$deviceId",
+                "userId=$userId",
+                "cUserId=$cUserId",
+                "passToken=$passToken",
+            ).joinToString("; ")
         }
-        cookieJar.addAll(cookies)
-        val data = getLocation().getOrThrow()
+        val data = getLocation(mapOf("Cookie" to cookieHeader)).getOrThrow()
         val location = data.location
         val serviceToken = getServiceToken(location).getOrThrow()
         miotUser.copy(
@@ -164,12 +157,6 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             serviceToken = serviceToken,
         )
     }
-
-    private fun Cookie(name: String, value: String): Cookie =
-        Cookie.Builder()
-            .name(name)
-            .value(value)
-            .build()
 
     private suspend fun Login.execute(): Result<MiotUser> = runCatching {
         if (code != 0) throw MiotBusinessException.loginFailed(code)
@@ -194,20 +181,16 @@ class MiotLoginProviderImpl : MiotLoginProvider {
                 else -> throw MiotHttpException("Login", e)
             }
         }
-        val cookiesHeader = response.headers["Set-Cookie"]!!
-        cookiesHeader.split(", ").firstNotNullOfOrNull { cookieString ->
-            val parts = cookieString.split("; ")[0].split("=", limit = 2)
-            if (parts.size == 2 && parts[0] == "serviceToken") {
-                parts[1]
-            } else {
-                null
-            }
-        } ?: throw MiotAuthException.tokenMissing()
+        response.headers.values("Set-Cookie")
+            .mapNotNull { Cookie.parse(response.request.url, it) }
+            .firstOrNull { it.name == "serviceToken" }
+            ?.value
+            ?: throw MiotAuthException.tokenMissing()
     }
 
-    private suspend fun getLocation(): Result<Location> = runCatching {
+    private suspend fun getLocation(headers: Map<String, String> = emptyMap()): Result<Location> = runCatching {
         // 如果Location的code不是预期的是否可以在这里就把结果包装成异常
-        get<String>(SERVICE_LOGIN_URL)
+        get<String>(SERVICE_LOGIN_URL, headers = headers)
             .getOrThrow()
             .removePrefix()
             .to<Location>()
@@ -223,8 +206,11 @@ class MiotLoginProviderImpl : MiotLoginProvider {
             .getOrThrow()
     }
 
-    private suspend inline fun <reified T> get(url: String, body: RequestBody? = null): Result<T> =
-        miotLoginClient.get<T>(url, body)
+    private suspend inline fun <reified T> get(
+        url: String,
+        body: RequestBody? = null,
+        headers: Map<String, String> = emptyMap(),
+    ): Result<T> = miotLoginClient.get<T>(url, body, headers)
 
     class SimpleCookieJar : CookieJar {
         private val storage = arrayListOf<Cookie>()
@@ -234,8 +220,6 @@ class MiotLoginProviderImpl : MiotLoginProvider {
         }
 
         override fun loadForRequest(url: HttpUrl): List<Cookie> = storage
-
-        fun addAll(cookies: List<Cookie>) = storage.addAll(cookies)
 
         fun clear() = storage.clear()
     }

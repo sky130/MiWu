@@ -9,7 +9,6 @@ import io.ktor.http.contentType
 import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import miwu.miot.kmp.plugin.ForceJsonSerializer
 import miwu.miot.kmp.plugin.MiotAuth
 import miwu.miot.common.MIOT_SERVER_URL
 import miwu.miot.common.MI_HOME_USER_AGENT
@@ -18,7 +17,8 @@ import miwu.miot.model.MiotUser
 @Suppress("FunctionName")
 fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
     install(ContentNegotiation) {
-        json(json)
+        json(json, ContentType.Application.Json)
+        json(json, ContentType.Text.Plain)
     }
     install(DefaultRequest) {
         val deviceId = user.deviceId
@@ -33,9 +33,6 @@ fun MiotAuthHttpClient(user: MiotUser) = MiotHttpClient {
     install(MiotAuth) {
         user(user)
     }
-    install(ForceJsonSerializer.Companion) {
-        json(json)
-    }
     expectSuccess = true
 }
 
@@ -44,4 +41,3 @@ fun MiotAuthKtorfit(user: MiotUser) = Ktorfit.Builder()
     .baseUrl(MIOT_SERVER_URL)
     .httpClient(MiotAuthHttpClient(user))
     .build()
-

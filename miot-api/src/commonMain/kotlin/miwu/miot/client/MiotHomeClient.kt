@@ -1,6 +1,6 @@
 package miwu.miot.client
 
-import miwu.miot.model.MiotResponse
+import miwu.miot.model.MiotSuccess
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.DeviceList
 import miwu.miot.model.miot.HomeList
@@ -48,7 +48,7 @@ interface MiotHomeClient {
         fetchShareDev: Boolean = true,
         appVer: Int = 7,
         limit: Int = 300,
-    ): Result<MiotResponse<HomeList>>
+    ): Result<MiotSuccess<HomeList>>
 
     /**
      * 异步获取指定家庭下的所有设备列表。
@@ -58,7 +58,7 @@ interface MiotHomeClient {
      * @param limit 期望返回的设备最大数量。
      * @return 一个包含设备列表 [DeviceList] 的 [Result] 对象。
      */
-    suspend fun getDevices(home: MiotHome, limit: Int = 200): Result<MiotResponse<DeviceList>>
+    suspend fun getDevices(home: MiotHome, limit: Int = 200): Result<MiotSuccess<DeviceList>>
 
     /**
      * 异步获取指定家庭下的所有智能场景列表。
@@ -67,7 +67,7 @@ interface MiotHomeClient {
      * @param home 目标家庭对象 [MiotHome]。
      * @return 一个包含场景列表 [SceneList] 的 [Result] 对象。
      */
-    suspend fun getScenes(home: MiotHome): Result<MiotResponse<SceneList>>
+    suspend fun getScenes(home: MiotHome): Result<MiotSuccess<SceneList>>
 
     /**
      * 异步获取指定家庭下的所有智能场景列表。
@@ -76,7 +76,7 @@ interface MiotHomeClient {
      * @param ownerUid 该家庭所有者的用户ID。
      * @return 一个包含场景列表 [SceneList] 的 [Result] 对象。
      */
-    suspend fun getScenes(homeId: Long, ownerUid: Long): Result<MiotResponse<SceneList>>
+    suspend fun getScenes(homeId: Long, ownerUid: Long): Result<MiotSuccess<SceneList>>
 
     /**
      * 异步获取指定家庭下的所有设备列表。
@@ -90,7 +90,7 @@ interface MiotHomeClient {
         homeId: Long,
         ownerUid: Long,
         limit: Int = 200
-    ): Result<MiotResponse<DeviceList>>
+    ): Result<MiotSuccess<DeviceList>>
 
     /**
      * 异步执行指定的智能场景。

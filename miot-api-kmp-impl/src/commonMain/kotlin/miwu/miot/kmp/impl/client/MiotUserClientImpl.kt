@@ -6,7 +6,7 @@ import miwu.miot.kmp.service.body.GetUserInfo
 import miwu.miot.kmp.service.createUserService
 import miwu.miot.kmp.utils.MiotAuthKtorfit
 import miwu.miot.model.MiotUser
-import miwu.miot.model.MiotResponse
+import miwu.miot.model.MiotSuccess
 import miwu.miot.model.requireSuccess
 import miwu.miot.model.miot.UserInfo
 import miwu.miot.utils.runCatchingSuspend
@@ -18,7 +18,7 @@ class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserCl
     private val ktorfit = MiotAuthKtorfit(user)
     private val userService = ktorfit.createUserService()
 
-    override suspend fun getUserInfo(): Result<MiotResponse<UserInfo>> =
+    override suspend fun getUserInfo(): Result<MiotSuccess<UserInfo>> =
         runCatchingSuspend {
             userService.getUserInfo(GetUserInfo(user.userId)).requireSuccess("Get user info")
         }

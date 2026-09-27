@@ -9,7 +9,7 @@ import miwu.miot.att.set.SetAtt
 import miwu.miot.att.set.piid
 import miwu.miot.att.set.siid
 import miwu.miot.att.set.value
-import miwu.miot.model.MiotResponse
+import miwu.miot.model.MiotSuccess
 import miwu.miot.model.att.Property
 import miwu.miot.model.att.PropertyList
 import miwu.miot.model.spec.SpecAtt
@@ -242,11 +242,9 @@ abstract class MockMiotDeviceClient(
      * @param att 要读取的属性索引列表
      * @return 包含模拟属性值的 MIoT 响应；执行异常时返回失败的 [Result]
      */
-    override suspend fun onGet(att: Array<out GetAtt>): Result<MiotResponse<PropertyList?>> =
+    override suspend fun onGet(att: Array<out GetAtt>): Result<MiotSuccess<PropertyList>> =
         runCatchingSuspend {
-            MiotResponse(
-                code = 0,
-                message = "",
+            MiotSuccess(
                 result = att.map { info ->
                     Property(
                         did = miotDevice.did,

@@ -4,7 +4,7 @@ import miwu.miot.client.MiotUserClient
 import miwu.miot.common.MIOT_SERVER_URL
 import miwu.miot.interceptor.MiotAuthInterceptor
 import miwu.miot.model.MiotUser
-import miwu.miot.model.MiotResponse
+import miwu.miot.model.MiotSuccess
 import miwu.miot.model.requireSuccess
 import kotlinx.coroutines.CancellationException
 import miwu.miot.model.miot.UserInfo
@@ -32,7 +32,7 @@ class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserCl
     )
     private val userService = retrofit.create<UserService>()
 
-    override suspend fun getUserInfo(): Result<MiotResponse<UserInfo>> =
+    override suspend fun getUserInfo(): Result<MiotSuccess<UserInfo>> =
         runCatchingSuspend {
             userService.getUserInfo(GetUserInfo(user.userId)).requireSuccess("Get user info")
         }

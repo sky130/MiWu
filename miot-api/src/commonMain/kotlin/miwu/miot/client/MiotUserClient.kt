@@ -1,6 +1,6 @@
 package miwu.miot.client
 
-import miwu.miot.model.MiotResponse
+import miwu.miot.model.MiotSuccess
 import miwu.miot.model.MiotUser
 import miwu.miot.model.miot.UserInfo
 
@@ -28,7 +28,7 @@ interface MiotUserClient {
      *
      * @return 包含 [UserInfo] 的 [Result] 对象
      */
-    suspend fun getUserInfo(): Result<MiotResponse<UserInfo>>
+    suspend fun getUserInfo(): Result<MiotSuccess<UserInfo>>
 
     /**
      * 检查当前用户的 `serviceToken` 是否有效，

@@ -11,7 +11,7 @@ import io.ktor.http.parameters
 import io.ktor.util.AttributeKey
 import io.ktor.util.reflect.TypeInfo
 import io.ktor.utils.io.KtorDsl
-import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 import miwu.miot.kmp.utils.json
@@ -25,13 +25,11 @@ import okio.use
 import kotlin.io.encoding.Base64
 
 
-@OptIn(InternalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class)
 class MiotAuth internal constructor(internal val user: MiotUser?) {
 
     @Suppress("UNCHECKED_CAST")
     fun transformRequestBody(request: HttpRequestBuilder, content: Any, bodyType: TypeInfo?): Any {
-        val originBody = request.body
-
         user ?: throw IllegalArgumentException("user not found.")
 
         val ssecurity = user.ssecurity
@@ -40,10 +38,9 @@ class MiotAuth internal constructor(internal val user: MiotUser?) {
         if (serviceToken.isEmpty() || ssecurity.isEmpty())
             throw IllegalArgumentException("serviceToken or securityToken not found.")
 
-        val data = json.encodeToString(
-            originBody::class.serializer() as KSerializer<Any>,
-            originBody
-        )
+        val serializer = bodyType?.kotlinType?.let(json.serializersModule::serializer)
+            ?: throw IllegalArgumentException("request body type not found")
+        val data = json.encodeToString(serializer as KSerializer<Any>, content)
 
         val nonce = getNonce()
         val signedNonce = generateSignedNonce(ssecurity, nonce)

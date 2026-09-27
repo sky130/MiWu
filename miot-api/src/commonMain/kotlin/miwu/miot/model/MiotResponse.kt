@@ -7,5 +7,7 @@ import kotlinx.serialization.Serializable
 data class MiotResponse<T>(
     @SerialName("code") val code: Int,
     @SerialName("message") val message: String = "",
-    @SerialName("result") val result: T
+    @SerialName("result") val result: T? = null,
 )
+
+data class MiotSuccess<T>(val result: T)

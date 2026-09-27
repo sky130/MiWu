@@ -2,7 +2,7 @@ package miwu.miot.client
 
 import miwu.miot.att.get.GetAtt
 import miwu.miot.att.set.SetAtt
-import miwu.miot.model.MiotResponse
+import miwu.miot.model.MiotSuccess
 import miwu.miot.model.MiotUser
 import miwu.miot.model.att.PropertyList
 import miwu.miot.model.miot.MiotDevice
@@ -39,7 +39,7 @@ interface MiotDeviceClient {
      * @param att 需要获取的属性数组，每个元素都是一个 [GetAtt] 实例。
      * @return 返回一个 [Result] 对象，成功时包含设备属性 [miwu.miot.model.att.Property]，失败时则包含异常信息。
      */
-    suspend fun get(device: MiotDevice, att: Array<out GetAtt>): Result<MiotResponse<PropertyList?>>
+    suspend fun get(device: MiotDevice, att: Array<out GetAtt>): Result<MiotSuccess<PropertyList>>
 
     /**
      * 异步设置指定的设备属性。

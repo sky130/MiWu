@@ -261,7 +261,7 @@ class MiotDeviceManagerImpl internal constructor(
         }
         if (attList.isEmpty()) return@withContext
         miot.get(device, attList.toTypedArray()).onSuccess {
-            update(it.result ?: return@onSuccess)
+            update(it.result)
         }
     }
 

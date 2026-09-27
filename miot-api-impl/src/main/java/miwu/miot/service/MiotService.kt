@@ -11,11 +11,11 @@ import retrofit2.http.POST
 
 interface MiotService {
     @POST("miotspec/prop/set")
-    suspend fun setDeviceAtt(@Body body: SetParams): MiotResponse<PropertyList?>
+    suspend fun setDeviceAtt(@Body body: SetParams): MiotResponse<PropertyList>
 
     @POST("miotspec/prop/get")
-    suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyList?>
+    suspend fun getDeviceAtt(@Body body: GetParams): MiotResponse<PropertyList>
 
     @POST("miotspec/action")
-    suspend fun doAction(@Body body: ActionBody): MiotResponse<ActionList?>
+    suspend fun doAction(@Body body: ActionBody): MiotResponse<ActionList>
 }

@@ -22,7 +22,7 @@ jobs:
           ./gradlew
           :app:assembleRelease
           test
-          :miot-api-kmp-impl:compileKotlinJs
+          :miot-api-kmp-impl:compileKotlinLinuxX64
           :miwu-support:compileKotlin
           :miwu-android:compileDebugKotlin
 

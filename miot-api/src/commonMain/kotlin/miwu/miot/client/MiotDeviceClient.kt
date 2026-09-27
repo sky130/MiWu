@@ -31,7 +31,9 @@ import miwu.miot.model.miot.MiotDevice
  * @see [PropertyResponse] 属性响应数据
  *
  */
-interface MiotDeviceClient {
+interface MiotDeviceClient : AutoCloseable {
+
+    override fun close() = Unit
     /**
      * 异步获取指定的设备属性。
      *

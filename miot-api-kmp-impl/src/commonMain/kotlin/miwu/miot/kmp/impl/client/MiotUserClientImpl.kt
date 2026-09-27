@@ -5,6 +5,7 @@ import miwu.miot.client.MiotUserClient
 import miwu.miot.kmp.service.body.GetUserInfo
 import miwu.miot.kmp.service.createUserService
 import miwu.miot.kmp.utils.MiotAuthKtorfit
+import miwu.miot.kmp.utils.MiotAuthHttpClient
 import miwu.miot.model.MiotUser
 import miwu.miot.model.MiotSuccess
 import miwu.miot.model.requireSuccess
@@ -15,8 +16,11 @@ import org.koin.core.annotation.InjectedParam
 
 @Factory
 class MiotUserClientImpl(@InjectedParam private val user: MiotUser) : MiotUserClient {
-    private val ktorfit = MiotAuthKtorfit(user)
+    private val httpClient = MiotAuthHttpClient(user)
+    private val ktorfit = MiotAuthKtorfit(httpClient)
     private val userService = ktorfit.createUserService()
+
+    override fun close() = httpClient.close()
 
     override suspend fun getUserInfo(): Result<MiotSuccess<UserInfo>> =
         runCatchingSuspend {

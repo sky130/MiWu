@@ -21,7 +21,9 @@ import miwu.miot.model.miot.UserInfo
  * @see [MiotUser] 用户身份信息
  * @see [UserInfo] 用户信息
  */
-interface MiotUserClient {
+interface MiotUserClient : AutoCloseable {
+
+    override fun close() = Unit
 
     /**
      * 获取用户信息

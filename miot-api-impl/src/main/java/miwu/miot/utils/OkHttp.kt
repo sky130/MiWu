@@ -1,5 +1,6 @@
 package miwu.miot.utils
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -11,6 +12,7 @@ import okio.Buffer
 import miwu.miot.exception.MiotHttpException
 import kotlinx.coroutines.CancellationException
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 
 fun OkHttpClient.Builder.userAgent(ua: String): OkHttpClient.Builder = addInterceptor { chain ->
@@ -26,11 +28,24 @@ fun OkHttpClient.Builder.userAgent(ua: String): OkHttpClient.Builder = addInterc
 fun OkHttpClient(block: OkHttpClient.Builder.() -> Unit = {}): OkHttpClient =
     OkHttpClient.Builder().apply(block).build()
 
+fun OkHttpClient.Builder.miotTimeouts(): OkHttpClient.Builder =
+    connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .callTimeout(30, TimeUnit.SECONDS)
+
+fun OkHttpClient.close() {
+    dispatcher.executorService.shutdown()
+    connectionPool.evictAll()
+    cache?.close()
+}
+
 internal suspend inline fun <reified T> OkHttpClient.get(
     url: String,
     body: RequestBody? = null,
     headers: Map<String, String> = emptyMap(),
-): Result<T> = withContext(Dispatchers.IO) {
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+): Result<T> = withContext(dispatcher) {
     runCatchingSuspend {
         val request = Request.Builder()
             .url(url)

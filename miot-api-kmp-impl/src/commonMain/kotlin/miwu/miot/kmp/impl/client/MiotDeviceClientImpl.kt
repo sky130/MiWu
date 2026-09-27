@@ -15,6 +15,7 @@ import miwu.miot.kmp.service.body.GetParams
 import miwu.miot.kmp.service.body.SetParams
 import miwu.miot.kmp.service.createMiotService
 import miwu.miot.kmp.utils.MiotAuthKtorfit
+import miwu.miot.kmp.utils.MiotAuthHttpClient
 import miwu.miot.model.MiotUser
 import miwu.miot.model.actionOutputOrUnit
 import miwu.miot.model.requirePropertySuccess
@@ -26,8 +27,11 @@ import org.koin.core.annotation.InjectedParam
 
 @Factory
 class MiotDeviceClientImpl(@InjectedParam private val user: MiotUser) : MiotDeviceClient {
-    private val ktorfit = MiotAuthKtorfit(user)
+    private val httpClient = MiotAuthHttpClient(user)
+    private val ktorfit = MiotAuthKtorfit(httpClient)
     private val miotService = ktorfit.createMiotService()
+
+    override fun close() = httpClient.close()
 
     override suspend fun get(
         device: MiotDevice,

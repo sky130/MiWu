@@ -79,11 +79,12 @@ class AccountRepositoryImpl(
         }
 
         currentUser = user
-        val tokenValid = clientFactory.createUserClient(user)
-            .getIsServiceTokenValid()
-            .throwIfCancelled()
-            .getOrNull()
-            ?: false
+        val tokenValid = clientFactory.createUserClient(user).use { client ->
+            client.getIsServiceTokenValid()
+                .throwIfCancelled()
+                .getOrNull()
+                ?: false
+        }
         if (tokenValid) {
             mutableLoginState.emit(LoginState.Success)
         } else {

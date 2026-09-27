@@ -4,8 +4,8 @@ import miwu.miot.model.MiotResponse
 import miwu.miot.model.miot.DeviceList
 import miwu.miot.model.miot.HomeList
 import miwu.miot.model.miot.SceneList
-import miwu.miot.service.body.*
-import okhttp3.ResponseBody
+import miwu.miot.model.request.*
+import kotlinx.serialization.json.JsonElement
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -30,7 +30,7 @@ interface HomeService {
 
 
     @POST("appgateway/miot/appsceneservice/AppSceneService/NewRunScene")
-    suspend fun runScene(@Body body: RunNewScene): ResponseBody
+    suspend fun runScene(@Body body: RunNewScene): MiotResponse<JsonElement>
 
     /**
      * 两个 runScene 方法使用根据获取他们的 icon 链接是否为空
@@ -39,10 +39,10 @@ interface HomeService {
      */
     @Deprecated("api 接口残缺", replaceWith = ReplaceWith("runScene(RunNewScene)"))
     @POST("appgateway/miot/appsceneservice/AppSceneService/RunScene")
-    suspend fun runScene(@Body body: RunCommonScene): ResponseBody
+    suspend fun runScene(@Body body: RunCommonScene): MiotResponse<JsonElement>
 
     @Deprecated("api 接口残缺", replaceWith = ReplaceWith("runScene(RunNewScene)"))
     @POST("scene/start")
-    suspend fun runScene(@Body body: RunScene): ResponseBody
+    suspend fun runScene(@Body body: RunScene): MiotResponse<JsonElement>
 
 }

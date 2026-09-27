@@ -17,4 +17,4 @@ private val Context.miotUserStore: MiotUserDataStore by dataStore(
     produceMigrations = { context -> listOf(LegacyMiotUserMigration(context)) },
 )
 
-fun datastore(context: Context): MiotUserDataStore = context.miotUserStore
+fun miotDataStore(context: Context): MiotUserDataStore = context.miotUserStore

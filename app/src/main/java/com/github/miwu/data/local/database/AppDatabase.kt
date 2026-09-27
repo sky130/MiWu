@@ -10,9 +10,7 @@ import com.github.miwu.data.local.database.dao.FavoriteDeviceDao
 import com.github.miwu.data.local.database.entity.CrashEntity
 import com.github.miwu.data.local.database.entity.FavoriteDeviceEntity
 import com.github.miwu.data.local.database.entity.FavoriteDeviceOrderEntity
-import org.koin.core.annotation.Singleton
 
-@Singleton
 @Database(
     version = 3,
     entities = [
@@ -66,7 +64,7 @@ abstract class AppDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE favorite_device_new RENAME TO favorite_device")
                 db.execSQL(
                     "CREATE INDEX IF NOT EXISTS index_favorite_device_uid_did " +
-                        "ON favorite_device(uid, did)"
+                            "ON favorite_device(uid, did)"
                 )
             }
         }

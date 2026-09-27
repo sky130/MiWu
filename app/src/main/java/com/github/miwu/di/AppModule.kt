@@ -9,7 +9,7 @@ import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Singleton
 
-@Module(includes = [DispatcherModule::class])
+@Module(includes = [DispatcherModule::class, DataModule::class])
 @ComponentScan("com.github.miwu")
 class AppModule {
     @Singleton
